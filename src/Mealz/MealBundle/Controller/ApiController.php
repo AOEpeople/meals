@@ -19,8 +19,8 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends BaseController
 {
@@ -55,7 +55,7 @@ class ApiController extends BaseController
         return new JsonResponse([
             'paypalId' => $this->getParameter('app.paypal.client_id'),
             'mercureUrl' => $this->getParameter('app.pubsub.subscribe_url'),
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -65,7 +65,7 @@ class ApiController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $weeks = $this->weekSrv->getNextTwoWeeks();
@@ -127,7 +127,7 @@ class ApiController extends BaseController
         return new JsonResponse(['weeks' => $response]);
     }
 
-    public function getNextThreeDays(): JSONResponse
+    public function getNextThreeDays(): JsonResponse
     {
         $result = [];
 
@@ -148,15 +148,15 @@ class ApiController extends BaseController
             $result[$today->format('Y-m-d')] = $dishes;
         }
 
-        return new JsonResponse($result, 200);
+        return new JsonResponse($result, Response::HTTP_OK);
     }
 
-    public function list(): JSONResponse
+    public function list(): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate(new DateTime('today'));
 
         if (null === $day) {
-            return new JsonResponse(null, 400);
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
         }
 
         $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
@@ -173,10 +173,10 @@ class ApiController extends BaseController
 
         $list['day'] = $day->getDateTime();
 
-        return new JsonResponse($list, 200);
+        return new JsonResponse($list, Response::HTTP_OK);
     }
 
-    public function listByDate(DateTime $date): JSONResponse
+    public function listByDate(DateTime $date): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {
@@ -188,7 +188,7 @@ class ApiController extends BaseController
         return new JsonResponse($list, 200);
     }
 
-    public function listParticipantsByDate(DateTime $date): JSONResponse
+    public function listParticipantsByDate(DateTime $date): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {
@@ -244,7 +244,7 @@ class ApiController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $dateFrom = new DateTime('-28 days 00:00:00');
@@ -270,7 +270,7 @@ class ApiController extends BaseController
         $profile = $this->getProfile();
         $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
 
-        return new JsonResponse($this->getMealState($meal, $profile, $participant), 200);
+        return new JsonResponse($this->getMealState($meal, $profile, $participant), Response::HTTP_OK);
     }
 
     private function convertMealForDashboard(Meal $meal, float $participationCount, ?Profile $profile): array
@@ -327,8 +327,8 @@ class ApiController extends BaseController
         ];
     }
 
-    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals): void
-    {
+    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals
+    ): void {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);
 
@@ -379,7 +379,7 @@ class ApiController extends BaseController
     {
         $guestInvitation = $this->guestPartiSrv->getGuestInvitationById($guestInvitationId);
         if (null === $guestInvitation) {
-            return new JsonResponse(null, 404);
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
         $day = $guestInvitation->getDay();
@@ -414,9 +414,14 @@ class ApiController extends BaseController
             }
         }
 
-        return new JsonResponse($guestData, 200);
+        return new JsonResponse($guestData, Response::HTTP_OK);
     }
 
+    /**
+     * @return ((int|string[]|null)[]|mixed)[]
+     *
+     * @psalm-return array<array{title: array{en: string, de: string}, parent?: int|null, participations?: int}|mixed>
+     */
     private function getDishData(Meal $meal): array
     {
         $collection[$meal->getDish()->getId()] = [

@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Dirk Rauscher <dirk.rauscher@aoe.com>
@@ -23,7 +24,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadCategories(),
             new LoadDishes(),
             new LoadDishVariations(),
@@ -46,7 +47,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('POST', '/api/dishes/' . $dish->getSlug() . '/variation', [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $found = false;
 
@@ -72,7 +73,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('PUT', '/api/dishes/variation/' . $dishVariation->getSlug(), [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
         $this->assertNotNull($updatedDishVariation);
@@ -89,12 +90,13 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue($dishVariation->isEnabled());
 
         $this->client->request('DELETE', '/api/dishes/variation/' . $dishVariation->getSlug());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
         if ($updatedDishVariation instanceof DishVariation) {
             $this->assertFalse($updatedDishVariation->isEnabled());
         } else {
+            /** @psalm-suppress RedundantCondition */
             $this->assertNull($updatedDishVariation);
         }
     }
@@ -102,7 +104,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testDeleteNonExistingDishVariation(): void
     {
         $this->client->request('DELETE', '/api/dishes/variation/non-existent-dish-variation');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -111,7 +113,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testUpdateActionOfNonExistingDishVariation(): void
     {
         $this->client->request('PUT', '/api/dishes/variation/non-existing-dishvariation');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -122,13 +124,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      * @param int|null $identifier      Dish ID
      * @param bool     $dishVarRequired if TRUE and no identifier is given the method returns the first dish
      *                                  having at least ONE variation
-     *
-     * @return Dish
      */
-    private function getDish($identifier = null, $dishVarRequired = false)
+    private function getDish(?int $identifier = null, bool $dishVarRequired = false): Dish
     {
         /** @var DishRepository $dishRepository */
-        $dishRepository = self::$container->get(DishRepository::class);
+        $dishRepository = self::getContainer()->get(DishRepository::class);
         $dish = null;
 
         if ($identifier > 0) {
@@ -144,11 +144,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             $this->fail('Failed to fetch test dish.');
         }
 
-        if (false == $dishVarRequired) {
+        if (!$dishVarRequired) {
             $dish = (is_array($result) && count($result)) ? $result[0] : null;
         } else {
             foreach ($result as $item) {
-                if (true == $item->hasVariations()) {
+                if ($item->hasVariations()) {
                     $dish = $item;
                     break;
                 }
@@ -162,14 +162,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         return $dish;
     }
 
-    /**
-     * @param string $attribute
-     * @param mixed  $value
-     * @param bool   $throwError
-     *
-     * @return DishVariation
-     */
-    private function getDishVariationBy($attribute, $value, $throwError = true)
+    private function getDishVariationBy(string $attribute, $value, bool $throwError = true): ?DishVariation
     {
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 

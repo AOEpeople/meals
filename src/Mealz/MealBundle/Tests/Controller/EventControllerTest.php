@@ -14,7 +14,9 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Response;
 
 class EventControllerTest extends AbstractControllerTestCase
 {
@@ -27,7 +29,7 @@ class EventControllerTest extends AbstractControllerTestCase
             new LoadDays(),
             new LoadEvents(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadWeeks(),
         ]);
 
@@ -37,7 +39,7 @@ class EventControllerTest extends AbstractControllerTestCase
     public function testGetEventList(): void
     {
         $this->client->request('GET', '/api/events');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -73,7 +75,7 @@ class EventControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('POST', '/api/events', [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -96,7 +98,7 @@ class EventControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('PUT', '/api/events/' . $newEvent->getSlug(), [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -114,7 +116,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$newEvent]);
 
         $this->client->request('DELETE', '/api/events/' . $newEvent->getSlug());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -129,10 +131,10 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepository::class);
+        $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -142,16 +144,16 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('POST', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
 
-        $eventPartRepo = self::$container->get(EventParticipationRepositoryInterface::class);
+        $eventPartRepo = self::getContainer()->get(EventParticipationRepositoryInterface::class);
         $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
         $this->assertNotNull($eventPart);
 
-        $partRepo = self::$container->get(ParticipantRepositoryInterface::class);
+        $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
         $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
@@ -165,10 +167,10 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepository::class);
+        $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         $day = $dayRepo->matching($criteria)->get(0);
 
@@ -179,16 +181,16 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('DELETE', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
 
-        $eventPartRepo = self::$container->get(EventParticipationRepositoryInterface::class);
+        $eventPartRepo = self::getContainer()->get(EventParticipationRepositoryInterface::class);
         $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
         $this->assertNotNull($eventPart);
 
-        $partRepo = self::$container->get(ParticipantRepositoryInterface::class);
+        $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
         $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
@@ -201,10 +203,11 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepository::class);
+        /** @var DayRepository $dayRepo */
+        $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -220,7 +223,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->assertEquals(0, count($participants));
 
         $this->client->request('POST', '/api/events/participation/' . $date);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/api/participations/event/' . $date);
         $participants = json_decode($this->client->getResponse()->getContent());

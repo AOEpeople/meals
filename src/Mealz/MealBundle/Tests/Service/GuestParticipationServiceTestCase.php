@@ -21,7 +21,7 @@ use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class GuestParticipationServiceTest extends AbstractParticipationServiceTest
+class GuestParticipationServiceTestCase extends AbstractParticipationServiceTestCase
 {
     private Profile $profile;
 
@@ -36,26 +36,28 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         ]);
 
         /** @var ProfileRepositoryInterface $profileRepo */
-        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
-        $roleRepo = self::$container->get(RoleRepositoryInterface::class);
-        $guestInvitationRepo = self::$container->get(GuestInvitationRepositoryInterface::class);
-        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
+        $roleRepo = self::getContainer()->get(RoleRepositoryInterface::class);
+        $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepositoryInterface::class);
+        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
 
-        $this->setParticipationService(new GuestParticipationService(
-            $this->entityManager,
-            $this->participantRepo,
-            $profileRepo,
-            $roleRepo,
-            $this->slotRepo,
-            $guestInvitationRepo,
-            $mealRepo
-        ));
+        $this->setParticipationService(
+            new GuestParticipationService(
+                $this->entityManager,
+                $this->participantRepo,
+                $profileRepo,
+                $roleRepo,
+                $this->slotRepo,
+                $guestInvitationRepo,
+                $mealRepo
+            )
+        );
 
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
         $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $price = is_float($price) ? $price : 0;
 
-        $dishRepo = static::$container->get(DishRepository::class);
+        $dishRepo = static::getContainer()->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
 
         /** @var Role $role */
@@ -137,7 +139,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with more than 2 slugs.
      */
-    public function joinCombinedMealWithThreeMealsSuccess()
+    public function joinCombinedMealWithThreeMealsSuccess(): void
     {
         $this->checkJoinCombinedMealWithThreeMealsFail($this->profile);
     }
@@ -162,8 +164,8 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         $this->checkJoinCombinedMealWithEmptySlugFail($this->profile);
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         $this->assertTrue($participant->isCostAbsorbed());
         $this->assertSame($meal->getId(), $participant->getMeal()->getId());
 

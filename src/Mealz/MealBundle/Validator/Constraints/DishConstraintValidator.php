@@ -22,9 +22,6 @@ class DishConstraintValidator extends ConstraintValidator
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function validate($value, Constraint $constraint): void
     {
         if (!($value->getDish() instanceof NullDish)) {
@@ -34,8 +31,8 @@ class DishConstraintValidator extends ConstraintValidator
         $unitOfWork = $this->entityManager->getUnitOfWork();
         $day = $value->getDay();
 
-        if (UnitOfWork::STATE_NEW !== $unitOfWork->getEntityState($value) &&
-            0 === $value->getParticipants()->count()
+        if (UnitOfWork::STATE_NEW !== $unitOfWork->getEntityState($value)
+            && 0 === $value->getParticipants()->count()
         ) {
             $meals = $day->getMeals();
             $meals->removeElement($value);

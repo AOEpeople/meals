@@ -148,6 +148,11 @@ trait ParticipationServiceTrait
         $participant->setCombinedDishes($dishes);
     }
 
+    /**
+     * @return \App\Mealz\MealBundle\Entity\Dish[]
+     *
+     * @psalm-return list<\App\Mealz\MealBundle\Entity\Dish>
+     */
     private function getCombinedMealDishes(Meal $meal, array $dishSlugs): array
     {
         $dishes = [];

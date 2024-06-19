@@ -22,7 +22,7 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadWeeks()]);
 
-        $this->weekRepository = self::$container->get(WeekRepositoryInterface::class);
+        $this->weekRepository = self::getContainer()->get(WeekRepositoryInterface::class);
     }
 
     public function testGetGetCurrentWeek(): void

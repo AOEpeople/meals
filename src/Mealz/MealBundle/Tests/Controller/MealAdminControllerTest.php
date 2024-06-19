@@ -15,6 +15,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
+use Symfony\Component\HttpFoundation\Response;
 
 class MealAdminControllerTest extends AbstractControllerTestCase
 {
@@ -32,7 +33,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
             new LoadEvents(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -44,7 +45,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('GET', '/api/weeks');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // Get data for assertions from response
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
@@ -76,7 +77,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $year = $date->format('Y');
         $week = $date->format('W');
         $this->createFutureEmptyWeek($date);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), 'Year: ' . $year . ', week: ' . $week . ', Status: ' . $this->client->getResponse()->getContent());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode(), 'Year: ' . $year . ', week: ' . $week . ', Status: ' . $this->client->getResponse()->getContent());
 
         // Get data for assertions with new request response
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
@@ -91,7 +92,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Trying to create the same week twice should fail
         $this->createFutureEmptyWeek($date);
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('102: week already exists', $response['message']);
     }
@@ -99,7 +100,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
     public function testCount(): void
     {
         $this->client->request('GET', '/api/meals/count');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNotNull($response);
@@ -118,7 +119,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Create new week
         $this->createFutureEmptyWeek($date);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // Get data for assertions with new request response
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
@@ -189,7 +190,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         }';
 
         $this->client->request('PUT', '/api/menu/' . $createdWeek->getId(), [], [], [], $testPutStr);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $createdWeek = $weekRepository->findOneBy([
             'year' => $year,
@@ -202,7 +203,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $this->assertEquals($testDish->getId(), $foundMeal->getDish()->getId());
     }
 
-    private function createFutureEmptyWeek(DateTime $date)
+    private function createFutureEmptyWeek(DateTime $date): void
     {
         $year = $date->format('o');
         $week = $date->format('W');

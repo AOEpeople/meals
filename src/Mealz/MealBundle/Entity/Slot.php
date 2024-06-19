@@ -13,58 +13,43 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Defines a meal slot.
- *
- * @ORM\Entity
- * @ORM\Table(name="slot")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'slot')]
 class Slot implements JsonSerializable
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", nullable=true)
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     * @Assert\Length(min=5, max=80)
-     */
+    #[Assert\Length(min: 5, max: 80)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private string $title = '';
 
     /**
      * Maximum number of people allowed to have their meal in given slot. Zero means no limit.
-     *
-     * @ORM\Column(name="`limit`", type="integer", options={"unsigned": true, "default": 0})
      */
+    #[ORM\Column(name: '`limit`', type: 'integer', options: ['unsigned' => true, 'default' => 0])]
     private int $limit = 0;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $disabled = false;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $deleted = false;
 
     /**
      * Sort order.
-     *
-     * @ORM\Column(name="`order`", type="integer", options={"default": 0})
      */
+    #[ORM\Column(name: '`order`', type: 'integer', options: ['default' => 0])]
     private int $order = 0;
 
-    /**
-     * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(length=128, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['title'])]
+    #[ORM\Column(type: 'string', length: 128, unique: true)]
     private ?string $slug = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Mealz\MealBundle\Entity\Participant", mappedBy="slot")
-     */
+    #[ORM\OneToMany(mappedBy: 'slot', targetEntity: Participant::class)]
     private ?Collection $participants = null;
 
     public function getId(): ?int
@@ -146,6 +131,11 @@ class Slot implements JsonSerializable
         return new ArrayCollection($this->participants->toArray());
     }
 
+    /**
+     * @return (bool|int|string|null)[]
+     *
+     * @psalm-return array{id: int|null, title: string, limit: int, order: int, enabled: bool, slug: null|string}
+     */
     public function jsonSerialize(): array
     {
         return [

@@ -2,6 +2,8 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use InvalidArgumentException;
+
 class HttpHeaderUtility
 {
     /**
@@ -17,20 +19,15 @@ class HttpHeaderUtility
     /**
      * parse an Accept-Language header and returns the best matching locale from $this->locales.
      *
-     * @param $headerString
-     *
-     * @return mixed
-     *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function getLocaleFromAcceptLanguageHeader($headerString)
+    public function getLocaleFromAcceptLanguageHeader(?string $headerString)
     {
         if (true === empty($this->locales)) {
-            throw new \InvalidArgumentException(sprintf('%s::locales is empty. Set some using the setLocales method.', get_class($this)));
+            throw new InvalidArgumentException(sprintf('%s::locales is empty. Set some using the setLocales method.', get_class($this)));
         }
-        $headerString = trim($headerString);
 
-        if (true === empty($headerString)) {
+        if (null === $headerString || true === empty(trim($headerString))) {
             return reset($this->locales);
         }
         $acceptLanguages = explode(',', $headerString);
@@ -43,12 +40,8 @@ class HttpHeaderUtility
     /**
      * filter an Accept-Language header string according to the given quality and drop
      * languages that are not supported in $this->locales.
-     *
-     * @param $acceptLanguages
-     *
-     * @return array
      */
-    protected function filterAndOrderAcceptLanguages($acceptLanguages)
+    protected function filterAndOrderAcceptLanguages(array $acceptLanguages): array
     {
         $orderedAcceptLangs = [];
         foreach ($acceptLanguages as $acceptLanguage) {
@@ -81,8 +74,6 @@ class HttpHeaderUtility
     /**
      * get the part before the first hyphen ("-") in a language string.
      *
-     * @param $acceptLanguage
-     *
      * @return string
      */
     protected function parseShortAcceptLanguage($acceptLanguage)
@@ -97,8 +88,6 @@ class HttpHeaderUtility
 
     /**
      * parse the quality string after a language string.
-     *
-     * @param $qualityString
      *
      * @return float|int
      */

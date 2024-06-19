@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -19,7 +18,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @extends BaseRepository<Participant>
+ * @extends BaseRepository<int, Participant>
  */
 class ParticipantRepository extends BaseRepository implements ParticipantRepositoryInterface
 {
@@ -34,8 +33,9 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     protected ParticipationHelper $participationHelper;
 
-    public function __construct(EntityManagerInterface $entityManager, string $entityClass, ParticipationHelper $participationHelper)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager, string $entityClass, ParticipationHelper $participationHelper
+    ) {
         parent::__construct($entityManager, $entityClass);
 
         $this->participationHelper = $participationHelper;
@@ -47,7 +47,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     public function getParticipantsOnDays(
         DateTime $startDate,
         DateTime $endDate,
-        Profile $profile = null
+        ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
@@ -90,7 +90,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
-        if ($result && is_array($result) && count($result) >= 1) {
+        if (is_array($result) && count($result) >= 1) {
             return (float) ($result[0]['total_cost'] ?? 0.0);
         }
 
@@ -124,6 +124,11 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         return $queryBuilder->getQuery()->execute();
     }
 
+    /**
+     * @return ((false|int|mixed)[][]|mixed)[][]
+     *
+     * @psalm-return array<array{name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
+     */
     public function findCostsGroupedByUserGroupedByMonth(): array
     {
         $costs = $this->findCostsPerMonthPerUser();
@@ -247,7 +252,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         $participants = $queryBuilder->getQuery()->execute();
 
-        return $this->participationHelper->sortParticipantsByName($this, $participants);
+        return $this->participationHelper->sortParticipantsByName($participants);
     }
 
     protected function getQueryBuilderWithOptions(array $options): QueryBuilder
@@ -424,6 +429,8 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     /**
      * Gets number of participants booked for a slot on a given day.
+     *
+     * @psalm-return 0|positive-int
      */
     public function getCountBySlot(Slot $slot, DateTime $date): int
     {
@@ -445,6 +452,8 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     /**
      * Gets number of participants booked for a certain meal.
+     *
+     * @psalm-return 0|positive-int
      */
     public function getCountByMeal(Meal $meal): int
     {

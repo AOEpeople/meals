@@ -10,39 +10,39 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
     private InteractiveLoginSubscriber $iaLoginSubscriber;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->clearAllTables();
+
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = self::getContainer()->get('security.user_password_hasher');
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers($passwordHasher),
         ]);
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
 
         /** @var ProfileRepositoryInterface $profileRepo */
-        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
 
         $this->iaLoginSubscriber = new InteractiveLoginSubscriber($entityManager, $profileRepo);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->clearAllTables();
     }
 
     public function testOnSecurityInteractiveLoginWithNonHiddenUser(): void
@@ -80,7 +80,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         $userInterfaceMock = $this->getMockBuilder(UserInterface::class)
             ->getMock();
         $userInterfaceMock->expects($this->once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn(parent::USER_STANDARD);
 
         $tokenInterfaceMock = $this->getMockBuilder(TokenInterface::class)
@@ -90,14 +90,6 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
             ->method('getUser')
             ->willReturn($userInterfaceMock);
 
-        $iaLoginEventMock = $this->getMockBuilder(InteractiveLoginEvent::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $iaLoginEventMock
-            ->expects($this->once())
-            ->method('getAuthenticationToken')
-            ->willReturn($tokenInterfaceMock);
-
-        return $iaLoginEventMock;
+        return new InteractiveLoginEvent(new Request(), $tokenInterfaceMock);
     }
 }

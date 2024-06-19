@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
+/**
+ * @implements DataTransformerInterface<Profile, string>
+ */
 class ProfileToStringTransformer implements DataTransformerInterface
 {
     private EntityManagerInterface $objectManager;
@@ -18,7 +21,7 @@ class ProfileToStringTransformer implements DataTransformerInterface
 
     public function transform($value): string
     {
-        if (null === $value || !$value instanceof Profile) {
+        if (!($value instanceof Profile)) {
             return '';
         }
 
@@ -32,7 +35,7 @@ class ProfileToStringTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value): ?Profile
     {
-        if (null === $value || !is_string($value)) {
+        if (!is_string($value)) {
             return null;
         }
 

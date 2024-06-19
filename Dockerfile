@@ -12,7 +12,7 @@ COPY public .
 RUN NODE_ENV=production yarn run build
 
 # build production container
-FROM php:7.4-fpm-alpine
+FROM php:8.3-fpm-alpine
 RUN apk --no-cache add \
         icu-dev \
         unzip \
@@ -42,7 +42,6 @@ USER www-data:www-data
 # add composer dependencies
 COPY --chown=www-data:www-data composer.json composer.lock ./
 RUN composer install \
-        --no-plugins \
         --no-scripts \
         --optimize-autoloader \
         --prefer-dist

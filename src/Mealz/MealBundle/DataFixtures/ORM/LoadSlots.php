@@ -16,9 +16,6 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
      */
     private const ORDER_NUMBER = 4;
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $slotItems = [
@@ -67,9 +64,6 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

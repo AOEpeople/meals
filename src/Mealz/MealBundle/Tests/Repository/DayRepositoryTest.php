@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 
 class DayRepositoryTest extends AbstractDatabaseTestCase
 {
@@ -27,7 +28,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
             new LoadDays(),
         ]);
 
-        $this->dayRepository = self::$container->get(DayRepository::class);
+        $this->dayRepository = self::getContainer()->get(DayRepository::class);
     }
 
     /**
@@ -44,7 +45,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
     /**
      * @test
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDayByDate(): void
     {
@@ -60,7 +61,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
     /**
      * @test
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function noDayByDate(): void
     {
@@ -74,7 +75,8 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
         while (!$notFound) {
             $randomTimestamp = random_int($startTime->getTimestamp(), $endTime->getTimestamp());
             $dateTimeWithNoDay->setTimestamp($randomTimestamp);
-            $daysOnRandomDateTime = $dayCollection->filter(fn (Day $day) => $dateTimeWithNoDay->format('Y-m-d') === $day->getDateTime()->format('Y-m-d'));
+            $daysOnRandomDateTime = $dayCollection->filter(fn (Day $day
+            ) => $dateTimeWithNoDay->format('Y-m-d') === $day->getDateTime()->format('Y-m-d'));
             $notFound = $daysOnRandomDateTime->isEmpty();
         }
 

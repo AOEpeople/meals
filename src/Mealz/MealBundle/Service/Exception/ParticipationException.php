@@ -18,7 +18,7 @@ class ParticipationException extends Exception
 
     private array $context;
 
-    public function __construct($message = '', $code = 0, Throwable $previous = null, array $context = [])
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null, array $context = [])
     {
         parent::__construct($message, $code, $previous);
 

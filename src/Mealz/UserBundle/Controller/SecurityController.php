@@ -5,16 +5,24 @@ namespace App\Mealz\UserBundle\Controller;
 use Error;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class SecurityController extends AbstractController
 {
-    public function loginAction(Request $request): Response
+    private TokenStorageInterface $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function login(Request $request): RedirectResponse
     {
         // If Keycloak is enabled, redirect to the Meals home
-        $token = $this->get('security.token_storage')->getToken();
+        $token = $this->tokenStorage->getToken();
         if ($token instanceof OAuthToken) {
             return $this->redirectToRoute('MealzMealBundle_home');
         }
@@ -22,14 +30,13 @@ class SecurityController extends AbstractController
         $session = $request->getSession();
 
         // get the login error if there is one
-        if ($request->attributes->has(Security::AUTHENTICATION_ERROR)) {
+        if ($request->attributes->has(SecurityRequestAttributes::AUTHENTICATION_ERROR)) {
             $error = $request->attributes->get(
-                Security::AUTHENTICATION_ERROR
+                SecurityRequestAttributes::AUTHENTICATION_ERROR
             );
             throw new Error($error);
         } else {
-            $error = $session->get(Security::AUTHENTICATION_ERROR);
-            $session->remove(Security::AUTHENTICATION_ERROR);
+            $session->remove(SecurityRequestAttributes::AUTHENTICATION_ERROR);
         }
 
         return $this->redirectToRoute('MealzMealBundle_home');

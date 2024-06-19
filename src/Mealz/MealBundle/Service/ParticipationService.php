@@ -138,7 +138,7 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
+    private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): Participant
     {
         $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
         $meal->participants->add($participant);
@@ -205,6 +205,9 @@ class ParticipationService
         return null;
     }
 
+    /**
+     * @psalm-return 0|positive-int
+     */
     public function getCountOfActiveParticipationsByDayAndUser(DateTime $dateTime, Profile $profile): int
     {
         $activeParticipations = $this->participantRepo->getParticipantsOnDays(
@@ -248,11 +251,21 @@ class ParticipationService
         return $this->participantRepo->getParticipantsByDay($day->getDateTime(), ['load_meal' => false]);
     }
 
+    /**
+     * @return int[][][][]
+     *
+     * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
+     */
     public function getParticipationListBySlots(Day $day, bool $getProfile = false): array
     {
         return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime(), $getProfile);
     }
 
+    /**
+     * @return (int|null)[]
+     *
+     * @psalm-return list<int|null>
+     */
     public function getDishesByDayAndProfile(Day $day, Profile $profile): array
     {
         $meals = $day->getMeals();
@@ -280,6 +293,11 @@ class ParticipationService
         return $result;
     }
 
+    /**
+     * @return Participant[]
+     *
+     * @psalm-return list<Participant>
+     */
     public function getParticipationsByDayAndProfile(Profile $profile, Day $day): array
     {
         $result = [];

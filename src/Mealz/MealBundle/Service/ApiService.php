@@ -35,6 +35,10 @@ class ApiService
 
     /**
      * Merge participation and transactions into 1 array.
+     *
+     * @return ((DateTime|false|float|int|string)[][]|float)[]
+     *
+     * @psalm-return array{0: float, 1: list<array{type: 'credit'|'debit', timestamp: false|int|string, date: DateTime, description_en: string, description_de: string, amount: float}>}
      */
     public function getFullTransactionHistory(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
     {
@@ -118,11 +122,16 @@ class ApiService
             && $type === gettype($parameters[$key]);
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
         return $this->eventPartSrv->getEventParticipationData($day, $profile);
     }
 
+    /**
+     * @return (array|string)[]|null
+     *
+     * @psalm-return array{name: string, participants: array}|null
+     */
     public function getEventParticipationInfo(Day $day): ?array
     {
         if (null === $day->getEvent()) {
@@ -135,7 +144,7 @@ class ApiService
         ];
     }
 
-    public function hasCombiReachedLimit(Day $day)
+    public function hasCombiReachedLimit(Day $day): bool
     {
         $hasReachedLimit = false;
         $mealReachedLimits = [];
@@ -157,13 +166,13 @@ class ApiService
         return $hasReachedLimit;
     }
 
-    public function isMealOpen(Meal $meal)
+    public function isMealOpen(Meal $meal): bool
     {
-        return false === $meal->isLocked() &&
-            true === $meal->isOpen() &&
-            false === $meal->hasReachedParticipationLimit() &&
-            (false === $meal->isCombinedMeal() ||
-            false === $this->hasCombiReachedLimit($meal->getDay()));
+        return false === $meal->isLocked()
+            && true === $meal->isOpen()
+            && false === $meal->hasReachedParticipationLimit()
+            && (false === $meal->isCombinedMeal()
+            || false === $this->hasCombiReachedLimit($meal->getDay()));
     }
 
     private function getEventParticipants(Day $day): array

@@ -7,19 +7,23 @@ use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<Profile>
+ */
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    private const ROLE_ADMIN = 'ROLE_ADMIN';
-    private const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    private const ROLE_FINANCE = 'ROLE_FINANCE';
-    private const ROLE_USER = 'ROLE_USER';
+    private const string ROLE_ADMIN = 'ROLE_ADMIN';
+    private const string ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+    private const string ROLE_FINANCE = 'ROLE_FINANCE';
+    private const string ROLE_USER = 'ROLE_USER';
 
     /**
      * Map Keycloak Roles to Meals ones.
@@ -43,29 +47,26 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $this->roleRepo = $roleRepo;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->entityManager->find(Profile::class, $username);
+        $user = $this->entityManager->find(Profile::class, $identifier);
         if ($user instanceof UserInterface) {
             return $user;
         }
 
-        $exception = new UsernameNotFoundException($username . ': user not found', 1629778235);
-        $exception->setUsername($username);
+        $exception = new UserNotFoundException($identifier . ': user not found', 1629778235);
+        $exception->setUserIdentifier($identifier);
         throw $exception;
     }
 
     /**
-     * {@inheritdoc}
+     * @throws Exception
      */
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response)
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $username = $response->getNickname();
-        $firstName = $response->getFirstName();
-        $lastName = $response->getLastName();
+        $firstName = $response->getFirstName() ?? '';
+        $lastName = $response->getLastName() ?? '';
         $email = $response->getEmail();
 
         $idpUserRoles = $response->getData()['roles'] ?? [];
@@ -73,30 +74,28 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $roles = (null === $role) ? [] : [$role];
 
         try {
-            $user = $this->loadUserByUsername($username);
-        } catch (UsernameNotFoundException $exception) {
+            $user = $this->loadUserByIdentifier($username);
+        } catch (UserNotFoundException $exception) {
             return $this->createProfile($username, $firstName, $lastName, $email, $roles);
+        }
+
+        if (!($user instanceof Profile)) {
+            throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
         }
 
         return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (false === $this->supportsClass(get_class($user))) {
-            throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)), 1716299773);
         }
 
-        return $this->loadUserByUsername($user->getUsername());
+        return $this->loadUserByIdentifier($user->getUserIdentifier());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return Profile::class === $class || is_subclass_of($class, Profile::class);
     }

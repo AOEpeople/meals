@@ -30,12 +30,6 @@ node_modules
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
-
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
@@ -51,3 +45,12 @@ test_ci_cypress.sh
 tests/e2e/cypress/e2e/FillDBWithStuff.cy.ts
 tests/e2e/cypress/downloads/result.pdf
 src/Resources/style/output.css.map
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

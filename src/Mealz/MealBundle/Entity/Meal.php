@@ -14,55 +14,41 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
  * @MealBundleAssert\DishConstraint()
- * @ORM\Table(name="meal")
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'meal')]
 class Meal implements JsonSerializable
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Dish::class, cascade: ['refresh'], fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: 'dish_id', referencedColumnName: 'id')]
     private Dish $dish;
 
-    /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
     private float $price = 0.0;
 
-    /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
-     */
+    #[Assert\NotBlank]
+    #[ORM\Column(name: 'participation_limit', type: 'integer', nullable: false)]
     private int $participationLimit = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
-     * @ORM\JoinColumn(name="day", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Day::class, inversedBy: 'meals')]
+    #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
     private Day $day;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Type(type="DateTime")
-     * @ORM\Column(type="datetime", nullable=FALSE)
-     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private DateTime $dateTime;
 
     /**
-     * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
-     *
      * @psalm-var Collection<int, Participant>
      */
+    #[ORM\OneToMany(mappedBy: 'meal', targetEntity: Participant::class)]
     public ?Collection $participants = null;
 
     public function __construct(Dish $dish, Day $day)
@@ -108,6 +94,9 @@ class Meal implements JsonSerializable
         return $this->dish;
     }
 
+    /**
+     * @psalm-return ArrayCollection<int, Participant>
+     */
     public function getParticipants(): ArrayCollection
     {
         if (null === $this->participants) {
@@ -190,23 +179,6 @@ class Meal implements JsonSerializable
         return false;
     }
 
-    /**
-     * @TODO don't load every participant object (raw sql query in repo?)
-     */
-    public function getTotalConfirmedParticipations(): int
-    {
-        $totalParticipation = 0;
-
-        foreach ($this->getParticipants() as $participation) {
-            /* @var Participant $participation */
-            if (true === $participation->isConfirmed()) {
-                ++$totalParticipation;
-            }
-        }
-
-        return $totalParticipation;
-    }
-
     public function hasReachedParticipationLimit(): bool
     {
         $participations = $this->getParticipants()->count();
@@ -220,6 +192,11 @@ class Meal implements JsonSerializable
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
     }
 
+    /**
+     * @return (DateTime|int|string|null)[]
+     *
+     * @psalm-return array{id: int|null, dish: null|string, participationLimit: int, day: int|null, dateTime: DateTime, lockTime: DateTime}
+     */
     public function jsonSerialize(): array
     {
         return [

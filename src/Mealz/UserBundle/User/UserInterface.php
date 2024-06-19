@@ -13,5 +13,5 @@ interface UserInterface
 {
     public function getProfile(): ?Profile;
 
-    public function setProfile(Profile $profile);
+    public function setProfile(Profile $profile): void;
 }

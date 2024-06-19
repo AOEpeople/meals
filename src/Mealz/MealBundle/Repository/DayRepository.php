@@ -9,7 +9,7 @@ use DateTime;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @extends BaseRepository<Day>
+ * @extends BaseRepository<int, Day>
  */
 class DayRepository extends BaseRepository implements DayRepositoryInterface
 {
@@ -30,16 +30,13 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
         $queryBuilder->setParameter(':date', $date . '%');
 
         $result = $queryBuilder->getQuery()->getResult();
-        if ($result && is_array($result) && count($result) >= 1) {
+        if (is_array($result) && count($result) >= 1) {
             return array_shift($result);
         }
 
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
     {
         $queryBuilder = $this->createQueryBuilder('d');
@@ -55,6 +52,9 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * @psalm-return Day::class
+     */
     public function getClassName(): string
     {
         return Day::class;

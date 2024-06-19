@@ -53,7 +53,7 @@ class OfferService
         return $offers;
     }
 
-    public function updateOfferCount(array &$offers, string $key, array $dishes = [])
+    public function updateOfferCount(array &$offers, string $key, array $dishes = []): void
     {
         if (true === isset($offers[$key])) {
             ++$offers[$key]['count'];

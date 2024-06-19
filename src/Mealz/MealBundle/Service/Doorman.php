@@ -6,10 +6,12 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
-use Symfony\Component\Security\Core\Security;
+use DateTime;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 /**
- * central business logic to determine if the currently logged in user is allowed to do a certain action.
+ * central business logic to determine if the currently logged-in user is allowed to do a certain action.
  *
  * For instance a user should not be allowed to register for a meal, that
  * starts in 10 minutes, but maybe a user with a special role ("cook") should be able
@@ -19,6 +21,7 @@ use Symfony\Component\Security\Core\Security;
  *
  * This logic should be accessible in controllers, templates and services.
  */
+#[Autoconfigure(lazy: true)]
 class Doorman
 {
     /**
@@ -26,7 +29,7 @@ class Doorman
      *
      * @see $this->hasAccessTo
      */
-    private const AT_MEAL_PARTICIPATION = 0;
+    private const int AT_MEAL_PARTICIPATION = 0;
 
     /**
      * Current timestamp.
@@ -51,8 +54,8 @@ class Doorman
             $mealIsAvailable = $mealAvailability;
         } else {
             $mealIsAvailable =
-                (true === $mealAvailability['available']) &&
-                ((1 > count($dishSlugs)) || (0 === count(array_diff($mealAvailability['availableWith'], $dishSlugs))));
+                (true === $mealAvailability['available'])
+                && ((1 > count($dishSlugs)) || (0 === count(array_diff($mealAvailability['availableWith'], $dishSlugs))));
         }
 
         if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $mealIsAvailable) {
@@ -121,7 +124,7 @@ class Doorman
         return $this->security->isGranted('ROLE_KITCHEN_STAFF');
     }
 
-    public function isToggleParticipationAllowed(\DateTime $lockPartDateTime): bool
+    public function isToggleParticipationAllowed(DateTime $lockPartDateTime): bool
     {
         // is it still allowed to participate in the meal by now?
         return $lockPartDateTime->getTimestamp() > $this->now;

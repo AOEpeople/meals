@@ -6,47 +6,30 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishCollection;
-use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
-use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class DishController extends BaseListController
 {
-    private float $defaultPrice;
-    private CategoryRepositoryInterface $categoryRepository;
-    private DishRepository $dishRepository;
-    private EntityManagerInterface $em;
-    private DishService $dishService;
-    private ApiService $apiService;
-    private LoggerInterface $logger;
-
     public function __construct(
-        float $price,
-        ApiService $apiService,
-        CategoryRepository $categoryRepository,
-        DishRepository $dishRepository,
-        DishService $dishService,
-        EntityManagerInterface $em,
-        LoggerInterface $logger
+        private readonly float $price,
+        private readonly ApiService $apiService,
+        private readonly CategoryRepositoryInterface $categoryRepository,
+        private readonly DishRepositoryInterface $dishRepository,
+        private readonly DishService $dishService,
+        private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger
     ) {
-        $this->defaultPrice = $price;
-        $this->apiService = $apiService;
-        $this->categoryRepository = $categoryRepository;
-        $this->dishRepository = $dishRepository;
-        $this->dishService = $dishService;
-        $this->em = $em;
-        $this->logger = $logger;
     }
 
     /**
@@ -72,7 +55,7 @@ class DishController extends BaseListController
             }
         }
 
-        return new JsonResponse($dishes, 200);
+        return new JsonResponse($dishes, Response::HTTP_OK);
     }
 
     /**
@@ -83,9 +66,9 @@ class DishController extends BaseListController
         try {
             $parameters = json_decode($request->getContent(), true);
             if (
-                false === isset($parameters['titleDe']) ||
-                false === isset($parameters['titleEn']) ||
-                false === isset($parameters['oneServingSize'])
+                false === isset($parameters['titleDe'])
+                || false === isset($parameters['titleEn'])
+                || false === isset($parameters['oneServingSize'])
             ) {
                 throw new Exception('201: Missing parameters');
             }
@@ -94,7 +77,7 @@ class DishController extends BaseListController
             $dish->setTitleDe($parameters['titleDe']);
             $dish->setTitleEn($parameters['titleEn']);
             $dish->setOneServingSize($parameters['oneServingSize']);
-            $dish->setPrice($this->defaultPrice);
+            $dish->setPrice($this->price);
 
             if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);
@@ -109,11 +92,11 @@ class DishController extends BaseListController
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish create error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -132,11 +115,11 @@ class DishController extends BaseListController
             }
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish delete error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -153,11 +136,11 @@ class DishController extends BaseListController
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse($dish, 200);
+            return new JsonResponse($dish, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish update error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

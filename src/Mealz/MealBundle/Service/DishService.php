@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use Exception;
-use PhpCollection\Set;
 
 class DishService
 {
@@ -98,16 +97,16 @@ class DishService
 
     public function getUniqueDishesFromMeals(array $meals): array
     {
-        $uniqueMeals = new Set();
+        $uniqueMeals = [];
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             if (false === ($meal->getDish() instanceof DishVariation)) {
-                $uniqueMeals->add($meal->getDish());
+                $uniqueMeals[] = $meal->getDish();
             } else {
-                $uniqueMeals->add($meal->getDish()->getParent());
+                $uniqueMeals[] = $meal->getDish()->getParent();
             }
         }
 
-        return $uniqueMeals->all();
+        return $uniqueMeals;
     }
 }

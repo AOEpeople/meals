@@ -37,7 +37,7 @@ class MealControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -190,10 +190,14 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Searching a Day with 3 options. I adapted fixtures so we always have 1 day with 3 options
      * (1 Dish without variations and 1 Dish with 2 variations).
+     *
+     * @return (Meal|string)[][]
+     *
+     * @psalm-return list<array{0: string, 1: Meal}>
      */
     private function getJoinAMealData(): array
     {
-        $mealRepository = self::$container->get(MealRepositoryInterface::class);
+        $mealRepository = self::getContainer()->get(MealRepositoryInterface::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
         $dataProvider = [];
@@ -212,8 +216,9 @@ class MealControllerTest extends AbstractControllerTestCase
      *
      * @param bool $enrollmentStatus flag whether enrollment should be successful or not
      */
-    public function testEnrollAsGuest(string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus): void
-    {
+    public function testEnrollAsGuest(
+        string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus
+    ): void {
         $this->markTestSkipped('frontend test');
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
@@ -260,6 +265,11 @@ class MealControllerTest extends AbstractControllerTestCase
         }
     }
 
+    /**
+     * @return (bool|string)[][]
+     *
+     * @psalm-return array{0: array{0: string, 1: string, 2: string, 3: false, 4: false}, 1: array{0: '', 1: string, 2: string, 3: true, 4: false}, 2: array{0: string, 1: '', 2: string, 3: true, 4: false}, 3: array{0: string, 1: string, 2: '', 3: true, 4: true}, 4: array{0: string, 1: string, 2: string, 3: true, 4: true}}
+     */
     public function getGuestEnrollmentData(): array
     {
         $time = time();
@@ -278,13 +288,13 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $availableMeal = null;
 
-        $mealRepository = self::$container->get(MealRepositoryInterface::class);
+        $mealRepository = self::getContainer()->get(MealRepositoryInterface::class);
         $criteria = Criteria::create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
-            $doorman = self::$container->get('mealz_meal.doorman');
+            $doorman = self::getContainer()->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
                 if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
                     $availableMeal = $meal;

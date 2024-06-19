@@ -1,40 +1,12 @@
 <?xml version="1.0"?>
 <phpmd-baseline>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/AccountingBundle/Controller/Payment/EcashController.php"/>
-  <violation rule="PHPMD\Rule\Naming\LongVariable" file="src/Mealz/AccountingBundle/ParticipantList/ParticipantListFactory.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/AccountingBundle/Service/TransactionService.php"/>
-  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/AccountingBundle/Tests/Controller/Payment/CashControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/AccountingBundle/Tests/Repository/TransactionRepositoryTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/AccountingBundle/Tests/Service/TransactionServiceTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/BaseController.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ApiController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealAdminController.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealGuestController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ParticipantController.php"/>
-  <violation rule="PHPMD\Rule\Naming\LongVariable" file="src/Mealz/MealBundle/Entity/Day.php"/>
+  <violation rule="PHPMD\Rule\Design\LongParameterList" file="src/Mealz/MealBundle/Controller/ParticipantController.php" method="__construct"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/CombinedMealService.php" method="update"/>
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Mealz/MealBundle/Service/CombinedMealService.php" method="update"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/Link.php" method="linkMeal"/>
-  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/ParticipationCountService.php" method="getParticipationByDay"/>
-  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php"/>
-  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php"/>
-  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php" method="getDish"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Service/AbstractParticipationServiceTest.php"/>
-  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Tests/Service/CombinedMealServiceTest.php" method="updateWeek"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Service/ParticipationCountServiceTest.php"/>
-  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Mealz/MealBundle/Tests/Service/ParticipationCountServiceTest.php" method="checkParticipationIsPossibleForMealsWithLimits"/>
-  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTest.php"/>
-  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/UserBundle/Entity/Profile.php"/>
-  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Resources/node_modules/easy-autocomplete/demo/api/countries.php"/>
-  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Resources/node_modules/easy-autocomplete/test/core/remote/countries.php"/>
-  <violation rule="PHPMD\Rule\Design\CountInLoopExpression" file="src/Resources/node_modules/flatted/php/flatted.php"/>
-  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Resources/node_modules/flatted/php/flatted.php" method="asString"/>
-  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Command/KeepAliveConnectionCommand.php"/>
-  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Event/Subscriber/KeepAliveConnectionSubscriber.php"/>
 </phpmd-baseline>

@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use Closure;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -46,6 +47,11 @@ class SlotService
         $this->em->flush();
     }
 
+    /**
+     * @return (int|mixed)[][]
+     *
+     * @psalm-return list<array{id: mixed, title: mixed, count: int, limit: mixed, slug: mixed}>
+     */
     public function getSlotStatusForDay(DateTime $datetime): array
     {
         $status = $this->getSlotsStatusOn($datetime);
@@ -118,8 +124,10 @@ class SlotService
      * Get status of booked slots from $startDate to $endDate.
      *
      * The return results are indexed by a composite key comprised of concatenated date and slot-ID.
+     *
+     * @psalm-return \Closure(DateTime, Slot):int
      */
-    private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): callable
+    private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): Closure
     {
         $slotBookingStatus = [];
         $bookedSlotsStatus = $this->participantRepo->getCountBySlots($startDate, $endDate);
@@ -136,6 +144,9 @@ class SlotService
         };
     }
 
+    /**
+     * @psalm-return 0|positive-int
+     */
     public function getSlotParticipationCountOnDay(Day $day, Slot $slot): int
     {
         $count = [];
@@ -153,6 +164,11 @@ class SlotService
         return count($count);
     }
 
+    /**
+     * @return object[]
+     *
+     * @psalm-return list<object>
+     */
     public function getAllActiveSlots(): array
     {
         return $this->slotRepo->findBy(['deleted' => 0, 'disabled' => 0]);

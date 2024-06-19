@@ -1,7 +1,7 @@
 controllers:
-    resource: ../../src/Mealz/MealBundle/Controller/
-    type: annotation
+  resource: ../../src/Mealz/MealBundle/Controller/
+  type: attribute
 
 kernel:
-    resource: ../../src/Kernel.php
-    type: annotation
+  resource: ../../src/Kernel.php
+  type: attribute

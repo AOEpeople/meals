@@ -7,6 +7,9 @@ namespace App\Mealz\UserBundle\Repository;
 use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Role>
+ */
 interface RoleRepositoryInterface extends ObjectRepository
 {
     /**

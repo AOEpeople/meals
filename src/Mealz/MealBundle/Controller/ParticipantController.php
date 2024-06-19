@@ -17,62 +17,47 @@ use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_USER')")
- */
+#[IsGranted('ROLE_USER')]
 class ParticipantController extends BaseController
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private EventService $eventSrv;
-    private ParticipationHelper $participationHelper;
-    private ParticipationService $participationSrv;
-    private MealRepositoryInterface $mealRepo;
-    private SlotRepositoryInterface $slotRepo;
-    private DayRepositoryInterface $dayRepo;
-    private ParticipantRepositoryInterface $participantRepo;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        EventService $eventSrv,
-        ParticipationHelper $participationHelper,
-        ParticipationService $participationSrv,
-        MealRepositoryInterface $mealRepo,
-        SlotRepositoryInterface $slotRepo,
-        DayRepositoryInterface $dayRepo,
-        ParticipantRepositoryInterface $participantRepo
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly EventService $eventSrv,
+        private readonly ParticipationHelper $participationHelper,
+        private readonly ParticipationService $participationSrv,
+        private readonly MealRepositoryInterface $mealRepo,
+        private readonly SlotRepositoryInterface $slotRepo,
+        private readonly DayRepositoryInterface $dayRepo,
+        private readonly ParticipantRepositoryInterface $participantRepo,
+        private readonly LoggerInterface $logger,
+        private readonly Doorman $doorman
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eventSrv = $eventSrv;
-        $this->participationSrv = $participationSrv;
-        $this->mealRepo = $mealRepo;
-        $this->slotRepo = $slotRepo;
-        $this->dayRepo = $dayRepo;
-        $this->participantRepo = $participantRepo;
-        $this->participationHelper = $participationHelper;
     }
 
     /**
      * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
     public function joinMeal(Request $request): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $parameters = json_decode($request->getContent(), true);
@@ -85,13 +70,13 @@ class ParticipantController extends BaseController
         try {
             $result = $this->participationSrv->join($profile, $meal, $slot, $parameters['dishSlugs']);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('join meal error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => '402: ' . $e->getMessage()], 500);
+            return new JsonResponse(['message' => '402: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if (null === $result) {
-            return new JsonResponse(['message' => '403: User is not allowed to join meal'], 500);
+            return new JsonResponse(['message' => '403: User is not allowed to join meal'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
@@ -112,34 +97,31 @@ class ParticipantController extends BaseController
                 'participantId' => $result['participant']->getId(),
                 'mealState' => $this->participationHelper->getMealState($meal),
             ],
-            200
+            Response::HTTP_OK
         );
     }
 
     /**
      * Lets the currently logged-in user either leave a meal, or put it up for offer.
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
-    public function leaveMeal(Request $request): JsonResponse
+    public function leaveMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
         $parameters = json_decode($request->getContent(), true);
         $meal = $this->mealRepo->find($parameters['mealId']);
         $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
 
-        if (false === $this->getDoorman()->isUserAllowedToLeave($meal)) {
-            return new JsonResponse(null, 403);
+        if (false === $this->doorman->isUserAllowedToLeave($meal)) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         } elseif (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $participant->setCombinedDishes(null);
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);
         $entityManager->flush();
 
@@ -156,7 +138,7 @@ class ParticipantController extends BaseController
         return new JsonResponse([
             'slotId' => $slotID,
             'mealState' => $this->participationHelper->getMealState($meal),
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     public function updateCombinedMeal(
@@ -164,16 +146,16 @@ class ParticipantController extends BaseController
         Participant $participant,
         ParticipationService $participationSrv
     ): JsonResponse {
-        $dishSlugs = $request->request->get('dishes', []);
+        $dishSlugs = $request->request->get('dishes', null);
 
         try {
-            $participationSrv->updateCombinedMeal($participant, $dishSlugs);
+            $participationSrv->updateCombinedMeal($participant, $dishSlugs ?? []);
         } catch (ParticipationException $pex) {
-            return new JsonResponse(['message' => $pex->getMessage()], 422);
-        } catch (Exception $exc) {
-            $this->logException($exc);
+            return new JsonResponse(['message' => $pex->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (Exception $e) {
+            $this->logger->error('update combined meal error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => 'unexpected error'], 500);
+            return new JsonResponse(['message' => 'unexpected error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
@@ -186,65 +168,55 @@ class ParticipantController extends BaseController
                     $participant->getCombinedDishes()->toArray()
                 ),
             ],
-            200
+            Response::HTTP_OK
         );
     }
 
     /**
      * Makes a booked meal by a participant to be available for taken over.
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
-    public function offerMeal(Request $request): JsonResponse
+    public function offerMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        if (false === is_object($this->getUser())) {
-            return $this->ajaxSessionExpiredRedirect();
-        }
-
         $participant = $this->getParticipantFromRequest($request);
         if (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
         $meal = $participant->getMeal();
 
         if ($this->getProfile() !== $participant->getProfile()
-            || false === $this->getDoorman()->isUserAllowedToSwap($meal)) {
-            return new JsonResponse(null, 403);
+            || false === $this->doorman->isUserAllowedToSwap($meal)) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $participant->setOfferedAt(time());
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($participant);
         $entityManager->flush();
 
         // trigger meal-offered event
         $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     /**
      * Cancels an offered meal by a participant, so it can no longer be taken over by other users.
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
-    public function cancelOfferedMeal(Request $request): JsonResponse
+    public function cancelOfferedMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
 
         if (null === $parameters['mealId']) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $participant = $this->getParticipantFromRequest($request);
         if (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $participant->setOfferedAt(0);
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($participant);
         $entityManager->flush();
 
@@ -263,9 +235,7 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function getParticipationsForWeek(Week $week): JsonResponse
     {
         $days = $week->getDays();
@@ -284,16 +254,13 @@ class ParticipantController extends BaseController
             $response = $this->addParticipationInfo($response, $participants, $day);
         }
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, Response::HTTP_OK);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
-        $result = null;
 
         try {
             if (true === $meal->isCombinedMeal() && false === isset($parameters['combiDishes'])) {
@@ -322,24 +289,21 @@ class ParticipantController extends BaseController
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
                 'booked' => $participationData,
-            ], 200);
+            ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('error adding participant to meal', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
-    public function remove(Profile $profile, Meal $meal): JsonResponse
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
+    public function remove(EntityManagerInterface $entityManager, Profile $profile, Meal $meal): JsonResponse
     {
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             $participation->setCombinedDishes(null);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($participation);
             $entityManager->flush();
 
@@ -357,23 +321,21 @@ class ParticipantController extends BaseController
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
                 'booked' => $participationData,
-            ], 200);
+            ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('error removing participant from meal', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function getProfilesWithoutParticipation(Week $week): JsonResponse
     {
         $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
         $response = $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, Response::HTTP_OK);
     }
 
     /**
@@ -383,15 +345,15 @@ class ParticipantController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
         $participant = $meal->getParticipant($profile);
         if (null === $participant) {
-            return new JsonResponse(['message' => 'No participation found'], 404);
+            return new JsonResponse(['message' => 'No participation found'], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($participant->getCombinedDishes()->toArray(), 200);
+        return new JsonResponse($participant->getCombinedDishes()->toArray(), Response::HTTP_OK);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
@@ -419,12 +381,11 @@ class ParticipantController extends BaseController
      */
     private function logAdd(Meal $meal, Participant $participant): void
     {
-        if (false === is_object($this->getDoorman()->isKitchenStaff())) {
+        if (false === is_object($this->doorman->isKitchenStaff())) {
             return;
         }
 
-        $logger = $this->get('monolog.logger.balance');
-        $logger->info(
+        $this->logger->info(
             'admin added {profile} to {meal} (Participant: {participantId})',
             [
                 'participantId' => $participant->getId(),
@@ -436,9 +397,8 @@ class ParticipantController extends BaseController
 
     private function logRemove(Meal $meal, Participant $participant): void
     {
-        if (true === $this->getDoorman()->isKitchenStaff()) {
-            $logger = $this->get('monolog.logger.balance');
-            $logger->info(
+        if (true === $this->doorman->isKitchenStaff()) {
+            $this->logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
                 [
                     'profile' => $participant->getProfile(),

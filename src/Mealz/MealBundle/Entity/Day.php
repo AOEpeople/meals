@@ -9,57 +9,41 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="day")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'day')]
 class Day extends AbstractMessage implements JsonSerializable
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @Assert\Type(type="DateTime")
-     * @ORM\Column(type="datetime", nullable=FALSE)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private DateTime $dateTime;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Week", inversedBy="days")
-     * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Week::class, inversedBy: 'days')]
+    #[ORM\JoinColumn(name: 'week_id', referencedColumnName: 'id')]
     private Week $week;
 
     /**
-     * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
-     *
      * @var Collection<int, Meal>
      */
+    #[ORM\OneToMany(mappedBy: 'day', targetEntity: Meal::class, cascade: ['all'])]
     private Collection $meals;
 
-    /**
-     * @ORM\OneToOne(targetEntity="EventParticipation", mappedBy="day", cascade={"all"})
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
+    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
     private ?EventParticipation $event = null;
 
-    /**
-     * @Assert\Type(type="DateTime")
-     * @ORM\Column(type="datetime", nullable=TRUE)
-     */
-    private DateTime $lockParticipationDateTime;
+    #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
+    private DateTime $lockParticipationOn;
 
     public function __construct()
     {
         $this->dateTime = new DateTime();
         $this->week = $this->getDefaultWeek($this->dateTime);
-        $this->lockParticipationDateTime = $this->dateTime;
+        $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
     }
 
@@ -130,12 +114,12 @@ class Day extends AbstractMessage implements JsonSerializable
 
     public function getLockParticipationDateTime(): DateTime
     {
-        return $this->lockParticipationDateTime;
+        return $this->lockParticipationOn;
     }
 
     public function setLockParticipationDateTime(DateTime $lockDateTime): void
     {
-        $this->lockParticipationDateTime = $lockDateTime;
+        $this->lockParticipationOn = $lockDateTime;
     }
 
     public function __toString(): string
@@ -151,11 +135,18 @@ class Day extends AbstractMessage implements JsonSerializable
         $week = new Week();
         $week->setYear($year);
         $week->setCalendarWeek($calWeek);
+        /** @psalm-suppress InvalidArgument */
+        // TODO: check if future versions of psalm can deal with it
         $week->setDays(new ArrayCollection([$this]));
 
         return $week;
     }
 
+    /**
+     * @return (DateTime|array[][]|bool|int|null)[]
+     *
+     * @psalm-return array{dateTime: DateTime, lockParticipationDateTime: DateTime, week: int|null, meals: array<''|int, non-empty-list<array>>, event: int|null, enabled: bool}
+     */
     public function jsonSerialize(): array
     {
         $meals = [];
@@ -174,7 +165,7 @@ class Day extends AbstractMessage implements JsonSerializable
             'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
             'meals' => $meals,
-            'event' => null !== $this->event ? $this->event->getEvent()->getId() : null,
+            'event' => $this->event?->getEvent()->getId(),
             'enabled' => $this->isEnabled(),
         ];
     }

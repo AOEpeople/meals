@@ -31,14 +31,14 @@ class PayPalService
         $request = new OrdersGetRequest($orderID);
         $response = $this->sendRequest($request);
 
-        switch ($response->statusCode) {
-            case 200:
-                return $this->toPayPalOrder($response->result);
-            case 404:
-                return null;
-            default:
-                throw new RuntimeException(sprintf('unexpected api response, status: %d, path: %s, method: %s', $response->statusCode, $request->path, $request->verb), 1633425374);
-        }
+        return match ($response->statusCode) {
+            200 => $this->toPayPalOrder($response->result),
+            404 => null,
+            default => throw new RuntimeException(
+                sprintf('unexpected api response, status: %d, path: %s, method: %s', $response->statusCode, $request->path, $request->verb),
+                1633425374
+            ),
+        };
     }
 
     /**
@@ -49,11 +49,15 @@ class PayPalService
         try {
             return $this->client->execute($request);
         } catch (Exception $e) {
-            throw new RuntimeException(sprintf('api request error; path: %s, method: %s', $request->path, $request->verb), 1633507746, $e);
+            throw new RuntimeException(
+                sprintf('api request error; path: %s, method: %s', $request->path, $request->verb),
+                1633507746,
+                $e
+            );
         }
     }
 
-    private function toPayPalOrder($orderResp): PayPalOrder
+    private function toPayPalOrder(array|string|object $orderResp): PayPalOrder
     {
         if (!is_object($orderResp)) {
             throw new RuntimeException('invalid order response, expected object, got ' . gettype($orderResp));

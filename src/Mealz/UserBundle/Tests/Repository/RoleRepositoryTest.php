@@ -9,6 +9,9 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class RoleRepositoryTest extends AbstractDatabaseTestCase
 {
     private RoleRepositoryInterface $roleRepository;
@@ -22,7 +25,7 @@ class RoleRepositoryTest extends AbstractDatabaseTestCase
             new LoadRoles(),
         ]);
 
-        $this->roleRepository = self::$container->get(RoleRepositoryInterface::class);
+        $this->roleRepository = self::getContainer()->get(RoleRepositoryInterface::class);
     }
 
     /**

@@ -18,19 +18,16 @@ use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Security\Core\Security;
 
 class TransactionServiceTest extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         self::bootKernel();
@@ -38,7 +35,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
     }
 
@@ -64,7 +61,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $transactionService = new TransactionService($paypalServiceMock, $entityManager, $securityServiceMock);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
 
         // verify transaction
@@ -95,7 +92,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionMessage('login required');
 
         // call test method
-        $request = Request::create('', 'POST');
+        $request = Request::create('', Request::METHOD_POST);
         $transactionService->createFromRequest($request);
     }
 
@@ -117,10 +114,15 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectException(BadRequestHttpException::class);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $data);
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $data);
         $transactionService->createFromRequest($request);
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{'no json payload': array{0: ''}, 'wrong data': array{0: '["lorem", "ipsum"]'}, 'no order-id': array{0: string}}
+     */
     public function createFromRequestInvalidData(): array
     {
         return [
@@ -150,7 +152,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633509057);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -177,14 +179,14 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633513408);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
     private function getProfile(string $username): Profile
     {
         /** @var ProfileRepositoryInterface $profileRepo */
-        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->find($username);
 
         if (null === $profile) {

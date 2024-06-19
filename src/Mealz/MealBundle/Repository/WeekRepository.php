@@ -10,7 +10,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Class WeekRepository.
+ * @extends BaseRepository<int, Week>
  */
 class WeekRepository extends BaseRepository implements WeekRepositoryInterface
 {
@@ -24,7 +24,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
         return $this->findWeekByDate(new DateTime(), $options);
     }
 
-    public function getNextWeek(DateTime $date = null, array $options = []): ?Week
+    public function getNextWeek(?DateTime $date = null, array $options = []): ?Week
     {
         $date = (($date instanceof DateTime) === false) ? new DateTime() : $date;
         $nextWeek = $date->modify('next monday');
@@ -45,7 +45,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
         $query->where('w.id = ?1')
             ->setParameter(1, $week->getId());
 
-        return $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     public function findWeekByDate(DateTime $date, array $options = []): ?Week

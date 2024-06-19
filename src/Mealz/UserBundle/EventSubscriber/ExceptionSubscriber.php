@@ -13,9 +13,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -31,7 +28,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $exception = $event->getThrowable();
         if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException) {
-            $event->setResponse(new JsonResponse(null, 401));
+            $event->setResponse(new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED));
         }
     }
 }

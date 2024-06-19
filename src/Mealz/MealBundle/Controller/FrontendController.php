@@ -10,6 +10,6 @@ class FrontendController extends BaseController
 {
     public function renderIndex(): Response
     {
-        return $this->render('MealzMealBundle:Meals:index.html.twig');
+        return $this->render('@MealzMeal/Meals/index.html.twig');
     }
 }

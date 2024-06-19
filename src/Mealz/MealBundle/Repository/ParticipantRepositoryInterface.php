@@ -11,12 +11,15 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Participant>
+ */
 interface ParticipantRepositoryInterface extends ObjectRepository
 {
     /**
      * @return Participant[]
      */
-    public function getParticipantsOnDays(DateTime $startDate, DateTime $endDate, Profile $profile = null): array;
+    public function getParticipantsOnDays(DateTime $startDate, DateTime $endDate, ?Profile $profile = null): array;
 
     public function getTotalCost(string $username): float;
 

@@ -8,24 +8,20 @@ use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class CategoryController extends BaseListController
 {
-    private CategoryRepositoryInterface $categoryRepo;
-    private EntityManagerInterface $em;
-
     public function __construct(
-        CategoryRepositoryInterface $categoryRepo,
-        EntityManagerInterface $em
+        private readonly CategoryRepositoryInterface $categoryRepo,
+        private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger
     ) {
-        $this->categoryRepo = $categoryRepo;
-        $this->em = $em;
     }
 
     /**
@@ -35,7 +31,7 @@ class CategoryController extends BaseListController
     {
         $categories = $this->categoryRepo->findAll();
 
-        return new JsonResponse($categories, 200);
+        return new JsonResponse($categories, Response::HTTP_OK);
     }
 
     /**
@@ -56,11 +52,11 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
 
-            return new JsonResponse($category, 200);
+            return new JsonResponse($category, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('category update error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,12 +69,12 @@ class CategoryController extends BaseListController
             $this->em->remove($category);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('category delete error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     /**
@@ -89,10 +85,10 @@ class CategoryController extends BaseListController
         $parameters = json_decode($request->getContent(), true);
 
         if (
-            true === isset($parameters['titleDe']) &&
-            true === isset($parameters['titleEn']) &&
-            null === $this->getCategoryByTitleEn($parameters['titleEn']) &&
-            null === $this->getCategoryByTitleDe($parameters['titleDe'])
+            true === isset($parameters['titleDe'])
+            && true === isset($parameters['titleEn'])
+            && null === $this->getCategoryByTitleEn($parameters['titleEn'])
+            && null === $this->getCategoryByTitleDe($parameters['titleDe'])
         ) {
             $category = new Category();
             $category->setTitleEn($parameters['titleEn']);
@@ -100,10 +96,10 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
         } else {
-            return new JsonResponse(['message' => '301: Category titles not set or they already exist'], 500);
+            return new JsonResponse(['message' => '301: Category titles not set or they already exist'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     private function getCategoryByTitleEn(string $title): ?Category

@@ -46,7 +46,9 @@ class LocalisationListener implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @return (int|string)[][][]
+     *
+     * @psalm-return array{'kernel.request': array{0: array{0: 'onKernelRequest', 1: 20}}}
      */
     public static function getSubscribedEvents(): array
     {

@@ -12,15 +12,18 @@ use RuntimeException;
  */
 class DishCollection extends ArrayCollection
 {
-    public function __construct(array $items = [])
+    /**
+     * @param Dish[] $elements
+     */
+    public function __construct(array $elements = [])
     {
-        foreach ($items as $item) {
+        foreach ($elements as $item) {
             if (false === ($item instanceof Dish)) {
                 throw new RuntimeException('invalid argument; expected "Dish", got "' . gettype($item) . '"');
             }
         }
 
-        parent::__construct($items);
+        parent::__construct($elements);
     }
 
     public function containsDishVariation(): bool

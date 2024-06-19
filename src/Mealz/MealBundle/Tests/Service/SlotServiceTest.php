@@ -17,9 +17,6 @@ class SlotServiceTest extends AbstractDatabaseTestCase
     private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,9 +24,9 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $this->loadFixtures([new LoadSlots()]);
 
         /* @var SlotService $sut */
-        $this->sut = static::$container->get(SlotService::class);
-        $this->slotRepo = static::$container->get(SlotRepositoryInterface::class);
-        $this->em = static::$container->get(EntityManagerInterface::class);
+        $this->sut = static::getContainer()->get(SlotService::class);
+        $this->slotRepo = static::getContainer()->get(SlotRepositoryInterface::class);
+        $this->em = static::getContainer()->get(EntityManagerInterface::class);
     }
 
     /**

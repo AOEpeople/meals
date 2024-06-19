@@ -23,9 +23,6 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
     private CombinedMealService $cms;
     private Dish $combinedDish;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,7 +41,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
         $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $price = is_float($price) ? $price : 0;
 
-        $dishRepo = static::$container->get(DishRepository::class);
+        $dishRepo = static::getContainer()->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $entityManager, $dishRepo);
 
         $combinedDishes = $dishRepo->findBy(['slug' => Dish::COMBINED_DISH_SLUG]);
@@ -59,7 +56,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
     public function updateWeek(): void
     {
         /** @var WeekRepositoryInterface $weekRepository */
-        $weekRepository = self::$container->get(WeekRepositoryInterface::class);
+        $weekRepository = self::getContainer()->get(WeekRepositoryInterface::class);
         $week = $weekRepository->getCurrentWeek();
         $this->assertNotNull($week);
         $this->assertNotEmpty($week->getDays());

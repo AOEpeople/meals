@@ -12,20 +12,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParticipationUpdateSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'participation-updates';
-    private const PUBLISH_MSG_TYPE = 'participationUpdate';
+    private const string PUBLISH_TOPIC = 'participation-updates';
+    private const string PUBLISH_MSG_TYPE = 'participationUpdate';
 
-    private PublisherInterface $publisher;
-    private ParticipationCountService $partCountSrv;
-
-    public function __construct(PublisherInterface $publisher, ParticipationCountService $partCountSrv)
-    {
-        $this->publisher = $publisher;
-        $this->partCountSrv = $partCountSrv;
+    public function __construct(
+        private readonly PublisherInterface $publisher,
+        private readonly ParticipationCountService $partCountSrv
+    ) {
     }
 
     /**
-     * {@inheritDoc}
+     * @return string[]
+     *
+     * @psalm-return array{ParticipationUpdateEvent::class: 'onUpdate'}
      */
     public static function getSubscribedEvents(): array
     {
@@ -60,6 +59,11 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
     }
 
+    /**
+     * @return (bool|int|mixed|null)[]
+     *
+     * @psalm-return array{mealId: int|null, parentId: int|null, limit: int, reachedLimit: bool, isOpen: bool, isLocked: bool, participations: int<0, max>|mixed}
+     */
     private function getMealInfo(Meal $meal, array $participationsPerDay): array
     {
         $participationCount = null;

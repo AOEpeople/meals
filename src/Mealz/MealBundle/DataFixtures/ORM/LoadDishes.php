@@ -15,7 +15,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
     /**
      * Constant to declare load order of fixture.
      */
-    private const ORDER_NUMBER = 5;
+    private const int ORDER_NUMBER = 5;
 
     protected ObjectManager $objectManager;
 
@@ -23,9 +23,6 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -73,8 +70,9 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
-    protected function addDish(string $titleEN, string $titleDE, string $descEN = null, string $descDE = null, bool $oneSize = false): void
-    {
+    protected function addDish(
+        string $titleEN, string $titleDE, ?string $descEN = null, ?string $descDE = null, bool $oneSize = false
+    ): void {
         $dish = new Dish();
         $dish->setPrice(4.13);
         $dish->setTitleEn($titleEN);
@@ -88,14 +86,33 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $this->addReference('dish-' . $this->counter++, $dish);
     }
 
-    protected function createRandomDish()
+    protected function createRandomDish(): void
     {
         $dishCookingMethod = ['Steamed', 'Cooked', 'Grilled', 'Roasted'];
         $dishPrefix = [
-            'Pork', 'Chicken', 'Beef', 'Duck', 'Lamb', 'Deer', 'Crocodile',
-            'Vegetable', 'Potatoe', 'Broccoli', 'Omlette', 'Pancake',
-            'Fish', 'Tuna', 'Salmon', 'Crab', 'Turtle', 'Shark', 'Oyster',
-            'Sushi', 'Burger', 'Kebab', 'Chili',
+            'Pork',
+            'Chicken',
+            'Beef',
+            'Duck',
+            'Lamb',
+            'Deer',
+            'Crocodile',
+            'Vegetable',
+            'Potatoe',
+            'Broccoli',
+            'Omlette',
+            'Pancake',
+            'Fish',
+            'Tuna',
+            'Salmon',
+            'Crab',
+            'Turtle',
+            'Shark',
+            'Oyster',
+            'Sushi',
+            'Burger',
+            'Kebab',
+            'Chili',
         ];
         $dishSuffix = ['stew', 'soup', 'patty', 'salad', 'steak', 'filet', 'dumpling', 'taco', 'wrap'];
         $sideDishes = ['noodles', 'rice', 'potatoes', 'salad', 'bread', 'sauce', 'dumplings', 'fries', 'chips'];

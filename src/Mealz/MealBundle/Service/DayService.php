@@ -60,7 +60,7 @@ class DayService
         }
     }
 
-    private function removeUnusedMealHelper(Meal $mealEntity, array $mealCollection, Day $day)
+    private function removeUnusedMealHelper(Meal $mealEntity, array $mealCollection, Day $day): void
     {
         $canRemove = true;
         foreach ($mealCollection as $mealArr) {

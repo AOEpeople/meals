@@ -17,6 +17,11 @@ class SettlementSubscriber implements EventSubscriberInterface
         $this->participantRepo = $participantRepo;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{ProfileSettlementEvent::class: 'onProfileSettlement'}
+     */
     public static function getSubscribedEvents(): array
     {
         return [

@@ -34,8 +34,6 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void

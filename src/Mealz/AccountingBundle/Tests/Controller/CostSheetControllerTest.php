@@ -28,12 +28,12 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadTransactions(),
         ]);
 
-        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->wallet = new Wallet($participantRepo, $transactionRepo);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -70,7 +70,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertEquals(0.00, $balance);
 
         $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         $this->assertNull($profile->getSettlementHash(), 'Settlement was set');
     }
@@ -94,7 +94,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $balanceBefore = $transactionRepo->getTotalAmount($profile->getUsername());
 
         // Pre-action tests
@@ -145,7 +145,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
 
         // Trigger action
         $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         // Check after action
         $profile = $this->getUserProfile(parent::USER_STANDARD);

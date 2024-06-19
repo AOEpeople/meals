@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
-use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ReadableCollection;
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,9 +14,11 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
 /**
+ * @template TKey as array-key
  * @template T of object
  *
  * @template-implements ObjectRepository<T>
+ * @template-implements Selectable<TKey, T>
  */
 abstract class BaseRepository implements ObjectRepository, Selectable
 {
@@ -48,41 +50,26 @@ abstract class BaseRepository implements ObjectRepository, Selectable
             ->from($this->entityClass, $alias, $indexBy);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findAll(): array
     {
         return $this->objectRepository->findBy([]);
     }
 
-    /**
-     * @psalm-return ?T
-     */
     public function find($id)
     {
         return $this->objectRepository->find($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
     {
         return $this->objectRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         return $this->objectRepository->findOneBy($criteria);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getClassName(): string
     {
         return $this->entityClass;
@@ -97,10 +84,10 @@ abstract class BaseRepository implements ObjectRepository, Selectable
      * Select all elements from a selectable that match the expression and
      * return a new collection containing these elements.
      */
-    public function matching(Criteria $criteria): AbstractLazyCollection
+    public function matching(Criteria $criteria)
     {
         $persister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityClass);
-        /** @var AbstractLazyCollection<int, T> $collection */
+        /** @psalm-var ReadableCollection<TKey, T>&Selectable<TKey, T> $collection */
         $collection = new LazyCriteriaCollection($persister, $criteria);
 
         return $collection;

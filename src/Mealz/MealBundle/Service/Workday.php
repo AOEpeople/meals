@@ -116,10 +116,8 @@ class Workday
      * @see https://www.php.net/manual/de/function.easter-date.php
      *
      * @param string $year
-     *
-     * @return DateTime
      */
-    private function getEasterDate($year)
+    private function getEasterDate($year): DateTime
     {
         $base = new DateTime($year . '-03-21');
         $days = easter_days($year);

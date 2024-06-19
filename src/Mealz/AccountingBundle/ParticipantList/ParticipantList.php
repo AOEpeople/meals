@@ -15,7 +15,7 @@ class ParticipantList
     /**
      * @var Profile[]
      */
-    protected $profiles = null;
+    protected $profiles;
 
     /**
      * @param \App\Mealz\MealBundle\Entity\Participant[] $participations
@@ -41,8 +41,10 @@ class ParticipantList
 
     /**
      * @return Participant[]
+     *
+     * @psalm-return list<Participant>
      */
-    public function getParticipations(Profile $profile)
+    public function getParticipations(Profile $profile): array
     {
         $participations = array_filter($this->participations, function (Participant $participant) use ($profile) {
             return $participant->getProfile() === $profile;
@@ -53,18 +55,17 @@ class ParticipantList
         return $participations;
     }
 
-    /**
-     * @return int
-     */
-    public function countParticipations(Profile $profile)
+    public function countParticipations(Profile $profile): int
     {
         return count($this->getParticipations($profile));
     }
 
     /**
      * @return Participant[]
+     *
+     * @psalm-return list<Participant>
      */
-    public function getAccountableParticipations(Profile $profile)
+    public function getAccountableParticipations(Profile $profile): array
     {
         $participations = array_filter($this->participations, function (Participant $participant) use ($profile) {
             return $participant->getProfile() === $profile && $participant->isAccountable();

@@ -23,7 +23,7 @@ use DateTime;
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class ParticipationCountServiceTest extends AbstractParticipationServiceTest
+class ParticipationCountServiceTestCase extends AbstractParticipationServiceTestCase
 {
     protected function setUp(): void
     {
@@ -32,25 +32,27 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(static::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $doorman = $this->getDoormanMock(true, false);
-        $dayRepo = self::$container->get(DayRepository::class);
+        $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $this->setParticipationService(new ParticipationService(
-            $this->entityManager,
-            $doorman,
-            $dayRepo,
-            $this->participantRepo,
-            $this->slotRepo
-        ));
+        $this->setParticipationService(
+            new ParticipationService(
+                $this->entityManager,
+                $doorman,
+                $dayRepo,
+                $this->participantRepo,
+                $this->slotRepo
+            )
+        );
 
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
         $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $price = is_float($price) ? $price : 0;
 
-        $dishRepo = static::$container->get(DishRepository::class);
+        $dishRepo = static::getContainer()->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
     }
 
@@ -202,68 +204,86 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
          */
 
         // Yes, dishA: 1.5 of 2
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            [$mealA->getDish()->getSlug()],
-            1
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                [$mealA->getDish()->getSlug()],
+                1
+            )
+        );
 
         // No, dishA: 2.5 of 2
         $totalParticipation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            [$mealA->getDish()->getSlug()],
-            2
-        ));
+        $this->assertFalse(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                [$mealA->getDish()->getSlug()],
+                2
+            )
+        );
 
         // Yes, dishB: 3.5 of 5
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            [$mealB->getDish()->getSlug()],
-            1
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                [$mealB->getDish()->getSlug()],
+                1
+            )
+        );
 
         // Yes, dishB: 4.5 of 5
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            [$mealB->getDish()->getSlug()],
-            2
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                [$mealB->getDish()->getSlug()],
+                2
+            )
+        );
 
         // No, dishB: 5.5 of 5
-        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            [$mealB->getDish()->getSlug()],
-            3
-        ));
+        $this->assertFalse(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                [$mealB->getDish()->getSlug()],
+                3
+            )
+        );
 
         // Yes, for combined dishes: dishA: 1 of 2; dishB: 3 of 5
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            $bookedDishSlugs,
-            0.5
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                $bookedDishSlugs,
+                0.5
+            )
+        );
 
         // Yes, for two combined dishes: dishA: 1.5 of 2; dishB: 3.5 of 5
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            $bookedDishSlugs,
-            1.0
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                $bookedDishSlugs,
+                1.0
+            )
+        );
 
         // Yes, for three combined dishes (or 1 full dish and one combined dish): dishA: 2 of 2; dishB: 4 of 5
-        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            $bookedDishSlugs,
-            1.5
-        ));
+        $this->assertTrue(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                $bookedDishSlugs,
+                1.5
+            )
+        );
 
         // No, for four combined dishes (or 2 full dish or another combination): dishA: 2.5 of 2; dishB: 4.5 of 5
-        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $totalParticipation,
-            $bookedDishSlugs,
-            2.0
-        ));
+        $this->assertFalse(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                $totalParticipation,
+                $bookedDishSlugs,
+                2.0
+            )
+        );
     }
 
     /**
@@ -298,17 +318,21 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meal = $this->getMeal();
 
-        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            [],
-            [$meal->getDish()->getSlug()],
-            1
-        ));
+        $this->assertFalse(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                [],
+                [$meal->getDish()->getSlug()],
+                1
+            )
+        );
 
-        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            [],
-            [$meal->getDish()->getSlug()],
-            1
-        ));
+        $this->assertFalse(
+            ParticipationCountService::isParticipationPossibleForDishes(
+                [],
+                [$meal->getDish()->getSlug()],
+                1
+            )
+        );
     }
 
     /**
@@ -325,18 +349,22 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $mealParticipation,
-                [],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $mealParticipation,
+                    [],
+                    1
+                )
+            );
 
             $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $totalParticipation,
-                [],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $totalParticipation,
+                    [],
+                    1
+                )
+            );
         }
     }
 
@@ -354,18 +382,22 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $mealParticipation,
-                ['wrong-slug'],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $mealParticipation,
+                    ['wrong-slug'],
+                    1
+                )
+            );
 
             $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $totalParticipation,
-                ['wrong-slug'],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $totalParticipation,
+                    ['wrong-slug'],
+                    1
+                )
+            );
         }
     }
 
@@ -384,18 +416,22 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $mealDishSlug = $meal->getDish()->getSlug();
 
             $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
-            $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-                $mealParticipation,
-                [$mealDishSlug],
-                1
-            ));
+            $this->assertTrue(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $mealParticipation,
+                    [$mealDishSlug],
+                    1
+                )
+            );
 
             $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-                $totalParticipation,
-                [$mealDishSlug],
-                1
-            ));
+            $this->assertTrue(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $totalParticipation,
+                    [$mealDishSlug],
+                    1
+                )
+            );
         }
     }
 
@@ -414,18 +450,22 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $mealDishSlug = $meal->getDish()->getSlug();
 
             $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $mealParticipation,
-                [$mealDishSlug],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $mealParticipation,
+                    [$mealDishSlug],
+                    1
+                )
+            );
 
             $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $totalParticipation,
-                [$mealDishSlug],
-                1
-            ));
+            $this->assertFalse(
+                ParticipationCountService::isParticipationPossibleForDishes(
+                    $totalParticipation,
+                    [$mealDishSlug],
+                    1
+                )
+            );
         }
     }
 
@@ -499,6 +539,11 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         return new MealCollection($meals);
     }
 
+    /**
+     * @return Meal[]
+     *
+     * @psalm-return array{0: Meal, 1: Meal, 2: Meal}
+     */
     private function getMixedMealsWithLimitReached(): array
     {
         $profileRepo = $this->entityManager->getRepository(Profile::class);
@@ -629,8 +674,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         }
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         echo 'not implemented.';
     }
 }

@@ -13,15 +13,18 @@ use RuntimeException;
  */
 class MealCollection extends ArrayCollection
 {
-    public function __construct(array $items = [])
+    /**
+     * @param Meal[] $elements
+     */
+    public function __construct(array $elements = [])
     {
-        foreach ($items as $item) {
+        foreach ($elements as $item) {
             if (false === ($item instanceof Meal)) {
                 throw new RuntimeException('invalid argument; expected "Meal", got "' . gettype($item) . '"');
             }
         }
 
-        parent::__construct($items);
+        parent::__construct($elements);
     }
 
     /**

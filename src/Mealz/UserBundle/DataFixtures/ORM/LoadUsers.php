@@ -6,44 +6,87 @@ namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
 use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
      */
-    private const ORDER_NUMBER = 1;
+    private const int ORDER_NUMBER = 1;
 
     protected ObjectManager $objectManager;
 
-    protected UserPasswordEncoderInterface $passwordEncoder;
+    protected UserPasswordHasherInterface $passwordHasher;
 
     protected int $counter = 0;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
         $users = [
-            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'firstName' => 'Alice', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'firstName' => 'Bob', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
-            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'Kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
-            ['username' => 'admin.meals', 'password' => 'x3pAsFoq8d', 'firstName' => 'Admin', 'lastName' => 'Meals', 'roles' => ['ROLE_ADMIN']],
+            [
+                'username' => 'alice.meals',
+                'password' => 'Chee7ieRahqu',
+                'firstName' => 'Alice',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'bob.meals',
+                'password' => 'ON2za5OoJohn',
+                'firstName' => 'Bob',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'finance.meals',
+                'password' => 'IUn4d9NKMt',
+                'firstName' => 'Finance',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_FINANCE'],
+            ],
+            [
+                'username' => 'jane.meals',
+                'password' => 'heabahW6ooki',
+                'firstName' => 'Jane',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'john.meals',
+                'password' => 'aef9xoo2hieY',
+                'firstName' => 'John',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'kochomi.meals',
+                'password' => 'f8400YzaOd',
+                'firstName' => 'Kochomi',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_KITCHEN_STAFF'],
+            ],
+            [
+                'username' => 'admin.meals',
+                'password' => 'x3pAsFoq8d',
+                'firstName' => 'Admin',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_ADMIN'],
+            ],
         ];
 
         foreach ($users as $user) {
@@ -75,9 +118,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     ): void {
         $login = new Login();
         $login->setUsername($username);
-        $login->setSalt(md5(uniqid('', true)));
 
-        $hashedPassword = $this->passwordEncoder->encodePassword($login, $password);
+        $hashedPassword = $this->passwordHasher->hashPassword($login, $password);
         $login->setPassword($hashedPassword);
 
         $profile = new Profile();
@@ -86,6 +128,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $profile->setFirstName($firstName);
 
         // set roles
+        /** @var Role[] $roleObjs */
         $roleObjs = [];
         foreach ($roles as $role) {
             $roleObjs[] = $this->getReference($role);
@@ -101,7 +144,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->addReference('login-' . $this->counter, $login);
     }
 
-    protected function createRandUser()
+    protected function createRandUser(): void
     {
         $firstNames = [
             'Felix', 'Maximilian', 'Alexander', 'Paul', 'Elias', 'Ben', 'Noah', 'Leon', 'Louis', 'Jonas',
@@ -121,7 +164,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $randFirstName = $firstNames[array_rand($firstNames)];
         $randLastName = $lastNames[array_rand($lastNames)];
         $randPass = (string) rand();
-        $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . (string) rand();
+        $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . rand();
         $this->addUser(
             $username,
             $randPass,

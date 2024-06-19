@@ -19,42 +19,32 @@ use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Order;
 use Exception;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
     /**
      * Role based test users.
      */
-    protected const USER_STANDARD = 'alice.meals';
-    protected const USER_FINANCE = 'finance.meals';
-    protected const USER_KITCHEN_STAFF = 'kochomi.meals';
+    protected const string USER_STANDARD = 'alice.meals';
+    protected const string USER_FINANCE = 'finance.meals';
+    protected const string USER_KITCHEN_STAFF = 'kochomi.meals';
 
     protected KernelBrowser $client;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->client = static::createClient();
     }
 
     protected function loginAs(string $username): void
     {
-        $session = $this->client->getContainer()->get('session');
-        // the firewall context (defaults to the firewall name)
-        $firewall = 'main';
-
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
         $user = $repo->find($username);
 
@@ -62,12 +52,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
             throw new RuntimeException($username . ': user not found');
         }
 
-        $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $session->set('_security_' . $firewall, serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        $this->client->loginUser($user);
     }
 
     protected function getFormCSRFToken(string $uri, string $tokenFieldSelector): string
@@ -87,7 +72,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function getUserProfile(string $username): Profile
     {
         /** @var ProfileRepositoryInterface $profileRepository */
-        $profileRepository = self::$container->get(ProfileRepositoryInterface::class);
+        $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
@@ -115,7 +100,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function getRole(string $roleType): Role
     {
         /** @var RoleRepositoryInterface $roleRepository */
-        $roleRepository = self::$container->get(RoleRepositoryInterface::class);
+        $roleRepository = self::getContainer()->get(RoleRepositoryInterface::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
             $this->fail('user role not found:  "' . $roleType);
@@ -173,10 +158,10 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepository::class);
+        $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -188,18 +173,18 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get the recent meal.
      */
-    protected function getRecentMeal(DateTime $dateTime = null): Meal
+    protected function getRecentMeal(?DateTime $dateTime = null): Meal
     {
         if (null === $dateTime) {
             $dateTime = new DateTime();
         }
 
         /** @var MealRepositoryInterface $mealRepository */
-        $mealRepository = self::$container->get(MealRepositoryInterface::class);
+        $mealRepository = self::getContainer()->get(MealRepositoryInterface::class);
         $criteria = Criteria::create();
         $criteria
             ->where(Criteria::expr()->lte('dateTime', $dateTime))
-            ->orderBy(['dateTime' => Criteria::DESC]);
+            ->orderBy(['dateTime' => Order::Descending]);
 
         $meal = $mealRepository->matching($criteria)->first();
         if ($meal instanceof Meal) {
@@ -217,7 +202,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function getLockedMeals(): array
     {
         /** @var MealRepositoryInterface $mealsRepo */
-        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
+        $mealsRepo = self::getContainer()->get(MealRepositoryInterface::class);
 
         $meals = $mealsRepo->getLockedMeals();
         if (0 < count($meals)) {

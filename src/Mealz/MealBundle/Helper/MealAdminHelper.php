@@ -18,12 +18,12 @@ class MealAdminHelper
         $this->eventService = $eventService;
     }
 
-    public function setParticipationLimit(Meal $mealEntity, $meal): void
+    public function setParticipationLimit(Meal $mealEntity, array $meal): void
     {
         if (
-            true === isset($meal['participationLimit']) &&
-            0 < $meal['participationLimit'] &&
-            count($mealEntity->getParticipants()) <= $meal['participationLimit']
+            true === isset($meal['participationLimit'])
+            && 0 < $meal['participationLimit']
+            && count($mealEntity->getParticipants()) <= $meal['participationLimit']
         ) {
             $mealEntity->setParticipationLimit($meal['participationLimit']);
         } else {
@@ -31,7 +31,7 @@ class MealAdminHelper
         }
     }
 
-    public function handleEventParticipation(Day $day, int $eventId = null)
+    public function handleEventParticipation(Day $day, ?int $eventId = null): void
     {
         $this->eventService->handleEventParticipation($day, $eventId);
     }

@@ -12,6 +12,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
+/**
+ * @extends BaseRepository<int, Transaction>
+ */
 class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
     /**
@@ -67,12 +70,12 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @param DateTime|null $maxDate End Date
      * @param Profile|null  $profile User profile
      *
-     * @psalm-return array<string, array{firstName: string, name: string, amount: float, paymethod: string|null}>
+     * @psalm-return array<string, array{firstName: string, name: string, amount: string, paymethod: string|null}>
      */
     public function findUserDataAndTransactionAmountForGivenPeriod(
-        DateTime $minDate = null,
-        DateTime $maxDate = null,
-        Profile $profile = null
+        ?DateTime $minDate = null,
+        ?DateTime $maxDate = null,
+        ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('t');
         $queryBuilder->select('p.username, p.firstName, p.name, t.paymethod, SUM(t.amount) AS amount');
@@ -180,7 +183,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
         $result = [];
         foreach ($queryResult as $item) {
-            //TODO: should not be floatval
+            // TODO: should not be floatval
             $result[] = [
                 'amount' => floatval($item['amount']),
                 'date' => $item['date']->format('d.m.Y'),

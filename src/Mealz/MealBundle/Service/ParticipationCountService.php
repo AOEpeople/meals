@@ -51,11 +51,16 @@ class ParticipationCountService
 
     private static function isParticipationPossible(array $participation, float $participationCount): bool
     {
-        return 0.01 > $participation[self::LIMIT_KEY] || // No no, no no no no, no no no no, no no there's no limit!
-            (0.0 < $participation[self::LIMIT_KEY]
+        return 0.01 > $participation[self::LIMIT_KEY] // No no, no no no no, no no no no, no no there's no limit!
+            || (0.0 < $participation[self::LIMIT_KEY]
                 && $participation[self::LIMIT_KEY] >= ($participation[self::COUNT_KEY] + $participationCount));
     }
 
+    /**
+     * @return array[]
+     *
+     * @psalm-return array<string, array>
+     */
     public function getParticipationByDays(Week $week, bool $onlyFutureMeals = false): array
     {
         $now = new DateTime();
@@ -173,7 +178,7 @@ class ParticipationCountService
         }
     }
 
-    private static function calculateLimit(int $configuredLimit, float $totalCount, float $currentCount)
+    private static function calculateLimit(int $configuredLimit, float $totalCount, float $currentCount): float
     {
         return $configuredLimit - ($totalCount - $currentCount);
     }

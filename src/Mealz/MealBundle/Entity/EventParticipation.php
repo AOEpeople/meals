@@ -10,35 +10,26 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Defines a event participation.
- *
- * @ORM\Entity
- * @ORM\Table(name="event_participation")
+ * Defines an event participation.
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'event_participation')]
 class EventParticipation
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Day", inversedBy="event")
-     * @ORM\JoinColumn(name="day", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(inversedBy: 'event', targetEntity: Day::class)]
+    #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
     private Day $day;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Event")
-     * @ORM\JoinColumn(name="event", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Event::class)]
+    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private Event $event;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Participant", mappedBy="event")
-     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class)]
     public ?Collection $participants = null;
 
     public function __construct(Day $day, Event $event, ?Collection $participants = null)

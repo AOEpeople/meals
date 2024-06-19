@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class DishConstraint extends Constraint
 {
-    public $message = 'error.meal.has_participants';
+    public string $message = 'error.meal.has_participants';
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

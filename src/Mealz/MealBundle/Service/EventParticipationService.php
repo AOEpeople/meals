@@ -39,7 +39,7 @@ class EventParticipationService
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
-    public function handleEventParticipation(Day $day, int $eventId = null)
+    public function handleEventParticipation(Day $day, ?int $eventId = null): void
     {
         if (null === $eventId) {
             $this->removeEventFromDay($day);
@@ -49,7 +49,12 @@ class EventParticipationService
         }
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
+    /**
+     * @return (bool|int|null)[]|null
+     *
+     * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
+     */
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
         $eventParticipation = $day->getEvent();
         if (null === $eventParticipation) {
@@ -75,23 +80,24 @@ class EventParticipationService
         $eventParticipation = $day->getEvent();
         if (null !== $eventParticipation && true === $this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
             $participation = $this->createEventParticipation($profile, $eventParticipation);
-            if (null !== $participation) {
-                $this->em->persist($participation);
-                $this->em->flush();
+            $this->em->persist($participation);
+            $this->em->flush();
 
-                return $eventParticipation;
-            }
+            return $eventParticipation;
         }
 
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     public function joinAsGuest(
         string $firstName,
         string $lastName,
         string $company,
         Day $eventDay
-    ): ?EventParticipation {
+    ): EventParticipation {
         $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
@@ -103,15 +109,15 @@ class EventParticipationService
 
         try {
             $this->em->persist($guestProfile);
-            $eventParticiation = $eventDay->getEvent();
-            $participation = $this->createEventParticipation($guestProfile, $eventParticiation);
+            $eventParticipation = $eventDay->getEvent();
+            $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);
 
             $this->em->flush();
             $this->em->commit();
 
-            return $eventParticiation;
+            return $eventParticipation;
         } catch (Exception $e) {
             $this->em->rollback();
             throw $e;
@@ -133,6 +139,11 @@ class EventParticipationService
         return null;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array<string>
+     */
     public function getParticipants(Day $day): array
     {
         $eventParticipation = $day->getEvent();
@@ -146,7 +157,7 @@ class EventParticipationService
         );
     }
 
-    private function addEventToDay(Day $day, ?Event $event)
+    private function addEventToDay(Day $day, ?Event $event): void
     {
         // new eventparticipation
         if (null !== $event && null === $day->getEvent()) {
@@ -158,7 +169,7 @@ class EventParticipationService
         }
     }
 
-    private function removeEventFromDay(Day $day)
+    private function removeEventFromDay(Day $day): void
     {
         if (null !== $day->getEvent()) {
             $this->em->remove($day->getEvent());
@@ -166,7 +177,7 @@ class EventParticipationService
         }
     }
 
-    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): ?Participant
+    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): Participant
     {
         return new Participant($profile, null, $eventParticiation);
     }

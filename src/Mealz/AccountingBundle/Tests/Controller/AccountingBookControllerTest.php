@@ -10,15 +10,13 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AccountingBookControllerTest.
  */
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,7 +25,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->loadFixtures([
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -63,7 +61,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_FINANCE);
         $this->client->request('GET', '/api/accounting/book');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
 
         // Test if default users can access the cash register page
         $this->loginAs(self::USER_STANDARD);

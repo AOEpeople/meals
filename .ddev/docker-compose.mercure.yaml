@@ -1,5 +1,3 @@
-version: '3.6'
-
 services:
   mercure:
     image: dunglas/mercure:v0.14

@@ -61,7 +61,7 @@ class ParticipantPersistenceListener
     {
         $queryBuilder
             ->select('COUNT(p.id)')
-            ->from('MealzMealBundle:Participant', 'p')
+            ->from(Participant::class, 'p')
             ->join('p.meal', 'm')
             ->join('p.profile', 'u')
             ->where('m = :meal AND u = :profile')
@@ -83,7 +83,7 @@ class ParticipantPersistenceListener
     {
         $queryBuilder
             ->select('COUNT(p.id)')
-            ->from('MealzMealBundle:Participant', 'p')
+            ->from(Participant::class, 'p')
             ->join('p.event', 'e')
             ->join('p.profile', 'u')
             ->where('e = :event AND u = :profile')

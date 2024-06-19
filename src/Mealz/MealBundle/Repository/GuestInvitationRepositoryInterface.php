@@ -9,6 +9,9 @@ use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<GuestInvitation>
+ */
 interface GuestInvitationRepositoryInterface extends ObjectRepository
 {
     /**

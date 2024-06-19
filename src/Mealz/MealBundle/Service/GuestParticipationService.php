@@ -56,6 +56,8 @@ class GuestParticipationService
     }
 
     /**
+     * @param Collection<int, Meal> $meals
+     *
      * @return Participant[]
      *
      * @throws ParticipationException
@@ -178,6 +180,8 @@ class GuestParticipationService
      * @return Participant[]
      *
      * @throws ParticipationException
+     *
+     * @psalm-return list<Participant>
      */
     private function create(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
@@ -217,8 +221,12 @@ class GuestParticipationService
     }
 
     /**
+     * @return (mixed|object|null)[]
+     *
      * @throws ParticipationException
      * @throws Exception
+     *
+     * @psalm-return array{profile: Profile, meals: MealCollection, slot: null|object, dishSlugs: mixed}
      */
     public function getGuestInvitationData(Request $request): array
     {

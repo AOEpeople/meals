@@ -35,13 +35,13 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $this->transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->locale = 'en';
 
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadWeeks(),
             new LoadDays(),
             new LoadCategories(),
@@ -49,7 +49,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadSlots(),
-            new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
+            new LoadCombinations(self::getContainer()->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
         ]);
     }
@@ -126,10 +126,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @param $transactionsArray array holding Transaction objects
      */
-    private function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray): float
+    private function getAssumedTotalAmountForTransactionsFromLastMonth(array $transactionsArray): float
     {
         $result = 0;
-        $transactions = array_filter($transactionsArray, ['self', 'isTransactionFromLastMonth']);
+        $transactions = array_filter($transactionsArray, [$this, 'isTransactionFromLastMonth']);
         foreach ($transactions as $transaction) {
             $result += $transaction->getAmount();
         }
@@ -140,9 +140,11 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Create and persist a bunch of transactions and return them in an array.
      *
-     * @return array of transactions
+     * @return Transaction[] of transactions
      *
      * @throws Exception
+     *
+     * @psalm-return non-empty-list<Transaction>
      */
     private function createTemporaryTransactions(): array
     {
@@ -170,7 +172,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Filter transactions from an array that date is NOT within the last month.
      *
-     * @param $item     Transaction object
+     * @param $item Transaction object
      *
      * @see getAssumedTotalAmountForTransactionsFromLastMonth()
      *

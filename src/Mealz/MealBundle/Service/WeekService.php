@@ -51,6 +51,11 @@ class WeekService
         return $week;
     }
 
+    /**
+     * @return Week[]
+     *
+     * @psalm-return array{0: Week, 1: Week}
+     */
     public function getNextTwoWeeks(): array
     {
         $currentWeek = $this->weekRepo->getCurrentWeek();

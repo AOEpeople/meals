@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
-use PhpCollection\Set;
 
 class ParticipationHelper
 {
@@ -28,14 +27,13 @@ class ParticipationHelper
     /**
      * helper function to sort participants by their name or guest name.
      *
-     * @param mixed $participantRepo
-     * @param mixed $participants
+     * @return Participant[]
      *
-     * @return mixed
+     * @psalm-return list<Participant>
      */
-    public function sortParticipantsByName($participantRepo, $participants)
+    public function sortParticipantsByName($participants): array
     {
-        usort($participants, [$participantRepo, 'compareNameOfParticipants']);
+        usort($participants, [$this, 'compareNameOfParticipants']);
 
         return $participants;
     }
@@ -49,7 +47,6 @@ class ParticipationHelper
     {
         $groupedParticipants = [];
 
-        /** @var Participant $participant */
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
 
@@ -63,13 +60,17 @@ class ParticipationHelper
         return $groupedParticipants;
     }
 
+    /**
+     * @return (string|string[])[][]
+     *
+     * @psalm-return array<array{user: string, fullName: string, roles: array<string>}>
+     */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {
-        $profiles = new Set(array_map(
+        $profiles = array_map(
             fn ($participant) => $participant->getProfile()->getUserName(),
             $participations
-        ));
-        $profiles = $profiles->all();
+        );
 
         if (0 === count($profiles)) {
             $profiles = [''];
@@ -114,7 +115,7 @@ class ParticipationHelper
         return $participationData;
     }
 
-    public function getMealState(Meal $meal)
+    public function getMealState(Meal $meal): string
     {
         $mealState = 'open';
         if (true === $meal->isLocked() && true === $meal->isOpen()) {
@@ -141,6 +142,11 @@ class ParticipationHelper
         return 0;
     }
 
+    /**
+     * @return array[][]
+     *
+     * @psalm-return array<string, array<string, array>>
+     */
     private function getParticipationbySlot(Participant $participant, ?Slot $slot, bool $profile = false): array
     {
         $slots = [];
@@ -181,8 +187,14 @@ class ParticipationHelper
         return new DishCollection([]);
     }
 
-    private function getParticipationData(Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes): array
-    {
+    /**
+     * @return ((bool|int|null)[]|string)[]
+     *
+     * @psalm-return array{booked: non-empty-list<int|null>, isOffering: non-empty-list<bool>, profile?: string}
+     */
+    private function getParticipationData(
+        Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes
+    ): array {
         $participantData = [];
         $participantData['booked'][] = $meal->getDish()->getId();
         $participantData['isOffering'][] = $participant->isPending();

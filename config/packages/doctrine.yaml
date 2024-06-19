@@ -1,18 +1,27 @@
 doctrine:
-    dbal:
-        url: '%app.db.url%'
+  dbal:
+    url: '%app.db.url%'
 
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '13'
-    orm:
-        auto_generate_proxy_classes: true
-        naming_strategy: doctrine.orm.naming_strategy.default
+    # IMPORTANT: You MUST configure your server version,
+    # either here or in the DATABASE_URL env var (see .env file)
+    #server_version: '16'
+    use_savepoints: true
+  orm:
+    enable_lazy_ghost_objects: true
+    auto_generate_proxy_classes: true
+    controller_resolver:
+      # Auto resolve entity in action arguments using the route parameter.
+      # Ex.: use "id" parameter in /user/{id}/edit to fetch the User entity,
+      #      and pass it as $user argument to UserController::edit(User $user) action.
+      # The route and entity property (like id above) must match for mapping to succeed.
+      auto_mapping: true
+    entity_managers:
+      default:
         auto_mapping: true
-        mappings:
-            App\Mealz\MealBundle:
-                is_bundle: false
-                type: annotation
-                dir: '%kernel.project_dir%/src/Mealz/MealBundle/Entity'
-                prefix: 'App\Mealz\MealBundle\Entity'
-                alias: App\Mealz\MealBundle
+        report_fields_where_declared: true
+
+#when@test:
+#    doctrine:
+#        dbal:
+#            # "TEST_TOKEN" is typically set by ParaTest
+#            dbname_suffix: '_test%env(default::TEST_TOKEN)%'

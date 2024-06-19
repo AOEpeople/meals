@@ -10,40 +10,29 @@ use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Defines a event.
- *
- * @ORM\Entity
- * @ORM\Table(name="event")
+ * Defines an event.
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'event')]
 class Event implements JsonSerializable
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private int $id = 0;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     * @Assert\Length(min=5, max=80)
-     */
+    #[Assert\Length(min: 5, max: 80)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private string $title = '';
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $deleted = false;
 
-    /**
-     * @Gedmo\Slug(fields={"title"})
-     * @ORM\Column(length=128, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['title'])]
+    #[ORM\Column(type: 'string', length: 128, unique: true)]
     private ?string $slug = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $public = false;
 
     public function __construct(string $title = '', bool $isPublic = false)
@@ -97,6 +86,11 @@ class Event implements JsonSerializable
         return $this->slug = $slug;
     }
 
+    /**
+     * @return (bool|int|string|null)[]
+     *
+     * @psalm-return array{id: int, title: string, slug: null|string, public: bool}
+     */
     public function jsonSerialize(): array
     {
         return [

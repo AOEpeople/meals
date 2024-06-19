@@ -4,7 +4,7 @@ namespace App\Mealz\UserBundle\Entity;
 
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Serializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
@@ -12,61 +12,29 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  *
  * This can be used for development (easier to set up then LDAP) and special roles
  * like login for a special app in the kitchen where you can check people as participated.
- *
- * @ORM\Table(name="login")
- * @ORM\Entity
  */
-class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
+#[ORM\Entity]
+#[ORM\Table(name: 'login')]
+class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
-    /**
-     * @ORM\Column(type="string", length=32)
-     */
-    protected string $salt = '';
-
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
+    #[ORM\Column(type: 'string', length: 128)]
     protected string $password = '';
 
-    /**
-     * @ORM\OneToOne(targetEntity="Profile")
-     * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: Profile::class)]
+    #[ORM\JoinColumn(name: 'profile_id', referencedColumnName: 'id')]
     protected ?Profile $profile = null;
-
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
 
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setProfile(Profile $profile = null): void
+    public function setUsername(string $username): void
     {
-        $this->profile = $profile;
-    }
-
-    /**
-     * @return Profile
-     */
-    public function getProfile(): ?Profile
-    {
-        return $this->profile;
-    }
-
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
+        $this->username = $username;
     }
 
     public function getPassword(): string
@@ -74,14 +42,19 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
         return $this->password;
     }
 
-    public function setSalt(string $salt): void
+    public function setPassword(string $password): void
     {
-        $this->salt = $salt;
+        $this->password = $password;
     }
 
-    public function getSalt(): string
+    public function getProfile(): ?Profile
     {
-        return $this->salt;
+        return $this->profile;
+    }
+
+    public function setProfile(?Profile $profile = null): void
+    {
+        $this->profile = $profile;
     }
 
     public function __toString()
@@ -90,48 +63,33 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * String representation of object.
+     * @return string[] serialized form of the Login object
      *
-     * @see http://php.net/manual/en/serializable.serialize.php
-     *
-     * @return string the string representation of the object or null
+     * @psalm-return array{username: string, password: string}
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize(
-            [
-                $this->username,
-                $this->salt,
-                $this->password,
-            ]
-        );
+        return [
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Constructs the object.
-     *
-     * @see http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param string $serialized <p>
-     *                           The string representation of the object.
-     *                           </p>
+     * @param array $data serialized form of the Login object
      */
-    public function unserialize($serialized): void
+    public function __unserialize(array $data): void
     {
-        list(
-            $this->username,
-            $this->salt,
-            $this->password) = unserialize($serialized);
+        $this->username = $data['username'];
+        $this->password = $data['password'];
     }
 
     /**
-     * {@inheritDoc}
+     * @return string[]
      */
     public function getRoles(): array
     {
-        return $this->profile->getRoles();
+        return $this->profile ? $this->profile->getRoles() : [];
     }
 
     /**
@@ -143,5 +101,10 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     public function eraseCredentials(): void
     {
         // nothing to do here
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
     }
 }

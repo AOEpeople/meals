@@ -11,7 +11,7 @@ use InvalidArgumentException;
 use LogicException;
 
 /**
- * @extends BaseRepository<Meal>
+ * @extends BaseRepository<int, Meal>
  */
 class MealRepository extends BaseRepository implements MealRepositoryInterface
 {

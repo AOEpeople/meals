@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use InvalidArgumentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -25,7 +26,6 @@ class Link
     }
 
     /**
-     * @param $object
      * @param null $action
      * @param int  $referenceType
      *
@@ -43,12 +43,12 @@ class Link
             return $this->linkCategory($object, $action, $referenceType);
         }
 
-        throw new \InvalidArgumentException(sprintf('linking a %s object is not configured.', get_class($object)));
+        throw new InvalidArgumentException(sprintf('linking a %s object is not configured.', get_class($object)));
     }
 
     public function linkMeal(
         Meal $meal,
-        string $action = null,
+        ?string $action = null,
         int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
     ): string {
         $dish = $meal->getDish();
@@ -77,12 +77,12 @@ class Link
             return $this->router->generate('MealzMealBundle_Meal_' . $action, ['meal' => $meal->getId()], $referenceType);
         }
 
-        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($meal)));
+        throw new InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($meal)));
     }
 
     public function linkParticipant(
         Participant $participant,
-        string $action = null,
+        ?string $action = null,
         int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
     ): string {
         $action = $action ?? 'edit';
@@ -91,12 +91,12 @@ class Link
             return $this->router->generate('MealzMealBundle_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
         }
 
-        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
+        throw new InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
     }
 
     public function linkDish(
         Dish $dish,
-        string $action = null,
+        ?string $action = null,
         int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
     ): string {
         $action = $action ?? 'edit';
@@ -110,14 +110,14 @@ class Link
             return $this->router->generate('MealzMealBundle_Dish_Form_preFilled', ['slug' => $dish->getSlug()], $referenceType);
         }
 
-        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($dish)));
+        throw new InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($dish)));
     }
 
     public function linkCategory(
         Category $category,
         $action = null,
-        $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
-    ) {
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
         $parameters = ['slug' => $category->getSlug()];
         if ('edit' === $action) {
             return $this->router->generate(
@@ -135,6 +135,6 @@ class Link
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($category)));
+        throw new InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($category)));
     }
 }

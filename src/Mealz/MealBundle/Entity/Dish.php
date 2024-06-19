@@ -8,108 +8,76 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="dish")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'dish')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['dish' => 'Dish', 'dish_variation' => 'DishVariation'])]
 class Dish implements JsonSerializable
 {
-    public const COMBINED_DISH_SLUG = 'combined-dish';
+    public const string COMBINED_DISH_SLUG = 'combined-dish';
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private ?int $id = null;
 
-    /**
-     * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
-     * @Gedmo\Slug(handlers={
-     *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-     *       @Gedmo\SlugHandlerOption(name="relationClass", value="App\Mealz\MealBundle\Entity\Dish"),
-     *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
-     *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
-     *      })
-     *   }, fields={"title_en"})
-     * @ORM\Column(length=128, unique=true)
-     *
-     * @var string
-     */
-    protected $slug;
+    #[Gedmo\Slug(fields: ['title_en'])]
+    #[ORM\Column(type: 'string', length: 128, unique: true)]
+    protected ?string $slug = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=255)
-     * @ORM\Column(type="string", length=255, nullable=FALSE)
-     */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     protected string $title_en = 'New Dish';
 
-    /**
-     * @Assert\Length(max=4096)
-     * @ORM\Column(type="text", nullable=TRUE)
-     */
+    #[Assert\Length(max: 4096)]
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description_en = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=255)
-     * @ORM\Column(type="string", length=255, nullable=FALSE)
-     */
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     protected string $title_de = 'Neues Gericht';
 
-    /**
-     * @Assert\Length(max=4096)
-     * @ORM\Column(type="text", nullable=TRUE)
-     */
+    #[Assert\Length(max: 4096)]
+    #[ORM\Column(type: 'text', nullable: true)]
     protected ?string $description_de = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
-     */
+    #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     protected ?Category $category = null;
 
-    /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
     protected float $price = 0.0;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=FALSE)
-     */
+    #[ORM\Column(type: 'boolean', nullable: false)]
     protected bool $enabled = true;
 
     /**
-     * Dish with this flag set can only have obe serving size.
+     * Dish with this flag set can only have one serving size.
      *
      * It can not be reduced, like half a portion or so.
-     *
-     * @ORM\Column(name="one_serving_size", type="boolean", nullable=FALSE)
      */
+    #[ORM\Column(name: 'one_serving_size', type: 'boolean', nullable: false)]
     protected bool $oneServingSize = false;
 
     protected string $currentLocale = 'en';
 
     /**
-     * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent", cascade={"persist"})
+     * @var Collection<int, DishVariation>|null
      */
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: DishVariation::class, cascade: ['persist'])]
     protected ?Collection $variations = null;
 
     /**
      * Parent property references to the same table dish.
      * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
-     *
-     * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations", cascade={"persist"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
      */
+    #[ORM\ManyToOne(targetEntity: Dish::class, cascade: ['persist'], inversedBy: 'variations')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     protected ?Dish $parent = null;
 
     public function getParent(): ?Dish
@@ -122,18 +90,12 @@ class Dish implements JsonSerializable
         $this->parent = $parent;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
@@ -260,6 +222,9 @@ class Dish implements JsonSerializable
         return new DishCollection($this->variations->toArray());
     }
 
+    /**
+     * @param Collection<int, DishVariation> $dishVariations
+     */
     public function setVariations(Collection $dishVariations): void
     {
         $this->variations = $dishVariations;

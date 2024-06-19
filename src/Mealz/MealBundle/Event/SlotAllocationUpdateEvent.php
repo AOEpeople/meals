@@ -22,7 +22,7 @@ class SlotAllocationUpdateEvent extends Event
      */
     private ?Slot $prevSlot;
 
-    public function __construct(Day $day, ?Slot $slot, Slot $prev = null)
+    public function __construct(Day $day, ?Slot $slot, ?Slot $prev = null)
     {
         $this->day = $day;
         $this->slot = $slot;

@@ -29,8 +29,6 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
     protected int $counter = 0;
 
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void

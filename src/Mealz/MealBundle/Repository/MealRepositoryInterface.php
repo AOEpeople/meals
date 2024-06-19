@@ -9,6 +9,10 @@ use DateTime;
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Meal>
+ * @template-extends Selectable<int, Meal>
+ */
 interface MealRepositoryInterface extends ObjectRepository, Selectable
 {
     /**

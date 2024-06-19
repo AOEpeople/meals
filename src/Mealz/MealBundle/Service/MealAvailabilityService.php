@@ -76,7 +76,12 @@ class MealAvailabilityService
         return true;
     }
 
-    private function getCombinedMealAvailability(Meal $meal)
+    /**
+     * @return (string[]|true)[]|bool
+     *
+     * @psalm-return array{available: true, availableWith: list<string>}|bool
+     */
+    private function getCombinedMealAvailability(Meal $meal): array|bool
     {
         $simpleMeals = array_filter(
             $meal->getDay()->getMeals()->toArray(),

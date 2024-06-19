@@ -4,103 +4,68 @@ namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="week")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'week')]
 class Week extends AbstractMessage implements JsonSerializable
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=FALSE)
-     *
-     * @var int
-     */
-    private $year;
+    #[ORM\Column(type: 'smallint', nullable: false)]
+    private int $year = 1970;
 
-    /**
-     * @ORM\Column(type="smallint", nullable=FALSE)
-     *
-     * @var int
-     */
-    private $calendarWeek;
+    #[ORM\Column(type: 'smallint', nullable: false)]
+    private int $calendarWeek = 0;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Day", mappedBy="week", cascade={"all"})
-     * @ORM\OrderBy({"dateTime" = "ASC"})
-     *
-     * @var ArrayCollection
-     */
-    private $days;
+    #[ORM\OneToMany(mappedBy: 'week', targetEntity: Day::class, cascade: ['all'])]
+    #[ORM\OrderBy(['dateTime' => 'ASC'])]
+    private Collection $days;
 
     public function __construct()
     {
         $this->days = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getDays()
+    public function getDays(): Collection
     {
         return $this->days;
     }
 
     /**
-     * @param ArrayCollection $days
+     * @param Collection<int, Day> $days
      */
-    public function setDays($days): void
+    public function setDays(Collection $days): void
     {
         $this->days = $days;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     */
-    public function setYear($year): void
+    public function setYear(int $year): void
     {
         $this->year = $year;
     }
 
-    /**
-     * @return int
-     */
-    public function getCalendarWeek()
+    public function getCalendarWeek(): int
     {
         return $this->calendarWeek;
     }
 
-    /**
-     * @param int $calendarWeek
-     */
-    public function setCalendarWeek($calendarWeek): void
+    public function setCalendarWeek(int $calendarWeek): void
     {
         $this->calendarWeek = $calendarWeek;
     }
@@ -129,6 +94,11 @@ class Week extends AbstractMessage implements JsonSerializable
         return $dateTime;
     }
 
+    /**
+     * @return (array|bool|int|null)[]
+     *
+     * @psalm-return array{id: int|null, year: int, calendarWeek: int, days: array<array-key|mixed, mixed>, enabled: bool}
+     */
     public function jsonSerialize(): array
     {
         $days = [];
@@ -141,8 +111,8 @@ class Week extends AbstractMessage implements JsonSerializable
 
         return [
             'id' => $this->getId(),
-            'year' => (int) $this->getYear(),
-            'calendarWeek' => (int) $this->getCalendarWeek(),
+            'year' => $this->getYear(),
+            'calendarWeek' => $this->getCalendarWeek(),
             'days' => $days,
             'enabled' => $this->isEnabled(),
         ];

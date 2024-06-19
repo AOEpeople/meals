@@ -16,7 +16,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
-use PhpCollection\Set;
 use RuntimeException;
 
 class LoadParticipants extends Fixture implements OrderedFixtureInterface
@@ -49,8 +48,6 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     protected array $slotIndex = [];
 
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void
@@ -70,7 +67,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     private function loadSimpleMealParticipants(): void
     {
         foreach ($this->meals as $meal) {
-            $users = new Set($this->getRandomUsers());
+            $users = $this->getRandomUsers();
 
             foreach ($users as $user) {
                 $participant = new Participant($user, $meal);
@@ -130,6 +127,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
      * Get days when meals with dish variations are offered.
      *
      * @return Day[]
+     *
+     * @psalm-return list<Day>
      */
     private function getDaysWithDishVariations(): array
     {
@@ -180,6 +179,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
 
     /**
      * @return Dish[]
+     *
+     * @psalm-return list<Dish>
      */
     private function getRandomCombinedMealDishes(Day $day): array
     {
@@ -200,11 +201,13 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         }
 
         if (2 > count($opts)) {
-            throw new RuntimeException(sprintf(
-                'insufficient dishes on %s; required: 2, got: %d',
-                $day->getDateTime()->format('Y-m-d'),
-                count($opts)
-            ));
+            throw new RuntimeException(
+                sprintf(
+                    'insufficient dishes on %s; required: 2, got: %d',
+                    $day->getDateTime()->format('Y-m-d'),
+                    count($opts)
+                )
+            );
         }
 
         foreach (array_slice($opts, 0, 2) as $opt) {
@@ -244,6 +247,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
      * @return Profile[]
      *
      * @throws Exception
+     *
+     * @psalm-return list<Profile>
      */
     protected function getRandomUsers(): array
     {

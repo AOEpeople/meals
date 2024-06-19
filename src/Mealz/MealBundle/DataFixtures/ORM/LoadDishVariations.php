@@ -26,9 +26,6 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;

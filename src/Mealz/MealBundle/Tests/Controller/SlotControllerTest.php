@@ -10,9 +10,6 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 class SlotControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -20,7 +17,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
     }
 

@@ -13,20 +13,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'slot-allocation-updates';
-    private const PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
-
-    private PublisherInterface $publisher;
-    private SlotService $slotSrv;
+    private const string PUBLISH_TOPIC = 'slot-allocation-updates';
+    private const string PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
 
     public function __construct(
-        PublisherInterface $publisher,
-        SlotService $slotSrv
+        private readonly PublisherInterface $publisher,
+        private readonly SlotService $slotSrv
     ) {
-        $this->publisher = $publisher;
-        $this->slotSrv = $slotSrv;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{SlotAllocationUpdateEvent::class: 'onSlotAllocationUpdate'}
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -54,7 +54,12 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function addSlot(?Slot $slot, DateTime $dateTime): ?array
+    /**
+     * @return (int|null)[]
+     *
+     * @psalm-return array{slotId: int|null, limit: int, count: int}
+     */
+    private function addSlot(?Slot $slot, DateTime $dateTime): array
     {
         if (null !== $slot) {
             $count = $this->slotSrv->getSlotsStatusOn($dateTime)[$slot->getSlug()];

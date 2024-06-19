@@ -12,63 +12,49 @@ use App\Mealz\MealBundle\Service\EventParticipationService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_USER')")
- */
+#[IsGranted('ROLE_USER')]
 class EventController extends BaseListController
 {
-    private DayRepositoryInterface $dayRepo;
-    private EntityManagerInterface $em;
-    private EventRepositoryInterface $eventRepo;
-    private EventDispatcherInterface $eventDispatcher;
-    private EventParticipationService $eventPartSrv;
-
     public function __construct(
-        DayRepositoryInterface $dayRepoInterface,
-        EntityManagerInterface $entityManager,
-        EventRepositoryInterface $eventRepository,
-        EventDispatcherInterface $eventDispatcher,
-        EventParticipationService $eventPartSrv
+        private readonly DayRepositoryInterface $dayRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly EventRepositoryInterface $eventRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly EventParticipationService $eventPartSrv,
+        private readonly LoggerInterface $logger
     ) {
-        $this->dayRepo = $dayRepoInterface;
-        $this->em = $entityManager;
-        $this->eventRepo = $eventRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->eventPartSrv = $eventPartSrv;
     }
 
     public function getEventList(): JsonResponse
     {
-        $events = $this->eventRepo->findBy(['deleted' => 0]);
+        $events = $this->eventRepository->findBy(['deleted' => 0]);
 
-        return new JsonResponse($events, 200);
+        return new JsonResponse($events, Response::HTTP_OK);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function new(Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
         if (false === isset($parameters['title']) || false === isset($parameters['public'])) {
-            return new JsonResponse(['message' => '701: Event creation parameters are not set'], 500);
+            return new JsonResponse(['message' => '701: Event creation parameters are not set'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event = new Event($parameters['title'], $parameters['public']);
-        $this->em->persist($event);
-        $this->em->flush();
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function update(Request $request, Event $event): JsonResponse
     {
         try {
@@ -82,31 +68,29 @@ class EventController extends BaseListController
                 $event->setPublic($parameters['public']);
             }
 
-            $this->em->persist($event);
-            $this->em->flush();
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
 
-            return new JsonResponse($event, 200);
+            return new JsonResponse($event, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('event update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function delete(Event $event): JsonResponse
     {
         try {
             $event->setDeleted(true);
 
-            $this->em->persist($event);
-            $this->em->flush();
+            $this->entityManager->persist($event);
+            $this->entityManager->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('event delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
@@ -116,48 +100,48 @@ class EventController extends BaseListController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(['message' => '801: User is not allowed to join'], 403);
+            return new JsonResponse(['message' => '801: User is not allowed to join'], Response::HTTP_FORBIDDEN);
         }
 
-        $day = $this->dayRepo->getDayByDate($date);
+        $day = $this->dayRepository->getDayByDate($date);
 
         $eventParticipation = $this->eventPartSrv->join($profile, $day);
         if (null === $eventParticipation) {
-            return new JsonResponse(['message' => '802: User could not join the event'], 500);
+            return new JsonResponse(['message' => '802: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), 200);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), Response::HTTP_OK);
     }
 
     public function leave(DateTime $date): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(['message' => '801: User is not allowed to leave'], 403);
+            return new JsonResponse(['message' => '801: User is not allowed to leave'], Response::HTTP_FORBIDDEN);
         }
 
-        $day = $this->dayRepo->getDayByDate($date);
+        $day = $this->dayRepository->getDayByDate($date);
 
         $eventParticipation = $this->eventPartSrv->leave($profile, $day);
         if (null === $eventParticipation) {
-            return new JsonResponse(['message' => '802: User could not leave the event'], 500);
+            return new JsonResponse(['message' => '802: User could not leave the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), 200);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), Response::HTTP_OK);
     }
 
     public function getEventParticipants(DateTime $date): JsonResponse
     {
-        $day = $this->dayRepo->getDayByDate($date);
+        $day = $this->dayRepository->getDayByDate($date);
 
         if (null === $day) {
-            return new JsonResponse(['message' => 'Could not find day'], 404);
+            return new JsonResponse(['message' => 'Could not find day'], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($this->eventPartSrv->getParticipants($day), 200);
+        return new JsonResponse($this->eventPartSrv->getParticipants($day), Response::HTTP_OK);
     }
 }

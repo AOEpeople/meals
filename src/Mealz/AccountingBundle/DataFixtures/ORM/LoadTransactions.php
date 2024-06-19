@@ -125,7 +125,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
-    private function addTransaction(Profile $user, float $amount, DateTime $date = null): void
+    private function addTransaction(Profile $user, float $amount, ?DateTime $date = null): void
     {
         $transaction = new Transaction();
         $transaction->setDate($date ?? new DateTime());

@@ -28,7 +28,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
-abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
+abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
@@ -40,9 +40,6 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
     /** @var ParticipationService|GuestParticipationService */
     private $sut;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,19 +47,19 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         /* @var EntityManagerInterface $entityManager */
         $this->entityManager = $this->getDoctrine()->getManager();
 
-        $this->participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $this->slotRepo = self::$container->get(SlotRepository::class);
+        $this->participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $this->slotRepo = self::getContainer()->get(SlotRepository::class);
     }
 
-    protected function checkJoinMealWithDishSlugsSuccess(Profile $profile)
+    protected function checkJoinMealWithDishSlugsSuccess(Profile $profile): void
     {
-        $meals = new MealCollection([
+        $meals = [
             $this->getMeal(),
             $this->getMeal(),
-        ]);
+        ];
         $slot = null;
         $dishSlugs = null;
-        /** @var Meal $meal */
+
         foreach ($meals as $meal) {
             $dishSlugs[] = $meal->getDish()->getSlug();
         }
@@ -77,7 +74,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->assertEmpty($participant->getCombinedDishes());
     }
 
-    protected function checkJoinCombinedMealSuccess(Profile $profile)
+    protected function checkJoinCombinedMealSuccess(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -102,7 +99,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->validateParticipant($participant, $profile, $combinedMeal, $slot);
     }
 
-    protected function checkJoinCombinedMealWithThreeMealsFail(Profile $profile)
+    protected function checkJoinCombinedMealWithThreeMealsFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -123,7 +120,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function checkJoinCombinedMealWithWrongSlugFail(Profile $profile)
+    protected function checkJoinCombinedMealWithWrongSlugFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -139,7 +136,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function checkJoinCombinedMealWithEmptySlugFail(Profile $profile)
+    protected function checkJoinCombinedMealWithEmptySlugFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -155,8 +152,9 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
-    {
+    protected function getMeal(
+        bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null
+    ): Meal {
         $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
 
         if ($expired) {
@@ -279,7 +277,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->cms->update($day->getWeek());
 
         /** @var MealRepositoryInterface $mealRepo */
-        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime(), Dish::COMBINED_DISH_SLUG);
         $this->assertNotNull($combinedMeal);
 
@@ -307,9 +305,6 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         return $this->sut;
     }
 
-    /**
-     * @param ParticipationService|GuestParticipationService $service
-     */
     protected function setParticipationService($service): void
     {
         $this->sut = $service;
@@ -324,5 +319,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         return $prophet->reveal();
     }
 
-    abstract protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null);
+    abstract protected function validateParticipant(
+        Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    );
 }

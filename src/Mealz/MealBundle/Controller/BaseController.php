@@ -4,69 +4,64 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Service\Doorman;
-use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 abstract class BaseController extends AbstractController
 {
+    /**
+     * @return (\Symfony\Contracts\Service\Attribute\SubscribedService|string)[]
+     *
+     * @psalm-return array<\Symfony\Contracts\Service\Attribute\SubscribedService|string>
+     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['logger'] = '?' . MealsLoggerInterface::class;
-        $services['mealz_meal.doorman'] = '?' . Doorman::class;
         $services['monolog.logger.balance'] = '?' . LoggerInterface::class;
         $services['translator'] = '?' . TranslatorInterface::class;
 
         return $services;
     }
 
-    /**
-     * @return Doorman
-     */
-    protected function getDoorman()
-    {
-        return $this->get('mealz_meal.doorman');
-    }
-
     protected function getProfile(): ?Profile
     {
-        return $this->getUser() ? $this->getUser()->getProfile() : null;
+        $user = $this->getUser();
+        if ($user instanceof Profile) {
+            return $user->getProfile();
+        }
+
+        return null;
     }
 
     /**
-     * @param mixed  $message
-     * @param string $severity "danger", "warning", "info", "success"
+     * @return array<string, array{code?: int, exception: string, file: string, message: string, stacktrace?: string}>
      */
-    protected function addFlashMessage($message, string $severity): void
+    protected function getTrace(Throwable $exc): array
     {
-        $this->get('session')->getFlashBag()->add($severity, $message);
-    }
+        $excChain = [];
 
-    protected function ajaxSessionExpiredRedirect(): JsonResponse
-    {
-        $message = $this->get('translator')->trans('session.expired', [], 'messages');
-        $this->addFlashMessage($message, 'info');
-        $response = [
-            'redirect' => $this->generateUrl('MealzUserBundle_login'),
-        ];
+        for ($i = 0; $exc; ++$i) {
+            $excLog = ['exception' => get_class($exc)];
 
-        return new JsonResponse($response);
-    }
+            if (0 < $exc->getCode()) {
+                $excLog['code'] = $exc->getCode();
+            }
 
-    /**
-     * @param Exception $exc     Exception to log
-     * @param string    $message Additional message
-     * @param array     $context Name-value data describing the execution state when exception occurred
-     */
-    protected function logException(Throwable $exc, string $message = '', array $context = []): void
-    {
-        $this->get('logger')->logException($exc, $message, $context);
+            $excLog['message'] = $exc->getMessage();
+            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
+
+            $prev = $exc->getPrevious();
+            if (null === $prev) {
+                $excLog['stacktrace'] = $exc->getTraceAsString();
+            }
+
+            $exc = $prev;
+            $excChain['caused by [#' . $i . ']'] = $excLog;
+        }
+
+        return $excChain;
     }
 }

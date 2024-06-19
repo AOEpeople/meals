@@ -33,7 +33,7 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
     {
         $user = $event->getAuthenticationToken()->getUser();
 
-        $profile = $this->profileRepository->find($user->getUsername());
+        $profile = $this->profileRepository->find($user->getUserIdentifier());
         if (null !== $profile) {
             $profile->setHidden(false);
 

@@ -17,7 +17,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\Collection;
 
-class OfferServiceTest extends AbstractParticipationServiceTest
+class OfferServiceTestCase extends AbstractParticipationServiceTestCase
 {
     protected function setUp(): void
     {
@@ -26,14 +26,14 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(static::getContainer()->get('security.user_password_hasher')),
         ]);
 
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
         $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $price = is_float($price) ? $price : 0;
 
-        $dishRepo = static::$container->get(DishRepository::class);
+        $dishRepo = static::getContainer()->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
         $this->offerService = new OfferService($this->participantRepo);
     }
@@ -347,6 +347,11 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         return $dishVariations;
     }
 
+    /**
+     * @return Participant[]
+     *
+     * @psalm-return list<Participant>
+     */
     private function addCombinedMealOfferers(Meal $combinedMeal, array $profiles, array $bookedDishes): array
     {
         $participants = [];
@@ -364,8 +369,8 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         return $participants;
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         echo 'not implemented.';
     }
 }

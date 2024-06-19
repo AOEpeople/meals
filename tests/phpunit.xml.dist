@@ -7,21 +7,26 @@
          bootstrap="bootstrap.php"
 >
     <php>
-        <ini name="display_errors" value="1" />
-        <ini name="error_reporting" value="-1" />
+        <ini name="display_errors" value="1"/>
+        <ini name="error_reporting" value="-1"/>
 
         <!-- Keep the following config in sync with the one in pipeline tests  -->
-        <env name="DB_NAME" value="db_test" force="true" />
+        <env name="DB_NAME" value="db_test" force="true"/>
         <!-- The following config is required to have the same cookie domain for mercure-hub and app -->
         <!-- Without it we can't set the hub cookies from app -->
-        <env name="MERCURE_URL" value="localhost" force="true" />
-        <env name="MERCURE_PUBLIC_URL" value="localhost" force="true" />
+        <env name="MERCURE_URL" value="localhost" force="true"/>
+        <env name="MERCURE_PUBLIC_URL" value="localhost" force="true"/>
 
-        <env name="APP_DEBUG" value="1" force="true" />
-        <env name="APP_ENV" value="test" force="true" />
+        <env name="KERNEL_CLASS" value="App\Kernel" force="true"/>
+        <env name="APP_DEBUG" value="false" force="true"/>
+        <env name="APP_ENV" value="test" force="true"/>
 
-        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="SHELL_VERBOSITY" value="-1"/>
     </php>
+
+    <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
 
     <testsuites>
         <testsuite name="Meals Test Suite">
@@ -30,7 +35,7 @@
     </testsuites>
 
     <logging>
-        <junit outputFile="../build/artifacts/qa/junit.xml" />
+        <junit outputFile="../build/artifacts/qa/junit.xml"/>
     </logging>
 
     <coverage cacheDirectory="./.cache"
@@ -52,7 +57,7 @@
         </exclude>
 
         <report>
-            <php outputFile="../../build/artifacts/qa/code-coverage.cov" />
+            <php outputFile="../../build/artifacts/qa/code-coverage.cov"/>
         </report>
     </coverage>
 

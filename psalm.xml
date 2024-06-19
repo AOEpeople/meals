@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="4"
-    resolveFromConfigFile="true"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-    errorBaseline="./psalm.baseline.xml">
+        errorLevel="4"
+        resolveFromConfigFile="true"
+        findUnusedBaselineEntry="false"
+        findUnusedCode="false"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+        errorBaseline="psalm.baseline.xml">
     <projectFiles>
-        <directory name="src"/>
+        <directory name="src/Mealz"/>
         <ignoreFiles>
             <directory name="vendor"/>
         </ignoreFiles>
@@ -15,6 +17,16 @@
 
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
-        <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
     </plugins>
+
+    <issueHandlers>
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <referencedFunction name="Doctrine\ORM\QueryBuilder::where" />
+                <referencedFunction name="Doctrine\ORM\Query\Expr::andX" />
+                <referencedFunction name="Doctrine\ORM\Query\Expr::orX" />
+            </errorLevel>
+        </TooManyArguments>
+    </issueHandlers>
+
 </psalm>

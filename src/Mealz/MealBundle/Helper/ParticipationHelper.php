@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
-use PhpCollection\Set;
 
 class ParticipationHelper
 {
@@ -68,13 +67,10 @@ class ParticipationHelper
      */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {
-        $profiles = new Set(
-            array_map(
-                fn ($participant) => $participant->getProfile()->getUserName(),
-                $participations
-            )
+        $profiles = array_map(
+            fn ($participant) => $participant->getProfile()->getUserName(),
+            $participations
         );
-        $profiles = $profiles->all();
 
         if (0 === count($profiles)) {
             $profiles = [''];

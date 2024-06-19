@@ -74,7 +74,6 @@
     "dama/doctrine-test-bundle": "^8.0",
     "doctrine/doctrine-fixtures-bundle": "^3.6",
     "friendsofphp/php-cs-fixer": "^3.3",
-    "phpcollection/phpcollection": "^0.6.0",
     "phploc/phploc": "^7.0",
     "phpmd/phpmd": "~2.2",
     "phpspec/prophecy-phpunit": "^2.0",

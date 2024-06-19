@@ -16,7 +16,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
-use PhpCollection\Set;
 use RuntimeException;
 
 class LoadParticipants extends Fixture implements OrderedFixtureInterface
@@ -68,7 +67,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     private function loadSimpleMealParticipants(): void
     {
         foreach ($this->meals as $meal) {
-            $users = new Set($this->getRandomUsers());
+            $users = $this->getRandomUsers();
 
             foreach ($users as $user) {
                 $participant = new Participant($user, $meal);

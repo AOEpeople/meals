@@ -6,7 +6,9 @@
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[24px_minmax(0,1fr)_24px]' : ''
+        !day.isLocked && !emptyDay && !guestData
+          ? 'grid-rows-[24px_minmax(0,1fr)_24px]'
+          : 'grid-rows-[24px_minmax(0,1fr)_24px]'
       ]"
     >
       <InformationButton
@@ -34,6 +36,8 @@
         v-if="openParticipantsModal"
         :openParticipantsModal="openParticipantsModal"
         :date="date"
+        :weekday="weekday"
+        :dateString="dateString"
         @close-dialog="closeParticipantsModal"
       />
     </div>
@@ -106,12 +110,12 @@ import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';
 import Slots from '@/components/dashboard/Slots.vue';
 import VariationsData from '@/components/dashboard/VariationsData.vue';
+import { Invitation } from '@/enums/Invitation';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { translateWeekday } from 'tools/localeHelper';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EventData from './EventData.vue';
-import { Invitation } from '@/enums/Invitation';
 import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n();
@@ -135,6 +139,13 @@ const date = computed(() => {
   // format date (2023-12-23) without time stamp
   return day.date.date.split(' ')[0];
 });
+const dateString = computed(() =>
+  new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {
+    weekday: 'long',
+    month: 'numeric',
+    day: 'numeric'
+  })
+);
 
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;

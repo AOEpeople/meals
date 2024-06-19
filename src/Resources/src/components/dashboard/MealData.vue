@@ -11,7 +11,7 @@
           {{ title }}
           <span
             v-if="meal.isNew"
-            class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] uppercase leading-[16px] tracking-[1.5px] text-white"
+            class="ml-1 h-[17px] w-[36px] bg-highlight py-px pl-1 pr-[3px] align-text-bottom text-[11px] uppercase leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
           </span> </span

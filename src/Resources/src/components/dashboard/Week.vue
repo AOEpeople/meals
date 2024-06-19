@@ -29,7 +29,7 @@
       :weekID="String(weekID)"
       :dayID="String(dayID)"
       :index="d_index"
-      class="mb-[2.5rem] w-[98%] sm:w-3/4 print:mb-3"
+      class="mb-10 w-[98%] sm:w-3/4 print:mb-3"
     />
   </div>
 </template>

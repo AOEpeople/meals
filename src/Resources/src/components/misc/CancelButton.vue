@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[buttonPressed ? 'translate-y-0.5' : 'light-shadow']"
-    class="mx-auto mb-6 mt-4 flex h-9 w-[132px] items-center justify-center rounded-btn bg-white px-[34px] text-center text-btn font-bold leading-[10px] text-[#1c5298] drop-shadow-btn transition-all duration-300 ease-out hover:text-[#029DF7] focus:outline-none"
+    class="mx-auto mb-6 mt-4 flex h-9 w-[132px] items-center justify-center rounded-btn bg-white px-[34px] text-center text-btn font-bold leading-[10px] text-primary-2 drop-shadow-btn transition-all duration-300 ease-out hover:text-cyan focus:outline-none"
     @mousedown="buttonPressed = true"
     @mouseup="buttonPressed = false"
   >

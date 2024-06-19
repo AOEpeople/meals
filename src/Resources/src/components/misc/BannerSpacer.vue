@@ -4,7 +4,7 @@
   >
     <div class="col-span-1 col-start-1 h-[2px] bg-[#e5e7eb]" />
     <span
-      class="col-span-1 col-start-2 flex h-full flex-row items-center justify-around gap-2 rounded-full border-[2px] border-solid px-4 py-1"
+      class="col-span-1 col-start-2 flex h-full flex-row items-center justify-around gap-2 rounded-full border-2 border-solid px-4 py-1"
     >
       <slot />
     </span>

@@ -1,7 +1,7 @@
 <template>
   <div class="mx-[5%] xl:mx-auto">
     <BalanceHeader />
-    <div class="mb-[2.5rem] text-center sm:text-right">
+    <div class="mb-10 text-center sm:text-right">
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.old') }} {{ oldDateString }}:
         <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
@@ -46,7 +46,7 @@
       </tr>
     </Table>
 
-    <div class="mb-[2.5rem] text-right">
+    <div class="mb-10 text-right">
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.current') }}:
         <span :class="[balance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">

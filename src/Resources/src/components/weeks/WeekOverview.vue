@@ -10,7 +10,7 @@
     />
     <div
       v-if="week.id"
-      class="col-start-1 row-span-2 row-start-1 w-[24px] rounded-l-lg bg-[#1c5298]"
+      class="col-start-1 row-span-2 row-start-1 w-[24px] rounded-l-lg bg-primary-2"
     />
     <h4
       class="row-start-1 m-auto px-2 pt-2"

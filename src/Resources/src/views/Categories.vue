@@ -10,7 +10,7 @@
         :key="index"
         class="max-h-[62px] border-b-2 border-gray-200"
       >
-        <td class="w-[80%]">
+        <td class="w-4/5">
           <span class="text-[12px] xl:text-[18px]">
             {{ locale === 'en' ? category.titleEn : category.titleDe }}
           </span>

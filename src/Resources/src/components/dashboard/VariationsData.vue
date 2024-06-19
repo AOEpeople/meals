@@ -16,7 +16,7 @@
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
           <span
             v-if="variation.isNew"
-            class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] font-bold uppercase leading-[16px] tracking-[1.5px] text-white"
+            class="ml-1 h-[17px] w-[36px] bg-highlight py-px pl-1 pr-[3px] align-text-bottom text-[11px] font-bold uppercase leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
           </span>

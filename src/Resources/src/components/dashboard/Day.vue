@@ -47,7 +47,7 @@
     >
       <div
         v-if="day.slotsEnabled"
-        class="flex h-[54px] items-center border-b-[2px] px-[15px] print:hidden"
+        class="flex h-[54px] items-center border-b-2 px-[15px] print:hidden"
       >
         <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
           {{ t('dashboard.slot.timeslot') }}

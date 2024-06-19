@@ -10,7 +10,7 @@
       <div
         v-for="variation in meal.variations"
         :key="variation.mealId"
-        class="meal-variations-test size-full flex-1 truncate border-l-0 text-center first:pr-[10px] last:border-l-[1px]"
+        class="meal-variations-test size-full flex-1 truncate border-l-0 text-center first:pr-[10px] last:border-l"
       >
         {{ getTitleForLocale(variation) }}
       </div>

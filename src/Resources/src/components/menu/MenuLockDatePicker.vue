@@ -11,7 +11,7 @@
     </template>
     <template #panel="{ close }">
       <div class="flex flex-col gap-2">
-        <div class="flex flex-row rounded-t-lg bg-[#1c5298] px-1 py-2">
+        <div class="flex flex-row rounded-t-lg bg-primary-2 px-1 py-2">
           <span class="grow self-center justify-self-center font-bold uppercase leading-4 tracking-[3px] text-white">
             {{ t('menu.lock') }}
           </span>

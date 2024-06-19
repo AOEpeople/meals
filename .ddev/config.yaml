@@ -34,7 +34,7 @@ web_environment:
     - MERCURE_JWT_SECRET=testing-testing-testing-testing!
     - MERCURE_URL=http://mercure:8080/.well-known/mercure
     - MERCURE_PUBLIC_URL=https://meals.test:8081/.well-known/mercure
-nodejs_version: "20"
+nodejs_version: "22"
 
 # Key features of DDEV's config.yaml:
 

@@ -5,7 +5,7 @@
     required
     min="0.00"
     step=".01"
-    class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
+    class="h-[46px] rounded-full border-2 border-solid border-[#CAD6E1] bg-white text-center"
     @focus="(e) => selectAllAndPlaceCursor(e.target as HTMLInputElement)"
   />
 </template>

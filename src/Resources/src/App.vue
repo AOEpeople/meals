@@ -8,7 +8,7 @@
       <vue3-progress-bar />
     </div>
     <DebtPopup />
-    <Content class="relative z-[2] grow-[1] pb-12" />
+    <Content class="relative z-[2] grow pb-12" />
     <Footer
       v-if="!showParticipations"
       class="relative z-[1] mt-auto"

@@ -5,7 +5,7 @@
   >
     <td
       colspan="1"
-      class="w-[50%] py-2"
+      class="w-1/2 py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ event.title }}
@@ -30,7 +30,7 @@
     </td>
     <td
       colspan="1"
-      class="w-[40%]"
+      class="w-2/5"
     >
       <EventsActions :event="event" />
     </td>

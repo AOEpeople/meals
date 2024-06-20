@@ -6,7 +6,7 @@
   >
     <FinanceHeader
       :date-range="finance.heading"
-      :show-controls="index === 0"
+      :show-controls="Number(index) === 0"
       @date-changed="handleDateChange"
       @generate-pdf="download()"
     />

@@ -23,7 +23,7 @@
           v-slot="{ selected }"
           :value="variation"
           class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
-          :class="index === dish.variations.length - 1 ? 'rounded-b-[23px]' : ''"
+          :class="Number(index) === dish.variations.length - 1 ? 'rounded-b-[23px]' : ''"
         >
           <div
             class="grid size-full grid-cols-[minmax(0,1fr)_24px]"

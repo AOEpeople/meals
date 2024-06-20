@@ -31,7 +31,7 @@
     v-for="(variation, index) in dish.variations"
     :key="variation.slug"
     class="overflow-hidden border-b-2 border-gray-200"
-    :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
+    :class="[Number(index) === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
     :render-on-idle="true"
     :min-height="40"
     :unrender="true"

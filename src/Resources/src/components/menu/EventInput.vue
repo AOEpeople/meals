@@ -38,7 +38,7 @@
         class="absolute z-10 w-full"
       >
         <ComboboxOptions
-          class="scrollbar-styling absolute z-[0] max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white pb-[100px] shadow-lg focus:outline-none"
+          class="scrollbar-styling absolute z-0 max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white pb-[100px] shadow-lg focus:outline-none"
           static
         >
           <li

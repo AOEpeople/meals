@@ -8,7 +8,7 @@
       <div
         class="grid max-h-[70vh] min-w-[300px] max-w-[310px] grid-cols-1 grid-rows-[auto_minmax(0,1fr)_auto] md:max-w-lg"
       >
-        <div class="flex h-[48px] flex-row gap-2 rounded-t-lg bg-[#1c5298] p-2">
+        <div class="flex h-[48px] flex-row gap-2 rounded-t-lg bg-primary-2 p-2">
           <span
             class="grow self-center justify-self-center truncate font-bold uppercase leading-4 tracking-[3px] text-white"
           >

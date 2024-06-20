@@ -6,7 +6,7 @@
       </span>
       <input
         :class="{ 'border-2 border-red': firstNameMissing }"
-        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
+        class="h-12 rounded-[100px] border-2 border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.firstnamePlaceholder')"
         required
@@ -20,7 +20,7 @@
       </span>
       <input
         :class="{ 'border-2 border-red': lastNameMissing }"
-        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
+        class="h-12 rounded-[100px] border-2 border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.lastnamePlaceholder')"
         required
@@ -34,7 +34,7 @@
       </span>
       <input
         :class="{ 'border-2 border-red': companyMissing }"
-        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
+        class="h-12 rounded-[100px] border-2 border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.companyPlaceholder')"
         required

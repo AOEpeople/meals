@@ -10,7 +10,7 @@
         :key="id"
         class="max-h-[62px] border-b-2 border-gray-200"
       >
-        <td class="w-[60%]">
+        <td class="w-3/5">
           <span class="text-[12px] xl:text-[18px]">
             {{ timeSlot.title }}
           </span>

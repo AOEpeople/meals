@@ -5,7 +5,7 @@
   >
     <td
       colspan="1"
-      class="sticky left-0 w-[50%] bg-[#f4f7f9] py-2"
+      class="sticky left-0 w-1/2 bg-[#f4f7f9] py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
@@ -19,7 +19,7 @@
     </td>
     <td
       colspan="1"
-      class="w-[40%]"
+      class="w-2/5"
     >
       <DishActions
         :dish="dish"
@@ -31,14 +31,14 @@
     v-for="(variation, index) in dish.variations"
     :key="variation.slug"
     class="overflow-hidden border-b-2 border-gray-200"
-    :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
+    :class="[Number(index) === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
     :render-on-idle="true"
     :min-height="40"
     :unrender="true"
   >
     <td
       colspan="1"
-      class="sticky left-0 w-[50%] bg-[#f4f7f9] py-2 pl-4"
+      class="sticky left-0 w-1/2 bg-[#f4f7f9] py-2 pl-4"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
@@ -46,7 +46,7 @@
     </td>
     <td
       colspan="2"
-      class="w-[50%]"
+      class="w-1/2"
     >
       <DishVariationActions
         :variation="variation"

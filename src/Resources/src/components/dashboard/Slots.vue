@@ -24,7 +24,7 @@
         </span>
       </ListboxButton>
       <ListboxOptions
-        class="absolute -mt-[1px] max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
+        class="absolute -mt-px max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
       >
         <template v-for="slot in day.slots">
           <ListboxOption

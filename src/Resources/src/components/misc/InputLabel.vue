@@ -9,7 +9,7 @@
     </label>
     <div
       :class="
-        overwriteInputStyle === ''
+        overwriteContainerStyles === ''
           ? 'invalid flex h-[46px] w-full flex-row items-center overflow-hidden rounded-full border-2 border-solid border-[#CAD6E1] bg-white px-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2'
           : overwriteContainerStyles
       "
@@ -62,7 +62,7 @@ const props = withDefaults(
     required: false,
     xButtonActive: false,
     overwriteInputStyle: '',
-    overwriteContainerStyle: ''
+    overwriteContainerStyles: ''
   }
 );
 

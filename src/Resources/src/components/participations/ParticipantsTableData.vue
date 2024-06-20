@@ -6,7 +6,7 @@
     <div
       v-for="(variation, index) in meal.variations"
       :key="variation.mealId"
-      class="variations-class min-h-[24px] flex-1 border-l-[1px] text-center"
+      class="variations-class min-h-[24px] flex-1 border-l text-center"
     >
       <Transition
         name="participations-data"
@@ -43,7 +43,7 @@
   </div>
   <div
     v-else
-    class="no-variations-class h-full min-h-[24px] border-l-[1px] text-center"
+    class="no-variations-class h-full min-h-[24px] border-l text-center"
   >
     <Transition
       name="participations-data"

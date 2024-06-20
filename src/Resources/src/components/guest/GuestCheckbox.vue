@@ -8,7 +8,7 @@
   >
     <CheckIcon
       v-if="enabled"
-      class="relative left-[10%] top-[10%] size-[80%] text-white"
+      class="relative left-[10%] top-[10%] size-4/5 text-white"
     />
   </span>
   <CombiModal

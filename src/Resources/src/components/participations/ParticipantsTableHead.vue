@@ -13,7 +13,7 @@
       <th
         v-for="meal in mealsWithVariations"
         :key="meal.mealId"
-        class="h-full border-l-[1px] px-2 py-4 text-primary"
+        class="h-full border-l px-2 py-4 text-primary"
         :class="meal.title.en === 'Combined Dish' ? 'w-1/3' : 'w-full'"
         data-test="meal-head-th"
       >

@@ -23,7 +23,7 @@
           v-slot="{ selected }"
           :value="variation"
           class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
-          :class="index === dish.variations.length - 1 ? 'rounded-b-[23px]' : ''"
+          :class="Number(index) === dish.variations.length - 1 ? 'rounded-b-[23px]' : ''"
         >
           <div
             class="grid size-full grid-cols-[minmax(0,1fr)_24px]"
@@ -34,7 +34,7 @@
             </span>
             <div
               v-if="MenuCountState.counts[variation.id] && MenuCountState.counts[variation.id] > 0"
-              class="col-start-2 mr-4 flex size-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white"
+              class="col-start-2 mr-4 flex size-6 items-center justify-center self-center justify-self-end rounded-lg bg-cyan text-center text-white"
               aria-hidden="true"
             >
               {{ MenuCountState.counts[variation.id] }}

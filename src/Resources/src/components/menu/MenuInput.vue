@@ -41,7 +41,7 @@
         class="absolute z-10 w-full"
       >
         <ComboboxOptions
-          class="scrollbar-styling absolute z-[0] max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white pb-[100px] shadow-lg focus:outline-none"
+          class="scrollbar-styling absolute z-0 max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white pb-[100px] shadow-lg focus:outline-none"
           static
         >
           <li
@@ -87,7 +87,7 @@
               </span>
               <div
                 v-if="MenuCountState.counts[dish.id] && MenuCountState.counts[dish.id] > 0"
-                class="col-start-2 row-start-1 mr-4 flex size-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white md:col-start-3"
+                class="col-start-2 row-start-1 mr-4 flex size-6 items-center justify-center self-center justify-self-end rounded-lg bg-cyan text-center text-white md:col-start-3"
                 aria-hidden="true"
               >
                 {{ MenuCountState.counts[dish.id] }}

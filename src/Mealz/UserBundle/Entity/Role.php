@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,6 +28,12 @@ class Role
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private int $id = 0;
+
+    /**
+     * @var Collection<int, Profile>|null
+     */
+    #[ORM\ManyToMany(targetEntity: 'Profile', mappedBy: 'roles')]
+    private ?Collection $profiles = null;
 
     /**
      * Role name.
@@ -73,6 +81,18 @@ class Role
     public function setSid(string $sid): static
     {
         $this->sid = $sid;
+
+        return $this;
+    }
+
+    public function getProfiles(): Collection
+    {
+        return $this->profiles ?? new ArrayCollection();
+    }
+
+    public function setProfiles(Collection $profiles): static
+    {
+        $this->profiles = $profiles;
 
         return $this;
     }

@@ -133,6 +133,11 @@ MealzMealBundle_api_participant_remove:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::remove }
     methods: [DELETE]
 
+MealzMealBundle_Meal_mealstate:
+    path: /api/mealstate/{meal}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getMealStateOnDay }
+    methods: [GET]
+
 MealzMealBundle_Meal_count:
     path: /api/meals/count
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::count }

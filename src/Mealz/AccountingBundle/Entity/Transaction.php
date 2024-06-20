@@ -28,11 +28,11 @@ class Transaction
 
     #[Assert\NotBlank]
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
-    private float $amount;
+    private string $amount;
 
     #[Assert\Length(min: 3, max: 2048)]
     #[ORM\Column(type: 'string', length: 2048, nullable: true)]
-    private string $paymethod;
+    private ?string $paymethod;
 
     #[ORM\Column(type: 'string', length: 24, unique: true, nullable: true)]
     private ?string $orderId = null;
@@ -57,14 +57,14 @@ class Transaction
 
     public function setAmount(float $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = (string) $amount;
 
         return $this;
     }
 
     public function getAmount(): float
     {
-        return $this->amount;
+        return (float) $this->amount;
     }
 
     public function setOrderId(string $orderId): static
@@ -81,10 +81,7 @@ class Transaction
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymethod()
+    public function getPaymethod(): ?string
     {
         return $this->paymethod;
     }

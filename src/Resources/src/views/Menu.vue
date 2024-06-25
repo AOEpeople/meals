@@ -114,7 +114,7 @@ onMounted(async () => {
   }
   await fetchEvents();
 
-  if (props.create !== null) {
+  if (props.create === null) {
     await fetchLockDatesForWeek(parseWeekId.value);
   }
 

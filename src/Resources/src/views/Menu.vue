@@ -113,7 +113,10 @@ onMounted(async () => {
     await getDishCountForWeek();
   }
   await fetchEvents();
-  await fetchLockDatesForWeek(parseWeekId.value);
+
+  if (props.create === null) {
+    await fetchLockDatesForWeek(parseWeekId.value);
+  }
 
   setUpDaysAndEnabled();
 

@@ -211,6 +211,9 @@
       "guest": {
         "joined": "Wir freuen uns Sie dabei zu haben."
       }
+    },
+    "print": {
+      "error": "Beim Erstellen des PDF's ist ein Fehler aufgetreten."
     }
   },
   "finance": {

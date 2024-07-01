@@ -211,6 +211,9 @@
       "guest": {
         "joined": "We are looking forward to meeting you."
       }
+    },
+    "print": {
+      "error": "An error occured during the creation of the pdf."
     }
   },
   "finance": {

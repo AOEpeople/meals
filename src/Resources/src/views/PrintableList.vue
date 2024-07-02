@@ -141,6 +141,7 @@
       "
       :meal-names="mealNames"
       :participation-count="participationCount"
+      class="mt-10"
     />
   </PdfCreator>
 </template>

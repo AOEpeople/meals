@@ -21,6 +21,7 @@
     <FinancePdfTemplate
       v-if="loaded && FinancesState.finances !== undefined && FinancesState.finances.length > 0"
       :finances="FinancesState.finances[0]"
+      class="mt-8"
     />
   </PdfCreator>
 </template>

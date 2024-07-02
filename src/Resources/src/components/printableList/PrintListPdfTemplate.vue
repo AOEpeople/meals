@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="listData !== null && mealNames.length > 0 && participationCount.length > 0"
-    class="w-[700px]"
+    class="w-full px-8"
   >
-    <div class="text-center">
+    <div class="w-full text-center">
       <svg
         class="mr-2 inline min-w-[36px] align-text-bottom text-primary"
         width="36"
@@ -36,12 +36,12 @@
         {{ t('printList.title') + dateString }}
       </h1>
     </div>
-    <div class="w-[700px]">
-      <div class="flex w-[700px] flex-col">
-        <div class="w-[700px]">
-          <div class="inline-block w-[700px] min-w-full py-2 align-middle">
-            <div class="aoe-shadow w-[700px] ring-1 ring-black/5 md:rounded-lg">
-              <table class="w-[700px] min-w-full divide-y divide-gray-300">
+    <div class="w-full">
+      <div class="flex w-full flex-col">
+        <div class="w-full">
+          <div class="inline-block w-full min-w-full py-2 align-middle">
+            <div class="aoe-shadow w-full ring-1 ring-black/5 md:rounded-lg">
+              <table class="w-full min-w-full divide-y divide-gray-300">
                 <thead class="bg-white">
                   <tr class="divide-y divide-gray-200">
                     <th

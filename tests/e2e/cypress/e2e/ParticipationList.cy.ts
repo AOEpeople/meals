@@ -49,6 +49,6 @@ describe('Test Print ParticipationList View', () => {
 
     cy.get('p').contains('Pdf downloaden').click();
 
-    cy.readFile('cypress/downloads/result.pdf', { timeout: 5000 });
+    cy.readFile('cypress/downloads/teilnehmerliste.pdf', { timeout: 5000 });
   });
 });

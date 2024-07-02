@@ -19,6 +19,15 @@ const computedLocale = computed({
 });
 
 describe('Test localeHelper', () => {
+    beforeAll(() => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(2023, 3, 15));
+    });
+
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
     it('should return the correct weekday representation', () => {
         expect(translateWeekday(dateTime, computedLocale)).toBe('Monday');
     });

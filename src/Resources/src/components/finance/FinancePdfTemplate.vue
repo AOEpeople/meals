@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="finances !== null && finances.transactions !== undefined"
-    class="w-[700px]"
+    class="w-full p-8"
   >
     <h1 class="mb-4 text-start">
       {{ finances.heading }}
@@ -9,6 +9,7 @@
     <FinanceTable
       :transactions="finances.transactions"
       :print="true"
+      class="w-full"
     />
   </div>
 </template>

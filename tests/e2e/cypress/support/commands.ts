@@ -96,7 +96,7 @@ export const visitMeals = () => {
   // Hide Symphony's toolbar
   if (Cypress.env('ddev_test')) {
     cy.wait(500)
-    cy.get('a[class="hide-button"]').click({ force: true });
+    cy.get('button[class="hide-button"]').click({ force: true });
   }
 };
 

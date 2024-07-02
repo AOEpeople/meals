@@ -150,7 +150,9 @@ export function useCosts() {
                     : 'Error on sending settlement';
         } else if (typeof response.value === 'number') {
             CostsState.error = '';
-            CostsState.users[username].costs['total'] = String(parseFloat(CostsState.users[username].costs['total']) + response.value);
+            CostsState.users[username].costs['total'] = String(
+                parseFloat(CostsState.users[username].costs['total']) + response.value
+            );
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'costs.cashPayment'

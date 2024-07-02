@@ -86,7 +86,7 @@ describe('Test CostsStore', () => {
         const user = CostsState.users[userKey];
         const oldBalance = user.costs['total'];
         await sendCashPayment(userKey, PAYMENT_AMOUNT);
-        expect(user.costs['total']).toEqual(oldBalance + PAYMENT_AMOUNT);
+        expect(user.costs['total']).toEqual(String(parseFloat(oldBalance) + PAYMENT_AMOUNT));
     });
 
     it('should return 3 month strings and a date string', () => {

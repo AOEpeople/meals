@@ -47,7 +47,6 @@
     "vue-router": "4",
     "vue-screen": "^2.1.0-beta.1",
     "vue-template-compiler": "^2.6.14",
-    "vue3-html2pdf": "^1.1.2",
     "vue3-tabs": "^0.1.13-beta.3",
     "webpack-merge": "^5.8.0"
   },

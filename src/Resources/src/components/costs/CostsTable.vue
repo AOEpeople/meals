@@ -15,29 +15,21 @@
         {{ `${costs.name}, ${costs.firstName}` }}
       </td>
       <td>
-        {{
-          new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(
-            parseFloat(costs.costs['earlier'])
-          )
-        }}
+        {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs['earlier']) }}
       </td>
       <td
         v-for="column in Object.keys(CostsState.columnNames)"
         :key="`${String(column)}_${username}`"
       >
-        {{
-          new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(parseFloat(costs.costs[column]))
-        }}
+        {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs[column]) }}
       </td>
       <td>
-        {{
-          new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(parseFloat(costs.costs['total']))
-        }}
+        {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs['total']) }}
       </td>
       <td class="min-w-[100px] pl-2">
         <CostsTableActions
           :username="username"
-          :balance="parseFloat(costs.costs['total'])"
+          :balance="costs.costs['total']"
         />
       </td>
     </LazyTableRow>

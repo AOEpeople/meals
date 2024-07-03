@@ -1,6 +1,6 @@
 # Changelog
 
-## Version v3.0.9 (2024-07-03)
+## Version v3.1.0 (2024-07-03)
 
 ### Fixes
 

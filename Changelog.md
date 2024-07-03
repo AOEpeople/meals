@@ -1,5 +1,49 @@
 # Changelog
 
+## Version v3.0.9 (2024-07-03)
+
+### Fixes
+
+- fixed code formatting (06ab4b25)
+- fixed typing error (1c038abd)
+- fixed error that was created during initial commit (ba18b25f)
+- fixed time dependend test that broke in july (bde3deeb)
+- fixed broken tests and adjusted fixture (990b66f6)
+- Fix snyk file (7f6f855d)
+- fixed a bug that occured on creating a new week, when getting the lockdates for the to be created week (c58bbdca)
+- fixed a bug that caused costs not to be visibly updated if cash was put into the account (3dbc88aa)
+- Fix phpmd message (efecba9e)
+- Fix multiple types overlap errors (c9ccf14d)
+- Fix routing and types (f18d643a)
+- Fix linter messages (3565e6e9)
+- fixed pipeline error - Icon Cancel had unnecessary @close property (19451008)
+- Fix code analysis issues (ff700c1a)
+- Fixed lintingproblem with make run-prettier (ff8968d7)
+- fixed layout for isLocked Day.vue (9085fa4d)
+
+### Chores and tidying
+
+- update nodejs to 22, update packages (f5d68fdb)
+- update lock file (873e96e4)
+
+### Other
+
+- reverted previous changes to costs type in the frontend and changed the type of costs to float in the backend (e8338b21)
+- Revert "Bugfix/#264597 costs type" (6d264294)
+- removed vue3-html2pdf due to security vulnerabilities (54eb9d8a)
+- adjusted created pdf file (aeb03b67)
+- replaced vue3-html2pdf in costs and finance (82c70464)
+- added service to create pdf files from its slot content (93064a7b)
+- added jsPdf and domtopng dependencies (003513d7)
+- Bump tecnickcom/tcpdf from 6.7.4 to 6.7.5 (5f5686bd)
+- remove phpcollection/phpcollection package (7ec5907c)
+- Bump braces from 3.0.2 to 3.0.3 in /src/Resources (475ff2e6)
+- suppress couplingBetweenObjects warning (8d65e3bf)
+- Bump docker/build-push-action from 5 to 6 (49331af7)
+- Bump ws from 7.5.9 to 7.5.10 in /src/Resources (d669c8d4)
+- Icon cancel added @close property with correct parameters (a011947f)
+- wip (b3920808)
+
 ## Version v3.0.8 (2024-06-13)
 
 ### Fixes

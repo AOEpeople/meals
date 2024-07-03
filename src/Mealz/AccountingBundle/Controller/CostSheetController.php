@@ -69,10 +69,13 @@ class CostSheetController extends BaseController
             if ($transactionsPerUser[$username]['amount'] > 0) {
                 $userCosts['total'] = $transactionsPerUser[$username]['amount'];
             }
-            $user['costs'] = $userCosts;
+            $user['costs'] = array_map(
+                fn ($cost) => (float) $cost,
+                $userCosts
+            );
 
             // if total amount is zero, remove user from rendered items
-            if ('0.0000' === $userCosts['total'] || '0.0' == $userCosts['total']) {
+            if (0.001 > (float) $userCosts['total'] && -0.001 < (float) $userCosts['total']) {
                 unset($users[$username]);
             }
         }

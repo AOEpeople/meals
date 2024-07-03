@@ -14,9 +14,7 @@
         {{ `${costs.name}, ${costs.firstName}` }}
       </td>
       <td>
-        {{
-          new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(parseFloat(costs.costs['total']))
-        }}
+        {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs['total']) }}
       </td>
     </LazyTableRow>
   </Table>

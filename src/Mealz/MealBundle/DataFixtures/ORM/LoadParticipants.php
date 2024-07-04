@@ -55,7 +55,6 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $this->loadReferences();
 
-        // braucht ca. 8sek
         $this->loadSimpleMealParticipants();
         $this->loadCombinedMealParticipants();
 

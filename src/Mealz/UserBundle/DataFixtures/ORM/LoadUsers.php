@@ -93,7 +93,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
             $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
         }
 
-        for ($i = 0; $i < 20; ++$i) {
+        for ($i = 0; $i < 15; ++$i) {
             $this->createRandUser();
         }
 

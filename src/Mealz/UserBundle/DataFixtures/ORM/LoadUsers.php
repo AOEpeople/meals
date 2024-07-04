@@ -121,7 +121,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $login->setUsername($username);
 
         $environment = getenv('APP_ENV');
-        if (false === $isRandUser && $environment !== 'prod' && $environment !== 'staging') {
+        if (false === $isRandUser && 'prod' !== $environment && 'staging' !== $environment) {
             $hashedPassword = $this->passwordHasher->hashPassword($login, $password);
             $login->setPassword($hashedPassword);
         } else {

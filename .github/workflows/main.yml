@@ -179,8 +179,8 @@ jobs:
       - name: Upload docker images
         uses: actions/upload-artifact@v4
         with:
-          name: docker-images
-          path: /tmp/docker/dev.tar
+          name: docker-dev-image
+          path: /tmp/docker/*.tar
     outputs:
       imageDev: aoepeople/meals:test
 
@@ -240,8 +240,8 @@ jobs:
       - name: Upload docker images
         uses: actions/upload-artifact@v4
         with:
-          name: docker-images
-          path: /tmp/docker/app.tar
+          name: docker-app-image
+          path: /tmp/docker/*.tar
     outputs:
       image: ${{ fromJson(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}

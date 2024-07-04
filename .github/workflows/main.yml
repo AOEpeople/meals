@@ -248,11 +248,11 @@ jobs:
 
   cypress:
     name: Run E2E-tests via Cypress
-    needs: [ buildImages, buildDevImage ]
+    needs: [ buildDevImage ]
     runs-on: ubuntu-latest
     env:
       SERVICE: dev # use `dev` to enable xdebug and code coverage
-      IMAGE_DEV: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildDevImage.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     strategy:
       fail-fast: false

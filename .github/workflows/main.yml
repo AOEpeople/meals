@@ -266,7 +266,7 @@ jobs:
       - name: Download docker images
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -318,10 +318,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - uses: actions/checkout@v4
-      - name: Download docker images
+      - name: Download docker app-image
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-app-image
+          path: /tmp/docker
+      - name: Download docker dev-image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -361,10 +366,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Download docker images
+      - name: Download docker app-image
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-app-image
+          path: /tmp/docker
+      - name: Download docker dev-image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -397,7 +407,11 @@ jobs:
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-          name: docker-images
+          name: docker-dev-image
+      - name: Delete docker image artifact
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: docker-app-image
     outputs:
       imageDigest: ${{ steps.image_digest.outputs.digest }}
 

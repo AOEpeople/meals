@@ -219,6 +219,10 @@ jobs:
       SERVICE: dev # use `dev` to enable xdebug and code coverage
       IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2]
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -261,7 +265,7 @@ jobs:
               printf '.'
               sleep 5
           done &&
-          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans
@@ -386,7 +390,7 @@ jobs:
       # Replace any "null" security severity values with 0. The null value is used in the case
       # of license-related findings, which do not do not indicate a security vulnerability.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
-      - name: Post process snyk sarif file  
+      - name: Post process snyk sarif file
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
       - name: Upload result to GitHub Code Scanning

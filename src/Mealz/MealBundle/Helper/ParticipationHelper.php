@@ -115,18 +115,6 @@ class ParticipationHelper
         return $participationData;
     }
 
-    public function getMealState(Meal $meal): string
-    {
-        $mealState = 'open';
-        if (true === $meal->isLocked() && true === $meal->isOpen()) {
-            $mealState = 'offerable';
-        } elseif ($this->getReachedLimit($meal)) {
-            $mealState = 'disabled';
-        }
-
-        return $mealState;
-    }
-
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
     {
         $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());

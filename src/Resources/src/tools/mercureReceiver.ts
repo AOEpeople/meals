@@ -4,13 +4,17 @@
 import { Meal } from '@/api/getDashboardData';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { environmentStore } from '@/stores/environmentStore';
+import { userDataStore } from '@/stores/userDataStore';
 import { useLockRequests } from '@/services/useLockRequests';
-import getMealState from '@/api/getMealState';
+import useMealState from '@/services/useMealState';
+import { getIsParticipating } from '@/api/getIsParticipating';
+import { MealState } from '@/enums/MealState';
 
 type Meal_Update = {
     weekId: number;
     dayId: number;
     meals: Meal_Participation_Update[];
+    participant: string;
 };
 
 type Meal_Participation_Update = {
@@ -51,6 +55,7 @@ const OFFER_NEW = 0;
 const OFFER_ACCEPTED = 1;
 const OFFER_GONE = 2;
 const { removeLock } = useLockRequests();
+const { generateMealState } = useMealState();
 
 type Offer_Update = {
     type: number;
@@ -98,24 +103,9 @@ class MercureReceiver {
 
     private static async handleParticipationUpdate(data: Meal_Update): Promise<void> {
         for (const mealData of data.meals) {
-            const { error, mealstate } = await getMealState(mealData.mealId);
-            let meal: Meal;
-            if (mealData.parentId !== null) {
-                meal = dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal;
-            } else {
-                meal = dashboardStore.getMeal(data.weekId, data.dayId, mealData.mealId) as Meal;
-            }
-
-            if (meal !== undefined) {
-                meal.limit = mealData.limit;
-                meal.participations = mealData.participations;
-                meal.isOpen = mealData.isOpen;
-                meal.isLocked = mealData.isLocked;
-                meal.reachedLimit = mealData.reachedLimit;
-                if (error.value === false) {
-                    meal.mealState = mealstate.value;
-                }
-            }
+            const meal: Meal = this.getMealToUpdate(mealData, data);
+            this.setMealAttributes(meal, mealData);
+            this.setMealState(data, mealData, meal);
         }
         removeLock(String(data.dayId));
     }
@@ -131,24 +121,24 @@ class MercureReceiver {
                 case OFFER_NEW:
                     meal.hasOffers = true;
                     if (!meal.isParticipating) {
-                        meal.mealState = 'tradeable';
+                        meal.mealState = MealState.TRADEABLE;
                     }
                     break;
                 case OFFER_ACCEPTED:
                     if (data.participantId === meal.isParticipating) {
                         meal.isParticipating = null;
                         if (data.lastOffer) {
-                            meal.mealState = 'disabled';
+                            meal.mealState = MealState.DISABLED;
                             meal.hasOffers = false;
                         } else {
-                            meal.mealState = 'tradeable';
+                            meal.mealState = MealState.TRADEABLE;
                         }
                     }
                     break;
                 case OFFER_GONE:
                     meal.hasOffers = false;
                     if (!meal.isParticipating) {
-                        meal.mealState = 'disabled';
+                        meal.mealState = MealState.DISABLED;
                     }
                     break;
             }
@@ -167,6 +157,34 @@ class MercureReceiver {
             if (prevSlot !== undefined) {
                 prevSlot.limit = data.prevSlot.limit;
                 prevSlot.count = data.prevSlot.count - 1;
+            }
+        }
+    }
+
+    private static setMealAttributes(meal: Meal, mealData: Meal_Participation_Update) {
+        if (meal !== undefined) {
+            meal.limit = mealData.limit;
+            meal.participations = mealData.participations;
+            meal.isOpen = mealData.isOpen;
+            meal.isLocked = mealData.isLocked;
+            meal.reachedLimit = mealData.reachedLimit;
+        }
+    }
+
+    private static getMealToUpdate(mealData: Meal_Participation_Update, data: Meal_Update): Meal | undefined {
+        if (mealData.parentId !== null) {
+            return dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal;
+        }
+
+        return dashboardStore.getMeal(data.weekId, data.dayId, mealData.mealId) as Meal;
+    }
+
+    private static async setMealState(data: Meal_Update, mealData: Meal_Participation_Update, meal: Meal) {
+        if (data.participant === userDataStore.getState().fullname) {
+            const { error, response } = await getIsParticipating(mealData.mealId);
+            if (meal !== undefined && error.value === false) {
+                meal.isParticipating = response.value;
+                meal.mealState = generateMealState(meal);
             }
         }
     }

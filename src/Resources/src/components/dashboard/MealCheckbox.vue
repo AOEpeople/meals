@@ -47,6 +47,8 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { IMessage, isMessage } from '@/interfaces/IMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import { useLockRequests } from '@/services/useLockRequests';
+import { MealState } from '@/enums/MealState';
+import useMealState from '@/services/useMealState';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -78,6 +80,7 @@ const isCombiBox = props.day.meals[props.mealID].dishSlug === 'combined-dish';
 
 const openPopover = ref(false);
 const { receive } = useEventsBus();
+const { generateMealState } = useMealState();
 
 receive('openOfferPanel_' + props.mealID, () => {
   openPopover.value = true;
@@ -89,7 +92,7 @@ const checkboxCSS = computed(() => {
 
   if (isParticipating.value === true) {
     switch (mealOrVariation.value.mealState) {
-      case 'disabled':
+      case MealState.DISABLED:
         cssResult += 'border-[0.5px] border-[#ABABAB]';
         if (mealOrVariation.value.isLocked === false) {
           cssResult += ' bg-[#80909F] cursor-pointer';
@@ -97,23 +100,23 @@ const checkboxCSS = computed(() => {
           cssResult += ' bg-[#B4C1CE]';
         }
         return cssResult;
-      case 'open':
-      case 'tradeable':
+      case MealState.OPEN:
+      case MealState.TRADEABLE:
         cssResult += 'bg-primary-4 hover:bg-primary-3 cursor-pointer border-0';
         return cssResult;
-      case 'offering':
+      case MealState.OFFERING:
         cssResult += 'bg-highlight cursor-pointer border-0';
-      case 'offerable':
+      case MealState.OFFERABLE:
         cssResult += 'bg-primary-4 cursor-pointer border-0';
         return cssResult;
     }
   } else if (isParticipating.value === false) {
     switch (mealOrVariation.value.mealState) {
-      case 'disabled':
+      case MealState.DISABLED:
         cssResult += 'bg-[#EDEDED] border-[0.5px] border-[#ABABAB]';
         return cssResult;
-      case 'tradeable':
-      case 'open':
+      case MealState.TRADEABLE:
+      case MealState.OPEN:
         cssResult += 'cursor-pointer bg-[#FAFAFA] border-[0.5px] border-[#ABABAB]';
         return cssResult;
     }
@@ -123,7 +126,7 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is being offered by someone to be taken over
-  if (mealOrVariation.value.hasOffers === true && mealOrVariation.value.mealState === 'tradeable') {
+  if (mealOrVariation.value.hasOffers === true && mealOrVariation.value.mealState === MealState.TRADEABLE) {
     let slugs = [mealOrVariation.value.dishSlug];
     if (isCombiBox === true) {
       slugs = getDishSlugs();
@@ -134,7 +137,7 @@ async function handle() {
   }
   // Meal is not locked
   if (
-    (mealOrVariation.value.isLocked === false || mealOrVariation.value.mealState === 'tradeable') &&
+    (mealOrVariation.value.isLocked === false || mealOrVariation.value.mealState === MealState.TRADEABLE) &&
     isLocked(String(props.dayID)) === false
   ) {
     addLock(String(props.dayID));
@@ -152,10 +155,10 @@ async function handle() {
     removeLock(String(props.dayID));
   } else if (isLocked(String(props.dayID)) === false) {
     addLock(String(props.dayID));
-    if (mealOrVariation.value.mealState === 'offerable') {
+    if (mealOrVariation.value.mealState === MealState.OFFERABLE) {
       addLock(String(props.dayID));
       await sendOffer();
-    } else if (mealOrVariation.value.mealState === 'offering') {
+    } else if (mealOrVariation.value.mealState === MealState.OFFERING) {
       addLock(String(props.dayID));
       await cancelOffer();
     }
@@ -197,7 +200,7 @@ async function joinMeal(dishSlugs) {
     if (error.value === false) {
       day.activeSlot = (response.value as JoinMeal).slotId;
       mealOrVariation.value.isParticipating = (response.value as JoinMeal).participantId;
-      mealOrVariation.value.mealState = (response.value as JoinMeal).mealState;
+      mealOrVariation.value.mealState = generateMealState(props.meal);
     } else if (isMessage(response.value) === true) {
       sendFlashMessage({
         type: FlashMessageType.ERROR,
@@ -223,7 +226,7 @@ async function leaveMeal() {
     const { response, error } = await useLeaveMeal(JSON.stringify(data));
     if (error.value === false) {
       day.activeSlot = response.value.slotId;
-      mealOrVariation.value.mealState = response.value.mealState;
+      mealOrVariation.value.mealState = generateMealState(props.meal);
       mealOrVariation.value.isParticipating = null;
     }
   }
@@ -236,7 +239,7 @@ async function sendOffer() {
 
   const { error } = await useOfferMeal(JSON.stringify(data));
   if (error.value === false) {
-    mealOrVariation.value.mealState = 'offering';
+    mealOrVariation.value.mealState = MealState.OFFERING;
     const { emit } = useEventsBus();
     emit('openOfferPanel_' + mealId);
   }
@@ -249,7 +252,7 @@ async function cancelOffer() {
 
   const { error } = await useCancelOffer(JSON.stringify(data));
   if (error.value === false) {
-    mealOrVariation.value.mealState = 'offerable';
+    mealOrVariation.value.mealState = MealState.OFFERABLE;
   }
 }
 

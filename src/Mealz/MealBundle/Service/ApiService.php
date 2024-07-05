@@ -166,15 +166,6 @@ class ApiService
         return $hasReachedLimit;
     }
 
-    public function isMealOpen(Meal $meal): bool
-    {
-        return false === $meal->isLocked()
-            && true === $meal->isOpen()
-            && false === $meal->hasReachedParticipationLimit()
-            && (false === $meal->isCombinedMeal()
-            || false === $this->hasCombiReachedLimit($meal->getDay()));
-    }
-
     private function getEventParticipants(Day $day): array
     {
         return $this->eventPartSrv->getParticipants($day);

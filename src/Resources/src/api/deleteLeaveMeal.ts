@@ -3,7 +3,6 @@ import { ref } from 'vue';
 
 export type LeaveMeal = {
     slotId: number;
-    mealState: string;
 };
 
 export async function useLeaveMeal(data: string) {

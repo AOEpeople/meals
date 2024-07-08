@@ -3,12 +3,9 @@
     class="day-shadow mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none"
   >
     <div
-      class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
+      class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
-        day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData
-          ? 'grid-rows-[24px_minmax(0,1fr)_24px]'
-          : 'grid-rows-[24px_minmax(0,1fr)_24px]'
+        day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2'
       ]"
     >
       <InformationButton
@@ -20,7 +17,7 @@
       />
       <span
         class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
-        :class="day.isLocked || emptyDay || guestData ? 'py-[60px]' : 'pb-[0px]'"
+        :class="day.isLocked || emptyDay || guestData ? '' : 'pb-[0px]'"
       >
         {{ weekday }}
       </span>

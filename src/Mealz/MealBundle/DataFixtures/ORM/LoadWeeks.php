@@ -53,7 +53,7 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
     {
         $currentWeeks = [];
         $date = new DateTime('first monday of -5 months');
-        $maxDate = new DateTime('+1 month');
+        $maxDate = new DateTime('+2 weeks');
 
         while ($date < $maxDate) {
             $year = $date->format('o');

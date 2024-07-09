@@ -93,7 +93,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
             $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
         }
 
-        for ($i = 0; $i < 50; ++$i) {
+        for ($i = 0; $i < 15; ++$i) {
             $this->createRandUser();
         }
 
@@ -114,13 +114,19 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         string $password,
         string $firstName,
         string $lastName,
-        array $roles
+        array $roles,
+        bool $isRandUser = false
     ): void {
         $login = new Login();
         $login->setUsername($username);
 
-        $hashedPassword = $this->passwordHasher->hashPassword($login, $password);
-        $login->setPassword($hashedPassword);
+        $environment = getenv('APP_ENV');
+        if (false === $isRandUser && 'prod' !== $environment && 'staging' !== $environment) {
+            $hashedPassword = $this->passwordHasher->hashPassword($login, $password);
+            $login->setPassword($hashedPassword);
+        } else {
+            $login->setPassword($password);
+        }
 
         $profile = new Profile();
         $profile->setUsername($username);
@@ -170,7 +176,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
             $randPass,
             $randFirstName,
             $randLastName,
-            ['ROLE_USER']
+            ['ROLE_USER'],
+            true
         );
     }
 }

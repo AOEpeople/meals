@@ -124,6 +124,66 @@ jobs:
         working-directory: ./src/Resources
         run: yarn test
 
+  buildDevImage:
+    name: Build Development Docker Images
+    runs-on: ubuntu-latest
+    needs: [ test-cgl, psalm, phpmd, format, lint, testFrontendUnitFunctional ]
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+      - name: Prepare build
+        run: |
+          mkdir -p /tmp/docker/buildx
+          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
+      - name: Setup docker build caches
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-buildx
+          path: /tmp/docker/buildx
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # Development image
+      - name: Get Docker meta for development
+        id: devmeta
+        uses: docker/metadata-action@v5
+        with:
+          images: aoepeople/meals:beta
+          tags: |
+            type=sha
+            type=ref,event=branch
+      - name: Build and push development image
+        id: build_dev
+        uses: docker/build-push-action@v6
+        with:
+          file: Dockerfile
+          push: false
+          tags: aoepeople/meals:test
+          labels: ${{ steps.devmeta.outputs.labels }}
+          build-args: |
+            BUILD_DEV="true"
+          cache-from: |
+            aoepeople/meals:beta
+            type=local,src=/tmp/docker/buildx
+          cache-to: type=local,dest=/tmp/docker/buildx
+          outputs: type=docker,dest=/tmp/docker/dev.tar
+      # Upload artifacts
+      - name: Upload docker images
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-dev-image
+          path: /tmp/docker/*.tar
+    outputs:
+      imageDev: aoepeople/meals:test
+
   buildImages:
     name: Build Docker Images
     runs-on: ubuntu-latest
@@ -176,49 +236,28 @@ jobs:
             type=local,src=/tmp/docker/buildx
           cache-to: type=local,dest=/tmp/docker/buildx
           outputs: type=docker,dest=/tmp/docker/app.tar
-      # Development image
-      - name: Get Docker meta for development
-        id: devmeta
-        uses: docker/metadata-action@v5
-        with:
-          images: aoepeople/meals:beta
-          tags: |
-            type=sha
-            type=ref,event=branch
-      - name: Build and push development image
-        id: build_dev
-        uses: docker/build-push-action@v6
-        with:
-          file: Dockerfile
-          push: false
-          tags: aoepeople/meals:test
-          labels: ${{ steps.devmeta.outputs.labels }}
-          build-args: |
-            BUILD_DEV="true"
-          cache-from: |
-            aoepeople/meals:beta
-            type=local,src=/tmp/docker/buildx
-          cache-to: type=local,dest=/tmp/docker/buildx
-          outputs: type=docker,dest=/tmp/docker/dev.tar
       # Upload artifacts
       - name: Upload docker images
         uses: actions/upload-artifact@v4
         with:
-          name: docker-images
+          name: docker-app-image
           path: /tmp/docker/*.tar
     outputs:
       image: ${{ fromJson(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
-      imageDev: aoepeople/meals:test
 
   cypress:
     name: Run E2E-tests via Cypress
-    needs: [ buildImages ]
+    needs: [ buildDevImage ]
     runs-on: ubuntu-latest
     env:
       SERVICE: dev # use `dev` to enable xdebug and code coverage
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      IMAGE_DEV: ${{ needs.buildDevImage.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -227,7 +266,7 @@ jobs:
       - name: Download docker images
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -261,28 +300,33 @@ jobs:
               printf '.'
               sleep 5
           done &&
-          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans
 
   testBackendUnitFunctional:
     name: Run backend unit- and functional-tests
-    needs: [ buildImages ]
+    needs: [ buildImages, buildDevImage ]
     runs-on: ubuntu-latest
     env:
       SERVICE: app # use `dev` to enable xdebug and code coverage
       IMAGE: ${{ needs.buildImages.outputs.image }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      IMAGE_DEV: ${{ needs.buildDevImage.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - uses: actions/checkout@v4
-      - name: Download docker images
+      - name: Download docker app-image
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-app-image
+          path: /tmp/docker
+      - name: Download docker dev-image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -309,11 +353,11 @@ jobs:
   publish:
     name: Publish
     if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
-    needs: [ buildImages, testBackendUnitFunctional, cypress ]
+    needs: [ buildImages, buildDevImage, testBackendUnitFunctional, cypress ]
     runs-on: ubuntu-latest
     env:
       IMAGES_APP: ${{ needs.buildImages.outputs.images }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      IMAGE_DEV: ${{ needs.buildDevImage.outputs.imageDev }}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -322,10 +366,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Download docker images
+      - name: Download docker app-image
         uses: actions/download-artifact@v4
         with:
-          name: docker-images
+          name: docker-app-image
+          path: /tmp/docker
+      - name: Download docker dev-image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-dev-image
           path: /tmp/docker
       - name: Import docker image
         run: |
@@ -358,7 +407,11 @@ jobs:
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v5
         with:
-          name: docker-images
+          name: docker-dev-image
+      - name: Delete docker image artifact
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: docker-app-image
     outputs:
       imageDigest: ${{ steps.image_digest.outputs.digest }}
 
@@ -386,7 +439,7 @@ jobs:
       # Replace any "null" security severity values with 0. The null value is used in the case
       # of license-related findings, which do not do not indicate a security vulnerability.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
-      - name: Post process snyk sarif file  
+      - name: Post process snyk sarif file
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
       - name: Upload result to GitHub Code Scanning

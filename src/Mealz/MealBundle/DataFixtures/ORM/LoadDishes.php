@@ -46,7 +46,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
             'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße'
         );
 
-        for ($i = 0; $i < 150; ++$i) {
+        for ($i = 0; $i < 30; ++$i) {
             $this->createRandomDish();
         }
 

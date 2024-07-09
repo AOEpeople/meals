@@ -95,7 +95,6 @@ class ParticipantController extends BaseController
             [
                 'slotId' => $slotID,
                 'participantId' => $result['participant']->getId(),
-                'mealState' => $this->participationHelper->getMealState($meal),
             ],
             Response::HTTP_OK
         );
@@ -137,7 +136,6 @@ class ParticipantController extends BaseController
 
         return new JsonResponse([
             'slotId' => $slotID,
-            'mealState' => $this->participationHelper->getMealState($meal),
         ], Response::HTTP_OK);
     }
 
@@ -354,6 +352,26 @@ class ParticipantController extends BaseController
         }
 
         return new JsonResponse($participant->getCombinedDishes()->toArray(), Response::HTTP_OK);
+    }
+
+    /**
+     * Determines wether the user is participating in a specific meal.
+     * Returns null on error, -1 for not participating,
+     * the id of the participation if they are participating.
+     */
+    public function isParticipating(Meal $meal): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
+        $participant = $meal->getParticipant($profile);
+        if (null === $participant) {
+            return new JsonResponse(-1, Response::HTTP_OK);
+        }
+
+        return new JsonResponse($participant->getId(), Response::HTTP_OK);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse

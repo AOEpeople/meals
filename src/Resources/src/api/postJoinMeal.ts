@@ -5,7 +5,6 @@ import { ref } from 'vue';
 export type JoinMeal = {
     slotId: number;
     participantId: number;
-    mealState: string;
 };
 
 export async function useJoinMeal(data: string) {

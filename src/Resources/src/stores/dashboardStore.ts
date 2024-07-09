@@ -2,6 +2,8 @@ import { Store } from '@/stores/store';
 import { Dashboard, Day, Meal, Slot, useDashboardData, Week } from '@/api/getDashboardData';
 import { Dictionary } from '../../types/types';
 import { mercureReceiver } from 'tools/mercureReceiver';
+import useMealState from '@/services/useMealState';
+import { MealState } from '@/enums/MealState';
 
 class DashboardStore extends Store<Dashboard> {
     protected data(): Dashboard {
@@ -14,6 +16,7 @@ class DashboardStore extends Store<Dashboard> {
         const { dashboardData } = await useDashboardData();
         if (dashboardData.value !== undefined && dashboardData.value !== null) {
             this.state = dashboardData.value;
+            this.setMealStates(this.state);
         } else {
             console.log('could not receive DashboardData');
         }
@@ -148,10 +151,42 @@ class DashboardStore extends Store<Dashboard> {
         }
     }
 
-    public updateMealState(weekId: number, dayId: number, mealId: number, mealState: string) {
+    public updateMealState(weekId: number, dayId: number, mealId: number, mealState: MealState) {
         const meal = this.getMeal(weekId, dayId, mealId);
         if (meal !== undefined && meal !== null) {
             meal.mealState = mealState;
+        }
+    }
+
+    private setMealStates(dashboardData: Dashboard) {
+        for (const week of Object.values(dashboardData.weeks)) {
+            this.setMealStatesForWeek(week.days);
+        }
+    }
+
+    private setMealStatesForVariations(meal: Meal) {
+        const { generateMealState } = useMealState();
+
+        for (const variation of Object.values(meal.variations)) {
+            variation.mealState = generateMealState(variation);
+        }
+    }
+
+    private setMealStatesForMeals(meals: Dictionary<Meal>) {
+        const { generateMealState } = useMealState();
+
+        for (const meal of Object.values(meals)) {
+            if (meal.variations === null || meal.variations === undefined) {
+                meal.mealState = generateMealState(meal);
+            } else {
+                this.setMealStatesForVariations(meal);
+            }
+        }
+    }
+
+    private setMealStatesForWeek(days: Dictionary<Day>) {
+        for (const day of Object.values(days)) {
+            this.setMealStatesForMeals(day.meals);
         }
     }
 

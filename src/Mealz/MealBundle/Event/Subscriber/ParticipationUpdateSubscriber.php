@@ -50,6 +50,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
             'weekId' => $eventMeal->getDay()->getWeek()->getId(),
             'dayId' => $eventMeal->getDay()->getId(),
             'meals' => [],
+            'participant' => $event->getParticipant()->getProfile()->getFullName(),
         ];
 
         foreach ($meals as $meal) {

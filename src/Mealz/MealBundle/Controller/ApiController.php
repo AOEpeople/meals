@@ -7,7 +7,6 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
@@ -262,24 +261,12 @@ class ApiController extends BaseController
         ]);
     }
 
-    /**
-     * @Security("is_granted('ROLE_USER')")
-     */
-    public function getMealStateOnDay(Meal $meal): JsonResponse
-    {
-        $profile = $this->getProfile();
-        $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
-
-        return new JsonResponse($this->getMealState($meal, $profile, $participant), Response::HTTP_OK);
-    }
-
     private function convertMealForDashboard(Meal $meal, float $participationCount, ?Profile $profile): array
     {
         $description = null;
         $parentId = null;
         $participationId = null;
         $isOffering = false;
-        $mealState = 'open';
 
         if (false === ($meal->getDish() instanceof DishVariation)) {
             $description = [
@@ -296,7 +283,6 @@ class ApiController extends BaseController
                 $participationId = $participation->getId();
             }
             $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
-            $mealState = $this->getMealState($meal, $profile, $participation);
         }
 
         $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
@@ -323,7 +309,6 @@ class ApiController extends BaseController
             'isParticipating' => $participationId,
             'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
             'isOffering' => $isOffering,
-            'mealState' => $mealState,
         ];
     }
 
@@ -346,33 +331,6 @@ class ApiController extends BaseController
         }
 
         $meals[$parent->getId()]['variations'][$meal->getId()] = $this->convertMealForDashboard($meal, $participationCount, $profile);
-    }
-
-    private function getMealState(Meal $meal, Profile $profile, ?Participant $participant): string
-    {
-        if (true === $meal->isLocked() && true === $meal->isOpen()) {
-            $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
-            if ($isOffering) {
-                return 'offering';
-            } elseif (null !== $participant) {
-                return 'offerable';
-            } elseif ($this->offerSrv->getOfferCountByMeal($meal) > 0) {
-                return 'tradeable';
-            }
-        }
-
-        return $this->getMealStateForOpenMeal($meal, $participant);
-    }
-
-    private function getMealStateForOpenMeal(Meal $meal, ?Participant $participant): string
-    {
-        if ($this->apiSrv->isMealOpen($meal)) {
-            return 'open';
-        } elseif (false === $meal->isLocked() && true === $meal->isOpen() && null !== $participant) {
-            return 'offerable';
-        }
-
-        return 'disabled';
     }
 
     public function getGuestData(string $guestInvitationId, ParticipationCountService $partCountSrv): JsonResponse

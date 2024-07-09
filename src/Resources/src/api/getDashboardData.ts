@@ -1,6 +1,7 @@
 import useApi from '@/api/api';
 import { Dictionary } from '../../types/types';
 import { ref } from 'vue';
+import { MealState } from '@/enums/MealState';
 
 export type Meal = {
     variations: Dictionary<Meal> | null;
@@ -18,7 +19,7 @@ export type Meal = {
     dishSlug: string | null;
     hasOffers: boolean;
     isOffering: boolean;
-    mealState: string;
+    mealState: MealState;
 };
 
 export type DateTime = {

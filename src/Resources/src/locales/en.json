@@ -287,7 +287,10 @@
     "download": "Download pdf"
   },
   "session": {
-    "expired": "Session expired!"
+    "expired": "Session expired!",
+    "timeout_header": "The session timed out!",
+    "timeout_text": "The page has to be reloaded in order to restore the session.",
+    "reload": "Reload"
   },
   "slot": {
     "create": "create Slot",
@@ -306,7 +309,7 @@
   },
   "password": "Password",
   "popup": {
-    "processing": "Die Anfrage wird bearbeitet"
+    "processing": "The request is being processed"
   },
   "username": "Username"
 }

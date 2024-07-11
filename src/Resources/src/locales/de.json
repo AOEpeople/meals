@@ -287,7 +287,10 @@
     "download": "Pdf downloaden"
   },
   "session": {
-    "expired": "Session abgelaufen!"
+    "expired": "Session abgelaufen!",
+    "timeout_header": "Die Session ist abgelaufen!",
+    "timeout_text": "Die Seite muss neugeladen werden, um die Session wiederherzustellen.",
+    "reload": "Neu laden"
   },
   "slot": {
     "create": "Slot erstellen",

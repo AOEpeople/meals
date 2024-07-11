@@ -46,6 +46,13 @@ MealzMealBundle_menu:
   path:  /menu/{week}
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_menu_create:
+  path:  /menu/{week}/create
+  defaults:
+    _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    path: /weeks
+    permanent: true
+
 MealzMealBundle_weeks:
   path:  /weeks
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

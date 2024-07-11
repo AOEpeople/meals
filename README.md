@@ -257,6 +257,7 @@ IDP_CLIENT_SECRET=client-secret
   * 801: User has no permission to enter or leave
   * 802: User could not join the event
   * 803: User could not leave the event
+  * 804: User could not join, because the event already happened
 *MealGuestController 9xx*
   * 901: Could not find the Invitation for the given hash
   * 902: Parameters were not provided (eg. firstname and lastname)

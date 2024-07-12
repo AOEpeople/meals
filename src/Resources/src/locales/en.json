@@ -279,7 +279,8 @@
     "notFound": "No profiles found for this query",
     "shortQuery": "Min. 3 Buchstaben für Suche eingeben",
     "search": "Filter participant",
-    "guest": "Gast"
+    "guest": "Gast",
+    "noMeals": "No dishes selected yet"
   },
   "printList": {
     "title": "Participations on ",

@@ -149,9 +149,6 @@ export function useWeeks() {
             }
         }
 
-        const mealDays = response.value.days;
-        console.log(JSON.stringify(mealDays));
-
         return response.value.calendarWeek;
     }
 

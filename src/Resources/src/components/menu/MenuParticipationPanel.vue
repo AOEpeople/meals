@@ -15,6 +15,9 @@
       :meal="meal"
       class="max-w-[300px] px-2"
     />
+    <span v-if="mealList.length < 1">
+      {{ t('menu.noMeals') }}
+    </span>
   </div>
 </template>
 
@@ -24,6 +27,9 @@ import { Dictionary } from 'types/types';
 import MealParticipationInput from './MealParticipationInput.vue';
 import { computed } from 'vue';
 import { XCircleIcon } from '@heroicons/vue/solid';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   meals: Dictionary<MealDTO[]>;
@@ -34,9 +40,9 @@ const emit = defineEmits(['closePanel']);
 const mealList = computed(() => {
   const keys = Object.keys(props.meals);
   removeCombinedMealKey(keys);
-  const returnMealDTOs = [];
+  const returnMealDTOs: MealDTO[] = [];
   keys.forEach((key) => {
-    if (parseInt(key) > 0) {
+    if (props.meals[key].length > 0) {
       returnMealDTOs.push(...props.meals[key]);
     }
   });
@@ -46,7 +52,13 @@ const mealList = computed(() => {
 function removeCombinedMealKey(keys: string[]) {
   let indexToRemove = -1;
   keys.forEach((mealId) => {
-    if (parseInt(mealId) > 0 && props.meals[mealId][0].dishSlug === 'combined-dish') {
+    if (
+      parseInt(mealId) > 0 &&
+      props.meals[mealId] !== undefined &&
+      props.meals[mealId] !== null &&
+      props.meals[mealId].length > 0 &&
+      props.meals[mealId][0].dishSlug === 'combined-dish'
+    ) {
       indexToRemove = keys.indexOf(mealId);
     }
   });

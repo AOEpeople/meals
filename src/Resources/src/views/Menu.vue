@@ -11,7 +11,7 @@
     />
     <MenuDay
       v-for="(day, index) in menu.days"
-      :key="day.id"
+      :key="Object.keys(day.meals).join()"
       v-model="menu.days[index]"
       :lockDates="lockDates"
       class="mt-4"
@@ -96,25 +96,9 @@ const menu = reactive<WeekDTO>({
 
 const calendarWeek = ref(0);
 
-// watch(
-//   () => menu.days,
-//   (prev, after) => {
-//     if (prev.length > 0) {
-//       const previous = JSON.stringify(Object.entries(prev[0].meals));
-//       console.log('Prev: \n' + previous);
-//     }
-//     if (after.length > 0) {
-//       const afterVal = JSON.stringify(Object.entries(after[0].meals));
-//       console.log('After: \n' + afterVal);
-//     }
-//   }
-// )
-
 onMounted(async () => {
   const progress = useProgress().start();
   parseWeekId.value = parseInt(props.week);
-
-  console.log(`Week is ${props.week} and create is ${props.create}`);
 
   if (DishesState.dishes.length === 0) {
     await fetchDishes();

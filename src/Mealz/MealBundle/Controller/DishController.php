@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishCollection;
+use App\Mealz\MealBundle\Enum\Diet;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Service\ApiService;
@@ -87,6 +88,9 @@ class DishController extends BaseListController
             }
             if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
                 $dish->setCategory($this->categoryRepository->find($parameters['category']));
+            }
+            if (true === $this->apiService->isParamValid($parameters, 'diet', 'string')) {
+                $dish->setDiet(Diet::tryFrom($parameters['diet']));
             }
 
             $this->em->persist($dish);

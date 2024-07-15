@@ -1,5 +1,6 @@
 import { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
+import { Diet } from '@/enums/Diet';
 
 export interface CreateDishDTO {
     titleDe: string;
@@ -8,6 +9,7 @@ export interface CreateDishDTO {
     descriptionDe?: string;
     descriptionEn?: string;
     category?: number;
+    diet?: Diet
 }
 
 /**

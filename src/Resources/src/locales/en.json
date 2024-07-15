@@ -120,6 +120,12 @@
         "edit": "Edit Variation",
         "new": "Create Variation"
       }
+    },
+    "diet": {
+      "diet": "Diet",
+      "vegan": "Vegan",
+      "vegetarian": "Vegetarisch",
+      "meat": "Beinhaltet Fleisch"
     }
   },
   "event": {

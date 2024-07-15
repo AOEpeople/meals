@@ -10,7 +10,7 @@
     </ListboxLabel>
     <ListboxButton
       :class="open ? 'rounded-t-[23px] border-x-2 border-t-2' : 'rounded-full border-2'"
-      class="focus-visible:ring-offset-orange-300 relative flex w-full items-center border-[#CAD6E1] bg-white px-4 py-2 text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+      class="focus-visible:ring-offset-orange-300 flex w-full items-center border-[#CAD6E1] bg-white px-4 py-2 text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
     >
       <span class="w-full truncate text-[#9CA3AF]">
         {{ locale === 'en' ? selectedCategory.titleEn : selectedCategory.titleDe }}
@@ -21,24 +21,29 @@
         aria-hidden="true"
       />
     </ListboxButton>
-    <ListboxOptions
-      class="absolute max-h-60 w-full overflow-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white shadow-lg focus:outline-none"
+    <div
+      v-if="open"
+      class="absolute z-10 w-full"
     >
-      <ListboxOption
-        v-for="category in CategoriesState.categories"
-        :key="category.id"
-        v-slot="{ selected }"
-        :value="category"
-        class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
+      <ListboxOptions
+        class="max-h-60 w-full overflow-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white shadow-lg focus:outline-none"
       >
-        <span
-          class="inline-block size-full px-4 py-2"
-          :class="selected ? 'bg-[#F4F4F4] font-medium' : 'font-normal'"
+        <ListboxOption
+          v-for="category in CategoriesState.categories"
+          :key="category.id"
+          v-slot="{ selected }"
+          :value="category"
+          class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
         >
-          {{ locale === 'en' ? category.titleEn : category.titleDe }}
-        </span>
-      </ListboxOption>
-    </ListboxOptions>
+          <span
+            class="inline-block size-full px-4 py-2"
+            :class="selected ? 'bg-[#F4F4F4] font-medium' : 'font-normal'"
+          >
+            {{ locale === 'en' ? category.titleEn : category.titleDe }}
+          </span>
+        </ListboxOption>
+      </ListboxOptions>
+    </div>
   </Listbox>
 </template>
 

@@ -1,9 +1,11 @@
 import { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
+import { Diet } from '@/enums/Diet';
 
 export interface CreateDishVariationDTO {
     titleDe?: string;
     titleEn?: string;
+    diet?: Diet
 }
 
 /**

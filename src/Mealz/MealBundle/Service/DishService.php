@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Enum\Diet;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use Exception;
@@ -80,6 +81,9 @@ class DishService
         }
         if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
             $dish->setCategory($this->categoryRepository->find($parameters['category']));
+        }
+        if (true === $this->apiService->isParamValid($parameters, 'diet', 'string')) {
+            $dish->setDiet(Diet::tryFrom($parameters['diet']));
         }
     }
 

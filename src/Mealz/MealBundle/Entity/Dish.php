@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use App\Mealz\MealBundle\Enum\Diet;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -55,6 +56,9 @@ class Dish implements JsonSerializable
 
     #[ORM\Column(type: 'boolean', nullable: false)]
     protected bool $enabled = true;
+
+    #[ORM\Column(type: 'string', nullable: false, enumType: Diet::class)]
+    protected Diet $diet = Diet::MEAT;
 
     /**
      * Dish with this flag set can only have one serving size.
@@ -240,6 +244,16 @@ class Dish implements JsonSerializable
         return self::COMBINED_DISH_SLUG === $this->slug;
     }
 
+    public function getDiet(): Diet
+    {
+        return $this->diet;
+    }
+
+    public function setDiet(Diet $diet): void
+    {
+        $this->diet = $diet;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -251,6 +265,7 @@ class Dish implements JsonSerializable
             'descriptionEn' => $this->description_en,
             'categoryId' => null !== $this->category ? $this->category->getId() : null,
             'oneServingSize' => $this->oneServingSize,
+            'diet' => $this->diet,
             'parentId' => null !== $this->parent ? $this->parent->getId() : null,
             'variations' => $this->hasVariations() ? $this->variations->toArray() : [],
         ];

@@ -7,6 +7,7 @@ import Dishes from '../fixtures/getDishes.json';
 import Categories from '../fixtures/getCategories.json';
 import { CreateDishDTO } from '@/api/postCreateDish';
 import combiDishes from '../fixtures/combiDishes.json';
+import { Diet } from '@/enums/Diet';
 
 const dish1: Dish = {
     id: 17,
@@ -15,6 +16,7 @@ const dish1: Dish = {
     titleEn: 'Limbs 123',
     categoryId: 6,
     oneServingSize: false,
+    diet: Diet.MEAT,
     parentId: null,
     variations: []
 };
@@ -60,7 +62,7 @@ const getMockedResponses = (method: string, url: string) => {
         method === 'GET'
     ) {
         return {
-            response: ref<Dish[]>(combiDishes),
+            response: ref<Dish[]>(combiDishes as Dish[]),
             request: asyncFunc,
             error: ref(false)
         };

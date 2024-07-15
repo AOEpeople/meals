@@ -13,6 +13,7 @@ import { refThrottled } from '@vueuse/core';
 import getDishesForCombi from '@/api/getDishesForCombi';
 import { useCategories } from './categoriesStore';
 import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
+import { Diet } from '@/enums/Diet';
 
 export interface Dish {
     id: number;
@@ -23,6 +24,7 @@ export interface Dish {
     descriptionEn?: string;
     categoryId: number;
     oneServingSize: boolean;
+    diet: Diet;
     parentId: number;
     variations: Dish[];
 }
@@ -43,9 +45,10 @@ function isDish(dish: Dish): dish is Dish {
         typeof (dish as Dish).titleEn === 'string' &&
         ((dish as Dish).categoryId === null || typeof (dish as Dish).categoryId === 'number') &&
         typeof (dish as Dish).oneServingSize === 'boolean' &&
+        typeof (dish as Dish).diet === 'string' &&
         Array.isArray((dish as Dish).variations) &&
-        Object.keys(dish).length >= 8 &&
-        Object.keys(dish).length <= 10
+        Object.keys(dish).length >= 9 &&
+        Object.keys(dish).length <= 11
     );
 }
 

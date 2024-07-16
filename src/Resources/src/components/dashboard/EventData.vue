@@ -34,12 +34,12 @@
         />
         <ParticipationCounter
           :limit="0"
-          :mealCSS="!day.isLocked ? 'bg-primary-4' : 'bg-[#80909F]'"
+          :mealCSS="!isEventPast() ? 'bg-primary-4' : 'bg-[#80909F]'"
         >
           {{ day.event?.participations }}
         </ParticipationCounter>
         <CheckBox
-          :isActive="new Date(day.date.date) > new Date()"
+          :isActive="!isEventPast()"
           :isChecked="day.event?.isParticipating ?? false"
           @click="handleClick"
         />
@@ -72,7 +72,7 @@ const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick() {
-  if (isLocked(props.dayId) === true) {
+  if (isLocked(props.dayId) === true || isEventPast() === true) {
     return;
   }
   addLock(props.dayId);
@@ -82,5 +82,12 @@ async function handleClick() {
     await leaveEvent(props.day.date.date);
   }
   removeLock(props.dayId);
+}
+
+function isEventPast() {
+  const eventLockDate = new Date(props.day.date.date).setHours(17, 0);
+  const now = Date.now();
+  const isPast = eventLockDate < now;
+  return isPast;
 }
 </script>

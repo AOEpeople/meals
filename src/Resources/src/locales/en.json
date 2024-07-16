@@ -167,6 +167,7 @@
       "801": "No permission to enter or leave the event",
       "802": "Couldn't join the event",
       "803": "Couldn't leave the event",
+      "804": "Can't join the event anymore",
       "903": "You are already registered. If you have any questions please message your contact person."
     },
     "success": {

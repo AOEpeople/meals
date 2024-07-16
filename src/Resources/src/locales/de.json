@@ -167,6 +167,7 @@
       "801": "Keine Berechtigung zum beitreten oder verlassen",
       "802": "Dem Event konnte nicht beigetreten werden",
       "803": "Das Event konnte nicht verlassen werden",
+      "804": "Dem Event kann nicht mehr beigetreten werden",
       "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner."
     },
     "success": {

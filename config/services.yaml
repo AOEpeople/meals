@@ -51,6 +51,7 @@ parameters:
   mealz.meal.search_timestamp: '2000-01-01'
   mealz.meal.new_flag_counter: 2
   mealz.meal.combined.price: 6.13
+  mealz.event.lock_participation_at: '17:00'
   # PDO Session Handler options
   # Define table and column names to store session data
   app.session.handler.pdo.options:

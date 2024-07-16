@@ -80,7 +80,6 @@ class DishVariationController extends BaseController
                 $dishVariation->setDiet(Diet::tryFrom($parameters['diet']));
             }
 
-
             $this->em->persist($dishVariation);
             $this->em->flush();
 

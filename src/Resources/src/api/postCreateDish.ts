@@ -9,7 +9,7 @@ export interface CreateDishDTO {
     descriptionDe?: string;
     descriptionEn?: string;
     category?: number;
-    diet?: Diet
+    diet?: Diet;
 }
 
 /**

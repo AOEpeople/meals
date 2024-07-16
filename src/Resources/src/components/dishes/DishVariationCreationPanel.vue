@@ -17,12 +17,12 @@
       :required="required"
     />
     <ListOptionsDropDown
-        v-model="dietInput"
-        :list-options="dietOptions"
-        class="col-span-1 col-start-1 row-start-6 items-start pt-2 sm:col-span-1 sm:row-start-4"
-      >
-        {{ t('dish.diet.diet') }}
-      </ListOptionsDropDown>
+      v-model="dietInput"
+      :list-options="dietOptions"
+      class="col-span-1 col-start-1 row-start-6 items-start pt-2 sm:col-span-1 sm:row-start-4"
+    >
+      {{ t('dish.diet.diet') }}
+    </ListOptionsDropDown>
     <SubmitButton />
   </form>
 </template>
@@ -61,7 +61,7 @@ const props = withDefaults(
 const emit = defineEmits(['closePanel']);
 
 const dietOptions = computed(() => {
-  return [Diet.MEAT, Diet.VEGAN, Diet.VEGETARIAN].map(diet => {
+  return [Diet.MEAT, Diet.VEGAN, Diet.VEGETARIAN].map((diet) => {
     return {
       value: diet,
       label: getDietOption(diet)

@@ -43,7 +43,7 @@
             :sr="t('dish.popover.oneSizeServing')"
             :initial="oneSizeServing"
             class="my-auto ml-4"
-            @toggle="(value) => dishInput.oneServingSize = value"
+            @toggle="(value) => (dishInput.oneServingSize = value)"
           />
         </div>
       </SwitchGroup>
@@ -85,7 +85,7 @@ const props = withDefaults(
     descriptionEn?: string | null;
     categoryId?: number | null;
     oneSizeServing?: boolean;
-    diet?: Diet,
+    diet?: Diet;
     dishId?: number | null;
     edit?: boolean;
   }>(),
@@ -109,7 +109,7 @@ onMounted(async () => {
 });
 
 const dietOptions = computed(() => {
-  return [Diet.MEAT, Diet.VEGAN, Diet.VEGETARIAN].map(diet => {
+  return [Diet.MEAT, Diet.VEGAN, Diet.VEGETARIAN].map((diet) => {
     return {
       value: diet,
       label: getDietOption(diet)
@@ -145,7 +145,7 @@ watch(
 watch(
   () => dietInput.value,
   () => {
-    dishInput.diet = dietInput.value.value
+    dishInput.diet = dietInput.value.value;
   }
 );
 

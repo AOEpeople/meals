@@ -5,7 +5,7 @@ import { Diet } from '@/enums/Diet';
 export interface CreateDishVariationDTO {
     titleDe?: string;
     titleEn?: string;
-    diet?: Diet
+    diet?: Diet;
 }
 
 /**

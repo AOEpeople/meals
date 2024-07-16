@@ -58,33 +58,11 @@ class DishService
      */
     public function updateHelper(Dish $dish, array $parameters): void
     {
-        if (true === $this->apiService->isParamValid($parameters, 'titleDe', 'string')) {
-            $dish->setTitleDe($parameters['titleDe']);
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'titleEn', 'string')) {
-            $dish->setTitleEn($parameters['titleEn']);
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
-            $dish->setOneServingSize($parameters['oneServingSize']);
-            if (true === $dish->hasVariations()) {
-                /** @var Dish $variation */
-                foreach ($dish->getVariations() as $variation) {
-                    $variation->setOneServingSize($parameters['oneServingSize']);
-                }
-            }
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
-            $dish->setDescriptionDe($parameters['descriptionDe']);
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
-            $dish->setDescriptionEn($parameters['descriptionEn']);
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
-            $dish->setCategory($this->categoryRepository->find($parameters['category']));
-        }
-        if (true === $this->apiService->isParamValid($parameters, 'diet', 'string')) {
-            $dish->setDiet(Diet::tryFrom($parameters['diet']));
-        }
+        $this->setTitleIfValid($dish, $parameters);
+        $this->setServingSizeIfValid($dish, $parameters);
+        $this->setDescriptionIfValid($dish, $parameters);
+        $this->setCategoryIfValid($dish, $parameters);
+        $this->setDietIfValid($dish, $parameters);
     }
 
     public function getDishCount(): array
@@ -112,5 +90,52 @@ class DishService
         }
 
         return $uniqueMeals;
+    }
+
+    private function setDietIfValid(Dish $dish, array $parameters): void
+    {
+        if (true === $this->apiService->isParamValid($parameters, 'diet', 'string')) {
+            $dish->setDiet(Diet::tryFrom($parameters['diet']));
+        }
+    }
+
+    private function setCategoryIfValid(Dish $dish, array $parameters): void
+    {
+        if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
+            $dish->setCategory($this->categoryRepository->find($parameters['category']));
+        }
+    }
+
+    private function setDescriptionIfValid(Dish $dish, array $parameters): void
+    {
+        if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
+            $dish->setDescriptionDe($parameters['descriptionDe']);
+        }
+        if (true === $this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
+            $dish->setDescriptionEn($parameters['descriptionEn']);
+        }
+    }
+
+    private function setServingSizeIfValid(Dish $dish, array $parameters): void
+    {
+        if (true === $this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
+            $dish->setOneServingSize($parameters['oneServingSize']);
+            if (true === $dish->hasVariations()) {
+                /** @var Dish $variation */
+                foreach ($dish->getVariations() as $variation) {
+                    $variation->setOneServingSize($parameters['oneServingSize']);
+                }
+            }
+        }
+    }
+
+    private function setTitleIfValid(Dish $dish, array $parameters): void
+    {
+        if (true === $this->apiService->isParamValid($parameters, 'titleDe', 'string')) {
+            $dish->setTitleDe($parameters['titleDe']);
+        }
+        if (true === $this->apiService->isParamValid($parameters, 'titleEn', 'string')) {
+            $dish->setTitleEn($parameters['titleEn']);
+        }
     }
 }

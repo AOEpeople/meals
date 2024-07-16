@@ -268,11 +268,11 @@ describe('Test Creating a Menu', () => {
 
         cy.get('input')
             .eq(12)
-            .should('have.value', 'Innards DE');
+            .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
 
         cy.get('input')
             .eq(13)
-            .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
+            .should('have.value', 'Innards DE');
 
         // Test Participations
         cy.get('span').contains('Teilnahmen').click();
@@ -299,7 +299,7 @@ describe('Test Creating a Menu', () => {
             .parent()
             .find('td')
             .eq(4)
-            .click()
+            .click();
 
         cy.wait('@putParticipation');
 
@@ -327,7 +327,7 @@ describe('Test Creating a Menu', () => {
             .parent()
             .find('td')
             .eq(4)
-            .click()
+            .click();
 
         cy.wait('@putParticipation');
 
@@ -353,7 +353,7 @@ describe('Test Creating a Menu', () => {
             .parent()
             .find('td')
             .eq(4)
-            .click()
+            .click();
 
         cy.wait('@deleteParticipation');
 
@@ -368,6 +368,154 @@ describe('Test Creating a Menu', () => {
             .eq(4)
             .find('svg')
             .should('not.exist');
+    });
+
+    it('should create a menu with participation limits, delete a meal in the first row of a day and be able to set it again', () => {
+        cy.get('span > a').contains('Mahlzeiten').click();
+
+        cy.wait(['@getWeeks']);
+
+        // Go to 7th week (it should not have been created yet because of db reset)
+        cy.get('h4').eq(6).contains('Woche').click();
+
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);
+
+        // create menu
+        // Monday
+        cy.get('input')
+            .first()
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click()
+            .parent()
+            .find('input')
+            .click()
+            .type('Tasty')
+            .parent().parent()
+            .find('li').contains('Tasty Worms DE')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        cy.get('input')
+            .eq(1)
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click()
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li').contains('Limbs DE')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        // Save
+        cy.contains('input', 'Speichern').click();
+
+        cy.wait(['@postWeeks', '@getWeeks']);
+
+        cy.get('[data-cy="msgClose"]').click();
+
+        // change participation limit
+        cy.get('input')
+            .first()
+            .parent()
+            .parent()
+            .parent()
+            .parent()
+            .find('div.col-start-1')
+            .first()
+            .find('button')
+            .first()
+            .click();
+
+        cy.get('[data-cy="meal-participation-limit-input"]')
+            .eq(1)
+            .clear()
+            .type('17');
+
+        cy.get('span').contains('Limit').parent().find('svg').click();
+
+        // Delete Meal
+        cy.get('h2').should('contain', 'Woche').click();
+
+        cy.get('input')
+            .first()
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        // Save
+        cy.contains('input', 'Speichern').click();
+
+        cy.wait(['@putMenu', '@getWeeks']);
+
+        cy.get('[data-cy="msgClose"]').click();
+
+        // Check Limbs is now set as first input
+        cy.get('input')
+            .first()
+            .should('have.value', 'Limbs DE');
+
+        // Set new second Meal
+        cy.get('input')
+            .eq(1)
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click()
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li').contains('Braaaaaiiinnnzzzzzz DE')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        // Save
+        cy.contains('input', 'Speichern').click();
+
+        cy.wait(['@putMenu', '@getWeeks']);
+
+        cy.get('[data-cy="msgClose"]').click();
+
+        // Check Meals are both saved
+        cy.get('input')
+            .first()
+            .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
+
+        cy.get('input')
+            .eq(1)
+            .should('have.value', 'Limbs DE');
+
+        // Check participation limits
+        cy.get('input')
+            .first()
+            .parent()
+            .parent()
+            .parent()
+            .parent()
+            .find('div.col-start-1')
+            .first()
+            .find('button')
+            .first()
+            .click();
+
+        cy.get('[data-cy="meal-participation-limit-input"]')
+            .eq(0)
+            .should('have.value', 0);
+
+        cy.get('[data-cy="meal-participation-limit-input"]')
+            .eq(1)
+            .should('have.value', 17);
     });
 
     it('should not create a menu if the initial submission of a menu gets aborted', () => {

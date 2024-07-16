@@ -11,7 +11,7 @@
     />
     <MenuDay
       v-for="(day, index) in menu.days"
-      :key="day.id"
+      :key="Object.keys(day.meals).join()"
       v-model="menu.days[index]"
       :lockDates="lockDates"
       class="mt-4"

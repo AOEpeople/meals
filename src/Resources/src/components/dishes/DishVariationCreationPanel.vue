@@ -16,6 +16,13 @@
       :label-text="t('dish.popover.english')"
       :required="required"
     />
+    <ListOptionsDropDown
+        v-model="dietInput"
+        :list-options="dietOptions"
+        class="col-span-1 col-start-1 row-start-6 items-start pt-2 sm:col-span-1 sm:row-start-4"
+      >
+        {{ t('dish.diet.diet') }}
+      </ListOptionsDropDown>
     <SubmitButton />
   </form>
 </template>
@@ -26,7 +33,9 @@ import SubmitButton from '../misc/SubmitButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import { useDishes } from '@/stores/dishesStore';
 import { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { Diet } from '@/enums/Diet';
+import ListOptionsDropDown from '@/components/misc/ListOptionsDropDown.vue';
 
 const { t } = useI18n();
 const { createDishVariation, updateDishVariation } = useDishes();
@@ -38,19 +47,34 @@ const props = withDefaults(
     slug?: string;
     parentSlug: string;
     edit?: boolean;
+    diet?: Diet;
   }>(),
   {
     titleDe: '',
     titleEn: '',
     slug: null,
-    edit: false
+    edit: false,
+    diet: Diet.MEAT
   }
 );
 
 const emit = defineEmits(['closePanel']);
 
+const dietOptions = computed(() => {
+  return [Diet.MEAT, Diet.VEGAN, Diet.VEGETARIAN].map(diet => {
+    return {
+      value: diet,
+      label: getDietOption(diet)
+    };
+  });
+});
+
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
+const dietInput = ref({
+  value: props.diet,
+  label: getDietOption(props.diet)
+});
 const required = ref(false);
 
 async function onSubmit() {
@@ -69,7 +93,12 @@ async function onSubmit() {
 function createDishVariationDtoObject(): CreateDishVariationDTO {
   return {
     titleDe: titleDeInput.value,
-    titleEn: titleEnInput.value
+    titleEn: titleEnInput.value,
+    diet: dietInput.value.value
   };
+}
+
+function getDietOption(diet: Diet): string {
+  return t(`dish.diet.${diet}`);
 }
 </script>

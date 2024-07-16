@@ -4,6 +4,7 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Enum\Diet;
 use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -45,6 +46,12 @@ class DishVariationController extends BaseController
                 throw new Exception('202: Title not set');
             }
 
+            if (true === isset($parameters['diet'])) {
+                $dishVariation->setDiet(Diet::tryFrom($parameters['diet']));
+            } else {
+                $dishVariation->setDiet(Diet::tryFrom('meat'));
+            }
+
             $this->em->persist($dishVariation);
             $this->em->flush();
 
@@ -69,6 +76,10 @@ class DishVariationController extends BaseController
             if (true === isset($parameters['titleEn'])) {
                 $dishVariation->setTitleEn($parameters['titleEn']);
             }
+            if (true === isset($parameters['diet'])) {
+                $dishVariation->setDiet(Diet::tryFrom($parameters['diet']));
+            }
+
 
             $this->em->persist($dishVariation);
             $this->em->flush();

@@ -285,11 +285,12 @@ export function useDishes() {
      * Updates the DishesState with the new values of a dishVariation
      */
     function updateDishVariationInState(parentId: number, variation: Dish) {
-        const varationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
+        const variationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
 
-        varationToUpdate.slug = variation.slug;
-        varationToUpdate.titleDe = variation.titleDe;
-        varationToUpdate.titleEn = variation.titleEn;
+        variationToUpdate.slug = variation.slug;
+        variationToUpdate.titleDe = variation.titleDe;
+        variationToUpdate.titleEn = variation.titleEn;
+        variationToUpdate.diet = variation.diet;
     }
 
     function getDishById(id: number) {

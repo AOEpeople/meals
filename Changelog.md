@@ -1,5 +1,42 @@
 # Changelog
 
+## Version v3.1.1 (2024-07-12)
+
+### Fixes
+
+- fixed a code smell (d67a63a5)
+- fixed a cypress test and added a new test for the fixed menu creation bug (11e97fd8)
+- fixed formatting (10eeaa0d)
+- fixed a bug that prevented participation limits to be set before saving a menu and fixed a bug that prevented a meal to be added to the menu after deleting the first meal of a day (add30808)
+- fixed a bug that gave locked days in the dashboard the wrong minimum height (5be07bf9)
+- fixed code smell (14ee9d87)
+
+### Tests
+
+- tests done, ready for review / discussion (deb12368)
+- test parallel build (5f69ddd7)
+- test parallel build (7bb14a0b)
+- test parallel build (24557dbc)
+- test parallel build (bf1798d3)
+- test parallel build (9e1935da)
+- test prod image (5eaf6535)
+- test increasing containers (fb1a8502)
+
+### Chores and tidying
+
+- updated faulty method signiture, added automatic reloading on session timeout, added popup to indicate a session timeout (a5aab746)
+- updated frontend validation for event joining and added validation for event joining in the backend (e6c9577c)
+
+### Other
+
+- added text and styling to SessionCheckerPopup, exported session checking from checkActiveSession (ddc29ea7)
+- - refactored MealState to be computed in the frontend (51cb729d)
+- started working on fixing participation input (9c94546a)
+- added redirect to mitigate faulty app state (911b29af)
+- added and configured cypress-split to parallelise the cypress tests (517d4cbe)
+- decreased the number of weeks and meals to load as fixtures (2bb8d7d3)
+- Changed creation of random users in fixture loading in dev environment to speed up fixture loading (17402d57)
+
 ## Version v3.1.0 (2024-07-03)
 
 ### Fixes

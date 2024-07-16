@@ -81,7 +81,7 @@ const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick(event: EventParticipation) {
-  if (isLocked(props.dayId) === true || isEventPast() === true) {
+  if (isLocked(props.dayId) === true || isEventPast(event) === true) {
     return;
   }
   addLock(props.dayId);
@@ -93,7 +93,18 @@ async function handleClick(event: EventParticipation) {
   removeLock(props.dayId);
 }
 
-function isEventPast() {
+function isEventPast(event: EventParticipation) {
+  if (getEventById(event?.eventId ?? -1)?.slug === 'lunch-roulette') {
+    // special lock date for lunchroulette
+    const eventDate = new Date(props.day.date.date);
+    eventDate.setDate(eventDate.getDate() - 1);
+    eventDate.setHours(16, 0, 0, 0);
+
+    const now = new Date();
+    const isPast = eventDate.getTime() < now.getTime();
+
+    return isPast;
+  }
   const eventLockDate = new Date(props.day.date.date).setHours(17, 0);
   const now = Date.now();
   const isPast = eventLockDate < now;

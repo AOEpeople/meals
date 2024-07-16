@@ -203,7 +203,8 @@
       "events": {
         "created": "The event was successfully created.",
         "deleted": "The event was succefully deleted.",
-        "edited": "The event was successfully updated."
+        "edited": "The event was successfully updated.",
+        "lunchroulette": "Reminder: You're still signed up for the Lunchroulette. Please cancel if you can't attend."
       },
       "finance": {
         "empty": "There are no transactions for the selected timeframe"

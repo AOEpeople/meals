@@ -5,7 +5,6 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\EventParticipation;
-use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Helper\MealAdminHelper;
@@ -190,73 +189,88 @@ class MealAdminController extends BaseController
 
     private function handleDay(array $day): void
     {
-        $dayEntity = $this->dayRepository->find($day['id']);
-        if (null === $dayEntity) {
-            throw new Exception('105: day not found');
-        }
-
-        if (null !== $day['enabled']) {
-            $dayEntity->setEnabled($day['enabled']);
-        }
-        $this->setLockParticipationForDay($dayEntity, $day);
-        if (array_key_exists('events', $day)) {
-            $eventCollection = $day['events'];
-            foreach ($dayEntity->getEvents() as $event) {
-                $this->em->remove($event);
-            }
-            $dayEntity->removeEvents();
-            $this->em->flush();
-            foreach ($eventCollection as $event) {
-                $this->handleEventArr($event, $dayEntity);
-            }
-        }
-
-        $mealCollection = $day['meals'];
-        /*
-         * 3 Meals are comprised of 2 main meals and a potential combined meal.
-         * The combined meal is also in the collection, because meals that are
-         * not in the collection get removed.
-         */
-        if (3 < count($mealCollection)) {
-            throw new Exception('106: too many meals requested');
-        }
-
-        $this->dayService->removeUnusedMeals($dayEntity, $mealCollection);
-
-        // parentMeal is an array of either one meal without variations or 1-2 variations
-        foreach ($mealCollection as $mealArr) {
-            $this->mealAdminHelper->handleMealArray($mealArr, $dayEntity);
-        }
+        $dayEntity = $this->getDayEntity($day['id']);
+        $this->updateDaySettings($dayEntity, $day);
+        $this->updateEvents($dayEntity, $day['events'] ?? []);
+        $this->updateMeals($dayEntity, $day['meals'], 3);
     }
 
     private function handleNewDay($dayData, Day $day): void
     {
-        // check for negative id
         if (0 < $dayData['id'] && $dayData['date'] === $day->getDateTime()) {
             throw new Exception('no new day');
         }
 
+        $this->updateDaySettings($day, $dayData);
+        $this->updateEvents($day, $dayData['events']);
+        $this->updateMeals($day, $dayData['meals'], 2);
+    }
+
+    private function updateDaySettings(Day $day, array $dayData): void
+    {
         if (null !== $dayData['enabled']) {
             $day->setEnabled($dayData['enabled']);
         }
-
-        $eventCollection = $dayData['events'];
         $this->setLockParticipationForDay($day, $dayData);
-        foreach ($day->getEvents() as $event) {
-            $this->em->remove($event);
-        }
-        $day->removeEvents();
+    }
+
+    private function updateEvents(Day $day, array $newEvents): void
+    {
+        $existingEventIds = $this->getExistingEventIds($day);
+        $newEventIds = array_filter(array_column($newEvents, 'eventId'));
+        $this->addNewEvents($day, $newEvents, $existingEventIds);
+        $this->removeOldEvents($day, $newEventIds);
+
         $this->em->flush();
-        foreach ($eventCollection as $eventArr) {
-            $this->handleEventArr($eventArr, $day);
+    }
+
+    private function getExistingEventIds(Day $day): array
+    {
+        return array_filter(array_map(
+            fn ($e) => $e instanceof EventParticipation ? $e->getEvent()->getId() : null,
+            $day->getEvents()->toArray()
+        ));
+    }
+
+    private function addNewEvents(Day $day, array $newEvents, array $existingEventIds): void
+    {
+        foreach ($newEvents as $eventArr) {
+            if (!in_array($eventArr['eventId'], $existingEventIds, true) && (null !== $eventArr['eventId'])) {
+                $this->addEvent($eventArr, $day);
+            }
         }
-        $mealCollection = $dayData['meals'];
-        // max 2 main meals allowed
-        if (2 < count($mealCollection)) {
+    }
+
+    private function getDayEntity(int $dayId): Day
+    {
+        $dayEntity = $this->dayRepository->find($dayId);
+        if (null === $dayEntity) {
+            throw new Exception('105: day not found');
+        }
+
+        return $dayEntity;
+    }
+
+    private function removeOldEvents(Day $dayEntity, array $newEventIds): void
+    {
+        foreach ($dayEntity->getEvents() as $existingEvent) {
+            if (!in_array($existingEvent->getEvent()->getId(), $newEventIds, true)) {
+                $dayEntity->removeEvent($existingEvent);
+                $this->em->remove($existingEvent);
+            }
+        }
+    }
+
+    private function updateMeals(Day $day, array $mealCollection, int $count): void
+    {
+        if ($count < count($mealCollection)) {
             throw new Exception('106: too many meals requested');
         }
+        // when updating a day remove old meals
+        if (3 === $count) {
+            $this->dayService->removeUnusedMeals($day, $mealCollection);
+        }
 
-        // parentMeal is an array of either one meal without variations or 1-2 variations
         foreach ($mealCollection as $mealArr) {
             $this->mealAdminHelper->handleMealArray($mealArr, $day);
         }
@@ -275,23 +289,10 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function handleEventArr(array $eventArr, Day $day): void
-    {
-        $this->addEvent($eventArr, $day);
-    }
-
     private function addEvent(array $event, Day $dayEntity)
     {
-        if (!isset($event['eventId'])) {
-        } else {
-            $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
-            $eventExistsAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
-            if (!$eventExistsAlready) {
-                $eventParticipation = new EventParticipation($dayEntity, $eventEntity);
-                $dayEntity->addEvent($eventParticipation);
-            } else {
-                throw new Exception('Meal exists for day already');
-            }
-        }
+        $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
+        $eventParticipation = new EventParticipation($dayEntity, $eventEntity);
+        $dayEntity->addEvent($eventParticipation);
     }
 }

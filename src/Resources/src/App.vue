@@ -8,6 +8,7 @@
       <vue3-progress-bar />
     </div>
     <DebtPopup />
+    <SessionCheckerPopup />
     <Content class="relative z-[2] grow pb-12" />
     <Footer
       v-if="!showParticipations"
@@ -24,6 +25,7 @@ import { useRoute } from 'vue-router';
 import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import { useComponentHeights } from '@/services/useComponentHeights';
 import DebtPopup from './components/debtPopup/DebtPopup.vue';
+import SessionCheckerPopup from '@/components/misc/SessionCheckerPopup.vue';
 
 const route = useRoute();
 const { setNavBarHeight, windowWidth } = useComponentHeights();

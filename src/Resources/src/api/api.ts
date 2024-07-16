@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ref } from 'vue';
+import checkActiveSession from '@/tools/checkActiveSession';
 
 const instance = axios.create({
     baseURL: window.location.origin,
@@ -14,13 +15,16 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
             method: method,
             url: url,
             data: data,
-            headers: { 'content-type': contentType }
+            headers: {
+                'content-type': contentType
+            }
         })
             .then((res) => {
                 response.value = res.data as T;
             })
             .catch((err) => {
                 error.value = true;
+
                 if (
                     err.response !== null &&
                     err.response !== undefined &&
@@ -28,6 +32,8 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
                     err.response.data !== undefined
                 ) {
                     response.value = err.response.data;
+                } else if (err.status === null || err.status === undefined) {
+                    checkActiveSession();
                 }
             });
     };

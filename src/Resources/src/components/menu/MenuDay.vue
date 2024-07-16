@@ -1,6 +1,6 @@
 <template>
   <div
-    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-3 rounded-lg border-0 border-none bg-white text-center align-middle sm:grid-cols-[24px_minmax(0,1fr)_72px]"
+    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-4 rounded-lg border-0 border-none bg-white text-center align-middle sm:grid-cols-[24px_minmax(0,1fr)_72px]"
   >
     <div
       class="col-start-1 row-span-3 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-primary-2 py-1"
@@ -44,8 +44,14 @@
       class="col-start-2 row-span-1 row-start-2 px-2 pb-4 pt-2 md:px-4"
     />
     <EventInput
-      v-model="selectedEvent"
-      class="col-start-2 row-span-1 row-start-3 border-t-[3px] px-2 py-[12px] md:px-4"
+      v-model="selectedEventOne"
+      class="col-start-2 row-span-1 row-start-3 border-b border-t-[3px] px-2 py-[12px] md:px-4"
+    />
+
+    <EventInput
+    v-if="selectedEventOne"
+      v-model="selectedEventTwo"
+      class="col-start-2 row-span-1 row-start-4 px-2 py-[12px] md:px-4"
     />
     <div class="col-start-3 row-span-3 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]">
       <Switch
@@ -89,7 +95,8 @@ const emit = defineEmits(['update:modelValue']);
 
 const selectedDishOne = ref<Dish[] | null>(null);
 const selectedDishTwo = ref<Dish[] | null>(null);
-const selectedEvent = ref<Event | null>(null);
+const selectedEventOne = ref<Event | null>(null);
+const selectedEventTwo = ref<Event | null>(null);
 const participationLimitNotZero = computed(() => {
   let limitNotZero = false;
   (Object.values(props.modelValue.meals) as MealDTO[][]).forEach((meals) => {
@@ -161,9 +168,17 @@ watch(selectedDishTwo, () => {
   });
 });
 
-watch(selectedEvent, () => {
-  if (selectedEvent.value !== null && selectedEvent.value !== undefined) {
-    props.modelValue.event = selectedEvent.value.id;
+watch(selectedEventOne, () => {
+  if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
+    props.modelValue.event = selectedEventOne.value.id;
+  } else {
+    props.modelValue.event = null;
+  }
+});
+
+watch(selectedEventTwo, () => {
+  if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
+    props.modelValue.event = selectedEventTwo.value.id;
   } else {
     props.modelValue.event = null;
   }
@@ -183,8 +198,11 @@ onMounted(() => {
   );
 
   // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEvent.value = getEventById(props.modelValue.event ?? -1) ?? null;
+  selectedEventOne.value = getEventById(props.modelValue.event);
+  // set Event from modelValue to be the initial value of the selectedEvent
+  selectedEventTwo.value = getEventById(props.modelValue.event);
 });
+
 
 /**
  * Extract the slugs from the selected dishes. Returns the slugs of variations if there are selected variations.

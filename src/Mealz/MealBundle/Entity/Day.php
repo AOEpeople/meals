@@ -37,7 +37,7 @@ class Day extends AbstractMessage implements JsonSerializable
      * @var Collection<int, EventParticipation>
      */
     #[ORM\OneToMany(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
-    private Collection $events;
+    private Collection $event_participations;
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
@@ -48,7 +48,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->week = $this->getDefaultWeek($this->dateTime);
         $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
-        $this->events = new EventCollection();
+        $this->event_participations = new EventCollection();
     }
 
     public function getId(): ?int
@@ -83,11 +83,11 @@ class Day extends AbstractMessage implements JsonSerializable
 
     public function getEvents(): ?EventCollection
     {
-        if (false === ($this->events instanceof Collection)) {
-            $this->events = new EventCollection();
+        if (false === ($this->event_participations instanceof Collection)) {
+            $this->event_participations = new EventCollection();
         }
 
-        return new EventCollection($this->events->toArray());
+        return new EventCollection($this->event_participations->toArray());
     }
 
     public function getEvent(int $id): ?EventParticipation
@@ -104,24 +104,24 @@ class Day extends AbstractMessage implements JsonSerializable
     public function addEvent(EventParticipation $event)
     {
         $event->setDay($this);
-        $this->events->add($event);
+        $this->event_participations->add($event);
     }
 
     public function removeEvent(EventParticipation $event)
     {
-        if ($this->events->contains($event)) {
-            $this->events->removeElement($event);
+        if ($this->event_participations->contains($event)) {
+            $this->event_participations->removeElement($event);
         }
     }
 
     public function removeEvents()
     {
-        $this->events->clear();
+        $this->event_participations->clear();
     }
 
     public function setEvents(EventCollection $events): void
     {
-        $this->events = $events;
+        $this->event_participations = $events;
     }
 
     public function getMeals(): MealCollection

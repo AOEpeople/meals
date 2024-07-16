@@ -50,7 +50,7 @@ final class EventParticipationService
     /**
      * @return (Day|bool|int|null)[]|null
      *
-     * @psalm-return array{day: \App\Mealz\MealBundle\Entity\Day, eventId: int, isParticipating?: bool, isPublic: bool, participationId: int|null, participations: int<0, max>} | array{\App\Mealz\MealBundle\Entity\EventParticipation}
+     * @psalm-return array{day: Day, eventId: int, isParticipating?: bool, isPublic: bool, participationId: int|null, participations: int<0, max>} | array{EventParticipation}
      */
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {

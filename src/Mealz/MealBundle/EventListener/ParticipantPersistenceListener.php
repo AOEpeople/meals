@@ -48,7 +48,7 @@ final class ParticipantPersistenceListener
 
         if (null !== $participant->getMeal()) {
             $query = $this->buildQueryMealParticipantExists($participant, $queryBuilder);
-        } elseif (null !== $participant->getEvent()) {
+        } elseif (null !== $participant->getEventParticipation()) {
             $query = $this->buildQueryEventParticipantExists($participant, $queryBuilder);
         } else {
             return false;
@@ -84,9 +84,9 @@ final class ParticipantPersistenceListener
         $queryBuilder
             ->select('COUNT(p.id)')
             ->from(Participant::class, 'p')
-            ->join('p.event', 'e')
+            ->join('p.event_participation', 'e')
             ->join('p.profile', 'u')
-            ->where('e = :event AND u = :profile')
+            ->where('e = :event_participation AND u = :profile')
         ;
         if ($participant->getId()) {
             $queryBuilder->andWhere('p.id != :id');
@@ -94,7 +94,7 @@ final class ParticipantPersistenceListener
         }
 
         $query = $queryBuilder->getQuery();
-        $query->setParameter('event', $participant->getEvent()->getId());
+        $query->setParameter('event_participation', $participant->getEventParticipation()->getId());
         $query->setParameter('profile', $participant->getProfile()->getUsername());
         $query->disableResultCache();
 

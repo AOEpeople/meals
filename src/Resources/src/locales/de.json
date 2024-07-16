@@ -203,7 +203,8 @@
       "events": {
         "created": "Das Event wurde erfolgreich erstellt.",
         "deleted": "Das Event wurde erfolgreich gelöscht.",
-        "edited": "Das Event wurde erfolgreich bearbeitet."
+        "edited": "Das Event wurde erfolgreich bearbeitet.",
+        "lunchroulette": "Denk dran: Du bist noch für die Lunchroulette angemeldet. Bitte melde dich ab, falls du nicht teilnehmen kannst."
       },
       "finance": {
         "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"

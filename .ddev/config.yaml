@@ -11,7 +11,7 @@ additional_fqdns:
     - meals.test
 database:
     type: mariadb
-    version: "10.2"
+    version: "10.11"
 performance_mode: none
 hooks:
     post-start:

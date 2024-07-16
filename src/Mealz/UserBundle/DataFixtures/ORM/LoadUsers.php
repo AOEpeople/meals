@@ -44,6 +44,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Alice',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_USER'],
+                'email' => 'alice.meals@aoe.com',
             ],
             [
                 'username' => 'bob.meals',
@@ -51,6 +52,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Bob',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_USER'],
+                'email' => 'bob.meals@aoe.com',
             ],
             [
                 'username' => 'finance.meals',
@@ -58,6 +60,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Finance',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_FINANCE'],
+                'email' => 'finance.meals@aoe.com',
             ],
             [
                 'username' => 'jane.meals',
@@ -65,6 +68,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Jane',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_USER'],
+                'email' => 'jane.meals@aoe.com',
             ],
             [
                 'username' => 'john.meals',
@@ -72,6 +76,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'John',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_USER'],
+                'email' => 'john.meals@aoe.com',
             ],
             [
                 'username' => 'kochomi.meals',
@@ -79,6 +84,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Kochomi',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_KITCHEN_STAFF'],
+                'email' => 'kochomi.meals@aoe.com',
             ],
             [
                 'username' => 'admin.meals',
@@ -86,11 +92,12 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'firstName' => 'Admin',
                 'lastName' => 'Meals',
                 'roles' => ['ROLE_ADMIN'],
+                'email' => 'admin.meals@aoe.com',
             ],
         ];
 
         foreach ($users as $user) {
-            $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
+            $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['email'], $user['roles']);
         }
 
         for ($i = 0; $i < 15; ++$i) {
@@ -114,8 +121,9 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         string $password,
         string $firstName,
         string $lastName,
+        string $email,
         array $roles,
-        bool $isRandUser = false
+        bool $isRandUser = false,
     ): void {
         $login = new Login();
         $login->setUsername($username);
@@ -132,6 +140,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $profile->setUsername($username);
         $profile->setName($lastName);
         $profile->setFirstName($firstName);
+        $profile->setEmail($username);
+
 
         // set roles
         /** @var Role[] $roleObjs */
@@ -171,13 +181,15 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $randLastName = $lastNames[array_rand($lastNames)];
         $randPass = (string) rand();
         $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . rand();
+        $email = $username . '@aoe.com';
         $this->addUser(
             $username,
             $randPass,
             $randFirstName,
             $randLastName,
+            $email,
             ['ROLE_USER'],
-            true
+            true,
         );
     }
 }

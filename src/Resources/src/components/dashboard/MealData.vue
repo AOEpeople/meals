@@ -6,16 +6,21 @@
     <div class="basis-11/12 items-center self-start min-[380px]:self-center xl:col-span-5">
       <div class="self-center">
         <span
-          class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note"
+          class="flex flex-row gap-1 break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note"
         >
           {{ title }}
+          <VeggiIcon
+            v-if="meal.diet && meal.diet !== Diet.MEAT"
+            :diet="meal.diet"
+            :class="meal.diet === Diet.VEGAN ? 'h-[17px]' : 'h-[14px] ml-[2px]'"
+          />
           <span
             v-if="meal.isNew"
             class="ml-1 h-[17px] w-[36px] bg-highlight py-px pl-1 pr-[3px] align-text-bottom text-[11px] uppercase leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
-          </span> </span
-        ><br />
+          </span>
+        </span>
         <p
           v-if="description !== null && description !== undefined && description !== ''"
           class="m-0 break-words text-[12px] font-light leading-[20px] text-primary min-[380px]:text-[14px]"
@@ -61,6 +66,8 @@ import { dashboardStore } from '@/stores/dashboardStore';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
 import { Day, Meal } from '@/api/getDashboardData';
 import { useDishes } from '@/stores/dishesStore';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
+import { Diet } from '@/enums/Diet';
 
 const props = defineProps<{
   weekID: number | string | undefined;

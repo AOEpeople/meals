@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mr-[5px] flex h-[30px] content-center rounded-md min-[380px]:mr-[15px] xl:h-[20px] print:bg-primary-2"
+    class="mr-[5px] flex h-[30px] content-center rounded-md min-[380px]:mr-[11px] xl:h-[20px] print:bg-primary-2"
     :class="[limit > 9 ? 'min-w-[46px] min-[370px]:min-w-[65px]' : 'min-w-[40px] min-[370px]:min-w-[46px]', mealCSS]"
   >
     <div class="my-auto h-3 w-4 flex-auto min-[370px]:w-6 min-[370px]:flex-none">

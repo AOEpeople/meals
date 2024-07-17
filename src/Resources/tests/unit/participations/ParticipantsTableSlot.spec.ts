@@ -4,6 +4,7 @@ import ParticipantsTableRow from '@/components/participations/ParticipantsTableR
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import { Dictionary } from 'types/types';
+import { Diet } from '@/enums/Diet';
 
 const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
 const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: [false] };
@@ -17,7 +18,8 @@ const mealOne: IMealWithVariations = {
     },
     variations: [],
     participations: 3,
-    mealId: 1
+    mealId: 1,
+    diet: Diet.MEAT
 };
 const mealThree: IMealWithVariations = {
     title: {
@@ -26,7 +28,8 @@ const mealThree: IMealWithVariations = {
     },
     variations: [],
     participations: 1,
-    mealId: 3
+    mealId: 3,
+    diet: Diet.MEAT
 };
 const mealFour: IMealWithVariations = {
     title: {
@@ -35,7 +38,8 @@ const mealFour: IMealWithVariations = {
     },
     variations: [],
     participations: 2,
-    mealId: 4
+    mealId: 4,
+    diet: Diet.MEAT
 };
 const mealTwo: IMealWithVariations = {
     title: {
@@ -44,7 +48,8 @@ const mealTwo: IMealWithVariations = {
     },
     variations: [mealThree, mealFour],
     participations: 5,
-    mealId: 2
+    mealId: 2,
+    diet: Diet.MEAT
 };
 
 const participantsData: Dictionary<IBookedData> = {

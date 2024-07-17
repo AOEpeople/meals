@@ -309,6 +309,7 @@ class ApiController extends BaseController
             'isParticipating' => $participationId,
             'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
             'isOffering' => $isOffering,
+            'diet' => $meal->getDish()->getDiet(),
         ];
     }
 
@@ -327,6 +328,7 @@ class ApiController extends BaseController
                 'variations' => [],
                 'isLocked' => $meal->isLocked(),
                 'isOpen' => $meal->isOpen(),
+                'diet' => $meal->getDish()->getDiet(),
             ];
         }
 
@@ -389,6 +391,7 @@ class ApiController extends BaseController
             ],
             'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
             'participations' => $this->participationSrv->getCountByMeal($meal, true),
+            'diet' => $meal->getDish()->getDiet(),
         ];
 
         if (null != $meal->getDish()->getParent()) {
@@ -397,6 +400,7 @@ class ApiController extends BaseController
                     'en' => $meal->getDish()->getParent()->getTitleEn(),
                     'de' => $meal->getDish()->getParent()->getTitleDe(),
                 ],
+                'diet' => $meal->getDish()->getDiet(),
             ];
         }
 

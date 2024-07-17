@@ -10,9 +10,14 @@
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="p-4 align-top text-lg text-primary"
+          class="flex flex-row justify-center gap-2 p-4 align-top text-lg text-primary"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
+          <VeggiIcon
+            v-if="testIf(meal)"
+            :diet="meal.diet"
+            class="h-[45px] self-center"
+          />
         </th>
       </tr>
     </thead>
@@ -22,11 +27,16 @@
         :key="index"
       >
         <td
-          class="p-4"
+          class="flex flex-row justify-center gap-2 p-4"
           :class="//@ts-ignore
           [meal.variations.length - 1 > index ? 'border-b border-solid' : 'border-none']"
         >
           {{ getTitleForLocale(variation) }}
+          <VeggiIcon
+            v-if="variation.diet && variation.diet !== Diet.MEAT"
+            :diet="variation.diet"
+            class="h-[45px] self-center"
+          />
         </td>
       </tr>
     </tbody>
@@ -37,6 +47,8 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
+import { Diet } from '@/enums/Diet';
 
 const { locale } = useI18n();
 
@@ -48,5 +60,10 @@ const languageIsEnglish = computed(() => locale.value === 'en');
 
 function getTitleForLocale(variation: IMealData) {
   return languageIsEnglish.value ? variation.title.en : variation.title.de;
+}
+
+function testIf(meal: IMealWithVariations) {
+  console.log(`Meal ${meal.title.de} is ${meal.diet} and has ${meal.variations.length} variations!`);
+  return meal.variations.length === 0 && meal.diet && meal.diet !== Diet.MEAT;
 }
 </script>

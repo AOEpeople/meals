@@ -279,6 +279,7 @@ export function useDishes() {
         dishToUpdate.descriptionDe = dish.descriptionDe;
         dishToUpdate.descriptionEn = dish.descriptionEn;
         dishToUpdate.categoryId = dish.categoryId;
+        dishToUpdate.diet = dish.diet;
     }
 
     /**

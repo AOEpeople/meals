@@ -2,34 +2,76 @@ import { ref } from 'vue';
 import nextThreeDays from '../fixtures/nextThreeDays.json';
 import useApi from '@/api/api';
 import { describe, expect } from '@jest/globals';
-import { IDay, getNextThreeDays } from '@/api/getMealsNextThreeDays';
+import { IDay, IDish, getNextThreeDays } from '@/api/getMealsNextThreeDays';
+import { Diet } from '@/enums/Diet';
+
+const iDishesEn: IDish[] = [
+    {
+        title: 'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Tasty Worms',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Combined Dish',
+        diet: Diet.MEAT
+    }
+];
+
+const iDishesDe: IDish[] = [
+    {
+        title: 'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Tasty Worms DE',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Kombi-Gericht',
+        diet: Diet.MEAT
+    }
+];
+
+const iDishesTwoEn: IDish[] = [
+    {
+        title: 'Braaaaaiiinnnzzzzzz DE',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Fish (so juicy sweat) DE',
+        diet: Diet.MEAT
+    }
+];
+
+const iDishesTwoDe: IDish[] = [
+    {
+        title: 'Braaaaaiiinnnzzzzzz',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Fish (so juicy sweat)',
+        diet: Diet.MEAT
+    }
+];
 
 const testDays: IDay[] = [
     {
         date: new Date('2023-05-10T00:00:00.000Z'),
-        de: [
-            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße',
-            'Tasty Worms DE',
-            'Kombi-Gericht'
-        ],
-        en: [
-            'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
-            'Tasty Worms',
-            'Combined Dish'
-        ]
+        de: iDishesDe,
+        en: iDishesEn
     },
     {
         date: new Date('2023-05-11T00:00:00.000Z'),
-        de: ['Braaaaaiiinnnzzzzzz DE', 'Fish (so juicy sweat) DE'],
-        en: ['Braaaaaiiinnnzzzzzz', 'Fish (so juicy sweat)']
+        de: iDishesTwoDe,
+        en: iDishesTwoEn
     },
     {
         date: new Date('2023-05-12T00:00:00.000Z'),
-        de: [
-            'Braaaaaiiinnnzzzzzz DE',
-            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße'
-        ],
-        en: ['Braaaaaiiinnnzzzzzz', 'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce']
+        de: [iDishesTwoDe[0], iDishesDe[0]],
+        en: [iDishesTwoEn[0], iDishesEn[0]]
     }
 ];
 

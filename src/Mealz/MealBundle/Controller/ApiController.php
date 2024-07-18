@@ -140,8 +140,14 @@ class ApiController extends BaseController
             $uniqueMeals = $this->dishSrv->getUniqueDishesFromMeals($meals);
 
             foreach ($uniqueMeals as $dish) {
-                $dishes['en'][] = $dish->getTitleEn();
-                $dishes['de'][] = $dish->getTitleDe();
+                $dishes['en'][] = [
+                    'title' => $dish->getTitleEn(),
+                    'diet' => $dish->getDiet(),
+                ];
+                $dishes['de'][] = [
+                    'title' => $dish->getTitleDe(),
+                    'diet' => $dish->getDiet(),
+                ];
             }
 
             $result[$today->format('Y-m-d')] = $dishes;

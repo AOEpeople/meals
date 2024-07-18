@@ -12,7 +12,7 @@
           <VeggiIcon
             v-if="meal.diet && meal.diet !== Diet.MEAT"
             :diet="meal.diet"
-            :class="meal.diet === Diet.VEGAN ? 'h-[17px]' : 'h-[14px] ml-[2px]'"
+            :class="meal.diet === Diet.VEGAN ? 'h-[17px]' : 'ml-[2px] h-[14px]'"
           />
           <span
             v-if="meal.isNew"

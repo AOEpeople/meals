@@ -2,20 +2,26 @@ import { reactive, readonly } from 'vue';
 import { Dictionary } from 'types/types';
 import useApi from './api';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
+import { Diet } from '@/enums/Diet';
 
 interface INextThreeDaysState {
     days: IDay[];
     error: boolean;
 }
 
+export interface IDish {
+    title: string;
+    diet: Diet;
+}
+
 export interface IMealList {
-    en: string[];
-    de: string[];
+    en: IDish[];
+    de: IDish[];
 }
 
 export interface IDay {
-    en: string[];
-    de: string[];
+    en: IDish[];
+    de: IDish[];
     date: Date;
 }
 

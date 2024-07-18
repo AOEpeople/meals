@@ -14,9 +14,11 @@
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
           <VeggiIcon
-            v-if="testIf(meal)"
+            v-if="meal.variations.length === 0 && meal.diet && meal.diet !== Diet.MEAT"
             :diet="meal.diet"
-            class="h-[45px] self-center"
+            class="self-center"
+            :class="meal.diet === Diet.VEGAN ? 'h-[45px]' : 'h-[42px]'"
+            :tooltip-active="false"
           />
         </th>
       </tr>
@@ -27,15 +29,19 @@
         :key="index"
       >
         <td
-          class="flex flex-row justify-center gap-2 p-4"
+          class="flex min-h-[60px] flex-row content-center justify-center gap-2"
           :class="//@ts-ignore
           [meal.variations.length - 1 > index ? 'border-b border-solid' : 'border-none']"
         >
-          {{ getTitleForLocale(variation) }}
+          <span class="my-auto">
+            {{ getTitleForLocale(variation) }}
+          </span>
           <VeggiIcon
             v-if="variation.diet && variation.diet !== Diet.MEAT"
             :diet="variation.diet"
-            class="h-[45px] self-center"
+            class="self-center"
+            :class="variation.diet === Diet.VEGAN ? 'h-[42px]' : 'h-[35px]'"
+            :tooltip-active="false"
           />
         </td>
       </tr>
@@ -60,10 +66,5 @@ const languageIsEnglish = computed(() => locale.value === 'en');
 
 function getTitleForLocale(variation: IMealData) {
   return languageIsEnglish.value ? variation.title.en : variation.title.de;
-}
-
-function testIf(meal: IMealWithVariations) {
-  console.log(`Meal ${meal.title.de} is ${meal.diet} and has ${meal.variations.length} variations!`);
-  return meal.variations.length === 0 && meal.diet && meal.diet !== Diet.MEAT;
 }
 </script>

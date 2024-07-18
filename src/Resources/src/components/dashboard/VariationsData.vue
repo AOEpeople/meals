@@ -12,12 +12,14 @@
   >
     <div class="basis-11/12 items-center self-start min-[380px]:self-center xl:col-span-5">
       <div class="self-center">
-        <p class="m-0 flex flex-row content-center gap-1 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]">
+        <p
+          class="m-0 flex flex-row content-center gap-1 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]"
+        >
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
           <VeggiIcon
             v-if="variation.diet && variation.diet !== Diet.MEAT"
             :diet="variation.diet"
-            :class="variation.diet === Diet.VEGAN ? 'h-[17px]' : 'h-[14px] ml-[2px]'"
+            :class="variation.diet === Diet.VEGAN ? 'h-[17px]' : 'ml-[2px] h-[14px]'"
           />
           <span
             v-if="variation.isNew"

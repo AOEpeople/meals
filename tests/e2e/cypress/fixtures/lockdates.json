@@ -1,0 +1,27 @@
+{
+    "281": {
+        "date": "2023-07-02 16:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    },
+    "282": {
+        "date": "2023-07-04 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    },
+    "283": {
+        "date": "2023-07-05 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    },
+    "284": {
+        "date": "2023-07-06 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    },
+    "285": {
+        "date": "2023-07-07 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    }
+}

@@ -5,12 +5,14 @@
       class="object-cover"
       src="../../../images/vegetarian.png"
       alt="vegetarian"
+      data-cy="vegetarian-icon"
     />
     <img
       v-else-if="diet === Diet.VEGAN"
       class="object-cover"
       src="../../../images/vegan.png"
       alt="vegan"
+      data-cy="vegan-icon"
     />
     <span
       v-if="tooltipActive && diet !== Diet.MEAT"

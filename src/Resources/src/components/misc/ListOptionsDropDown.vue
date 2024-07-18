@@ -25,6 +25,7 @@
       <div
         v-if="open"
         class="absolute z-10 w-full"
+        data-cy="dropdown-options"
       >
         <ListboxOptions
           class="max-h-60 w-full overflow-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white shadow-lg focus:outline-none"

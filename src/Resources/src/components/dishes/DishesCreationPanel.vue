@@ -51,6 +51,7 @@
         v-model="dietInput"
         :list-options="dietOptions"
         class="col-span-1 col-start-1 row-start-6 items-start pt-2 sm:col-span-1 sm:row-start-4"
+        data-cy="veggi-options"
       >
         {{ t('dish.diet.diet') }}
       </ListOptionsDropDown>

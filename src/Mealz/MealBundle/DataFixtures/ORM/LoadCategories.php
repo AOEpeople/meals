@@ -22,8 +22,9 @@ class LoadCategories extends Fixture implements OrderedFixtureInterface
     {
         $categories = [
             'Others' => 'Sonstiges',
-            'Vegetarian' => 'Vegetarisch',
-            'Meat' => 'Fleisch',
+            'Soup' => 'Suppe',
+            'Pasta' => 'Pasta',
+            'Dessert' => 'Dessert'
         ];
 
         foreach ($categories as $categoryEn => $categoryDe) {

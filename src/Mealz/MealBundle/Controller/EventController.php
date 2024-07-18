@@ -104,7 +104,12 @@ class EventController extends BaseListController
         }
 
         $day = $this->dayRepository->getDayByDate($date);
-        $eventLockModifier = (string) $this->getParameter('mealz.event.lock_participation_at');
+        try {
+            $eventLockModifier = (string) $this->getParameter('mealz.event.lock_participation_at');
+        } catch (Exception $e) {
+            $this->logger->info($e->getMessage());
+            $eventLockModifier = '17:00';
+        }
 
         if (new DateTime() > $day->getDateTime()->modify($eventLockModifier)) {
             return new JsonResponse(['message' => '804: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);

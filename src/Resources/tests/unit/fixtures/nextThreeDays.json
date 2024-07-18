@@ -2,40 +2,127 @@
   "dataOne": {
     "2023-05-10": {
       "en": [
-        "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
-        "Tasty Worms",
-        "Combined Dish"
+        {
+          "title": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+          "diet": "meat"
+        },
+        {
+          "title": "Tasty Worms",
+          "diet": "meat"
+        },
+        {
+          "title": "Combined Dish",
+          "diet": "meat"
+        }
       ],
       "de": [
-        "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße",
-        "Tasty Worms DE",
-        "Kombi-Gericht"
+        {
+          "title": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße",
+          "diet": "meat"
+        },
+        {
+          "title": "Tasty Worms DE",
+          "diet": "meat"
+        },
+        {
+          "title": "Kombi-Gericht",
+          "diet": "meat"
+        }
       ]
     },
     "2023-05-11": {
-      "en": ["Braaaaaiiinnnzzzzzz", "Fish (so juicy sweat)"],
-      "de": ["Braaaaaiiinnnzzzzzz DE", "Fish (so juicy sweat) DE"]
+      "en": [
+        {
+          "title": "Braaaaaiiinnnzzzzzz",
+          "diet": "meat"
+        },
+        {
+          "title": "Fish (so juicy sweat)",
+          "diet": "meat"
+        }
+      ],
+      "de": [
+        {
+          "title": "Braaaaaiiinnnzzzzzz DE",
+          "diet": "meat"
+        },
+        {
+          "title": "Fish (so juicy sweat) DE",
+          "diet": "meat"
+        }
+      ]
     },
     "2023-05-12": {
-      "en": ["Braaaaaiiinnnzzzzzz", "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce"],
+      "en": [
+        {
+          "title": "Braaaaaiiinnnzzzzzz",
+          "diet": "meat"
+        },
+        {
+          "title": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+          "diet": "meat"
+        }
+      ],
       "de": [
-        "Braaaaaiiinnnzzzzzz DE",
-        "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße"
+        {
+          "title": "Braaaaaiiinnnzzzzzz DE",
+          "diet": "meat"
+        },
+        {
+          "title": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße",
+          "diet": "meat"
+        }
       ]
     }
   },
   "dataTwo": {
     "2023-05-12": {
-      "en": ["Menü Surprise also for Take Away"],
-      "de": ["Überraschungsessen auch zum mitnehmen"]
+      "en": [
+        {
+          "title": "Menü Surprise also for Take Away",
+          "diet": "meat"
+        }
+      ],
+      "de": [
+        {
+          "title": "Überraschungsessen auch zum mitnehmen",
+          "diet": "meat"
+        }
+      ]
     },
     "2023-05-15": {
       "en": [],
       "de": []
     },
     "2023-05-16": {
-      "en": ["Tortellini with a tomato-ricotta-Sauce", "Pasta with salmon", "Combined Dish"],
-      "de": ["Tortellini mit einer Tomaten-Ricotta - Sauce", "Nudeln mit Lachs", "Kombi-Gericht"]
+      "en": [
+        {
+          "title": "Tortellini with a tomato-ricotta-Sauce",
+          "diet": "meat"
+        },
+        {
+          "title": "Pasta with salmon",
+          "diet": "meat"
+        },
+        {
+          "title": "Combined Dish",
+          "diet": "meat"
+        }
+      ],
+      "de": [
+        {
+          "title": "Tortellini mit einer Tomaten-Ricotta - Sauce",
+          "diet": "meat"
+        },
+        {
+          "title": "Nudeln mit Lachs",
+          "diet": "meat"
+        },
+        {
+          "title": "Kombi-Gericht",
+          "diet": "meat"
+        }
+      ]
     }
   }
 }

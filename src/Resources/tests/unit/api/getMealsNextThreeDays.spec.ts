@@ -37,22 +37,22 @@ const iDishesDe: IDish[] = [
 
 const iDishesTwoEn: IDish[] = [
     {
-        title: 'Braaaaaiiinnnzzzzzz DE',
+        title: 'Braaaaaiiinnnzzzzzz',
         diet: Diet.MEAT
     },
     {
-        title: 'Fish (so juicy sweat) DE',
+        title: 'Fish (so juicy sweat)',
         diet: Diet.MEAT
     }
 ];
 
 const iDishesTwoDe: IDish[] = [
     {
-        title: 'Braaaaaiiinnnzzzzzz',
+        title: 'Braaaaaiiinnnzzzzzz DE',
         diet: Diet.MEAT
     },
     {
-        title: 'Fish (so juicy sweat)',
+        title: 'Fish (so juicy sweat) DE',
         diet: Diet.MEAT
     }
 ];

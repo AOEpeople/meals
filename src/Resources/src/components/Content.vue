@@ -1,7 +1,5 @@
 <template>
-  <main
-    :class="isShowParticipations ? '' : 'pb-12'"
-  >
+  <main :class="isShowParticipations ? '' : 'pb-12'">
     <div
       class="mx-auto"
       :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe print:mt-0']"

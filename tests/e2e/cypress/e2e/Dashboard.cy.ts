@@ -478,4 +478,78 @@ describe('Test Dashboard View', () => {
             .click()
         cy.log('verified left afterwork');
     });
+
+    it('should show the veggi icons on vegetarian/vegan meals', () => {
+        cy.intercept('GET', '**/api/events', { fixture: 'events.json', statusCode: 200 }).as('getEvents');
+        cy.intercept('GET', '**/api/dashboard', { fixture: 'getDashboard.json', statusCode: 200 }).as('getDashboard');
+
+        cy.visitMeals();
+        cy.wait(['@getDashboard', '@getEvents']);
+
+        cy.get('span')
+            .contains('Montag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Braaaaaiiinnnzzzzzz DE')
+            .parent()
+            .find('img[data-cy="vegan-icon"]')
+            .should('exist');
+
+        cy.get('span')
+            .contains('Montag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('p')
+            .contains('Innards DE #v1')
+            .parent()
+            .find('img[data-cy="vegan-icon"]')
+            .should('exist');
+
+        cy.get('span')
+            .contains('Montag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('p')
+            .contains('Innards DE #v2')
+            .parent()
+            .find('img[data-cy="vegetarian-icon"]')
+            .should('exist');
+
+        cy.get('span')
+            .contains('Dienstag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Fish (so juicy sweat) DE')
+            .parent()
+            .find('img[data-cy="vegetarian-icon"]')
+            .should('exist');
+
+        cy.get('span')
+            .contains('Dienstag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Tasty Worms DE')
+            .parent()
+            .find('img[data-cy="vegetarian-icon"]')
+            .should('not.exist');
+
+        cy.get('span')
+            .contains('Dienstag')
+            .eq(0)
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Tasty Worms DE')
+            .parent()
+            .find('img[data-cy="vegan-icon"]')
+            .should('not.exist');
+    });
 });

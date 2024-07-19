@@ -1,0 +1,117 @@
+{
+    "data": {
+        "Active w\/ limit": {
+            "Meals, Admin": {
+                "booked": [
+                    6472
+                ],
+                "isOffering": [
+                    true
+                ]
+            },
+            "Meals, Finance": {
+                "booked": [
+                    6472
+                ],
+                "isOffering": [
+                    true
+                ]
+            },
+            "Meals, John": {
+                "booked": [
+                    6472
+                ],
+                "isOffering": [
+                    true
+                ]
+            }
+        },
+        "Active w\/o limit": {
+            "Meals, Alice": {
+                "booked": [
+                    6505
+                ],
+                "isOffering": [
+                    false
+                ]
+            },
+            "Meals, Bob": {
+                "booked": [
+                    6506
+                ],
+                "isOffering": [
+                    false
+                ]
+            },
+            "Meals, Jane": {
+                "booked": [
+                    6505
+                ],
+                "isOffering": [
+                    false
+                ]
+            },
+            "Meals, Kochomi": {
+                "booked": [
+                    6529,
+                    6472,
+                    6506
+                ],
+                "isOffering": [
+                    false
+                ]
+            }
+        }
+    },
+    "meals": {
+        "6472": {
+            "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+            },
+            "parent": null,
+            "participations": 3,
+            "diet": "vegetarian"
+        },
+        "6505": {
+            "title": {
+                "en": "Innards #v1",
+                "de": "Innards DE #v1"
+            },
+            "parent": 6470,
+            "participations": 2,
+            "diet": "vegan"
+        },
+        "6470": {
+            "title": {
+                "en": "Innards",
+                "de": "Innards DE"
+            },
+            "diet": "vegan"
+        },
+        "6506": {
+            "title": {
+                "en": "Innards #v2",
+                "de": "Innards DE #v2"
+            },
+            "parent": 6470,
+            "participations": 1,
+            "diet": "vegetarian"
+        },
+        "6529": {
+            "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+            },
+            "parent": null,
+            "participations": 1,
+            "diet": "meat"
+        }
+    },
+    "event": null,
+    "day": {
+        "date": "2024-07-19 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    }
+}

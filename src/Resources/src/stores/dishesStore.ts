@@ -13,7 +13,7 @@ import { refThrottled } from '@vueuse/core';
 import getDishesForCombi from '@/api/getDishesForCombi';
 import { useCategories } from './categoriesStore';
 import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
-import { Diet } from '@/enums/Diet';
+import { Diet, getDietTranslationMap } from '@/enums/Diet';
 
 export interface Dish {
     id: number;
@@ -100,14 +100,20 @@ export function useDishes() {
     });
 
     /**
-     * Determines wether a dish contains the search string in its title or in the title of one of its variations
+     * Determines wether a dish contains the search string in its title or in the title of one of its variations or in its diet
      */
     function dishContainsString(dish: Dish, searchStr: string) {
         return (
             dish.titleDe.toLowerCase().includes(searchStr.toLowerCase()) ||
             dish.titleEn.toLowerCase().includes(searchStr.toLowerCase()) ||
+            dishContainsDiet(dish, searchStr) ||
             dish.variations.map((variation) => dishContainsString(variation, searchStr)).includes(true)
         );
+    }
+
+    function dishContainsDiet(dish: Dish, searchStr: string) {
+        const translatedSearchStr = getDietTranslationMap().get(searchStr.toLowerCase().trim()) ?? searchStr.toLowerCase();
+        return dish.diet.toString().toLowerCase().includes(translatedSearchStr);
     }
 
     /**

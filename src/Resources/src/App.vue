@@ -9,7 +9,7 @@
     </div>
     <DebtPopup />
     <SessionCheckerPopup />
-    <Content class="relative z-[2] grow pb-12" />
+    <Content class="relative z-[2] grow" />
     <Footer
       v-if="!showParticipations"
       class="relative z-[1] mt-auto"

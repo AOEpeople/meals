@@ -33,7 +33,7 @@ describe('Test Menu Participations View', () => {
         cy.get('input').first().click().type('meals');
         cy.wait(500);
         cy.get('li').each(($el) => {
-            expect($el.text()).to.match(/Meals, .*/);
+            expect($el.text()).to.match(/Meals, */);
         });
         cy.get('input').clear().first().type('bob');
         cy.get('li').should('have.length', 1);

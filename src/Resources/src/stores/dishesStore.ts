@@ -112,7 +112,8 @@ export function useDishes() {
     }
 
     function dishContainsDiet(dish: Dish, searchStr: string) {
-        const translatedSearchStr = getDietTranslationMap().get(searchStr.toLowerCase().trim()) ?? searchStr.toLowerCase();
+        const translatedSearchStr =
+            getDietTranslationMap().get(searchStr.toLowerCase().trim()) ?? searchStr.toLowerCase();
         return dish.diet.toString().toLowerCase().includes(translatedSearchStr);
     }
 

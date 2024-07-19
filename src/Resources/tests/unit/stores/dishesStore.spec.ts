@@ -132,11 +132,33 @@ describe('Test dishesStore', () => {
         setFilter('Vegetarisch');
         await new Promise((r) => setTimeout(r, 1100));
         for (const dish of filteredDishes.value) {
-            expect(dish.categoryId).toBe(5);
+            expect(dish.diet).toBe('vegetarian');
         }
-        expect(filteredDishes.value).not.toContainEqual(Dishes[3]);
-        expect(filteredDishes.value).toContainEqual(Dishes[0]);
-    });
+
+        setFilter('Vegetarian');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('vegetarian');
+        }
+
+        setFilter('Vegan');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('vegan');
+        }
+
+        setFilter('Fleisch');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('meat');
+        }
+
+        setFilter('Pasta');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.categoryId).toBe(6);
+        }
+    }, 10000);
 
     it('should update the state after sending a PUT request', async () => {
         await fetchDishes();

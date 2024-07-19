@@ -1,0 +1,26 @@
+[
+  {
+    "id": 5425,
+    "slug": "fish-so-juicy-sweat",
+    "titleDe": "Fish (so juicy sweat) DE",
+    "titleEn": "Fish (so juicy sweat)",
+    "descriptionDe": "Beschreibung - Fish (so juicy sweat) DE",
+    "descriptionEn": "Description - Fish (so juicy sweat)",
+    "categoryId": 1357,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 5430,
+    "slug": "innards-v2",
+    "titleDe": "Innards DE #v2",
+    "titleEn": "Innards #v2",
+    "descriptionDe": null,
+    "descriptionEn": null,
+    "categoryId": null,
+    "oneServingSize": false,
+    "parentId": 5424,
+    "variations": []
+  }
+]

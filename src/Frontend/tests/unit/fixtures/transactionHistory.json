@@ -1,0 +1,80 @@
+{
+  "lastMonth": "01.07.-31.07.2023",
+  "thisMonth": "01.08.-15.08.2023",
+  "usersLastMonth": {
+    "admin.meals": {
+      "firstName": "Admin",
+      "name": "Meals",
+      "amount": "365.0900",
+      "paymethod": null
+    },
+    "alice.meals": {
+      "firstName": "Alice",
+      "name": "Meals",
+      "amount": "238.2500",
+      "paymethod": null
+    },
+    "bob.meals": {
+      "firstName": "Bob",
+      "name": "Meals",
+      "amount": "326.2300",
+      "paymethod": null
+    },
+    "finance.meals": {
+      "firstName": "Finance",
+      "name": "Meals",
+      "amount": "241.6100",
+      "paymethod": null
+    },
+    "jane.meals": {
+      "firstName": "Jane",
+      "name": "Meals",
+      "amount": "377.6000",
+      "paymethod": null
+    },
+    "kochomi.meals": {
+      "firstName": "Kochomi",
+      "name": "Meals",
+      "amount": "392.3900",
+      "paymethod": null
+    }
+  },
+  "usersThisMonth": {
+    "admin.meals": {
+      "firstName": "Admin",
+      "name": "Meals",
+      "amount": "382.0100",
+      "paymethod": null
+    },
+    "alice.meals": {
+      "firstName": "Alice",
+      "name": "Meals",
+      "amount": "-670.9700",
+      "paymethod": null
+    },
+    "bob.meals": {
+      "firstName": "Bob",
+      "name": "Meals",
+      "amount": "320.7900",
+      "paymethod": null
+    },
+    "finance.meals": {
+      "firstName": "Finance",
+      "name": "Meals",
+      "amount": "-389.0700",
+      "paymethod": null
+    },
+    "jane.meals": {
+      "firstName": "Jane",
+      "name": "Meals",
+      "amount": "-754.3800",
+      "paymethod": null
+    },
+    "kochomi.meals": {
+      "firstName": "Kochomi",
+      "name": "Meals",
+      "amount": "210.7100",
+      "paymethod": null
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "response": [
+    {
+      "id": "5",
+      "title": "Active w/o limit",
+      "limit": 0,
+      "order": 0,
+      "enabled": true,
+      "slug": "active wo limit"
+    },
+    {
+      "id": "6",
+      "title": "Active w/ limit",
+      "limit": 10,
+      "order": 0,
+      "enabled": true,
+      "slug": "active w limit"
+    },
+    {
+      "id": "7",
+      "title": "Inactive",
+      "limit": 0,
+      "order": 0,
+      "enabled": false,
+      "slug": "inactive"
+    },
+    {
+      "id": "11",
+      "title": "Omnevo",
+      "limit": 9,
+      "order": 1,
+      "enabled": true,
+      "slug": "omnevo"
+    },
+    {
+      "id": "17",
+      "title": "test",
+      "limit": 4,
+      "order": 0,
+      "enabled": true,
+      "slug": "test"
+    }
+  ],
+  "state": {
+    "11": {
+      "enabled": true,
+      "limit": 9,
+      "order": 1,
+      "slug": "omnevo",
+      "title": "Omnevo"
+    },
+    "17": {
+      "enabled": true,
+      "limit": 4,
+      "order": 0,
+      "slug": "test",
+      "title": "test"
+    },
+    "5": {
+      "enabled": true,
+      "limit": 0,
+      "order": 0,
+      "slug": "active wo limit",
+      "title": "Active w/o limit"
+    },
+    "6": {
+      "enabled": true,
+      "limit": 10,
+      "order": 0,
+      "slug": "active w limit",
+      "title": "Active w/ limit"
+    },
+    "7": {
+      "enabled": false,
+      "limit": 0,
+      "order": 0,
+      "slug": "inactive",
+      "title": "Inactive"
+    }
+  }
+}

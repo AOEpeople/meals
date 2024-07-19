@@ -1,85 +1,74 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <div class="flex min-h-screen flex-col print:h-[29.7cm] print:w-[21cm]">
+    <NavBar
+      id="navibar"
+      ref="navibar"
+    />
+    <div class="absolute z-[4]">
+      <vue3-progress-bar />
     </div>
-  </header>
-
-  <RouterView />
+    <DebtPopup />
+    <SessionCheckerPopup />
+    <Content class="relative z-[2] grow pb-12" />
+    <Footer
+      v-if="!showParticipations"
+      class="relative z-[1] mt-auto"
+    />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script setup lang="ts">
+import NavBar from '@/components/NavBar.vue';
+import Footer from '@/components/Footer.vue';
+import Content from '@/components/Content.vue';
+import { useRoute } from 'vue-router';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
+import { useComponentHeights } from '@/services/useComponentHeights';
+import DebtPopup from './components/debtPopup/DebtPopup.vue';
+import SessionCheckerPopup from '@/components/misc/SessionCheckerPopup.vue';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+const route = useRoute();
+const { setNavBarHeight, windowWidth } = useComponentHeights();
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+const navibar = ref(null);
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+const showParticipations = computed(() => {
+  return route.path === '/show/participations';
+});
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+watch(windowWidth, () => {
+  if (navibar.value !== null && navibar.value !== undefined) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+});
 
-  .logo {
-    margin: 0 2rem 0 0;
+onMounted(() => {
+  if (navibar.value !== null && navibar.value !== undefined) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+});
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+onUpdated(() => {
+  if (navibar.value !== null && navibar.value !== undefined) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+});
+</script>
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+<style>
+.btn-disabled {
+  @apply mx-2 mb-6 mt-4 h-9 items-center rounded-btn px-[34px] text-center text-btn font-medium shadow-btn drop-shadow-btn;
+  @apply bg-grey text-white shadow-light-grey;
+}
+.aoe-shadow {
+  box-shadow:
+    0 4px 0 hsla(0, 0%, 100%, 0.46),
+    0 15px 35px rgba(216, 225, 233, 0.8);
+}
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.btn-highlight-shadow {
+  box-shadow:
+    0 6px 8px rgba(0, 0, 0, 0.25),
+    0 3px 0 #ff890e;
 }
 </style>

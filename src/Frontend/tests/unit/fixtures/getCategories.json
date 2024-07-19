@@ -1,0 +1,20 @@
+[
+  {
+    "id": 4,
+    "titleDe": "Sonstiges",
+    "titleEn": "Others",
+    "slug": "others"
+  },
+  {
+    "id": 5,
+    "titleDe": "Vegetarisch",
+    "titleEn": "Vegetarian",
+    "slug": "vegetarian"
+  },
+  {
+    "id": 6,
+    "titleDe": "Fleisch",
+    "titleEn": "Meat",
+    "slug": "meat"
+  }
+]

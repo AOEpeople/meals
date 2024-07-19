@@ -1,0 +1,1092 @@
+{
+  "weeks": {
+    "7218": {
+      "startDate": {
+        "date": "2024-01-08 00:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe/Berlin"
+      },
+      "endDate": {
+        "date": "2024-01-12 23:59:59.000000",
+        "timezone_type": 3,
+        "timezone": "Europe/Berlin"
+      },
+      "days": {
+        "36086": {
+          "date": {
+            "date": "2024-01-08 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": true,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 2,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 5,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102489": {
+              "title": {
+                "en": "Braaaaaiiinnnzzzzzz",
+                "de": "Braaaaaiiinnnzzzzzz DE"
+              },
+              "description": {
+                "en": "Description - Braaaaaiiinnnzzzzzz",
+                "de": "Beschreibung"
+              },
+              "dishSlug": "braaaaaiiinnnzzzzzz",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": false,
+              "isLocked": true,
+              "isNew": false,
+              "parentId": null,
+              "participations": 7,
+              "isParticipating": null,
+              "hasOffers": true,
+              "isOffering": false,
+              "mealState": "disabled"
+            },
+            "3076": {
+              "title": {
+                "en": "Innards",
+                "de": "Innards DE"
+              },
+              "isNew": true,
+              "variations": {
+                "102490": {
+                  "title": {
+                    "en": "Innards #v1",
+                    "de": "Innards DE #v1"
+                  },
+                  "description": null,
+                  "dishSlug": "innards-v1",
+                  "price": 3.6000000000000001,
+                  "limit": 0,
+                  "reachedLimit": false,
+                  "isOpen": false,
+                  "isLocked": true,
+                  "isNew": false,
+                  "parentId": 3076,
+                  "participations": 6,
+                  "isParticipating": null,
+                  "hasOffers": true,
+                  "isOffering": false,
+                  "mealState": "disabled"
+                },
+                "102491": {
+                  "title": {
+                    "en": "Innards #v2",
+                    "de": "Innards DE #v2"
+                  },
+                  "description": null,
+                  "dishSlug": "innards-v2",
+                  "price": 3.6000000000000001,
+                  "limit": 0,
+                  "reachedLimit": false,
+                  "isOpen": false,
+                  "isLocked": true,
+                  "isNew": false,
+                  "parentId": 3076,
+                  "participations": 2,
+                  "isParticipating": null,
+                  "hasOffers": true,
+                  "isOffering": false,
+                  "mealState": "disabled"
+                }
+              },
+              "isLocked": true,
+              "isOpen": false
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36087": {
+          "date": {
+            "date": "2024-01-09 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": true,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 4,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 3,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102492": {
+              "title": {
+                "en": "Fish (so juicy sweat)",
+                "de": "Fish (so juicy sweat) DE"
+              },
+              "description": {
+                "en": "Description - Fish (so juicy sweat)",
+                "de": "Beschreibung - Fish (so juicy sweat) DE"
+              },
+              "dishSlug": "fish-so-juicy-sweat",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": false,
+              "isLocked": true,
+              "isNew": false,
+              "parentId": null,
+              "participations": 7,
+              "isParticipating": null,
+              "hasOffers": true,
+              "isOffering": false,
+              "mealState": "disabled"
+            },
+            "102493": {
+              "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+              },
+              "description": {
+                "en": "Description - Tasty Worms",
+                "de": "Beschreibung - Tasty Worms DE"
+              },
+              "dishSlug": "tasty-worms",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": false,
+              "isLocked": true,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": true,
+              "isOffering": false,
+              "mealState": "disabled"
+            },
+            "102619": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": false,
+              "isLocked": true,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "disabled"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36088": {
+          "date": {
+            "date": "2024-01-10 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 3,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 2,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102494": {
+              "title": {
+                "en": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "description": {
+                "en": "Description - Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Beschreibung - Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "dishSlug": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 3,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102495": {
+              "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+              },
+              "description": {
+                "en": "Description - Limbs",
+                "de": "Beschreibung - Limbs DE"
+              },
+              "dishSlug": "limbs",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 3,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102620": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": {
+            "eventId": 537,
+            "participations": 0,
+            "isParticipating": false
+          }
+        },
+        "36089": {
+          "date": {
+            "date": "2024-01-11 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 1,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 4,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102496": {
+              "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+              },
+              "description": {
+                "en": "Description - Tasty Worms",
+                "de": "Beschreibung - Tasty Worms DE"
+              },
+              "dishSlug": "tasty-worms",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102497": {
+              "title": {
+                "en": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "description": {
+                "en": "Description - Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Beschreibung - Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "dishSlug": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 5,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102621": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36090": {
+          "date": {
+            "date": "2024-01-12 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 2,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 0,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102498": {
+              "title": {
+                "en": "Braaaaaiiinnnzzzzzz",
+                "de": "Braaaaaiiinnnzzzzzz DE"
+              },
+              "description": {
+                "en": "Description - Braaaaaiiinnnzzzzzz",
+                "de": "Beschreibung"
+              },
+              "dishSlug": "braaaaaiiinnnzzzzzz",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 2,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102499": {
+              "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+              },
+              "description": {
+                "en": "Description - Limbs",
+                "de": "Beschreibung - Limbs DE"
+              },
+              "dishSlug": "limbs",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        }
+      },
+      "isEnabled": true
+    },
+    "7219": {
+      "startDate": {
+        "date": "2024-01-15 00:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe/Berlin"
+      },
+      "endDate": {
+        "date": "2024-01-19 23:59:59.000000",
+        "timezone_type": 3,
+        "timezone": "Europe/Berlin"
+      },
+      "days": {
+        "36091": {
+          "date": {
+            "date": "2024-01-15 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 1,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 2,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102500": {
+              "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+              },
+              "description": {
+                "en": "Description - Tasty Worms",
+                "de": "Beschreibung - Tasty Worms DE"
+              },
+              "dishSlug": "tasty-worms",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 3,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102501": {
+              "title": {
+                "en": "Braaaaaiiinnnzzzzzz",
+                "de": "Braaaaaiiinnnzzzzzz DE"
+              },
+              "description": {
+                "en": "Description - Braaaaaiiinnnzzzzzz",
+                "de": "Beschreibung"
+              },
+              "dishSlug": "braaaaaiiinnnzzzzzz",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36092": {
+          "date": {
+            "date": "2024-01-16 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 1,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 0,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102502": {
+              "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+              },
+              "description": {
+                "en": "Description - Tasty Worms",
+                "de": "Beschreibung - Tasty Worms DE"
+              },
+              "dishSlug": "tasty-worms",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102503": {
+              "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+              },
+              "description": {
+                "en": "Description - Limbs",
+                "de": "Beschreibung - Limbs DE"
+              },
+              "dishSlug": "limbs",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102622": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36093": {
+          "date": {
+            "date": "2024-01-17 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 4,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 3,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102504": {
+              "title": {
+                "en": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "description": {
+                "en": "Description - Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Beschreibung - Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+              },
+              "dishSlug": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 4.5,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "3079": {
+              "title": {
+                "en": "Century Eggs, paired with a compote of seasonal berries and rye bread",
+                "de": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot"
+              },
+              "isNew": true,
+              "variations": {
+                "102505": {
+                  "title": {
+                    "en": "Century Eggs, paired with a compote of seasonal berries and rye bread #v1",
+                    "de": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot #v1"
+                  },
+                  "description": null,
+                  "dishSlug": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1",
+                  "price": 3.6000000000000001,
+                  "limit": 0,
+                  "reachedLimit": false,
+                  "isOpen": true,
+                  "isLocked": false,
+                  "isNew": false,
+                  "parentId": 3079,
+                  "participations": 7.5,
+                  "isParticipating": null,
+                  "hasOffers": false,
+                  "isOffering": false,
+                  "mealState": "open"
+                },
+                "102506": {
+                  "title": {
+                    "en": "Century Eggs, paired with a compote of seasonal berries and rye bread #v2",
+                    "de": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot #v2"
+                  },
+                  "description": null,
+                  "dishSlug": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v2",
+                  "price": 3.6000000000000001,
+                  "limit": 0,
+                  "reachedLimit": false,
+                  "isOpen": true,
+                  "isLocked": false,
+                  "isNew": false,
+                  "parentId": 3079,
+                  "participations": 6,
+                  "isParticipating": null,
+                  "hasOffers": false,
+                  "isOffering": false,
+                  "mealState": "open"
+                }
+              },
+              "isLocked": false,
+              "isOpen": true
+            },
+            "102623": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36094": {
+          "date": {
+            "date": "2024-01-18 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 1,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 1,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102507": {
+              "title": {
+                "en": "Fish (so juicy sweat)",
+                "de": "Fish (so juicy sweat) DE"
+              },
+              "description": {
+                "en": "Description - Fish (so juicy sweat)",
+                "de": "Beschreibung - Fish (so juicy sweat) DE"
+              },
+              "dishSlug": "fish-so-juicy-sweat",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102508": {
+              "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+              },
+              "description": {
+                "en": "Description - Limbs",
+                "de": "Beschreibung - Limbs DE"
+              },
+              "dishSlug": "limbs",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 1,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102624": {
+              "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+              },
+              "description": {
+                "en": "",
+                "de": ""
+              },
+              "dishSlug": "combined-dish",
+              "price": 5.5999999999999996,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 0,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        },
+        "36095": {
+          "date": {
+            "date": "2024-01-19 12:00:00.000000",
+            "timezone_type": 3,
+            "timezone": "Europe/Berlin"
+          },
+          "isLocked": false,
+          "activeSlot": 0,
+          "slotsEnabled": true,
+          "slots": {
+            "0": {
+              "id": 0,
+              "title": "auto",
+              "count": 0,
+              "limit": 0,
+              "slug": "auto",
+              "disabled": false
+            },
+            "1024": {
+              "id": 1024,
+              "title": "Active w/o limit",
+              "count": 5,
+              "limit": 0,
+              "slug": "active-wo-limit",
+              "disabled": false
+            },
+            "1025": {
+              "id": 1025,
+              "title": "Active w/ limit",
+              "count": 2,
+              "limit": 10,
+              "slug": "active-w-limit",
+              "disabled": false
+            }
+          },
+          "meals": {
+            "102509": {
+              "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+              },
+              "description": {
+                "en": "Description - Tasty Worms",
+                "de": "Beschreibung - Tasty Worms DE"
+              },
+              "dishSlug": "tasty-worms",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 5,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            },
+            "102510": {
+              "title": {
+                "en": "Braaaaaiiinnnzzzzzz",
+                "de": "Braaaaaiiinnnzzzzzz DE"
+              },
+              "description": {
+                "en": "Description - Braaaaaiiinnnzzzzzz",
+                "de": "Beschreibung"
+              },
+              "dishSlug": "braaaaaiiinnnzzzzzz",
+              "price": 3.6000000000000001,
+              "limit": 0,
+              "reachedLimit": false,
+              "isOpen": true,
+              "isLocked": false,
+              "isNew": false,
+              "parentId": null,
+              "participations": 6,
+              "isParticipating": null,
+              "hasOffers": false,
+              "isOffering": false,
+              "mealState": "open"
+            }
+          },
+          "isEnabled": true,
+          "event": null
+        }
+      },
+      "isEnabled": true
+    }
+  }
+}

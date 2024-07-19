@@ -1,0 +1,148 @@
+[
+  {
+    "id": 44,
+    "slug": "braaaaaiiinnnzzzzzz",
+    "titleDe": "Braaaaaiiinnnzzzzzz DE",
+    "titleEn": "Braaaaaiiinnnzzzzzz",
+    "descriptionDe": "Beschreibung",
+    "descriptionEn": "Description - Braaaaaiiinnnzzzzzz",
+    "categoryId": 12,
+    "oneServingSize": true,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 45,
+    "slug": "tasty-worms",
+    "titleDe": "Tasty Worms DE",
+    "titleEn": "Tasty Worms",
+    "descriptionDe": "Beschreibung - Tasty Worms DE",
+    "descriptionEn": "Description - Tasty Worms",
+    "categoryId": 10,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 46,
+    "slug": "innards",
+    "titleDe": "Innards DE",
+    "titleEn": "Innards",
+    "descriptionDe": "Beschreibung - Innards DE",
+    "descriptionEn": "Description - Innards",
+    "categoryId": 12,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": [
+      {
+        "id": 51,
+        "slug": "innards-v1",
+        "titleDe": "Innards DE #v1",
+        "titleEn": "Innards #v1",
+        "descriptionDe": null,
+        "descriptionEn": null,
+        "categoryId": null,
+        "oneServingSize": false,
+        "parentId": 46,
+        "variations": []
+      },
+      {
+        "id": 52,
+        "slug": "innards-v2",
+        "titleDe": "Innards DE #v2",
+        "titleEn": "Innards #v2",
+        "descriptionDe": null,
+        "descriptionEn": null,
+        "categoryId": null,
+        "oneServingSize": false,
+        "parentId": 46,
+        "variations": []
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "slug": "fish-so-juicy-sweat",
+    "titleDe": "Fish (so juicy sweat) DE",
+    "titleEn": "Fish (so juicy sweat)",
+    "descriptionDe": "Beschreibung - Fish (so juicy sweat) DE",
+    "descriptionEn": "Description - Fish (so juicy sweat)",
+    "categoryId": 10,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 48,
+    "slug": "limbs",
+    "titleDe": "Limbs DE",
+    "titleEn": "Limbs",
+    "descriptionDe": "Beschreibung - Limbs DE",
+    "descriptionEn": "Description - Limbs",
+    "categoryId": 11,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 49,
+    "slug": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread",
+    "titleDe": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot",
+    "titleEn": "Century Eggs, paired with a compote of seasonal berries and rye bread",
+    "descriptionDe": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+    "descriptionEn": "Description - Century Eggs, paired with a compote of seasonal berries and rye bread",
+    "categoryId": 12,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": [
+      {
+        "id": 53,
+        "slug": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1",
+        "titleDe": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot #v1",
+        "titleEn": "Century Eggs, paired with a compote of seasonal berries and rye bread #v1",
+        "descriptionDe": null,
+        "descriptionEn": null,
+        "categoryId": null,
+        "oneServingSize": false,
+        "parentId": 49,
+        "variations": []
+      },
+      {
+        "id": 54,
+        "slug": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v2",
+        "titleDe": "Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot #v2",
+        "titleEn": "Century Eggs, paired with a compote of seasonal berries and rye bread #v2",
+        "descriptionDe": null,
+        "descriptionEn": null,
+        "categoryId": null,
+        "oneServingSize": false,
+        "parentId": 49,
+        "variations": []
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "slug": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+    "titleDe": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe",
+    "titleEn": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+    "descriptionDe": "Beschreibung - Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe",
+    "descriptionEn": "Description - Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+    "categoryId": 10,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  },
+  {
+    "id": 55,
+    "slug": "combined-dish",
+    "titleDe": "Kombi-Gericht",
+    "titleEn": "Combined Dish",
+    "descriptionDe": "",
+    "descriptionEn": "",
+    "categoryId": null,
+    "oneServingSize": false,
+    "parentId": null,
+    "variations": []
+  }
+]

@@ -1,0 +1,2044 @@
+[
+  {
+    "id": 112,
+    "year": 2023,
+    "calendarWeek": 31,
+    "days": {
+      "556": {
+        "dateTime": {
+          "date": "2023-07-31 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-07-30 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 112,
+        "meals": {
+          "50": [
+            {
+              "id": 1483,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 556,
+              "dateTime": {
+                "date": "2023-07-31 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-07-30 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "44": [
+            {
+              "id": 1484,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 556,
+              "dateTime": {
+                "date": "2023-07-31 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-07-30 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "557": {
+        "dateTime": {
+          "date": "2023-08-01 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-07-31 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 112,
+        "meals": {
+          "48": [
+            {
+              "id": 1485,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 557,
+              "dateTime": {
+                "date": "2023-08-01 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-07-31 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "50": [
+            {
+              "id": 1486,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 557,
+              "dateTime": {
+                "date": "2023-08-01 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-07-31 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1609,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 557,
+              "dateTime": {
+                "date": "2023-08-01 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-07-31 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "558": {
+        "dateTime": {
+          "date": "2023-08-02 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-01 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 112,
+        "meals": {
+          "47": [
+            {
+              "id": 1487,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 558,
+              "dateTime": {
+                "date": "2023-08-02 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-01 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "49": [
+            {
+              "id": 1488,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1",
+              "participationLimit": 0,
+              "day": 558,
+              "dateTime": {
+                "date": "2023-08-02 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-01 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1489,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v2",
+              "participationLimit": 0,
+              "day": 558,
+              "dateTime": {
+                "date": "2023-08-02 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-01 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1610,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 558,
+              "dateTime": {
+                "date": "2023-08-02 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-01 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "559": {
+        "dateTime": {
+          "date": "2023-08-03 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-02 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 112,
+        "meals": {
+          "48": [
+            {
+              "id": 1490,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 559,
+              "dateTime": {
+                "date": "2023-08-03 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-02 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1491,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 559,
+              "dateTime": {
+                "date": "2023-08-03 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-02 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1611,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 559,
+              "dateTime": {
+                "date": "2023-08-03 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-02 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "560": {
+        "dateTime": {
+          "date": "2023-08-04 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-03 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 112,
+        "meals": {
+          "44": [
+            {
+              "id": 1492,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 560,
+              "dateTime": {
+                "date": "2023-08-04 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-03 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1493,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 560,
+              "dateTime": {
+                "date": "2023-08-04 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-03 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": 113,
+    "year": 2023,
+    "calendarWeek": 32,
+    "days": {
+      "561": {
+        "dateTime": {
+          "date": "2023-08-07 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-06 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 113,
+        "meals": {
+          "48": [
+            {
+              "id": 1494,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 561,
+              "dateTime": {
+                "date": "2023-08-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "46": [
+            {
+              "id": 1495,
+              "dish": "innards-v1",
+              "participationLimit": 0,
+              "day": 561,
+              "dateTime": {
+                "date": "2023-08-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1496,
+              "dish": "innards-v2",
+              "participationLimit": 0,
+              "day": 561,
+              "dateTime": {
+                "date": "2023-08-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1612,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 561,
+              "dateTime": {
+                "date": "2023-08-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "562": {
+        "dateTime": {
+          "date": "2023-08-08 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-07 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 113,
+        "meals": {
+          "47": [
+            {
+              "id": 1497,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 562,
+              "dateTime": {
+                "date": "2023-08-08 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-07 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1498,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 562,
+              "dateTime": {
+                "date": "2023-08-08 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-07 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1613,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 562,
+              "dateTime": {
+                "date": "2023-08-08 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-07 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "563": {
+        "dateTime": {
+          "date": "2023-08-09 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-08 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 113,
+        "meals": {
+          "44": [
+            {
+              "id": 1499,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 563,
+              "dateTime": {
+                "date": "2023-08-09 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-08 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "50": [
+            {
+              "id": 1500,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 563,
+              "dateTime": {
+                "date": "2023-08-09 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-08 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "564": {
+        "dateTime": {
+          "date": "2023-08-10 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-09 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 113,
+        "meals": {
+          "47": [
+            {
+              "id": 1501,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 564,
+              "dateTime": {
+                "date": "2023-08-10 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-09 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1502,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 564,
+              "dateTime": {
+                "date": "2023-08-10 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-09 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1614,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 564,
+              "dateTime": {
+                "date": "2023-08-10 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-09 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "565": {
+        "dateTime": {
+          "date": "2023-08-11 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-10 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 113,
+        "meals": {
+          "44": [
+            {
+              "id": 1503,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 565,
+              "dateTime": {
+                "date": "2023-08-11 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-10 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1504,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 565,
+              "dateTime": {
+                "date": "2023-08-11 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-10 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": 114,
+    "year": 2023,
+    "calendarWeek": 33,
+    "days": {
+      "566": {
+        "dateTime": {
+          "date": "2023-08-14 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-13 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 114,
+        "meals": {
+          "50": [
+            {
+              "id": 1505,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 566,
+              "dateTime": {
+                "date": "2023-08-14 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-13 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "47": [
+            {
+              "id": 1506,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 566,
+              "dateTime": {
+                "date": "2023-08-14 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-13 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1615,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 566,
+              "dateTime": {
+                "date": "2023-08-14 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-13 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "567": {
+        "dateTime": {
+          "date": "2023-08-15 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-14 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 114,
+        "meals": {
+          "50": [
+            {
+              "id": 1507,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 567,
+              "dateTime": {
+                "date": "2023-08-15 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-14 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "47": [
+            {
+              "id": 1508,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 567,
+              "dateTime": {
+                "date": "2023-08-15 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-14 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1616,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 567,
+              "dateTime": {
+                "date": "2023-08-15 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-14 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "568": {
+        "dateTime": {
+          "date": "2023-08-16 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-15 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 114,
+        "meals": {
+          "48": [
+            {
+              "id": 1509,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 568,
+              "dateTime": {
+                "date": "2023-08-16 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-15 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "49": [
+            {
+              "id": 1510,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1",
+              "participationLimit": 0,
+              "day": 568,
+              "dateTime": {
+                "date": "2023-08-16 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-15 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1511,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v2",
+              "participationLimit": 0,
+              "day": 568,
+              "dateTime": {
+                "date": "2023-08-16 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-15 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1617,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 568,
+              "dateTime": {
+                "date": "2023-08-16 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-15 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "569": {
+        "dateTime": {
+          "date": "2023-08-17 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-16 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 114,
+        "meals": {
+          "50": [
+            {
+              "id": 1512,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 569,
+              "dateTime": {
+                "date": "2023-08-17 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-16 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "47": [
+            {
+              "id": 1513,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 569,
+              "dateTime": {
+                "date": "2023-08-17 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-16 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1618,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 569,
+              "dateTime": {
+                "date": "2023-08-17 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-16 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "570": {
+        "dateTime": {
+          "date": "2023-08-18 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-17 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 114,
+        "meals": {
+          "44": [
+            {
+              "id": 1514,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 570,
+              "dateTime": {
+                "date": "2023-08-18 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-17 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1515,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 570,
+              "dateTime": {
+                "date": "2023-08-18 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-17 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": 115,
+    "year": 2023,
+    "calendarWeek": 34,
+    "days": {
+      "571": {
+        "dateTime": {
+          "date": "2023-08-21 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-20 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 115,
+        "meals": {
+          "48": [
+            {
+              "id": 1516,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 571,
+              "dateTime": {
+                "date": "2023-08-21 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-20 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "46": [
+            {
+              "id": 1517,
+              "dish": "innards-v1",
+              "participationLimit": 0,
+              "day": 571,
+              "dateTime": {
+                "date": "2023-08-21 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-20 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1518,
+              "dish": "innards-v2",
+              "participationLimit": 0,
+              "day": 571,
+              "dateTime": {
+                "date": "2023-08-21 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-20 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1619,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 571,
+              "dateTime": {
+                "date": "2023-08-21 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-20 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "572": {
+        "dateTime": {
+          "date": "2023-08-22 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-21 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 115,
+        "meals": {
+          "47": [
+            {
+              "id": 1519,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 572,
+              "dateTime": {
+                "date": "2023-08-22 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-21 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "50": [
+            {
+              "id": 1520,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 572,
+              "dateTime": {
+                "date": "2023-08-22 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-21 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1620,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 572,
+              "dateTime": {
+                "date": "2023-08-22 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-21 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "573": {
+        "dateTime": {
+          "date": "2023-08-23 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-22 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 115,
+        "meals": {
+          "44": [
+            {
+              "id": 1521,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 573,
+              "dateTime": {
+                "date": "2023-08-23 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-22 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1522,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 573,
+              "dateTime": {
+                "date": "2023-08-23 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-22 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "574": {
+        "dateTime": {
+          "date": "2023-08-24 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-23 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 115,
+        "meals": {
+          "50": [
+            {
+              "id": 1523,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 574,
+              "dateTime": {
+                "date": "2023-08-24 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-23 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "47": [
+            {
+              "id": 1524,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 574,
+              "dateTime": {
+                "date": "2023-08-24 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-23 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1621,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 574,
+              "dateTime": {
+                "date": "2023-08-24 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-23 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "575": {
+        "dateTime": {
+          "date": "2023-08-25 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-24 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 115,
+        "meals": {
+          "48": [
+            {
+              "id": 1525,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 575,
+              "dateTime": {
+                "date": "2023-08-25 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-24 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1526,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 575,
+              "dateTime": {
+                "date": "2023-08-25 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-24 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1622,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 575,
+              "dateTime": {
+                "date": "2023-08-25 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-24 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": 116,
+    "year": 2023,
+    "calendarWeek": 35,
+    "days": {
+      "576": {
+        "dateTime": {
+          "date": "2023-08-28 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-27 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 116,
+        "meals": {
+          "44": [
+            {
+              "id": 1623,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 576,
+              "dateTime": {
+                "date": "2023-08-28 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-27 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "46": [
+            {
+              "id": 1624,
+              "dish": "innards-v2",
+              "participationLimit": 0,
+              "day": 576,
+              "dateTime": {
+                "date": "2023-08-28 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-27 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1625,
+              "dish": "innards-v1",
+              "participationLimit": 0,
+              "day": 576,
+              "dateTime": {
+                "date": "2023-08-28 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-27 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "577": {
+        "dateTime": {
+          "date": "2023-08-29 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-28 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 116,
+        "meals": {
+          "47": [
+            {
+              "id": 1626,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 577,
+              "dateTime": {
+                "date": "2023-08-29 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-28 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1627,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 577,
+              "dateTime": {
+                "date": "2023-08-29 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-28 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1633,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 577,
+              "dateTime": {
+                "date": "2023-08-29 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-28 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "578": {
+        "dateTime": {
+          "date": "2023-08-30 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-29 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 116,
+        "meals": {
+          "50": [
+            {
+              "id": 1628,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 578,
+              "dateTime": {
+                "date": "2023-08-30 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-29 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "45": [
+            {
+              "id": 1629,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 578,
+              "dateTime": {
+                "date": "2023-08-30 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-29 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1634,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 578,
+              "dateTime": {
+                "date": "2023-08-30 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-29 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "579": {
+        "dateTime": {
+          "date": "2023-08-31 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-30 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 116,
+        "meals": {
+          "49": [
+            {
+              "id": 1630,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1",
+              "participationLimit": 0,
+              "day": 579,
+              "dateTime": {
+                "date": "2023-08-31 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-30 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "46": [
+            {
+              "id": 1631,
+              "dish": "innards",
+              "participationLimit": 0,
+              "day": 579,
+              "dateTime": {
+                "date": "2023-08-31 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-30 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1635,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 579,
+              "dateTime": {
+                "date": "2023-08-31 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-30 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "580": {
+        "dateTime": {
+          "date": "2023-09-01 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-08-31 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 116,
+        "meals": {
+          "50": [
+            {
+              "id": 1632,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 580,
+              "dateTime": {
+                "date": "2023-09-01 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-08-31 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": 117,
+    "year": 2023,
+    "calendarWeek": 36,
+    "days": {
+      "581": {
+        "dateTime": {
+          "date": "2023-09-04 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-09-03 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 117,
+        "meals": {
+          "45": [
+            {
+              "id": 1636,
+              "dish": "tasty-worms",
+              "participationLimit": 0,
+              "day": 581,
+              "dateTime": {
+                "date": "2023-09-04 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-03 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "44": [
+            {
+              "id": 1637,
+              "dish": "braaaaaiiinnnzzzzzz",
+              "participationLimit": 0,
+              "day": 581,
+              "dateTime": {
+                "date": "2023-09-04 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-03 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "582": {
+        "dateTime": {
+          "date": "2023-09-05 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-09-04 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 117,
+        "meals": {
+          "46": [
+            {
+              "id": 1638,
+              "dish": "innards-v1",
+              "participationLimit": 0,
+              "day": 582,
+              "dateTime": {
+                "date": "2023-09-05 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-04 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            },
+            {
+              "id": 1639,
+              "dish": "innards-v2",
+              "participationLimit": 0,
+              "day": 582,
+              "dateTime": {
+                "date": "2023-09-05 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-04 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1640,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 582,
+              "dateTime": {
+                "date": "2023-09-05 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-04 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1646,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 582,
+              "dateTime": {
+                "date": "2023-09-05 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-04 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "583": {
+        "dateTime": {
+          "date": "2023-09-06 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-09-05 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 117,
+        "meals": {
+          "50": [
+            {
+              "id": 1641,
+              "dish": "limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce",
+              "participationLimit": 0,
+              "day": 583,
+              "dateTime": {
+                "date": "2023-09-06 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-05 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "49": [
+            {
+              "id": 1642,
+              "dish": "century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread",
+              "participationLimit": 0,
+              "day": 583,
+              "dateTime": {
+                "date": "2023-09-06 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-05 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1647,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 583,
+              "dateTime": {
+                "date": "2023-09-06 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-05 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "584": {
+        "dateTime": {
+          "date": "2023-09-07 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-09-06 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 117,
+        "meals": {
+          "47": [
+            {
+              "id": 1643,
+              "dish": "fish-so-juicy-sweat",
+              "participationLimit": 0,
+              "day": 584,
+              "dateTime": {
+                "date": "2023-09-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "48": [
+            {
+              "id": 1644,
+              "dish": "limbs",
+              "participationLimit": 0,
+              "day": 584,
+              "dateTime": {
+                "date": "2023-09-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ],
+          "55": [
+            {
+              "id": 1648,
+              "dish": "combined-dish",
+              "participationLimit": 0,
+              "day": 584,
+              "dateTime": {
+                "date": "2023-09-07 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-06 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      },
+      "585": {
+        "dateTime": {
+          "date": "2023-09-08 12:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "lockParticipationDateTime": {
+          "date": "2023-09-07 16:00:00.000000",
+          "timezone_type": 3,
+          "timezone": "Europe/Berlin"
+        },
+        "week": 117,
+        "meals": {
+          "46": [
+            {
+              "id": 1645,
+              "dish": "innards",
+              "participationLimit": 0,
+              "day": 585,
+              "dateTime": {
+                "date": "2023-09-08 12:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              },
+              "lockTime": {
+                "date": "2023-09-07 16:00:00.000000",
+                "timezone_type": 3,
+                "timezone": "Europe/Berlin"
+              }
+            }
+          ]
+        },
+        "enabled": true
+      }
+    },
+    "enabled": true
+  },
+  {
+    "id": null,
+    "year": "2023",
+    "calendarWeek": "37",
+    "days": [],
+    "enabled": true
+  },
+  {
+    "id": null,
+    "year": "2023",
+    "calendarWeek": "38",
+    "days": [],
+    "enabled": true
+  }
+]

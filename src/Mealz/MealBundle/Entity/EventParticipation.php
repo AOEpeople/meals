@@ -87,4 +87,14 @@ class EventParticipation
 
         return new ArrayCollection($this->participants->toArray());
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'event' => $this->getEvent(),
+            'day' => $this->getDay()->getId(),
+            'participants' => $this->getParticipants(),
+        ];
+    }
 }

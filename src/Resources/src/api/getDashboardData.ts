@@ -55,7 +55,7 @@ export type Day = {
     slots: Dictionary<Slot>;
     slotsEnabled: boolean;
     isEnabled: boolean;
-    event: EventParticipation | null;
+    events: Dictionary<EventParticipation>;
 };
 
 export type Week = {

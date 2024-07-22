@@ -30,59 +30,70 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { useRoute } from 'vue-router';
 import { useInvitationData } from '@/api/getInvitationData';
-import useEventsBus from 'tools/eventBus';
-import { ref, computed } from 'vue';
+import useEventsBus from '@/tools/eventBus';
+import { ref, computed, reactive } from 'vue';
 import { useJoinMealGuest } from '@/api/postJoinMealGuest';
 import { useI18n } from 'vue-i18n';
 import GuestCompletion from '@/components/guest/GuestCompletion.vue';
 import GuestForm from '@/components/guest/GuestForm.vue';
 import Day from '@/components/dashboard/Day.vue';
 
+interface IForm {
+  firstName: string,
+  lastName: string,
+  company: string,
+  chosenSlot: number,
+  chosenMeals: string[],
+  combiDishes: string[]
+}
+
 const progress = useProgress().start();
 const route = useRoute();
-const { invitation, error } = await useInvitationData(route.params.hash);
+const { invitation, error } = await useInvitationData(route.params.hash as string);
 const result = ref(error.value === true ? 'data_error' : '');
 const { receive } = useEventsBus();
 const { t, locale } = useI18n();
-const form = ref({
+
+const form = reactive<IForm>({
   firstName: '',
   lastName: '',
   company: '',
   chosenSlot: 0,
   chosenMeals: [],
   combiDishes: []
-});
+})
+
 const filled = computed(
   () =>
-    form.value.firstName !== '' &&
-    form.value.lastName !== '' &&
-    form.value.company !== '' &&
-    form.value.chosenMeals.length !== 0
+    form.firstName !== '' &&
+    form.lastName !== '' &&
+    form.company !== '' &&
+    form.chosenMeals.length !== 0
 );
 const firstNameMissing = ref(false);
 const lastNameMissing = ref(false);
 const companyMissing = ref(false);
 const mealsMissing = ref(false);
 
-receive('guestChosenMeals', (slug) => {
-  const index = form.value.chosenMeals.indexOf(slug);
+receive('guestChosenMeals', (slug: string) => {
+  const index = form.chosenMeals.indexOf(slug);
   if (index !== -1) {
-    form.value.chosenMeals.splice(index, 1);
+    form.chosenMeals.splice(index, 1);
   } else {
-    form.value.chosenMeals.push(slug);
+    form.chosenMeals.push(slug);
   }
 });
 
 receive('guestChosenSlot', (slot) => {
-  form.value.chosenSlot = slot;
+  form.chosenSlot = slot;
 });
 
 receive('guestChosenCombi', (dishes) => {
-  form.value.combiDishes = dishes;
+  form.combiDishes = dishes;
 });
 
 const date = new Date(invitation.value.date.date);
@@ -92,7 +103,7 @@ const localeDate = computed(() =>
 
 async function submitForm() {
   if (filled.value === true) {
-    const { error } = await useJoinMealGuest(JSON.stringify(form.value));
+    const { error } = await useJoinMealGuest(JSON.stringify(form));
     if (error.value === false) {
       result.value = 'resolve_success';
     } else {
@@ -104,10 +115,10 @@ async function submitForm() {
 }
 
 function showFormErrors() {
-  firstNameMissing.value = form.value.firstName === '';
-  lastNameMissing.value = form.value.lastName === '';
-  companyMissing.value = form.value.company === '';
-  mealsMissing.value = form.value.chosenMeals.length === 0;
+  firstNameMissing.value = form.firstName === '';
+  lastNameMissing.value = form.lastName === '';
+  companyMissing.value = form.company === '';
+  mealsMissing.value = form.chosenMeals.length === 0;
 }
 
 progress.finish();

@@ -1,7 +1,7 @@
 import { Store } from '@/stores/store';
 import { Dashboard, Day, Meal, Slot, useDashboardData, Week } from '@/api/getDashboardData';
 import { Dictionary } from '../../types/types';
-import { mercureReceiver } from 'tools/mercureReceiver';
+import { mercureReceiver } from '@/tools/mercureReceiver';
 import useMealState from '@/services/useMealState';
 import { MealState } from '@/enums/MealState';
 

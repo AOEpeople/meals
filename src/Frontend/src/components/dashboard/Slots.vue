@@ -30,7 +30,7 @@
           <ListboxOption
             v-if="slot.id !== 0 || !isParticipating"
             v-slot="{ active, selected }"
-            :key="slot.slug"
+            :key="slot.slug as string"
             :value="slot"
             as="template"
           >
@@ -59,8 +59,8 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headless
 import { useI18n } from 'vue-i18n';
 import { useUpdateSelectedSlot } from '@/api/putUpdateSelectedSlot';
 import { ChevronDownIcon } from '@heroicons/vue/solid';
-import useEventsBus from 'tools/eventBus';
-import { Day } from '@/api/getDashboardData';
+import useEventsBus from '@/tools/eventBus';
+import { type Day } from '@/api/getDashboardData';
 
 const props = defineProps<{
   dayID: number | string | undefined;

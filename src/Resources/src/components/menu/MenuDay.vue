@@ -3,7 +3,8 @@
     class="group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-3 rounded-lg border-0 border-none bg-white text-center align-middle shadow-day sm:grid-cols-[24px_minmax(0,1fr)_72px]"
   >
     <div
-      class="col-start-1 row-span-3 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-primary-2 py-1"
+      class="col-start-1 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-primary-2 py-1"
+      :class="[selectedEventOne ? 'row-span-4' : 'row-span-3']"
     >
       <Popover
         :translate-x-min="'0%'"
@@ -49,11 +50,11 @@
     />
 
     <EventInput
-    v-if="selectedEventOne"
+      v-if="selectedEventOne"
       v-model="selectedEventTwo"
       class="col-start-2 row-span-1 row-start-4 px-2 py-[12px] md:px-4"
     />
-    <div class="col-start-3 row-span-3 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]">
+    <div class="col-start-3 row-span-4 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]">
       <Switch
         :sr="t('menu.enableDay')"
         :initial="modelValue.enabled"
@@ -202,7 +203,6 @@ onMounted(() => {
   // set Event from modelValue to be the initial value of the selectedEvent
   selectedEventTwo.value = getEventById(props.modelValue.event);
 });
-
 
 /**
  * Extract the slugs from the selected dishes. Returns the slugs of variations if there are selected variations.

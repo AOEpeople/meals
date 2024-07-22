@@ -32,9 +32,15 @@ class Day extends AbstractMessage implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'day', targetEntity: Meal::class, cascade: ['all'])]
     private Collection $meals;
 
-    #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
-    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
-    private ?EventParticipation $event = null;
+    // #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
+    // #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
+    // private ?EventParticipation $event = null;
+
+    /**
+     * @var Collection<int, EventParticipation>
+     */
+    #[ORM\OneToMany(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
+    private Collection $events;
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
@@ -45,6 +51,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->week = $this->getDefaultWeek($this->dateTime);
         $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
+        $this->events = new EventCollection();
     }
 
     public function getId(): ?int
@@ -76,15 +83,18 @@ class Day extends AbstractMessage implements JsonSerializable
     {
         $this->week = $week;
     }
-
-    public function getEvent(): ?EventParticipation
+    public function getEvents(): EventCollection
     {
-        return $this->event;
+        if (false === ($this->events instanceof Collection)) {
+            $this->events = new EventCollection();
+        }
+
+        return new EventCollection($this->events->toArray());
     }
 
-    public function setEvent(?EventParticipation $event): void
+    public function setEvents(EventCollection $events): void
     {
-        $this->event = $event;
+        $this->events = $events;
     }
 
     public function getMeals(): MealCollection
@@ -150,6 +160,7 @@ class Day extends AbstractMessage implements JsonSerializable
     public function jsonSerialize(): array
     {
         $meals = [];
+        $events = [];
 
         foreach ($this->getMeals() as $meal) {
             $parent = $meal->getDish()->getParent();
@@ -159,13 +170,19 @@ class Day extends AbstractMessage implements JsonSerializable
                 $meals[$meal->getDish()->getId()][] = $meal->jsonSerialize();
             }
         }
+        foreach ($this->getEvents() as $event) {
+            if(null !== $event){
+                $event->jsonSerialize();
+            }
+
+        }
 
         return [
             'dateTime' => $this->getDateTime(),
             'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
             'meals' => $meals,
-            'event' => $this->event?->getEvent()->getId(),
+            'events' => $events,
             'enabled' => $this->isEnabled(),
         ];
     }

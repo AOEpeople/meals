@@ -19,7 +19,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
-
+    private string $email = '';
     #[ORM\Column(type: 'string', length: 128)]
     protected string $password = '';
 
@@ -39,6 +39,10 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     public function setEmail(string $username): void
     {
         $this->email = $username .'@aoe.com';
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function getPassword(): string

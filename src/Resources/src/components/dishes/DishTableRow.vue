@@ -5,11 +5,15 @@
   >
     <td
       colspan="1"
-      class="sticky left-0 w-1/2 bg-[#f4f7f9] py-2"
+      class="sticky left-0 flex w-1/2 flex-row content-center gap-2 bg-[#f4f7f9] py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
       </span>
+      <VeggiIcon
+        :diet="dish.diet"
+        class="h-6"
+      />
     </td>
     <td
       colspan="1"
@@ -38,11 +42,15 @@
   >
     <td
       colspan="1"
-      class="sticky left-0 w-1/2 bg-[#f4f7f9] py-2 pl-4"
+      class="sticky left-0 flex w-1/2 flex-row content-center gap-2 bg-[#f4f7f9] py-2 pl-4"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
       </span>
+      <VeggiIcon
+        :diet="variation.diet"
+        class="h-6"
+      />
     </td>
     <td
       colspan="2"
@@ -63,6 +71,7 @@ import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';
 import DishVariationActions from './DishVariationActions.vue';
 import LazyTableRow from '../misc/LazyTableRow.vue';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();

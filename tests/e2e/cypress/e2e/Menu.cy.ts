@@ -12,6 +12,7 @@ describe('Test Weeks View', () => {
         cy.intercept('GET', '**/api/categories', { fixture: 'categories.json', statusCode: 200 }).as('getCategories');
         cy.intercept('GET', '**/api/dishes', { fixture: 'dishes.json', statusCode: 200 }).as('getDishes');
         cy.intercept('GET', '**/api/events', { fixture: 'events.json', statusCode: 200 }).as('getEvents');
+        cy.intercept('GET', '**/api/week/lockdates/*', { fixture: 'lockdates.json', statusCode: 200 }).as('getLockdates');
     });
 
     it('should be able to browse to the menu page from the weekspage', () => {
@@ -21,7 +22,7 @@ describe('Test Weeks View', () => {
 
         cy.get('h4').contains('Woche #28').click();
 
-        cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getEvents']);
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getEvents', '@getLockdates']);
 
         cy.url().should('include', '/menu');
         cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)');

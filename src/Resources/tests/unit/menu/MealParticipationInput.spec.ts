@@ -3,6 +3,7 @@ import { Dish } from '@/stores/dishesStore';
 import { MealDTO } from '@/interfaces/DayDTO';
 import { Ref, ref } from 'vue';
 import { mount } from '@vue/test-utils';
+import { Diet } from '@/enums/Diet';
 
 const testMeal: Ref<MealDTO> = ref({
     dishSlug: 'TestDish',
@@ -18,6 +19,7 @@ const mockGetDishBySlug = jest.fn((slug: string) => {
         titleEn: `${slug}En`,
         categoryId: 0,
         oneServingSize: false,
+        diet: Diet.MEAT,
         parentId: 0,
         variations: []
     };

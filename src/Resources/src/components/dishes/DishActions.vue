@@ -41,6 +41,7 @@
           :dish-id="dish.id"
           :category-id="dish.categoryId"
           :one-size-serving="dish.oneServingSize"
+          :diet="dish.diet"
           @close-panel="close()"
         />
       </template>

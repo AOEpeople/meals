@@ -3,6 +3,7 @@ import { reactive, readonly } from 'vue';
 import { DateTime } from './getDashboardData';
 import useApi from './api';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
+import { Diet } from '@/enums/Diet';
 
 // timeout in ms between fetches of the participations
 const PERIODIC_TIMEOUT = 60000;
@@ -34,6 +35,7 @@ export interface IMealData {
     };
     parent?: number | null;
     participations?: number;
+    diet: Diet;
 }
 
 interface ILoadedState {
@@ -49,6 +51,7 @@ export interface IMealWithVariations {
     variations: IMealWithVariations[];
     participations: number;
     mealId: number;
+    diet: Diet;
 }
 
 /**
@@ -183,7 +186,8 @@ export function getShowParticipations() {
             },
             variations: [],
             participations: numberOfParticipants !== undefined ? numberOfParticipants : 0,
-            mealId: Number.parseInt(mealId)
+            mealId: Number.parseInt(mealId),
+            diet: participationsState.meals[mealId].diet
         };
 
         return mealWithVariations;
@@ -202,7 +206,8 @@ export function getShowParticipations() {
             },
             variations: getVariationsOfMeal(mealId),
             participations: 0,
-            mealId: Number.parseInt(mealId)
+            mealId: Number.parseInt(mealId),
+            diet: participationsState.meals[mealId].diet
         };
         return mealWithVariations;
     }

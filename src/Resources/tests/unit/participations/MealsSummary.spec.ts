@@ -1,23 +1,54 @@
 import MealsSummary from '@/components/participations/MealsSummary.vue';
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
-import { IDay } from '@/api/getMealsNextThreeDays';
+import { IDay, IDish } from '@/api/getMealsNextThreeDays';
+import { Diet } from '@/enums/Diet';
+
+const iDishesEn: IDish[] = [
+    {
+        title: 'Test111',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Test112',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Combined Dish',
+        diet: Diet.MEAT
+    }
+];
+
+const iDishesDe: IDish[] = [
+    {
+        title: 'Test111',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Test112',
+        diet: Diet.MEAT
+    },
+    {
+        title: 'Kombi-Gericht',
+        diet: Diet.MEAT
+    }
+];
 
 const dayOne: IDay = {
-    en: ['Test111', 'Test112', 'Combined Dish'],
-    de: ['Test111', 'Test112', 'Kombi-Gericht'],
+    en: iDishesEn,
+    de: iDishesDe,
     date: new Date('2023-05-10')
 };
 
 const dayTwo: IDay = {
-    en: ['Test111', 'Test112'],
-    de: ['Test111', 'Test112'],
+    en: [iDishesEn[0], iDishesEn[1]],
+    de: [iDishesDe[0], iDishesDe[1]],
     date: new Date('2023-05-11')
 };
 
 const dayThree: IDay = {
-    en: ['Test111'],
-    de: ['Test111'],
+    en: [iDishesEn[0]],
+    de: [iDishesDe[0]],
     date: new Date('2023-05-12')
 };
 

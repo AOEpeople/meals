@@ -8,6 +8,7 @@
     "descriptionEn": "Description - Fish (so juicy sweat)",
     "categoryId": 1357,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": []
   },
@@ -20,6 +21,7 @@
     "descriptionEn": null,
     "categoryId": null,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": 5424,
     "variations": []
   }

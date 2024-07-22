@@ -10,9 +10,16 @@
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="p-4 align-top text-lg text-primary"
+          class="flex flex-row justify-center gap-2 p-4 align-top text-lg text-primary"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
+          <VeggiIcon
+            v-if="meal.variations.length === 0 && meal.diet && meal.diet !== Diet.MEAT"
+            :diet="meal.diet"
+            class="self-center"
+            :class="meal.diet === Diet.VEGAN ? 'h-[45px]' : 'h-[42px]'"
+            :tooltip-active="false"
+          />
         </th>
       </tr>
     </thead>
@@ -22,11 +29,20 @@
         :key="index"
       >
         <td
-          class="p-4"
+          class="flex min-h-[60px] flex-row content-center justify-center gap-2"
           :class="//@ts-ignore
           [meal.variations.length - 1 > index ? 'border-b border-solid' : 'border-none']"
         >
-          {{ getTitleForLocale(variation) }}
+          <span class="my-auto">
+            {{ getTitleForLocale(variation) }}
+          </span>
+          <VeggiIcon
+            v-if="variation.diet && variation.diet !== Diet.MEAT"
+            :diet="variation.diet"
+            class="self-center"
+            :class="variation.diet === Diet.VEGAN ? 'h-[42px]' : 'h-[35px]'"
+            :tooltip-active="false"
+          />
         </td>
       </tr>
     </tbody>
@@ -37,6 +53,8 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
+import { Diet } from '@/enums/Diet';
 
 const { locale } = useI18n();
 

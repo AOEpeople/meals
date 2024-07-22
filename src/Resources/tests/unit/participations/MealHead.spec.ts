@@ -1,5 +1,6 @@
 import { IMealWithVariations } from '@/api/getShowParticipations';
 import MealHead from '@/components/participations/MealHead.vue';
+import { Diet } from '@/enums/Diet';
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 
@@ -10,7 +11,8 @@ const mealOne: IMealWithVariations = {
     },
     variations: [],
     participations: 3,
-    mealId: 1
+    mealId: 1,
+    diet: Diet.MEAT
 };
 const mealThree: IMealWithVariations = {
     title: {
@@ -19,7 +21,8 @@ const mealThree: IMealWithVariations = {
     },
     variations: [],
     participations: 1,
-    mealId: 3
+    mealId: 3,
+    diet: Diet.MEAT
 };
 const mealFour: IMealWithVariations = {
     title: {
@@ -28,7 +31,8 @@ const mealFour: IMealWithVariations = {
     },
     variations: [],
     participations: 2,
-    mealId: 4
+    mealId: 4,
+    diet: Diet.MEAT
 };
 const mealTwo: IMealWithVariations = {
     title: {
@@ -37,7 +41,8 @@ const mealTwo: IMealWithVariations = {
     },
     variations: [mealThree, mealFour],
     participations: 5,
-    mealId: 2
+    mealId: 2,
+    diet: Diet.MEAT
 };
 
 describe('Test MealHead', () => {

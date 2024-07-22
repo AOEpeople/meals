@@ -140,8 +140,14 @@ class ApiController extends BaseController
             $uniqueMeals = $this->dishSrv->getUniqueDishesFromMeals($meals);
 
             foreach ($uniqueMeals as $dish) {
-                $dishes['en'][] = $dish->getTitleEn();
-                $dishes['de'][] = $dish->getTitleDe();
+                $dishes['en'][] = [
+                    'title' => $dish->getTitleEn(),
+                    'diet' => $dish->getDiet(),
+                ];
+                $dishes['de'][] = [
+                    'title' => $dish->getTitleDe(),
+                    'diet' => $dish->getDiet(),
+                ];
             }
 
             $result[$today->format('Y-m-d')] = $dishes;
@@ -309,6 +315,7 @@ class ApiController extends BaseController
             'isParticipating' => $participationId,
             'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
             'isOffering' => $isOffering,
+            'diet' => $meal->getDish()->getDiet(),
         ];
     }
 
@@ -327,6 +334,7 @@ class ApiController extends BaseController
                 'variations' => [],
                 'isLocked' => $meal->isLocked(),
                 'isOpen' => $meal->isOpen(),
+                'diet' => $meal->getDish()->getDiet(),
             ];
         }
 
@@ -389,6 +397,7 @@ class ApiController extends BaseController
             ],
             'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
             'participations' => $this->participationSrv->getCountByMeal($meal, true),
+            'diet' => $meal->getDish()->getDiet(),
         ];
 
         if (null != $meal->getDish()->getParent()) {
@@ -397,6 +406,7 @@ class ApiController extends BaseController
                     'en' => $meal->getDish()->getParent()->getTitleEn(),
                     'de' => $meal->getDish()->getParent()->getTitleDe(),
                 ],
+                'diet' => $meal->getDish()->getDiet(),
             ];
         }
 

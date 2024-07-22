@@ -7,14 +7,14 @@
   },
   {
     "id": 5,
-    "titleDe": "Vegetarisch",
-    "titleEn": "Vegetarian",
-    "slug": "vegetarian"
+    "titleDe": "Suppe",
+    "titleEn": "Soup",
+    "slug": "soup"
   },
   {
     "id": 6,
-    "titleDe": "Fleisch",
-    "titleEn": "Meat",
-    "slug": "meat"
+    "titleDe": "Pasta",
+    "titleEn": "Pasta",
+    "slug": "pasta"
   }
 ]

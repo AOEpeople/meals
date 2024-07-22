@@ -12,8 +12,15 @@
   >
     <div class="basis-11/12 items-center self-start min-[380px]:self-center xl:col-span-5">
       <div class="self-center">
-        <p class="m-0 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]">
+        <p
+          class="m-0 flex flex-row content-center gap-1 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]"
+        >
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
+          <VeggiIcon
+            v-if="variation.diet && variation.diet !== Diet.MEAT"
+            :diet="variation.diet"
+            :class="variation.diet === Diet.VEGAN ? 'h-[17px]' : 'ml-[2px] h-[14px]'"
+          />
           <span
             v-if="variation.isNew"
             class="ml-1 h-[17px] w-[36px] bg-highlight py-px pl-1 pr-[3px] align-text-bottom text-[11px] font-bold uppercase leading-[16px] tracking-[1.5px] text-white"
@@ -68,6 +75,8 @@ import useEventsBus from 'tools/eventBus';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
 import { Day, Meal } from '@/api/getDashboardData';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
+import { Diet } from '@/enums/Diet';
 
 const { receive } = useEventsBus();
 

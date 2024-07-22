@@ -24,7 +24,8 @@ module.exports = {
                 tb: 'inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb'
             },
             colors: {
-                'tb-shadow': '#f4f6f9'
+                'tb-shadow': '#f4f6f9',
+                triangle: '#585858 transparent transparent transparent'
             }
         }
     }

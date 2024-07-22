@@ -18,6 +18,7 @@
           :title-de="variation.titleDe"
           :title-en="variation.titleEn"
           :slug="variation.slug"
+          :diet="variation.diet"
           :edit="true"
           @close-panel="close()"
         />

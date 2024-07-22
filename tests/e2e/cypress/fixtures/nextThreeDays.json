@@ -1,0 +1,92 @@
+{
+    "2024-07-22": {
+        "en": [
+            {
+                "title": "Potatoewrap704EN",
+                "diet": "vegetarian"
+            },
+            {
+                "title": "Ducksteak751EN",
+                "diet": "meat"
+            },
+            {
+                "title": "Ducksteak751EN",
+                "diet": "meat"
+            },
+            {
+                "title": "Combined Dish",
+                "diet": "meat"
+            }
+        ],
+        "de": [
+            {
+                "title": "Potatoewrap704DE",
+                "diet": "vegetarian"
+            },
+            {
+                "title": "Ducksteak751DE",
+                "diet": "meat"
+            },
+            {
+                "title": "Ducksteak751DE",
+                "diet": "meat"
+            },
+            {
+                "title": "Kombi-Gericht",
+                "diet": "meat"
+            }
+        ]
+    },
+    "2024-07-23": {
+        "en": [
+            {
+                "title": "Kebabdumpling968EN",
+                "diet": "meat"
+            },
+            {
+                "title": "Sushipatty624EN",
+                "diet": "vegan"
+            }
+        ],
+        "de": [
+            {
+                "title": "Kebabdumpling968DE",
+                "diet": "meat"
+            },
+            {
+                "title": "Sushipatty624DE",
+                "diet": "vegan"
+            }
+        ]
+    },
+    "2024-07-24": {
+        "en": [
+            {
+                "title": "Ducksoup467EN",
+                "diet": "meat"
+            },
+            {
+                "title": "Burgerwrap965EN",
+                "diet": "meat"
+            },
+            {
+                "title": "Combined Dish",
+                "diet": "meat"
+            }
+        ],
+        "de": [
+            {
+                "title": "Ducksoup467DE",
+                "diet": "meat"
+            },
+            {
+                "title": "Burgerwrap965DE",
+                "diet": "meat"
+            },
+            {
+                "title": "Kombi-Gericht",
+                "diet": "meat"
+            }
+        ]
+    }
+}

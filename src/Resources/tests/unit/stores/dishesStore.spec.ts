@@ -7,6 +7,7 @@ import Dishes from '../fixtures/getDishes.json';
 import Categories from '../fixtures/getCategories.json';
 import { CreateDishDTO } from '@/api/postCreateDish';
 import combiDishes from '../fixtures/combiDishes.json';
+import { Diet } from '@/enums/Diet';
 
 const dish1: Dish = {
     id: 17,
@@ -15,6 +16,7 @@ const dish1: Dish = {
     titleEn: 'Limbs 123',
     categoryId: 6,
     oneServingSize: false,
+    diet: Diet.MEAT,
     parentId: null,
     variations: []
 };
@@ -60,7 +62,7 @@ const getMockedResponses = (method: string, url: string) => {
         method === 'GET'
     ) {
         return {
-            response: ref<Dish[]>(combiDishes),
+            response: ref<Dish[]>(combiDishes as Dish[]),
             request: asyncFunc,
             error: ref(false)
         };
@@ -130,11 +132,33 @@ describe('Test dishesStore', () => {
         setFilter('Vegetarisch');
         await new Promise((r) => setTimeout(r, 1100));
         for (const dish of filteredDishes.value) {
-            expect(dish.categoryId).toBe(5);
+            expect(dish.diet).toBe('vegetarian');
         }
-        expect(filteredDishes.value).not.toContainEqual(Dishes[3]);
-        expect(filteredDishes.value).toContainEqual(Dishes[0]);
-    });
+
+        setFilter('Vegetarian');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('vegetarian');
+        }
+
+        setFilter('Vegan');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('vegan');
+        }
+
+        setFilter('Fleisch');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.diet).toBe('meat');
+        }
+
+        setFilter('Pasta');
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
+            expect(dish.categoryId).toBe(6);
+        }
+    }, 10000);
 
     it('should update the state after sending a PUT request', async () => {
         await fetchDishes();

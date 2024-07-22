@@ -6,6 +6,7 @@ import Dishes from '../fixtures/getDishes.json';
 import Categories from '../fixtures/getCategories.json';
 import useApi from '@/api/api';
 import { useCategories } from '@/stores/categoriesStore';
+import { Dish } from '@/stores/dishesStore';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -31,7 +32,7 @@ describe('Test DishTableRow', () => {
     it('should render the dish from the props with no variations', async () => {
         const wrapper = mount(DishTableRow, {
             props: {
-                dish: Dishes[4],
+                dish: Dishes[4] as Dish,
                 indexInList: 4
             }
         });
@@ -45,7 +46,7 @@ describe('Test DishTableRow', () => {
             if (index === 0) {
                 expect(td.text()).toBe(Dishes[4].titleEn);
             } else if (index === 1) {
-                expect(td.text()).toBe('Meat');
+                expect(td.text()).toBe('Pasta');
             }
         });
     });
@@ -53,7 +54,7 @@ describe('Test DishTableRow', () => {
     it('should render the dish from the props with variations', async () => {
         const wrapper = mount(DishTableRow, {
             props: {
-                dish: Dishes[0],
+                dish: Dishes[0] as Dish,
                 indexInList: 0
             }
         });
@@ -73,7 +74,7 @@ describe('Test DishTableRow', () => {
     it('should render the dish variations with topShadow and bottomShadow classes', () => {
         const wrapper = mount(DishTableRow, {
             props: {
-                dish: Dishes[0],
+                dish: Dishes[0] as Dish,
                 indexInList: 0
             }
         });
@@ -86,7 +87,7 @@ describe('Test DishTableRow', () => {
     it('should render the dish variation with topBottomShadow class', () => {
         const wrapper = mount(DishTableRow, {
             props: {
-                dish: Dishes[8],
+                dish: Dishes[8] as Dish,
                 indexInList: 8
             }
         });

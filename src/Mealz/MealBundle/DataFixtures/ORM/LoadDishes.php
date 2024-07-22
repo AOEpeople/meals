@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Enum\Diet;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -39,7 +40,10 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
             'Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot',
             'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, '
             . 'sed diam nonumy eirmod tempor invidunt ut labore et dolore '
-            . 'magna aliquyam erat, sed diam voluptua.'
+            . 'magna aliquyam erat, sed diam voluptua.',
+            null,
+            false,
+            Diet::VEGETARIAN
         );
         $this->addDish(
             'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
@@ -71,7 +75,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
     }
 
     protected function addDish(
-        string $titleEN, string $titleDE, ?string $descEN = null, ?string $descDE = null, bool $oneSize = false
+        string $titleEN, string $titleDE, ?string $descEN = null, ?string $descDE = null, bool $oneSize = false, Diet $diet = Diet::MEAT
     ): void {
         $dish = new Dish();
         $dish->setPrice(4.13);
@@ -82,6 +86,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $randomCategory = (0 === count($this->categories)) ? null : $this->categories[array_rand($this->categories, 1)];
         $dish->setCategory($randomCategory);
         $dish->setOneServingSize($oneSize);
+        $dish->setDiet($diet);
         $this->objectManager->persist($dish);
         $this->addReference('dish-' . $this->counter++, $dish);
     }
@@ -116,6 +121,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         ];
         $dishSuffix = ['stew', 'soup', 'patty', 'salad', 'steak', 'filet', 'dumpling', 'taco', 'wrap'];
         $sideDishes = ['noodles', 'rice', 'potatoes', 'salad', 'bread', 'sauce', 'dumplings', 'fries', 'chips'];
+        $diet = [Diet::MEAT, Diet::VEGAN, Diet::VEGETARIAN];
 
         $dish = $dishPrefix[array_rand($dishPrefix)] . $dishSuffix[array_rand($dishSuffix)];
         $description = $dishCookingMethod[array_rand($dishCookingMethod)] . ' ' . $dish . ' with ' . $sideDishes[array_rand($sideDishes)];
@@ -127,7 +133,8 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
             $dish . $randNum . 'DE',
             $descActive ? $description . ' EN' : null,
             $descActive ? $description . ' DE' : null,
-            $oneSize
+            $oneSize,
+            $diet[array_rand($diet)],
         );
     }
 }

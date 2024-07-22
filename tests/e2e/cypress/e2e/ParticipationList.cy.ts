@@ -1,12 +1,138 @@
 describe('Test TV ParticipationsList view', () => {
   beforeEach(() => {
-    cy.resetDB();
     cy.setCookie('locale', 'de');
   });
 
   it('should be able to visit the page without authentication', () => {
     cy.viewport(1080, 1920);
     cy.visit(Cypress.env('baseUrl') + 'show/participations');
+  });
+
+  it('should display vegan/vegetarian icons on some meals', () => {
+    cy.intercept('GET', '**/api/print/participations', { fixture: 'tvParticipations.json', statusCode: 200 }).as('getParticipations');
+    cy.intercept('GET', '**/api/meals/nextThreeDays', { fixture: 'nextThreeDays.json', statusCode: 200 }).as('getNextThreeDays');
+    cy.viewport(1080, 1920);
+    cy.visit(Cypress.env('baseUrl') + 'show/participations');
+
+    cy.wait(['@getParticipations', '@getNextThreeDays']);
+
+    // Check the head
+    cy.get('th')
+      .eq(1)
+      .contains('Limbs DE')
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('exist');
+
+    cy.get('th')
+      .first()
+      .contains('Innards DE')
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('not.exist');
+
+    cy.get('th')
+      .first()
+      .contains('Innards DE')
+      .find('img[data-cy="vegan-icon"]')
+      .should('not.exist');
+
+    cy.get('th')
+      .first()
+      .contains('Innards DE')
+      .parent()
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(1)
+      .contains('Innards DE #v1')
+      .parent()
+      .find('img[data-cy="vegan-icon"]')
+      .should('exist');
+
+    cy.get('th')
+      .first()
+      .contains('Innards DE')
+      .parent()
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(2)
+      .contains('Innards DE #v2')
+      .parent()
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('exist');
+
+    // Check the bottom
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Montag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(1)
+      .contains('Potatoewrap704DE')
+      .parent()
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('exist');
+
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Montag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(2)
+      .contains('Ducksteak751DE')
+      .parent()
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('not.exist');
+
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Montag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(2)
+      .contains('Ducksteak751DE')
+      .parent()
+      .find('img[data-cy="vegan-icon"]')
+      .should('not.exist');
+
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Dienstag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(2)
+      .contains('Sushipatty624DE')
+      .parent()
+      .find('img[data-cy="vegan-icon"]')
+      .should('exist');
+
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Dienstag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(1)
+      .contains('Kebabdumpling968DE')
+      .parent()
+      .find('img[data-cy="vegan-icon"]')
+      .should('not.exist');
+
+    cy.get('table[id="mealsOverview"]')
+      .find('th')
+      .contains('Dienstag')
+      .parent()
+      .parent()
+      .find('tr')
+      .eq(1)
+      .contains('Kebabdumpling968DE')
+      .parent()
+      .find('img[data-cy="vegetarian-icon"]')
+      .should('not.exist');
   });
 });
 

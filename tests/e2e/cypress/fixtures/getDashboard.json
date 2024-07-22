@@ -69,7 +69,8 @@
                             "isParticipating": null,
                             "hasOffers": true,
                             "isOffering": false,
-                            "mealState": "disabled"
+                            "mealState": "disabled",
+                            "diet": "vegan"
                         },
                         "3076": {
                             "title": {
@@ -96,7 +97,8 @@
                                     "isParticipating": null,
                                     "hasOffers": true,
                                     "isOffering": false,
-                                    "mealState": "disabled"
+                                    "mealState": "disabled",
+                                    "diet": "vegan"
                                 },
                                 "102491": {
                                     "title": {
@@ -116,7 +118,8 @@
                                     "isParticipating": null,
                                     "hasOffers": true,
                                     "isOffering": false,
-                                    "mealState": "disabled"
+                                    "mealState": "disabled",
+                                    "diet": "vegetarian"
                                 }
                             },
                             "isLocked": true,
@@ -183,7 +186,8 @@
                             "isParticipating": null,
                             "hasOffers": true,
                             "isOffering": false,
-                            "mealState": "disabled"
+                            "mealState": "disabled",
+                            "diet": "vegetarian"
                         },
                         "102493": {
                             "title": {
@@ -206,7 +210,8 @@
                             "isParticipating": null,
                             "hasOffers": true,
                             "isOffering": false,
-                            "mealState": "disabled"
+                            "mealState": "disabled",
+                            "diet": "meat"
                         },
                         "102619": {
                             "title": {
@@ -292,7 +297,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102495": {
                             "title": {
@@ -315,7 +321,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102620": {
                             "title": {
@@ -405,7 +412,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102497": {
                             "title": {
@@ -428,7 +436,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102621": {
                             "title": {
@@ -514,7 +523,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102499": {
                             "title": {
@@ -537,7 +547,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         }
                     },
                     "isEnabled": true,
@@ -615,7 +626,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102501": {
                             "title": {
@@ -638,7 +650,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         }
                     },
                     "isEnabled": true,
@@ -701,7 +714,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102503": {
                             "title": {
@@ -724,7 +738,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102622": {
                             "title": {
@@ -810,7 +825,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "3079": {
                             "title": {
@@ -837,7 +853,8 @@
                                     "isParticipating": null,
                                     "hasOffers": false,
                                     "isOffering": false,
-                                    "mealState": "open"
+                                    "mealState": "open",
+                                    "diet": "meat"
                                 },
                                 "102506": {
                                     "title": {
@@ -857,7 +874,8 @@
                                     "isParticipating": null,
                                     "hasOffers": false,
                                     "isOffering": false,
-                                    "mealState": "open"
+                                    "mealState": "open",
+                                    "diet": "meat"
                                 }
                             },
                             "isLocked": false,
@@ -947,7 +965,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102508": {
                             "title": {
@@ -970,7 +989,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102624": {
                             "title": {
@@ -1056,7 +1076,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         },
                         "102510": {
                             "title": {
@@ -1079,7 +1100,8 @@
                             "isParticipating": null,
                             "hasOffers": false,
                             "isOffering": false,
-                            "mealState": "open"
+                            "mealState": "open",
+                            "diet": "meat"
                         }
                     },
                     "isEnabled": true,

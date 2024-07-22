@@ -51,15 +51,21 @@ class CategoryControllerTest extends AbstractControllerTestCase
             ],
             [
                 'id' => $response[1]['id'],
-                'titleDe' => 'Vegetarisch',
-                'titleEn' => 'Vegetarian',
-                'slug' => 'vegetarian',
+                'titleDe' => 'Suppe',
+                'titleEn' => 'Soup',
+                'slug' => 'soup',
             ],
             [
                 'id' => $response[2]['id'],
-                'titleDe' => 'Fleisch',
-                'titleEn' => 'Meat',
-                'slug' => 'meat',
+                'titleDe' => 'Pasta',
+                'titleEn' => 'Pasta',
+                'slug' => 'pasta',
+            ],
+            [
+                'id' => $response[3]['id'],
+                'titleDe' => 'Dessert',
+                'titleEn' => 'Dessert',
+                'slug' => 'dessert',
             ],
         ];
 

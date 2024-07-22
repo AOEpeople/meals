@@ -13,6 +13,7 @@ import { refThrottled } from '@vueuse/core';
 import getDishesForCombi from '@/api/getDishesForCombi';
 import { useCategories } from './categoriesStore';
 import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
+import { Diet, getDietTranslationMap } from '@/enums/Diet';
 
 export interface Dish {
     id: number;
@@ -23,6 +24,7 @@ export interface Dish {
     descriptionEn?: string;
     categoryId: number;
     oneServingSize: boolean;
+    diet: Diet;
     parentId: number;
     variations: Dish[];
 }
@@ -43,9 +45,10 @@ function isDish(dish: Dish): dish is Dish {
         typeof (dish as Dish).titleEn === 'string' &&
         ((dish as Dish).categoryId === null || typeof (dish as Dish).categoryId === 'number') &&
         typeof (dish as Dish).oneServingSize === 'boolean' &&
+        typeof (dish as Dish).diet === 'string' &&
         Array.isArray((dish as Dish).variations) &&
-        Object.keys(dish).length >= 8 &&
-        Object.keys(dish).length <= 10
+        Object.keys(dish).length >= 9 &&
+        Object.keys(dish).length <= 11
     );
 }
 
@@ -97,14 +100,21 @@ export function useDishes() {
     });
 
     /**
-     * Determines wether a dish contains the search string in its title or in the title of one of its variations
+     * Determines wether a dish contains the search string in its title or in the title of one of its variations or in its diet
      */
     function dishContainsString(dish: Dish, searchStr: string) {
         return (
             dish.titleDe.toLowerCase().includes(searchStr.toLowerCase()) ||
             dish.titleEn.toLowerCase().includes(searchStr.toLowerCase()) ||
+            dishContainsDiet(dish, searchStr) ||
             dish.variations.map((variation) => dishContainsString(variation, searchStr)).includes(true)
         );
+    }
+
+    function dishContainsDiet(dish: Dish, searchStr: string) {
+        const translatedSearchStr =
+            getDietTranslationMap().get(searchStr.toLowerCase().trim()) ?? searchStr.toLowerCase();
+        return dish.diet.toString().toLowerCase().includes(translatedSearchStr);
     }
 
     /**
@@ -276,17 +286,19 @@ export function useDishes() {
         dishToUpdate.descriptionDe = dish.descriptionDe;
         dishToUpdate.descriptionEn = dish.descriptionEn;
         dishToUpdate.categoryId = dish.categoryId;
+        dishToUpdate.diet = dish.diet;
     }
 
     /**
      * Updates the DishesState with the new values of a dishVariation
      */
     function updateDishVariationInState(parentId: number, variation: Dish) {
-        const varationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
+        const variationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
 
-        varationToUpdate.slug = variation.slug;
-        varationToUpdate.titleDe = variation.titleDe;
-        varationToUpdate.titleEn = variation.titleEn;
+        variationToUpdate.slug = variation.slug;
+        variationToUpdate.titleDe = variation.titleDe;
+        variationToUpdate.titleEn = variation.titleEn;
+        variationToUpdate.diet = variation.diet;
     }
 
     function getDishById(id: number) {

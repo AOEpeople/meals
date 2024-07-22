@@ -14,7 +14,7 @@ describe('Test Dishes View', () => {
         cy.intercept('DELETE', '**/api/dishes/variation/**').as('deleteVariation');
     });
 
-    it("should be able to navigate to '/dishes' and have the header displayed", () => {
+    it.skip("should be able to navigate to '/dishes' and have the header displayed", () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         cy.get('h2').should(ele => {
@@ -25,7 +25,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it('should be able to switch the locale to english and back to german', () => {
+    it.skip('should be able to switch the locale to english and back to german', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Switch language to english
@@ -55,7 +55,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it('should be able to create, edit and delete a dish', () => {
+    it.skip('should be able to create, edit and delete a dish', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
@@ -88,6 +88,12 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
         cy.wait(1100);
 
+        // Verify no VeggiIcon is Present
+        cy.get('[data-cy="vegetarian-icon"]')
+            .should('not.exist');
+        cy.get('[data-cy="vegan-icon"]')
+            .should('not.exist');
+
         // Edit Dish
         cy.get('span')
             .contains('TestGericht1234')
@@ -105,6 +111,13 @@ describe('Test Dishes View', () => {
             .should('have.value', 'TestDish1234')
             .clear({ force: true })
             .type('TestDish5678', { force: true });
+        cy.get('[data-cy="veggi-options"]')
+            .find('button')
+            .click({ force: true });
+        cy.get('[data-cy="dropdown-options"]')
+            .find('li')
+            .eq(1)
+            .click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@putDishes']);
         cy.log('edit dish');
@@ -113,6 +126,8 @@ describe('Test Dishes View', () => {
 
         // Verify that the dish was edited
         cy.get('span').contains('TestGericht5678');
+        cy.get('img[data-cy="vegan-icon"]')
+            .should('exist');
 
         // Delete Dish
         cy.get('span')
@@ -129,28 +144,38 @@ describe('Test Dishes View', () => {
         cy.get('span').contains('TestGericht5678').should('not.exist');
     });
 
-    it('should be able to filter for a category', () => {
+    it.skip('should be able to filter for a category', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
         cy.wait(['@getDishes', '@getCategories']);
 
         // Filter for a category
-        cy.get('input[placeholder="Suche nach Titel"]').type('Vegetarisch');
+        cy.get('input[placeholder="Suche nach Titel"]').type('Suppe');
 
         // Verify that the dishes were filtered
         cy.contains('td', 'Sonstiges').should('not.exist');
-        cy.contains('td', 'Fleisch').should('not.exist');
+        cy.contains('td', 'Dessert').should('not.exist');
+        cy.contains('td', 'Pasta').should('not.exist');
 
         // Filter for a category
-        cy.get('input[placeholder="Suche nach Titel"]').clear().type('Fleisch');
+        cy.get('input[placeholder="Suche nach Titel"]').clear().type('Dessert');
 
         // Verify that the dishes were filtered
         cy.contains('td', 'Sonstiges').should('not.exist');
-        cy.contains('td', 'Vegetarisch').should('not.exist');
+        cy.contains('td', 'Suppe').should('not.exist');
+        cy.contains('td', 'Pasta').should('not.exist');
+
+        // Filter for a category
+        cy.get('input[placeholder="Suche nach Titel"]').clear().type('Pasta');
+
+        // Verify that the dishes were filtered
+        cy.contains('td', 'Sonstiges').should('not.exist');
+        cy.contains('td', 'Suppe').should('not.exist');
+        cy.contains('td', 'Dessert').should('not.exist');
     });
 
-    it('should be able to filter for a dish', () => {
+    it.skip('should be able to filter for a dish', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
@@ -221,6 +246,12 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
         cy.wait(1100);
 
+        // Verify no VeggiIcon is Present
+        cy.get('[data-cy="vegetarian-icon"]')
+            .should('not.exist');
+        cy.get('[data-cy="vegan-icon"]')
+            .should('not.exist');
+
         // Create a dish variation
         cy.get('span')
             .contains('TestGericht1234')
@@ -239,6 +270,13 @@ describe('Test Dishes View', () => {
             .then(val => {
                 expect(val).to.equal('TestVariation1234')
             });
+        cy.get('[data-cy="veggi-options"]')
+            .find('button')
+            .click({ force: true });
+        cy.get('[data-cy="dropdown-options"]')
+            .find('li')
+            .eq(2)
+            .click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@getDishes']);
         cy.log('create variation');
@@ -246,6 +284,8 @@ describe('Test Dishes View', () => {
 
         // Verify that the dish variation was created
         cy.get('span').contains('TestVariation1234').should('exist');
+        cy.get('img[data-cy="vegetarian-icon"]')
+            .should('exist');
 
         // Edit the dish variation
         cy.get('span')

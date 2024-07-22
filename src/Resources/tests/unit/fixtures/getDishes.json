@@ -8,6 +8,7 @@
     "descriptionEn": "Description",
     "categoryId": 5,
     "oneServingSize": true,
+    "diet": "meat",
     "parentId": null,
     "variations": [
       {
@@ -19,6 +20,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "meat",
         "parentId": 13,
         "variations": []
       },
@@ -31,6 +33,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "meat",
         "parentId": 13,
         "variations": []
       }
@@ -45,6 +48,7 @@
     "descriptionEn": "Description - Tasty Worms",
     "categoryId": 4,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": []
   },
@@ -57,6 +61,7 @@
     "descriptionEn": "Description - Innards",
     "categoryId": 6,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": [
       {
@@ -68,6 +73,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "meat",
         "parentId": 15,
         "variations": []
       },
@@ -80,6 +86,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "meat",
         "parentId": 15,
         "variations": []
       }
@@ -94,6 +101,7 @@
     "descriptionEn": "Description - Fish (so juicy sweat)",
     "categoryId": 4,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": []
   },
@@ -106,6 +114,7 @@
     "descriptionEn": "Description - Limbs",
     "categoryId": 6,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": []
   },
@@ -118,6 +127,7 @@
     "descriptionEn": "Description - Century Eggs, paired with a compote of seasonal berries and rye bread",
     "categoryId": 4,
     "oneServingSize": false,
+    "diet": "vegetarian",
     "parentId": null,
     "variations": [
       {
@@ -129,6 +139,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "vegetarian",
         "parentId": 18,
         "variations": []
       },
@@ -141,6 +152,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": false,
+        "diet": "vegetarian",
         "parentId": 18,
         "variations": []
       }
@@ -155,6 +167,7 @@
     "descriptionEn": "Description - Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
     "categoryId": 6,
     "oneServingSize": false,
+    "diet": "meat",
     "parentId": null,
     "variations": []
   },
@@ -167,6 +180,7 @@
     "descriptionEn": "I love roasted meat",
     "categoryId": 6,
     "oneServingSize": true,
+    "diet": "meat",
     "parentId": null,
     "variations": [
       {
@@ -178,6 +192,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": true,
+        "diet": "meat",
         "parentId": 30,
         "variations": []
       }
@@ -192,6 +207,7 @@
     "descriptionEn": "srrthsrfth",
     "categoryId": 5,
     "oneServingSize": true,
+    "diet": "meat",
     "parentId": null,
     "variations": [
       {
@@ -203,6 +219,7 @@
         "descriptionEn": null,
         "categoryId": null,
         "oneServingSize": true,
+        "diet": "meat",
         "parentId": 32,
         "variations": []
       }

@@ -13,6 +13,7 @@ describe('Test Menu Participations View', () => {
         cy.intercept('GET', '**/api/participations/*', { fixture: 'participations.json', statusCode: 200 }).as('getParticipations');
         cy.intercept('PUT', '**/api/participation/*/*', { fixture: 'putParticipation.json', statusCode: 200 }).as('putParticipation');
         cy.intercept('DELETE', '**/api/participation/*/*', { fixture: 'deleteParticipation.json', statusCode: 200 }).as('deleteParticipation');
+        cy.intercept('GET', '**/api/week/lockdates/*', { fixture: 'lockdates.json', statusCode: 200 }).as('getLockdates');
     });
 
     it('should be able to visit the menu participations page', () => {
@@ -21,7 +22,7 @@ describe('Test Menu Participations View', () => {
         cy.wait(['@getWeeks']);
 
         cy.get('h4').eq(1).contains('Woche').click();
-        cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getLockdates']);
 
         cy.get('span').contains('Teilnahmen').click();
         cy.wait(['@getParticipations', '@getAbstaining']);
@@ -32,7 +33,7 @@ describe('Test Menu Participations View', () => {
         cy.get('input').first().click().type('meals');
         cy.wait(500);
         cy.get('li').each(($el) => {
-            expect($el.text()).to.match(/Meals, .*/);
+            expect($el.text()).to.match(/Meals, */);
         });
         cy.get('input').clear().first().type('bob');
         cy.get('li').should('have.length', 1);

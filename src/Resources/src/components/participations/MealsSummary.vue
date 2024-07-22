@@ -8,25 +8,36 @@
       </th>
     </tr>
     <tr
-      v-for="(meal, index) in mealNames"
-      :key="`${String(meal)}_${String(index)}`"
+      v-for="(meal, index) in mealsToDisplay"
+      :key="`${String((meal as IDish).title)}_${String(index)}`"
       class="h-[60px]"
     >
       <td
         v-if="index < 3"
-        class="truncate p-4"
-        :class="[mealNameIsEmpty(String(meal)) ? 'h-[60px]' : 'h-[60px] border-b border-solid']"
+        class="flex flex-row content-center justify-center gap-2 truncate"
+        :class="[mealNameIsEmpty(String((meal as IDish).title)) ? 'h-[60px]' : 'h-[60px] border-b border-solid']"
       >
-        {{ String(meal) }}
+        <span class="my-auto">
+          {{ String((meal as IDish).title) }}
+        </span>
+        <VeggiIcon
+          v-if="(meal as IDish).diet && (meal as IDish).diet !== Diet.MEAT"
+          :diet="(meal as IDish).diet"
+          class="self-center"
+          :class="(meal as IDish).diet === Diet.VEGAN ? 'h-[42px]' : 'h-[35px]'"
+          :tooltip-active="false"
+        />
       </td>
     </tr>
   </table>
 </template>
 
 <script setup lang="ts">
-import { IDay } from '@/api/getMealsNextThreeDays';
+import { IDay, IDish } from '@/api/getMealsNextThreeDays';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import VeggiIcon from '@/components/misc/VeggiIcon.vue';
+import { Diet } from '@/enums/Diet';
 
 const { locale } = useI18n();
 
@@ -34,14 +45,17 @@ const props = defineProps<{
   day: IDay;
 }>();
 
-const mealNames = computed(() => {
-  const names: string[] = [];
+const mealsToDisplay = computed(() => {
+  const names: IDish[] = [] as IDish[];
   for (const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
-    names.push(meal as string);
+    names.push(meal as IDish);
   }
   const timesToFill = 3 - names.length;
   for (let i = 0; i < timesToFill; i++) {
-    names.push('');
+    names.push({
+      title: '',
+      diet: Diet.MEAT
+    } as IDish);
   }
   return names;
 });

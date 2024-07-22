@@ -2,7 +2,7 @@ import getAbsentingProfiles from '@/api/getAbsentingProfiles';
 import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
 import { reactive, readonly, watch } from 'vue';
 import getProfileWithHash from '@/api/getProfileWithHash';
-import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { type IMessage, isMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 

@@ -1,5 +1,5 @@
 import useApi from '@/api/api';
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 
 /**
  * Confirmation of a settlement request.

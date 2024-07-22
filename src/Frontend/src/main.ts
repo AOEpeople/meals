@@ -7,7 +7,7 @@ import { userDataStore } from '@/stores/userDataStore';
 import { environmentStore } from '@/stores/environmentStore';
 
 // Style
-import '../style/output.css';
+// import '../style/output.css';
 
 // Vue Components
 import App from '@/App.vue';
@@ -19,8 +19,8 @@ import de from '@/locales/de.json';
 const i18n = createI18n({
     locale: navigator.language,
     fallbackLocale: 'de',
-    fallbackWarn: false,
-    missingWarn: false,
+    legacy: false,
+    warnHtmlInMessage: 'off',
     messages: {
         en,
         de

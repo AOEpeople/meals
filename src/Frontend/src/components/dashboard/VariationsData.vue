@@ -64,10 +64,10 @@ import MealCheckbox from '@/components/dashboard/MealCheckbox.vue';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
-import useEventsBus from 'tools/eventBus';
+import useEventsBus from '@/tools/eventBus';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
-import { Day, Meal } from '@/api/getDashboardData';
+import { type Day, type Meal } from '@/api/getDashboardData';
 
 const { receive } = useEventsBus();
 

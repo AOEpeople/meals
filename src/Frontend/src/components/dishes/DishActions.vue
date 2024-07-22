@@ -60,7 +60,7 @@ import ActionButton from '../misc/ActionButton.vue';
 import { useI18n } from 'vue-i18n';
 import { Action } from '@/enums/Actions';
 import { useDishes } from '@/stores/dishesStore';
-import { Dish } from '@/stores/dishesStore';
+import { type Dish } from '@/stores/dishesStore';
 import Popover from '../misc/Popover.vue';
 import DishesCreationPanel from './DishesCreationPanel.vue';
 import DishVariationCreationPanel from './DishVariationCreationPanel.vue';

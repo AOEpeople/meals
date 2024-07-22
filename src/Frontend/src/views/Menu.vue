@@ -37,7 +37,7 @@ import MenuDay from '@/components/menu/MenuDay.vue';
 import { useDishes } from '@/stores/dishesStore';
 import { useWeeks } from '@/stores/weeksStore';
 import { useCategories } from '@/stores/categoriesStore';
-import { WeekDTO } from '@/interfaces/DayDTO';
+import { type WeekDTO } from '@/interfaces/DayDTO';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
 import MenuHeader from '@/components/menu/MenuHeader.vue';
 import { useI18n } from 'vue-i18n';

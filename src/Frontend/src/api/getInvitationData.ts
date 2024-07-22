@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import { ref } from 'vue';
-import { Day } from '@/api/getDashboardData';
+import { type Day } from '@/api/getDashboardData';
 
 export type GuestDay = Day;
 

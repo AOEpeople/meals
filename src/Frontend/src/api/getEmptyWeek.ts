@@ -1,6 +1,6 @@
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
-import { Week } from '@/stores/weeksStore';
+import { type Week } from '@/stores/weeksStore';
 
 /**
  * Fetches an empty week from the backend. Only contains basic information about the week.

@@ -20,7 +20,7 @@
 import { IBookedData, getShowParticipations } from '@/api/getShowParticipations';
 import ParticipantsTableSlot from './ParticipantsTableSlot.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { Dictionary } from 'types/types';
+import { Dictionary } from '@/types/types';
 
 const { participationsState, getMealsWithVariations, loadedState } = getShowParticipations();
 

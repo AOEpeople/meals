@@ -1,5 +1,5 @@
 import useApi from './api';
-import { Finances } from '@/stores/financesStore';
+import { type Finances } from '@/stores/financesStore';
 import moment from 'moment/moment';
 
 export default async function getFinances(dateRange?: Date[]) {

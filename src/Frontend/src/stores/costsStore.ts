@@ -1,11 +1,11 @@
 import getCosts from '@/api/getCosts';
-import { DateTime } from '@/api/getDashboardData';
+import type { DateTime } from '@/api/getDashboardData';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';
-import { Dictionary } from 'types/types';
+import type { Dictionary } from '@/types/types';
 import { reactive, readonly, watch } from 'vue';
 import { translateMonth } from '@/tools/localeHelper';
 import postHideUser from '@/api/postHideUser';
-import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { type IMessage, isMessage } from '@/interfaces/IMessage';
 import postSettlement from '@/api/postSettlement';
 import postCashPayment from '@/api/postCashPayment';
 import postConfirmSettlement from '@/api/postConfirmSettlement';

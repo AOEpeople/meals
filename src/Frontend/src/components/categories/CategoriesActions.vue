@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { Category } from '@/stores/categoriesStore';
+import { type Category } from '@/stores/categoriesStore';
 import ActionButton from '../misc/ActionButton.vue';
 import Popover from '../misc/Popover.vue';
 import CategoriesCreationPanel from './CategoriesCreationPanel.vue';

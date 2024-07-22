@@ -1,6 +1,6 @@
-import { Category } from '@/stores/categoriesStore';
+import { type Category } from '@/stores/categoriesStore';
 import useApi from './api';
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 
 /**
  * Performs a POST to create a new category

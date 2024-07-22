@@ -1,4 +1,4 @@
-import { Ref, onBeforeUnmount, ref } from 'vue';
+import { type Ref, onBeforeUnmount, ref } from 'vue';
 
 /**
  * Dectect wether a mouse click was outside of a component.

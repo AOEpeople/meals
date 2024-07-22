@@ -37,8 +37,8 @@ import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import GuestCheckbox from '@/components/guest/GuestCheckbox.vue';
-import { Dictionary } from 'types/types';
-import { Meal } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
+import { type Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
   meals: Dictionary<Meal>;

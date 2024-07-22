@@ -1,4 +1,4 @@
-import { Ref } from 'vue';
+import { type Ref } from 'vue';
 
 /**
  * Checks if a given API response object is defined and error free.

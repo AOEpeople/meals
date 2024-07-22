@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dish } from '@/stores/dishesStore';
+import { type Dish } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';

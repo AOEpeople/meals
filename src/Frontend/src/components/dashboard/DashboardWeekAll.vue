@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import WeekComp from './Week.vue';
-import { Week } from '@/api/getDashboardData';
+import { type Week } from '@/api/getDashboardData';
 
 defineProps<{
   weeks: Dictionary<Week>;

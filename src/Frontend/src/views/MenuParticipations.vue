@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import AddParticipantsSearchBar from '@/components/menuParticipants/AddParticipantsSearchBar.vue';
 import MenuTable from '@/components/menuParticipants/MenuTable.vue';
-import { IProfile } from '@/stores/profilesStore';
+import { type IProfile } from '@/stores/profilesStore';
 import { useI18n } from 'vue-i18n';
 import { useParticipations } from '@/stores/participationsStore';
 import InputLabel from '@/components/misc/InputLabel.vue';

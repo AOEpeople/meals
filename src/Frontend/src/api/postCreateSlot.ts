@@ -1,6 +1,6 @@
-import { IMessage } from '@/interfaces/IMessage';
+import type { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
-import { TimeSlot } from '@/stores/timeSlotStore';
+import type { TimeSlot } from '@/stores/timeSlotStore';
 
 /**
  * Performs a POST to create a new timeslot

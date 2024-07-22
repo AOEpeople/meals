@@ -93,7 +93,7 @@ import { dashboardStore } from '@/stores/dashboardStore';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { type Meal } from '@/api/getDashboardData';
-import { type Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 
 const props = defineProps<{
   open: boolean;

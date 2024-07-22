@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Week, useWeeks } from '@/stores/weeksStore';
+import { type Week, useWeeks } from '@/stores/weeksStore';
 import WeekOverview from '@/components/weeks/WeekOverview.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';

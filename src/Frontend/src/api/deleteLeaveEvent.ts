@@ -1,6 +1,6 @@
 import useApi from './api';
-import { IMessage } from '@/interfaces/IMessage';
-import { EventParticipationResponse } from './postJoinEvent';
+import { type IMessage } from '@/interfaces/IMessage';
+import { type EventParticipationResponse } from './postJoinEvent';
 
 export async function deleteLeaveEvent(date: string) {
     const { response, request, error } = useApi<IMessage | EventParticipationResponse>(

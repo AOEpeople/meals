@@ -59,7 +59,7 @@ import { useI18n } from 'vue-i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
-import { Day, Meal } from '@/api/getDashboardData';
+import { type Day, type Meal } from '@/api/getDashboardData';
 import { useDishes } from '@/stores/dishesStore';
 
 const props = defineProps<{

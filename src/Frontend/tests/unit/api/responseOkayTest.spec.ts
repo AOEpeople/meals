@@ -1,7 +1,7 @@
 import { isResponseObjectOkay, isResponseArrayOkay, isResponseDictOkay } from '@/api/isResponseOkay';
 import { ref } from 'vue';
 import { IMessage, isMessage } from '@/interfaces/IMessage';
-import { Dictionary } from 'types/types';
+import { Dictionary } from '@/types/types';
 import { TimeSlot, isTimeSlot } from '@/stores/timeSlotStore';
 
 describe('Test isResponseOkay', () => {

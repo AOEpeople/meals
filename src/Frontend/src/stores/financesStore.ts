@@ -1,6 +1,6 @@
 import { reactive, watch } from 'vue';
 import getFinances from '@/api/getFinances';
-import { Dictionary } from '../../types/types';
+import { type Dictionary } from '@/types/types';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';

@@ -38,9 +38,9 @@ import { computed, ref } from 'vue';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 import CombiRadioGroup from './CombiRadioGroup.vue';
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import { useWeeks } from '@/stores/weeksStore';
-import { MealDTO } from '@/interfaces/DayDTO';
+import { type MealDTO } from '@/interfaces/DayDTO';
 import CancelButton from '../misc/CancelButton.vue';
 import CreateButton from '@/components/misc/CreateButton.vue';
 

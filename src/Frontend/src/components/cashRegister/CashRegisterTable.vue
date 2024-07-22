@@ -67,8 +67,8 @@
 
 <script setup lang="ts">
 import Table from '@/components/misc/Table.vue';
-import { IUserTransaction } from '@/stores/accountingStore';
-import { Dictionary } from 'types/types';
+import { type IUserTransaction } from '@/stores/accountingStore';
+import { type Dictionary } from '@/types/types';
 import { useI18n } from 'vue-i18n';
 import { CurrencyEuroIcon } from '@heroicons/vue/outline';
 

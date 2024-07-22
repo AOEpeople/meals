@@ -1,7 +1,7 @@
 /**
  * Configure handlers to process meal push notifications.
  */
-import { Meal } from '@/api/getDashboardData';
+import { type Meal } from '@/api/getDashboardData';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { environmentStore } from '@/stores/environmentStore';
 import { userDataStore } from '@/stores/userDataStore';

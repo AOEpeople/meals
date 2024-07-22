@@ -1,5 +1,5 @@
 import useApi from './api';
-import { Event } from '@/stores/eventsStore';
+import { type Event } from '@/stores/eventsStore';
 
 /**
  * Performs a GET request and returns an object containing a list of all events

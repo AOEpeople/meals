@@ -1,4 +1,4 @@
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
 
 /**

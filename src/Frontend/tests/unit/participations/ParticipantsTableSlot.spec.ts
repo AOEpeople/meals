@@ -3,7 +3,7 @@ import ParticipantsTableSlot from '@/components/participations/ParticipantsTable
 import ParticipantsTableRow from '@/components/participations/ParticipantsTableRow.vue';
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
-import { Dictionary } from 'types/types';
+import { Dictionary } from '@/types/types';
 
 const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
 const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: [false] };

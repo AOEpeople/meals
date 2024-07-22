@@ -54,7 +54,7 @@
 import { ref, watch } from 'vue';
 import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
 import { dashboardStore } from '@/stores/dashboardStore';
-import { Meal } from '@/api/getDashboardData';
+import { type Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
   weekID: number | string;

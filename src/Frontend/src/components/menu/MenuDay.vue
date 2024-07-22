@@ -74,7 +74,7 @@ import MenuLockDatePicker from './MenuLockDatePicker.vue';
 import EventInput from './EventInput.vue';
 import { Event, useEvents } from '@/stores/eventsStore';
 import { DateTime } from '@/api/getDashboardData';
-import { Dictionary } from 'types/types';
+import { Dictionary } from '@/types/types';
 
 const { getDishArrayBySlugs, getDishBySlug } = useDishes();
 const { locale, t } = useI18n();

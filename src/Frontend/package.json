@@ -16,6 +16,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^1.0.6",
+    "@intlify/unplugin-vue-i18n": "^1.4.0",
     "@marcoschulte/vue3-progress": "^0.0.6",
     "@paypal/paypal-js": "^8.0.4",
     "@vuepic/vue-datepicker": "^5.4.0",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
     "@tsconfig/node20": "^20.1.4",
+    "@types/dom-to-image": "^2.6.7",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.5",
     "@vitejs/plugin-vue": "^5.0.5",
@@ -41,6 +43,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
+    "aoe-group-web-cd": "git+https://aoe-group-web-cd:VB8F3WcfJ_hUcspHuuFH@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
     "autoprefixer": "^10.4.19",
     "cssnano": "^7.0.4",
     "cssnano-preset-advanced": "^7.0.4",

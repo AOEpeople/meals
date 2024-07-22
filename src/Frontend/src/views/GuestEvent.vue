@@ -47,8 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import getEventInvitationData, { EventInvitationData } from '@/api/getEventInvitionData';
-import postJoinEventGuest, { GuestEventData } from '@/api/postJoinEventGuest';
+import getEventInvitationData, { type EventInvitationData } from '@/api/getEventInvitionData';
+import postJoinEventGuest, { type GuestEventData } from '@/api/postJoinEventGuest';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import SubmitButton from '@/components/misc/SubmitButton.vue';

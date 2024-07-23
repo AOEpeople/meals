@@ -5,8 +5,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>AOE Meals</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
+    {# <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" /> #}
     {% block head %}{% endblock %}
+    {% block stylesheets %}
+        {{ vite_entry_link_tags('app') }}
+    {% endblock %}
 </head>
 <style>
 #loading-fallback-container {
@@ -48,7 +51,11 @@
 
 {% block body %}{% endblock %}
 
-<script src="{{ assets_server }}{{ asset('static/vendors.js') }}"></script>
-<script src="{{ assets_server }}{{ asset('static/app.js') }}"></script>
+{% block javascripts %}
+    {{ vite_entry_script_tags('app') }}
+
+    {# if you are using React, you have to replace with this #}
+    {{ vite_entry_script_tags('app', { dependency: 'react' }) }}
+{% endblock %}
 </body>
 </html>

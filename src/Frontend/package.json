@@ -26,6 +26,7 @@
     "epic-spinners": "^2.0.0",
     "jspdf": "^2.5.1",
     "moment": "^2.29.4",
+    "vite-plugin-symfony": "^6.4.7",
     "vue": "^3.4.29",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.3.3",

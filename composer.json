@@ -25,6 +25,7 @@
     "hwi/oauth-bundle": "^2.2.0",
     "lcobucci/jwt": "^5.3",
     "paypal/paypal-checkout-sdk": "^1.0.0",
+    "pentatrion/vite-bundle": "^6.4",
     "psr/cache": "^3.0.0",
     "psr/container": "^1.0",
     "psr/link": "^1.0",

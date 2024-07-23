@@ -2,7 +2,7 @@
   <span
     :class="[
       enabled ? 'bg-primary-3' : '',
-      'size-[30px] cursor-pointer rounded-md border-[0.5px] border-gray-200 xl:size-[20px]'
+      'size-[30px] cursor-pointer rounded-md border-[0.5px] border-[#ABABAB] xl:size-[20px]'
     ]"
     @click="handle"
   >
@@ -24,7 +24,7 @@ import { CheckIcon } from '@heroicons/vue/solid';
 import { ref } from 'vue';
 import useEventsBus from 'tools/eventBus';
 import CombiModal from '@/components/dashboard/CombiModal.vue';
-import { Meal } from '@/api/getDashboardData';
+import { type Meal } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 
 const props = defineProps<{
@@ -36,10 +36,10 @@ const enabled = ref(false);
 const open = ref(false);
 const { emit } = useEventsBus();
 
-const isCombiBox = props.meals[props.mealId].dishSlug === 'combined-dish';
+const isCombiBox = (props.meals[props.mealId] as Meal).dishSlug === 'combined-dish';
 let hasVariations = false;
 
-Object.values(props.meals).forEach((meal) => (meal.variations ? (hasVariations = true) : ''));
+Object.values(props.meals).forEach((meal) => ((meal as Meal).variations ? (hasVariations = true) : ''));
 
 function handle() {
   // Is a combi meal
@@ -49,8 +49,8 @@ function handle() {
       open.value = true;
     } else {
       let combiDishes = Object.values(props.meals)
-        .filter((meal) => meal.dishSlug !== 'combined-dish')
-        .map((meal) => meal.dishSlug);
+        .filter((meal) => (meal as Meal).dishSlug !== 'combined-dish')
+        .map((meal) => (meal as Meal).dishSlug);
 
       emit('guestChosenCombi', combiDishes);
       emit('guestChosenMeals', props.mealId);

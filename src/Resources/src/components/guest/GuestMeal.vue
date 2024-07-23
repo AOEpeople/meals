@@ -21,9 +21,11 @@
     </div>
     <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
       <ParticipationCounter
-        :meal="meals[mealId]"
+        :meal="meals[mealId].limit"
         :mealCSS="mealCSS"
-      />
+      >
+        {{ participationDisplayString }}
+      </ParticipationCounter>
       <GuestCheckbox
         :meals="meals"
         :mealId="mealId"
@@ -39,6 +41,7 @@ import { useI18n } from 'vue-i18n';
 import GuestCheckbox from '@/components/guest/GuestCheckbox.vue';
 import { Dictionary } from 'types/types';
 import { Meal } from '@/api/getDashboardData';
+import useMealState from '@/services/useMealState';
 
 const props = defineProps<{
   meals: Dictionary<Meal>;
@@ -46,23 +49,29 @@ const props = defineProps<{
 }>();
 
 const { t, locale } = useI18n();
+const { generateMealState } = useMealState();
 
-const title = computed(() =>
-  locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de
-);
+const meal = computed(() => {
+  const mealForGuest = props.meals[props.mealId];
+  mealForGuest.mealState = generateMealState(mealForGuest);
+  return mealForGuest;
+});
+
+const title = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.value.title.en : meal.value.title.de));
+
 const description = computed(() => {
-  if (props.meals[props.mealId].description !== null) {
+  if (meal.value.description !== null) {
     if (locale.value.substring(0, 2) === 'en') {
-      return props.meals[props.mealId].description.en;
+      return meal.value.description.en;
     }
-    return props.meals[props.mealId].description.de;
+    return meal.value.description.de;
   }
   return 1;
 });
 
 const mealCSS = computed(() => {
   let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
-  switch (props.meals[props.mealId].mealState) {
+  switch (meal.value.mealState) {
     case 'disabled':
       css += 'bg-[#80909F]';
       return css;
@@ -72,5 +81,10 @@ const mealCSS = computed(() => {
     default:
       return css;
   }
+});
+
+const participationDisplayString = computed(() => {
+  const fixedCount = Math.ceil(parseFloat(meal.value.participations.toFixed(1)));
+  return meal.value.limit > 0 ? `${fixedCount}/${meal.value.limit}` : fixedCount;
 });
 </script>

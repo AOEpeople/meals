@@ -34,7 +34,12 @@
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] py-[13px] last:border-b-0 print:py-2"
       >
+        <GuestVariation
+          v-if="meal.variations && Object.values(meal.variations).length > 0"
+          :meal="meal"
+        />
         <GuestMeal
+          v-else
           :meals="guestData.meals"
           :mealId="mealID"
         />
@@ -58,6 +63,7 @@ import { translateWeekday } from 'tools/localeHelper';
 import { computed } from 'vue';
 import Slots from '@/components/dashboard/Slots.vue';
 import GuestMeal from '@/components/guest/GuestMeal.vue';
+import GuestVariation from '@/components/guest/GuestVariation.vue';
 
 const { t, locale } = useI18n();
 

@@ -1,5 +1,6 @@
 <template>
   <span
+    data-cy="guest-checkbox"
     :class="[
       enabled ? 'bg-primary-3' : '',
       'size-[30px] cursor-pointer rounded-md border-[0.5px] border-[#ABABAB] xl:size-[20px]'

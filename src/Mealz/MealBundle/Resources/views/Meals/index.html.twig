@@ -9,3 +9,12 @@
         </div>
     </div>
 {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ vite_entry_link_tags('pageVue') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ vite_entry_script_tags('pageVue') }}
+{% endblock %}

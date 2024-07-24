@@ -24,5 +24,17 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173
-  }
+  },
+  build: {
+    outDir: '../../public/static',
+    rollupOptions: {
+        input: {
+            /* relative to the root option */
+            app: "./src/main.ts",
+
+            /* you can also provide [s]css files */
+            theme: "./style/main.css"
+        },
+    }
+  },
 })

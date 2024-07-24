@@ -9,6 +9,7 @@
     {% block head %}{% endblock %}
     {% block stylesheets %}
         {{ vite_entry_link_tags('app') }}
+        {{ vite_entry_link_tags('theme') }}
     {% endblock %}
 </head>
 <style>
@@ -53,9 +54,6 @@
 
 {% block javascripts %}
     {{ vite_entry_script_tags('app') }}
-
-    {# if you are using React, you have to replace with this #}
-    {{ vite_entry_script_tags('app', { dependency: 'react' }) }}
 {% endblock %}
 </body>
 </html>

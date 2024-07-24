@@ -7,7 +7,7 @@
       :class="[day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2']"
     >
       <InformationButton
-        v-if="!day.isLocked && !emptyDay && !guestData"
+        v-if="!day.isLocked && !emptyDay"
         :dayID="dayID"
         :index="index"
         class="hover: row-start-1 size-[24px] cursor-pointer p-1 text-center"
@@ -15,12 +15,12 @@
       />
       <span
         class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
-        :class="day.isLocked || emptyDay || guestData ? '' : 'pb-[0px]'"
+        :class="day.isLocked || emptyDay ? '' : 'pb-[0px]'"
       >
         {{ weekday }}
       </span>
       <GuestButton
-        v-if="!day.isLocked && !emptyDay && !guestData && day.isEnabled"
+        v-if="!day.isLocked && !emptyDay && day.isEnabled"
         :dayID="dayID"
         :index="index"
         :invitation="Invitation.MEAL"
@@ -57,7 +57,7 @@
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] last:border-b-0"
         :class="
-          isEventDay && !guestData
+          isEventDay
             ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px] print:pt-2 print:last:pb-2'
             : 'py-[13px] print:py-2'
         "
@@ -90,7 +90,7 @@
       </span>
     </div>
     <EventData
-      v-if="isEventDay && !guestData"
+      v-if="isEventDay"
       class="col-start-2 row-start-2 print:hidden"
       :day="day"
       :dayId="dayID"
@@ -99,7 +99,6 @@
 </template>
 
 <script setup lang="ts">
-import { GuestDay } from '@/api/getInvitationData';
 import GuestButton from '@/components/dashboard/GuestButton.vue';
 import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';
@@ -120,10 +119,9 @@ const props = defineProps<{
   weekID?: string;
   dayID?: string;
   index?: number;
-  guestData?: GuestDay | undefined;
 }>();
 
-const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID);
+const day = dashboardStore.getDay(props.weekID, props.dayID);
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
 const isEventDay = day.event !== null;

@@ -3,8 +3,10 @@
     v-slot="{ open }"
     v-model="selectedSlot"
     :disabled="disabled"
+    class="relative w-full"
+    as="span"
   >
-    <div class="relative w-full">
+    <div class="relative">
       <ListboxButton
         :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
         class="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center border-[#B4C1CE] bg-white pl-4 pr-2 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10 sm:w-64"
@@ -23,31 +25,36 @@
           />
         </span>
       </ListboxButton>
-      <ListboxOptions
-        class="absolute -mt-px max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
+      <div
+        v-if="open"
+        class="absolute z-10 w-full"
       >
-        <template v-for="slot in day.slots">
-          <ListboxOption
-            v-if="slot.id !== 0 || !isParticipating"
-            v-slot="{ active, selected }"
-            :key="slot.slug"
-            :value="slot"
-            as="template"
-          >
-            <li
-              :class="selected ? 'bg-[#F4F4F4]' : 'hover:bg-[#FAFAFA]'"
-              class="cursor-pointer pl-4"
+        <ListboxOptions
+          class="-mt-px max-h-60 w-full overflow-hidden rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
+        >
+          <template v-for="slot in day.slots">
+            <ListboxOption
+              v-if="slot.id !== 0 || !isParticipating"
+              v-slot="{ active, selected }"
+              :key="slot.slug"
+              :value="slot"
+              as="template"
             >
-              <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate py-2 text-note']">
-                {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
-                <span v-if="slot.limit !== 0">
-                  {{ '( ' + slot.count + ' / ' + slot.limit + ' )' }}
+              <li
+                :class="selected ? 'bg-[#F4F4F4]' : 'hover:bg-[#FAFAFA]'"
+                class="cursor-pointer pl-4"
+              >
+                <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate py-2 text-note']">
+                  {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
+                  <span v-if="slot.limit !== 0">
+                    {{ '( ' + slot.count + ' / ' + slot.limit + ' )' }}
+                  </span>
                 </span>
-              </span>
-            </li>
-          </ListboxOption>
-        </template>
-      </ListboxOptions>
+              </li>
+            </ListboxOption>
+          </template>
+        </ListboxOptions>
+      </div>
     </div>
   </Listbox>
 </template>

@@ -13,7 +13,7 @@
         {{ t('guest.description') }}
       </p>
     </div>
-    <Day
+    <GuestDay
       :class="{ 'ring-2 ring-red': mealsMissing }"
       :guestData="invitation"
     />
@@ -40,7 +40,7 @@ import { useJoinMealGuest } from '@/api/postJoinMealGuest';
 import { useI18n } from 'vue-i18n';
 import GuestCompletion from '@/components/guest/GuestCompletion.vue';
 import GuestForm from '@/components/guest/GuestForm.vue';
-import Day from '@/components/dashboard/Day.vue';
+import GuestDay from '@/components/guest/GuestDay.vue';
 
 const progress = useProgress().start();
 const route = useRoute();

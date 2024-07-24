@@ -27,7 +27,7 @@ import DishesHeader from '@/components/dishes/DishesHeader.vue';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import Table from '@/components/misc/Table.vue';
 import { useCategories } from '@/stores/categoriesStore';
-import { Dish, useDishes } from '@/stores/dishesStore';
+import { type Dish, useDishes } from '@/stores/dishesStore';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';

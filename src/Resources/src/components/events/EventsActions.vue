@@ -33,7 +33,7 @@ import ActionButton from '../misc/ActionButton.vue';
 import Popover from '../misc/Popover.vue';
 import { useI18n } from 'vue-i18n';
 import EventCreationPanel from './EventCreationPanel.vue';
-import { Event, useEvents } from '@/stores/eventsStore';
+import { type Event, useEvents } from '@/stores/eventsStore';
 
 const { t } = useI18n();
 const { deleteEventWithSlug } = useEvents();

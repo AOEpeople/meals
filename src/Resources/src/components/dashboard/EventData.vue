@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { Day } from '@/api/getDashboardData';
+import { type Day } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
 import ParticipationCounter from '../menuCard/ParticipationCounter.vue';
 import CheckBox from '../misc/CheckBox.vue';

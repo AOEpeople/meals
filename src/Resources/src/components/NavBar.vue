@@ -174,7 +174,7 @@ const getShowParticipationsError = computed(() => loadedState.error !== '');
 const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 
 const user = computed(() => userDataStore.getState().user);
-const isAuthenticated = computed(() => !userDataStore.getState().roles.includes('ROLE_GUEST'));
+const isAuthenticated = computed(() => {!userDataStore.getState().roles.includes('ROLE_GUEST')});
 
 const navigation = computed(() => {
   return [

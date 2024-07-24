@@ -1,5 +1,5 @@
 import useApi from '@/api/api';
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 
 /**
  * Performs a POST request to add a cash payment to a user.

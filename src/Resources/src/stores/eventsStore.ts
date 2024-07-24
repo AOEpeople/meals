@@ -2,7 +2,7 @@ import getEvents from '@/api/getEvents';
 import { isResponseArrayOkay } from '@/api/isResponseOkay';
 import { computed, reactive, readonly, ref, watch } from 'vue';
 import postCreateEvent from '@/api/postCreateEvent';
-import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { type IMessage, isMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import putEventUpdate from '@/api/putEventUpdate';

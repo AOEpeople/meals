@@ -1,4 +1,4 @@
-import { ICosts } from '@/stores/costsStore';
+import { type ICosts } from '@/stores/costsStore';
 import useApi from './api';
 
 /**

@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from 'vue';
+import { type Ref, ref, watch } from 'vue';
 
 /**
  * Periodically performs a passed in callback if periodicFetchActive is set to true

@@ -66,7 +66,7 @@ import SubmitButton from '../misc/SubmitButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import { useDishes } from '@/stores/dishesStore';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
-import { CreateDishDTO } from '@/api/postCreateDish';
+import { type CreateDishDTO } from '@/api/postCreateDish';
 import CategoriesDropDown from '../categories/CategoriesDropDown.vue';
 import { useCategories } from '@/stores/categoriesStore';
 import Switch from '@/components/misc/Switch.vue';

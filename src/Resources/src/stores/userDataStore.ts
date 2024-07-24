@@ -1,5 +1,5 @@
 import { Store } from '@/stores/store';
-import { useUserData, UserData } from '@/api/getUserData';
+import { useUserData, type UserData } from '@/api/getUserData';
 import router from '@/router';
 
 class UserDataStore extends Store<UserData> {
@@ -22,7 +22,7 @@ class UserDataStore extends Store<UserData> {
             console.warn("couldn't receive User Data!");
             return;
         }
-        if (userData.value !== undefined) {
+        if (userData.value !== undefined && this.isUserdata(userData.value)) {
             this.state.roles = userData.value.roles;
             this.state.user = userData.value.user;
             this.state.fullname = userData.value.fullname;
@@ -30,9 +30,17 @@ class UserDataStore extends Store<UserData> {
         }
     }
 
+    private isUserdata(userData: UserData): userData is UserData {
+        return (
+            userData !== null &&
+            userData !== undefined &&
+            typeof userData.balance === 'number'
+        );
+    }
+
     public roleAllowsRoute(routeName: string): boolean {
         const route = router.getRoutes().find((r) => r.name === routeName);
-        if (route === undefined || route === null) {
+        if (route === undefined || route === null || this.state.roles === undefined || this.state.roles === null) {
             return false;
         }
 

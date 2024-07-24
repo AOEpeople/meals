@@ -1,4 +1,4 @@
-import { Meal } from '@/api/getDashboardData';
+import { type Meal } from '@/api/getDashboardData';
 import { MealState } from '@/enums/MealState';
 
 export default function useMealState() {

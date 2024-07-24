@@ -1,7 +1,7 @@
-import { IMessage } from '@/interfaces/IMessage';
+import type { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
-import { CreateDishVariationDTO } from './postCreateDishVariation';
-import { Dish } from '@/stores/dishesStore';
+import type { CreateDishVariationDTO } from './postCreateDishVariation';
+import type { Dish } from '@/stores/dishesStore';
 
 /**
  * Performs a PUT request to update a dish variation

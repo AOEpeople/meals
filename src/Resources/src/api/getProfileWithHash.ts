@@ -1,6 +1,6 @@
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
-import { IProfile } from '@/stores/profilesStore';
+import { type IProfile } from '@/stores/profilesStore';
 
 /**
  * Fetches a profile that was requested for settlement by their settlement hash.

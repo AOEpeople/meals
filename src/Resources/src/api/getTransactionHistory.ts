@@ -1,5 +1,5 @@
 import useApi from './api';
-import { ITransactionHistory } from '@/stores/accountingStore';
+import { type ITransactionHistory } from '@/stores/accountingStore';
 
 /**
  * Fetches two lists of transactions per user for the past month and the current month

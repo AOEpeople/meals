@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import useDetectClickOutside from '@/services/useDetectClickOutside';
-import { Event, useEvents } from '@/stores/eventsStore';
+import { type Event, useEvents } from '@/stores/eventsStore';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 import { XIcon } from '@heroicons/vue/solid';
 import { computed, ref } from 'vue';

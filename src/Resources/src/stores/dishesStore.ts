@@ -1,9 +1,9 @@
 import deleteDish from '@/api/deleteDish';
 import deleteDishVariation from '@/api/deleteDishVariation';
 import getDishes from '@/api/getDishes';
-import { Ref, computed, reactive, readonly, ref, watch } from 'vue';
-import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
-import postCreateDishVariation, { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
+import { type Ref, computed, reactive, readonly, ref, watch } from 'vue';
+import postCreateDish, { type CreateDishDTO } from '@/api/postCreateDish';
+import postCreateDishVariation, { type CreateDishVariationDTO } from '@/api/postCreateDishVariation';
 import putDishUpdate from '@/api/putDishUpdate';
 import putDishVariationUpdate from '@/api/putDishVariationUpdate';
 import { isMessage } from '@/interfaces/IMessage';

@@ -50,9 +50,9 @@
 <script setup lang="ts">
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption, ListboxLabel } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
-import { Category, useCategories } from '@/stores/categoriesStore';
+import { type Category, useCategories } from '@/stores/categoriesStore';
 import { ChevronDownIcon } from '@heroicons/vue/solid';
-import { Ref, computed, ref } from 'vue';
+import { type Ref, computed, ref } from 'vue';
 
 const { t, locale } = useI18n();
 const { CategoriesState, getCategoryById } = useCategories();

@@ -1,5 +1,5 @@
 import useApi from './api';
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 
 /**
  * Deletes an event with an DELETE request

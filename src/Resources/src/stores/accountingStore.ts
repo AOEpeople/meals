@@ -1,4 +1,4 @@
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import { reactive, watch } from 'vue';
 import getTransactionHistory from '@/api/getTransactionHistory';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';

@@ -1,4 +1,4 @@
-import { FunctionalComponent, Component } from 'vue';
+import { type FunctionalComponent, type Component } from 'vue';
 
 export interface INavigation {
     name: string;

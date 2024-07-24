@@ -1,6 +1,6 @@
-import { IParticipationUpdate } from '@/stores/participationsStore';
+import { type IParticipationUpdate } from '@/stores/participationsStore';
 import useApi from './api';
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 
 export default async function deleteParticipation(mealId: number, profileId: string) {
     const { error, request, response } = useApi<IMessage | IParticipationUpdate>(

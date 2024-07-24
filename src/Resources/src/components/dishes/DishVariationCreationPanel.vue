@@ -33,7 +33,7 @@ import { useI18n } from 'vue-i18n';
 import SubmitButton from '../misc/SubmitButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import { useDishes } from '@/stores/dishesStore';
-import { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
+import { type CreateDishVariationDTO } from '@/api/postCreateDishVariation';
 import { computed, ref } from 'vue';
 import { Diet } from '@/enums/Diet';
 import ListOptionsDropDown from '@/components/misc/ListOptionsDropDown.vue';

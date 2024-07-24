@@ -1,4 +1,4 @@
-import { Category } from '@/stores/categoriesStore';
+import { type Category } from '@/stores/categoriesStore';
 import useApi from './api';
 
 /**

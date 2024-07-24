@@ -1,5 +1,5 @@
-import { Dictionary } from 'types/types';
-import { DateTime } from './getDashboardData';
+import type { Dictionary } from '@/types/types';
+import type { DateTime } from './getDashboardData';
 import useApi from './api';
 
 export default async function getLockDatesForWeek(weekId: number) {

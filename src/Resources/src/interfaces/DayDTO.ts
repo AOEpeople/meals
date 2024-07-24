@@ -1,5 +1,5 @@
-import { DateTime } from '@/api/getDashboardData';
-import { Dictionary } from 'types/types';
+import { type DateTime } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
 
 export interface WeekDTO {
     id: number;

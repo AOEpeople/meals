@@ -48,6 +48,7 @@
                     class="mt-2 grid"
                   >
                     <CombiButtonGroup
+                      v-if="weekID && dayID"
                       :key="key"
                       :weekID="weekID"
                       :dayID="dayID"
@@ -91,8 +92,8 @@ import CombiButtonGroup from '@/components/dashboard/CombiButtonGroup.vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Meal } from '@/api/getDashboardData';
-import { Dictionary } from 'types/types';
+import { type Meal } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
 
 const props = defineProps<{
   open: boolean;
@@ -103,7 +104,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const emit = defineEmits(['closeCombiModal']);
-const meals = props.meals ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID);
+const meals = props.meals ?? dashboardStore.getMeals(props.weekID ?? 0, props.dayID ?? 0);
 let keys = Object.keys(meals).filter((mealID) => meals[mealID].dishSlug !== 'combined-dish');
 const slugs = ref<string[]>([]);
 const bookingDisabled = computed(() => slugs.value.length < 2);

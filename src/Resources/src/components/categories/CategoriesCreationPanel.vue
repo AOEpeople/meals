@@ -26,7 +26,7 @@ import { useI18n } from 'vue-i18n';
 import SubmitButton from '../misc/SubmitButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import { ref } from 'vue';
-import { Category, useCategories } from '@/stores/categoriesStore';
+import { type Category, useCategories } from '@/stores/categoriesStore';
 
 const { t } = useI18n();
 const { createCategory, editCategory } = useCategories();

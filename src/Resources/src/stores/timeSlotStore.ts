@@ -1,4 +1,4 @@
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import { reactive, readonly, watch } from 'vue';
 import { useTimeSlotData } from '@/api/getTimeSlotData';
 import { useUpdateSlot } from '@/api/putSlotUpdate';

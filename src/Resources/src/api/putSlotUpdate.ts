@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import { ref } from 'vue';
-import { TimeSlot } from '@/stores/timeSlotStore';
+import { type TimeSlot } from '@/stores/timeSlotStore';
 
 /**
  * Performs a PUT request to update a slot

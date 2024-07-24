@@ -1,6 +1,6 @@
-import { Dictionary } from 'types/types';
+import type { Dictionary } from '@/types/types';
 import { reactive, readonly } from 'vue';
-import { DateTime } from './getDashboardData';
+import type { DateTime } from './getDashboardData';
 import useApi from './api';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 import { Diet } from '@/enums/Diet';

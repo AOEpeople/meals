@@ -1,10 +1,10 @@
-import { DateTime } from '@/api/getDashboardData';
+import { type DateTime } from '@/api/getDashboardData';
 import getWeeksData from '@/api/getWeeks';
 import postCreateWeek from '@/api/postCreateWeek';
 import putWeekUpdate from '@/api/putWeekUpdate';
 import getDishCount from '@/api/getDishCount';
-import { DayDTO, WeekDTO } from '@/interfaces/DayDTO';
-import { Dictionary } from 'types/types';
+import type { DayDTO, WeekDTO } from '@/interfaces/DayDTO';
+import { type Dictionary } from '@/types/types';
 import { reactive, readonly, ref, watch } from 'vue';
 import { isMessage } from '@/interfaces/IMessage';
 import { isResponseArrayOkay } from '@/api/isResponseOkay';

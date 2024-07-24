@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 import { useParticipations } from '@/stores/participationsStore';
-import { SimpleMeal, useWeeks } from '@/stores/weeksStore';
-import { Dictionary } from 'types/types';
+import { type SimpleMeal, useWeeks } from '@/stores/weeksStore';
+import { type Dictionary } from '@/types/types';
 import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const props = defineProps<{

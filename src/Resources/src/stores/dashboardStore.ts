@@ -1,6 +1,6 @@
 import { Store } from '@/stores/store';
-import { Dashboard, Day, Meal, Slot, useDashboardData, Week } from '@/api/getDashboardData';
-import { Dictionary } from '../../types/types';
+import { type Dashboard, type Day, type Meal, type Slot, useDashboardData, type Week } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
 import { mercureReceiver } from '@/tools/mercureReceiver';
 import useMealState from '@/services/useMealState';
 import { MealState } from '@/enums/MealState';
@@ -146,7 +146,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {
         const day = this.getDayByEventParticipationId(participationId);
-        if (day !== undefined) {
+        if (day !== undefined && day.event) {
             day.event.isParticipating = isParticipating;
         }
     }
@@ -167,8 +167,10 @@ class DashboardStore extends Store<Dashboard> {
     private setMealStatesForVariations(meal: Meal) {
         const { generateMealState } = useMealState();
 
-        for (const variation of Object.values(meal.variations)) {
-            variation.mealState = generateMealState(variation);
+        if (meal.variations) {
+            for (const variation of Object.values(meal.variations)) {
+                variation.mealState = generateMealState(variation);
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import { onMounted, onUnmounted, reactive, readonly, ref } from 'vue';
-import type { Dictionary } from '../../types/types';
+import type { Dictionary } from '@/types/types';
 import type { DateTime } from '@/api/getDashboardData';
 
 export type ListData = {

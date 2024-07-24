@@ -1,5 +1,39 @@
 # Changelog
 
+## Version v3.1.2 (2024-07-24)
+
+### Fixes
+
+- fixed cypress test (1f7df921)
+- fixed code smell (16f748d0)
+- fixed formatting (0715dd61)
+- fixed scrollbar appearing on the tv screen (a3b43ed0)
+- fixed disappearing participationcounter (2f033556)
+- fixed vanished meal checkbox on guestpage (80eb940e)
+- fixed lockdates fixture to match expected week (183476c8)
+- fixed cypress tests (6fb7c95c)
+
+### Other
+
+- Bump socket.io-parser from 3.3.3 to 3.3.4 in /tests/e2e (b60a14b7)
+- adjusted tests (a7287dc6)
+- removed a fixture user from the pool of participants (067b2435)
+- added filtering of dishes by diet (13502c61)
+- added variations component and added cypress test for guest invitation (caf98a25)
+- cleaned up unused guest code (ca70fa0c)
+- added tests to verify VegiIcon is working (47f658a9)
+- potential fix for cypress test (b4aa8245)
+- formatting fix (547f466e)
+- Intermediate extended tests (ae86f09b)
+- created migration for new diet attribute and fixed broken tests (47d97cb9)
+- adjusted styling of VeggiIcon, added tooltip for VeggiIcon, added Diet to TV-Screen (b9a1d518)
+- added icons for vegan and vegetarian, adjusted interfaces of apicontroller to also include diet attribute, adjusted tests to match the interfaces (c909e0fa)
+- formatting fixes and code smell fixing (c7eb650b)
+- added diet input for variations and updated the state update process (c2837242)
+- changed dish input form to allow for inputting a diet type (dec21655)
+- adjusted dish interface to accomodate diet type, updated interface check to work with diet type and fixed unit tests that broke due to the changes (ed72f133)
+- added attribute Diet to Dish and extended fixtures to accomodate Diet type (91332e1b)
+
 ## Version v3.1.1 (2024-07-12)
 
 ### Fixes

@@ -70,10 +70,10 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             $users = $this->getRandomUsers();
 
             foreach ($users as $user) {
-                if ($user->getUsername() === 'finance.meals') {
+                if ('finance.meals' === $user->getUsername()) {
                     continue;
                 }
-                
+
                 $participant = new Participant($user, $meal);
 
                 $participant->setCostAbsorbed(false);

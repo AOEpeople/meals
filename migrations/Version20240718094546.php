@@ -24,6 +24,7 @@ final class Version20240718094546 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE dish ADD diet VARCHAR(255) NOT NULL, CHANGE one_serving_size one_serving_size TINYINT(1) NOT NULL');
+        $this->addSql('update dish set diet="meat" where 1=1');
     }
 
     public function down(Schema $schema): void

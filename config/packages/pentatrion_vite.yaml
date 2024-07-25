@@ -1,0 +1,9 @@
+pentatrion_vite:
+  public_directory: public
+  build_directory: static
+  throw_on_missing_entry: true
+  preload: link-tag
+
+when@prod:
+    pentatrion_vite:
+        cache: true

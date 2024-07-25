@@ -11,9 +11,18 @@
     "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "strict": true,
     "types": ["node"]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "ES2015",
+      "moduleResolution": "Node"
+    }
   }
 }

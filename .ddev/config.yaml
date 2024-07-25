@@ -24,7 +24,7 @@ composer_version: "2"
 web_environment:
     - FINAL_RELEASEFOLDER=/var/www/html
     - APP_DEBUG=1
-    - APP_ENV=dev
+    - APP_ENV=prod
     - DB_HOST=db
     - DB_PORT=3306
     - DB_NAME=db
@@ -37,10 +37,10 @@ web_environment:
 nodejs_version: "22"
 
 web_extra_exposed_ports:
-    - name: vue-frontend
+    - name: vite
       container_port: 5173
-      http_port: 5173
-      https_port: 5172
+      http_port: 5172
+      https_port: 5173
 
 # Key features of DDEV's config.yaml:
 

@@ -46,6 +46,9 @@ onMounted(() => {
   if (navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+
+  const env = process.env.NODE_ENV;
+  console.log(`ENV is ${env}`);
 });
 
 onUpdated(() => {

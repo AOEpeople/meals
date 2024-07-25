@@ -4,12 +4,14 @@
 
 {% block body %}
     <div id="app" class="bg-[rgb(244,247,249)]">
+        <h4>{{ vite_mode() }}</h4>
+        <h4>{{ app.environment }}</h4>
         <div id="loading-fallback-container">
             <div id="loading-fallback-img"></div>
         </div>
     </div>
 {% endblock %}
-{% block stylesheets %}
+{# {% block stylesheets %}
     {{ parent() }}
     {{ vite_entry_link_tags('pageVue') }}
 {% endblock %}
@@ -17,4 +19,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ vite_entry_script_tags('pageVue') }}
-{% endblock %}
+{% endblock %} #}

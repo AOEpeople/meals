@@ -7,6 +7,12 @@
   },
   {
     "id": 48,
+    "title": "Lunch Roulette",
+    "slug": "lunch-roulette",
+    "public": true
+  },
+  {
+    "id": 49,
     "title": "Alumni Afterwork",
     "slug": "alumni-afterwork",
     "public": true

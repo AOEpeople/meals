@@ -70,7 +70,7 @@
 import MenuInput from '@/components/menu/MenuInput.vue';
 import { type Ref, computed, onMounted, ref, watch } from 'vue';
 import { type Dish } from '@/stores/dishesStore';
-import type { MealDTO, DayDTO } from '@/interfaces/DayDTO';
+import type { MealDTO, DayDTO, EventDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { translateWeekdayWithoutRef } from '@/tools/localeHelper';
 import { useI18n } from 'vue-i18n';
@@ -172,7 +172,7 @@ watch(selectedDishTwo, () => {
 
 watch(selectedEventOne, () => {
   if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
-    props.modelValue.event = selectedEventOne.value.id;
+    props.modelValue.events = selectedEventOne.value.id;
   } else {
     props.modelValue.event = null;
   }
@@ -180,9 +180,9 @@ watch(selectedEventOne, () => {
 
 watch(selectedEventTwo, () => {
   if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
-    props.modelValue.event = selectedEventTwo.value.id;
+    props.modelValue.eventId = selectedEventTwo.value.id;
   } else {
-    props.modelValue.event = null;
+    props.modelValue.eventId = null;
   }
 });
 
@@ -200,9 +200,9 @@ onMounted(() => {
   );
 
   // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEventOne.value = getEventById(props.modelValue.event);
+  selectedEventOne.value = getEventById(props.modelValue.eventId);
   // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEventTwo.value = getEventById(props.modelValue.event);
+  selectedEventTwo.value = getEventById(props.EventDTO.eventId);
 });
 
 

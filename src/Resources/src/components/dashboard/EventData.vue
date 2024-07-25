@@ -17,11 +17,11 @@
       <span
         class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
       >
-        {{ getEventById(day?.event?.eventId ?? -1)?.title }}
+        {{ getEventById(day.events.EventParticipation.eventId)?.title }}
       </span>
       <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
         <GuestButton
-          v-if="!day.isLocked && day?.event?.isPublic"
+          v-if="!day.isLocked && day.events.isPublic"
           :dayID="dayId"
           :index="0"
           :invitation="Invitation.EVENT"
@@ -29,18 +29,18 @@
           class="col-start-1 w-[24px] text-center"
         />
         <EventPopup
-          :event-title="getEventById(day?.event?.eventId ?? -1)?.title"
+          :event-title="getEventById(day.events.EventParticipation.eventId)?.title"
           :date="day.date.date"
         />
         <ParticipationCounter
           :limit="0"
           :mealCSS="!isEventPast() ? 'bg-primary-4' : 'bg-[#80909F]'"
         >
-          {{ day.event?.participations }}
+          {{ day.events.EventParticipation?.participations }}
         </ParticipationCounter>
         <CheckBox
           :isActive="!isEventPast()"
-          :isChecked="day.event?.isParticipating ?? false"
+          :isChecked="day.events.EventParticipation?.isParticipating ?? false"
           @click="handleClick"
         />
       </div>
@@ -76,7 +76,7 @@ async function handleClick() {
     return;
   }
   addLock(props.dayId);
-  if (props.day.event?.isParticipating === false) {
+  if (props.day.events.EventParticipation?.isParticipating === false) {
     await joinEvent(props.day.date.date);
   } else {
     await leaveEvent(props.day.date.date);

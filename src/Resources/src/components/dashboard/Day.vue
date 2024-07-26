@@ -95,7 +95,6 @@
       class="col-start-2 row-start-2 print:hidden"
       :day="day"
       :dayId="dayID"
-      :eventId="eventId"
     />
   </div>
 </template>

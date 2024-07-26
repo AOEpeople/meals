@@ -85,7 +85,6 @@ import { type Dictionary } from '@/types/types';
 
 const { getDishArrayBySlugs, getDishBySlug } = useDishes();
 const { locale, t } = useI18n();
-const { getEventById } = useEvents();
 
 const props = defineProps<{
   modelValue: DayDTO;

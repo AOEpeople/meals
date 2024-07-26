@@ -31,11 +31,7 @@ class UserDataStore extends Store<UserData> {
     }
 
     private isUserdata(userData: UserData): userData is UserData {
-        return (
-            userData !== null &&
-            userData !== undefined &&
-            typeof userData.balance === 'number'
-        );
+        return userData !== null && userData !== undefined && typeof userData.balance === 'number';
     }
 
     public roleAllowsRoute(routeName: string): boolean {

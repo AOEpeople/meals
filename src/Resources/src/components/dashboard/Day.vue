@@ -142,10 +142,10 @@ const dateString = computed(() => {
     });
   }
   return new Date().toLocaleDateString(locale.value, {
-      weekday: 'long',
-      month: 'numeric',
-      day: 'numeric'
-    })
+    weekday: 'long',
+    month: 'numeric',
+    day: 'numeric'
+  });
 });
 
 async function closeParticipantsModal() {

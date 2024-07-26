@@ -7,23 +7,21 @@ help:
 	@echo "Available helper commands:"
 	@echo ""
 	@echo "	build              - Build an image from the Dockerfile"
-	@echo "	build-yarn         - (Re-)build production ready frontend assets i.e. CSS, JS"
-	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. JS"
-	@echo "	build-yarn-dev-css - (Re-)build development ready frontend assets i.e. CSS, JS"
-	@echo "	build-yarn-watch   - (Re-)build and watch development ready frontend assets i.e. CSS, JS"
+	@echo "	build-vite         - (Re-)build production ready frontend assets i.e. CSS, JS"
+	@echo "	build-vite-dev     - (Re-)build and watch development ready frontend assets i.e. CSS, JS"
 	@echo "	create-migration   - Create Doctrine migration from code"
 	@echo "	get-users          - Get test users and their passwords"
 	@echo "	load-testdata      - Load test data i.e. dishes, meals and users"
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
-	@echo "	run-lint           - Run code linter"
+	@echo "	run-lint           - Run code frontend linter (eslint)"
 	@echo "	run-prettier-check - Run prettier with the check option"
 	@echo "	run-prettier       - Run prettier to format frontend files"
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
 	@echo "	run-tests-be       - Run backend-tests"
-	@echo "	run-tests-fe       - Run frontend-tests"
+	@echo "	run-tests-fe       - Run frontend-unit-tests"
 	@echo " run-cypress        - Run cypress"
 	@echo " run-cypress-headless - Run cypress headless"
 	@echo "	ssh                - Open a bash session in the web container"
@@ -38,26 +36,20 @@ build:
 		--tag aoepeople/meals:edge \
 		.
 
-build-yarn:
-	ddev exec yarn --cwd=src/Resources build
+build-vite:
+	ddev exec npm run --prefix src/Resources build
 
-build-yarn-dev:
-	ddev exec yarn --cwd=src/Resources build-dev
-
-build-yarn-dev-css:
-	ddev exec yarn --cwd=src/Resources build-dev-css
-
-build-yarn-watch:
-	ddev exec yarn --cwd=src/Resources build-watch
+build-vite-dev:
+	ddev exec npm run --prefix src/Resources dev
 
 run-lint:
-	ddev exec yarn --cwd src/Resources lint
+	ddev exec npm run --prefix src/Resources lint
 
 run-prettier-check:
-	ddev exec yarn --cwd src/Resources prettier-check
+	ddev exec npm run --prefix src/Resources format-check
 
 run-prettier:
-	ddev exec yarn --cwd src/Resources prettier
+	ddev exec npm run --prefix src/Resources format
 
 run-phpmd:
 	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
@@ -81,7 +73,7 @@ run-tests-be:
 	ddev run tests
 
 run-tests-fe:
-	ddev exec yarn --cwd=src/Resources test
+	ddev exec npm run --prefix src/Resources test:unit
 
 run-cypress:
 	yarn --cwd=./tests/e2e cypress open

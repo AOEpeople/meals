@@ -43,12 +43,12 @@ import GuestForm from '@/components/guest/GuestForm.vue';
 import GuestDay from '@/components/guest/GuestDay.vue';
 
 interface IForm {
-  firstName: string,
-  lastName: string,
-  company: string,
-  chosenSlot: number,
-  chosenMeals: string[],
-  combiDishes: string[]
+  firstName: string;
+  lastName: string;
+  company: string;
+  chosenSlot: number;
+  chosenMeals: string[];
+  combiDishes: string[];
 }
 
 const progress = useProgress().start();
@@ -65,14 +65,10 @@ const form = reactive<IForm>({
   chosenSlot: 0,
   chosenMeals: [],
   combiDishes: []
-})
+});
 
 const filled = computed(
-  () =>
-    form.firstName !== '' &&
-    form.lastName !== '' &&
-    form.company !== '' &&
-    form.chosenMeals.length !== 0
+  () => form.firstName !== '' && form.lastName !== '' && form.company !== '' && form.chosenMeals.length !== 0
 );
 const firstNameMissing = ref(false);
 const lastNameMissing = ref(false);

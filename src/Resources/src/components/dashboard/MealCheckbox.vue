@@ -65,10 +65,13 @@ const day = props.day ?? dashboardStore.getDay(props.weekID ?? 0, props.dayID ??
 const mealOrVariation = ref<Meal>();
 let mealId: number | string;
 if (props.variationID) {
-  mealOrVariation.value = props.meal ?? dashboardStore.getVariation(props.weekID ?? 0, props.dayID ?? 0, props.mealID, props.variationID);
+  mealOrVariation.value =
+    props.meal ?? dashboardStore.getVariation(props.weekID ?? 0, props.dayID ?? 0, props.mealID, props.variationID);
   mealId = props.variationID;
 } else {
-  mealOrVariation.value = props.meal ? props.meal : dashboardStore.getMeal(props.weekID ?? 0, props.dayID ?? 0, props.mealID);
+  mealOrVariation.value = props.meal
+    ? props.meal
+    : dashboardStore.getMeal(props.weekID ?? 0, props.dayID ?? 0, props.mealID);
   mealId = props.mealID;
 }
 

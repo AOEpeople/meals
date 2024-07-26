@@ -37,6 +37,9 @@ build:
 		.
 
 build-vite:
+	ddev exec npm run --prefix src/Resources build-only
+
+build-vite-check:
 	ddev exec npm run --prefix src/Resources build
 
 build-vite-dev:

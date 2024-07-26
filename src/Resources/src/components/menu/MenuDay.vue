@@ -48,7 +48,6 @@
       v-model="selectedEventOne"
       class="col-start-2 row-span-1 row-start-3 border-b border-t-[3px] px-2 py-[12px] md:px-4"
     />
-
     <EventInput
       v-if="selectedEventOne"
       v-model="selectedEventTwo"
@@ -170,18 +169,37 @@ watch(selectedDishTwo, () => {
 });
 
 watch(selectedEventOne, () => {
-  if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
-    props.modelValue.events = selectedEventOne.value.id;
+  try{
+    const firstKey = Object.keys(props.modelValue.events)[0];
+    if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
+    selectedDishes.value.events[firstKey] = [{
+      eventId: selectedEventOne.value.id,
+      eventSlug: selectedEventOne.value.slug,
+    }]
   } else {
-    props.modelValue.event = null;
+    selectedDishes.value.events[firstKey][0].eventId = null;
   }
+  }
+  catch(error){
+    console.error('Fehler: ', error)
+  }
+
 });
 
 watch(selectedEventTwo, () => {
+  try{
+  const secondKey = Object.keys(props.modelValue.events)[1];
   if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
-    props.modelValue.eventId = selectedEventTwo.value.id;
+    selectedDishes.value.events[secondKey] = [{
+      eventId: selectedEventTwo.value.id,
+      eventSlug: selectedEventTwo.value.slug,
+    }]
   } else {
-    props.modelValue.eventId = null;
+    selectedDishes.value.events[secondKey][1].eventId = null;
+  }
+}
+  catch(error){
+    console.error('Fehler: ', error)
   }
 });
 
@@ -197,11 +215,23 @@ onMounted(() => {
       .map((meal: MealDTO) => meal.dishSlug)
       .filter((slug) => slug !== null) as string[]
   );
-
-  // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEventOne.value = getEventById(props.modelValue.eventId);
-  // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEventTwo.value = getEventById(props.EventDTO.eventId);
+  try{
+    const firstKey = Object.keys(props.modelValue.events)[0];
+    const secondKey = Object.keys(props.modelValue.events)[1];
+    // set Events from modelValue to be the initial value of the selectedEvents
+    if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
+    selectedDishes.value.events[firstKey] = [{
+      eventId: selectedEventTwo.value.id,
+      eventSlug: selectedEventTwo.value.slug,
+    }]
+  }
+  if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
+    selectedDishes.value.events[secondKey] = [{
+      eventId: selectedEventTwo.value.id,
+      eventSlug: selectedEventTwo.value.slug,
+    }]
+  }
+  } catch(error){}
 });
 
 /**

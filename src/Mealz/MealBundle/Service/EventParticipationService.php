@@ -78,9 +78,9 @@ final class EventParticipationService
             }
     }
 
-    public function join(Profile $profile, Day $day): ?EventParticipation
+    public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
-        $eventParticipation = $day->getEvent();
+        $eventParticipation = $day->getEvent($day, $eventId);
         if (null !== $eventParticipation && true === $this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
             $participation = $this->createEventParticipation($profile, $eventParticipation);
             $this->em->persist($participation);
@@ -99,20 +99,22 @@ final class EventParticipationService
         string $firstName,
         string $lastName,
         string $company,
-        Day $eventDay
+        Day $eventDay,
+        int $eventId
     ): EventParticipation {
         $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
             $company,
-            $eventDay->getDateTime()
+            $eventDay->getDateTime(),
+            $eventId
         );
 
         $this->em->beginTransaction();
 
         try {
             $this->em->persist($guestProfile);
-            $eventParticipation = $eventDay->getEvent();
+            $eventParticipation = $eventDay->getEvent($eventDay, $eventId);
             $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);
@@ -127,9 +129,9 @@ final class EventParticipationService
         }
     }
 
-    public function leave(Profile $profile, Day $day): ?EventParticipation
+    public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
-        $eventParticipation = $day->getEvent();
+        $eventParticipation = $day->getEvent($day, $eventId);
         $participation = $eventParticipation->getParticipant($profile);
 
         if (null !== $participation) {
@@ -147,16 +149,16 @@ final class EventParticipationService
      *
      * @psalm-return array<string>
      */
-    public function getParticipants(Day $day): array
+    public function getParticipants(Day $day, int $eventId): array
     {
-        $eventParticipation = $day->getEvent();
+        $eventParticipation = $day->getEvent($day, $eventId);
         if (null === $eventParticipation) {
             return [];
         }
 
         return array_map(
             fn (Participant $participant) => $this->getParticipantName($participant),
-            $day->getEvent()->getParticipants()->toArray()
+            $day->getEvent($day, $eventId)->getParticipants()->toArray()
         );
     }
 

@@ -95,6 +95,7 @@
       class="col-start-2 row-start-2 print:hidden"
       :day="day"
       :dayId="dayID"
+      :eventId="eventId"
     />
   </div>
 </template>
@@ -131,6 +132,7 @@ const weekday = computed(() => {
 });
 const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
 const isEventDay = day?.event !== null;
+const eventId = day.events[Object.keys(day.events)[0]][0].eventId;
 const date = computed(() => {
   if (day === null || day === undefined) {
     return '';

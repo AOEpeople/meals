@@ -96,7 +96,7 @@ final class EventController extends BaseListController
         }
     }
 
-    public function join(DateTime $date): JsonResponse
+    public function join(DateTime $date, int $eventId): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -110,17 +110,17 @@ final class EventController extends BaseListController
             return new JsonResponse(['message' => '804: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $eventParticipation = $this->eventPartSrv->join($profile, $day);
+        $eventParticipation = $this->eventPartSrv->join($profile, $day, $eventId);
         if (null === $eventParticipation) {
             return new JsonResponse(['message' => '802: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), Response::HTTP_OK);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day,$eventId, $profile), Response::HTTP_OK);
     }
 
-    public function leave(DateTime $date): JsonResponse
+    public function leave(DateTime $date, int $eventId): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -129,17 +129,17 @@ final class EventController extends BaseListController
 
         $day = $this->dayRepository->getDayByDate($date);
 
-        $eventParticipation = $this->eventPartSrv->leave($profile, $day);
+        $eventParticipation = $this->eventPartSrv->leave($profile, $day, $eventId);
         if (null === $eventParticipation) {
             return new JsonResponse(['message' => '802: User could not leave the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), Response::HTTP_OK);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day,$eventId, $profile), Response::HTTP_OK);
     }
 
-    public function getEventParticipants(DateTime $date): JsonResponse
+    public function getEventParticipants(DateTime $date, int $eventId): JsonResponse
     {
         $day = $this->dayRepository->getDayByDate($date);
 
@@ -147,6 +147,6 @@ final class EventController extends BaseListController
             return new JsonResponse(['message' => 'Could not find day'], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($this->eventPartSrv->getParticipants($day), Response::HTTP_OK);
+        return new JsonResponse($this->eventPartSrv->getParticipants($day, $eventId), Response::HTTP_OK);
     }
 }

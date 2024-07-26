@@ -16,9 +16,9 @@
         <script type="module" src="https://meals.test:5173/@vite/client"></script>
         <script type="module" src="https://meals.test:5173/src/main.ts"></script>
     {% else %} #}
-        {% block javascripts %}
-            {{ vite_entry_script_tags('app') }}
-        {% endblock %}
+    {% block javascripts %}
+        {{ vite_entry_script_tags('app') }}
+    {% endblock %}
     {# {% endif %} #}
 </head>
 <style>

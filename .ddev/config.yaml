@@ -24,7 +24,7 @@ composer_version: "2"
 web_environment:
     - FINAL_RELEASEFOLDER=/var/www/html
     - APP_DEBUG=1
-    - APP_ENV=prod
+    - APP_ENV=dev
     - DB_HOST=db
     - DB_PORT=3306
     - DB_NAME=db

@@ -1,6 +1,5 @@
 <template>
   <div class="relative top-0 z-[3] print:hidden">
-    <h2>Test</h2>
     <Menu v-slot="{ open }">
       <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav

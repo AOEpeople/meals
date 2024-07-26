@@ -8,23 +8,17 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { dirname } from 'node:path'
 import { rm } from 'node:fs/promises'
 
-const port = 5173;
-const origin = `${process.env.DDEV_PRIMARY_URL}:${port}`;
-
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: process.env.NODE_ENV === 'production' ? '/static/' : '/',
-  base: '/static/',
-  mode: 'production',
+  base: process.env.NODE_ENV === 'production' ? '/static/' : '/',
   plugins: [
     vue(),
     vueDevTools(),
     symfony({
-      // debug: true,
       enforcePluginOrderingPosition: true,
-      enforceServerOriginAfterListening: false,
+      enforceServerOriginAfterListening: true,
       viteDevServerHostname: 'meals.test',
-      // originOverride: 'https://meals.test'
+      originOverride: 'https://meals.test:5173'
     }),
     VueI18nPlugin({
       include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
@@ -42,23 +36,26 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  // server: {
-  //   host: true,
-  //   port: port,
-  //   strictPort: true,
-  //   origin: 'https://meals.test:5173',
-  //   cors: true,
-  //   headers: {
-  //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  //     'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
-  //     'Access-Control-Allow-Origin': '*',
-  //     'X-Content-Type-Options': 'nosniff'
-  //   },
-  //   // hmr: {
-  //   //   host: 'meals.test',
-  //   //   protocol: 'ws'
-  //   // }
-  // },
+  server: {
+    host: true,
+    port: 5173,
+    strictPort: true,
+    origin: 'https://meals.test:5173',
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+      'Access-Control-Allow-Origin': '*',
+      'X-Content-Type-Options': 'nosniff'
+    },
+    proxy: {
+      '/static/': 'https://localhost:5173'
+    },
+    // hmr: {
+    //   host: 'meals.test',
+    //   protocol: 'ws'
+    // }
+  },
   build: {
     outDir: '../../public/static',
     manifest: true,
@@ -74,9 +71,9 @@ export default defineConfig({
           chunkFileNames: '[name]-[hash].js',
           entryFileNames: '[name]-[hash].js',
           assetFileNames: '[name]-[hash].[ext]',
-          manualChunks: {
-            vue: ['vue']
-          }
+          // manualChunks: {
+          //   vue: ['vue']
+          // }
         }
     }
   },

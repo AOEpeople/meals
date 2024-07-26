@@ -26,8 +26,15 @@ export interface SimpleDay {
     lockParticipationDateTime: DateTime;
     week: number;
     meals: Dictionary<SimpleMeal[]>;
-    event: number | null;
+    events: Dictionary<SimpleEvent[]>;
     enabled: boolean;
+}
+
+export interface SimpleEvent {
+    id: number,
+    event: string,
+    day: number,
+    participations: [],
 }
 
 export interface SimpleMeal {
@@ -238,7 +245,7 @@ export function useWeeks() {
             meals: {},
             id: parseInt(dayId),
             enabled: day.enabled,
-            event: day.event,
+            events: {},
             date: day.dateTime,
             lockDate: day.lockParticipationDateTime
         };

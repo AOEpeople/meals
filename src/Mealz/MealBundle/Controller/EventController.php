@@ -35,7 +35,7 @@ final class EventController extends BaseListController
     public function getEventList(): JsonResponse
     {
         $events = $this->eventRepository->findBy(['deleted' => 0]);
-
+        $this->logger->info('Anzahl Events:' . count($events) );
         return new JsonResponse($events, Response::HTTP_OK);
     }
 

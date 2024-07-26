@@ -92,6 +92,25 @@ class Day extends AbstractMessage implements JsonSerializable
         return new EventCollection($this->events->toArray());
     }
 
+    public function getEvent(Day $day, int $id):EventParticipation | null{
+        foreach ($this->getEvents() as $event) {
+            if($event->getId() === $id && $event->getDay() == $day){
+                return $event;
+            }
+    }
+        return null;
+    }
+
+    public function setEvent(EventParticipation $event){
+        $this->events->add($event);
+    }
+
+    public function removeEvent(EventParticipation $event){
+        if($this->events->contains($event)){
+            $this->events->removeElement($event);
+        }
+    }
+
     public function setEvents(EventCollection $events): void
     {
         $this->events = $events;

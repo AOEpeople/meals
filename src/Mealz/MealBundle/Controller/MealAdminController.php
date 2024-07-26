@@ -201,9 +201,8 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($dayEntity, $day);
-        $this->mealAdminHelper->handleEventParticipation($dayEntity, $day['event']);
-
         $mealCollection = $day['meals'];
+        $eventCollection = $day['events'];
         /*
          * 3 Meals are comprised of 2 main meals and a potential combined meal.
          * The combined meal is also in the collection, because meals that are
@@ -233,8 +232,11 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($day, $dayData);
-        $this->mealAdminHelper->handleEventParticipation($day, $dayData['event']);
 
+        $eventCollection = $day['events'];
+        foreach($eventCollection as $event){
+            $this->mealAdminHelper->handleEventParticipation($day, $event);
+        }
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed
         if (2 < count($mealCollection)) {

@@ -13,40 +13,42 @@
         :size="20"
       />
     </BannerSpacer>
-    <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
-      <span
-        class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
-      >
-        {{ getEventById(day.events.EventParticipation.eventId)?.title }}
-      </span>
-      <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
-        <GuestButton
-          v-if="!day.isLocked && day.events.isPublic"
-          :dayID="dayId"
-          :index="0"
-          :invitation="Invitation.EVENT"
-          :icon-white="false"
-          class="col-start-1 w-[24px] text-center"
-        />
-        <EventPopup
-          :event-title="getEventById(day.events.EventParticipation.eventId)?.title"
-          :date="day.date.date"
-        />
-        <ParticipationCounter
-          :limit="0"
-          :mealCSS="!isEventPast() ? 'bg-primary-4' : 'bg-[#80909F]'"
+    <div v-for="(event, key) in day.events" :key="key">
+      <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
+        <span
+          class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
         >
-          {{ day.events.EventParticipation?.participations }}
-        </ParticipationCounter>
-        <CheckBox
-          :isActive="!isEventPast()"
-          :isChecked="day.events.EventParticipation?.isParticipating ?? false"
-          @click="handleClick"
-        />
+          {{ getEventById(event.eventId)?.title }}
+        </span>
+        <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
+          <GuestButton
+            v-if="!day.isLocked && day.events.isPublic"
+            :dayID="dayId"
+            :index="0"
+            :invitation="Invitation.EVENT"
+            :icon-white="false"
+            class="col-start-1 w-[24px] text-center"
+          />
+          <EventPopup
+            :event-title="getEventById(event.eventId)?.title"
+            :date="day.date.date"
+          />
+          <ParticipationCounter
+            :limit="0"
+            :mealCSS="!day.isLocked ? 'bg-primary-4' : 'bg-[#80909F]'"
+          >
+            {{ event?.participations }}
+          </ParticipationCounter>
+          <CheckBox
+            :isActive="new Date(day.date.date) > new Date()"
+            :isChecked="event?.isParticipating ?? false"
+            @click="handleClick"
+          />
+        </div>
       </div>
+      <div />
     </div>
-    <div />
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">

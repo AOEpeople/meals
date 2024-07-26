@@ -39,12 +39,12 @@ class EventParticipationService
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
-    public function handleEventParticipation(Day $day, ?int $eventId = null): void
+    public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
-        if (null === $eventId) {
-            $this->removeEventFromDay($day);
+        if (null === $event) {
+            $this->removeEventFromDay($day, $event->getId());
         } else {
-            $event = $this->eventRepo->find($eventId);
+            $event = $this->eventRepo->find($event->getId());
             $this->addEventToDay($day, $event);
         }
     }
@@ -54,25 +54,28 @@ class EventParticipationService
      *
      * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
      */
-    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
+    public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null,): ?array
     {
-        $eventParticipation = $day->getEvent();
-        if (null === $eventParticipation) {
-            return null;
-        }
+        if($eventId === null){
+            return $day->getEvents();
+        } else{
+            $eventParticipation = $day->getEvent($day,$eventId);
+            if (null === $eventParticipation) {
+                return null;
+            }
+            $participationData = [
+                'eventId' => $eventParticipation->getEvent()->getId(),
+                'participationId' => $eventParticipation->getId(),
+                'participations' => count($eventParticipation->getParticipants()),
+                'isPublic' => $eventParticipation->getEvent()->isPublic(),
+            ];
 
-        $participationData = [
-            'eventId' => $eventParticipation->getEvent()->getId(),
-            'participationId' => $eventParticipation->getId(),
-            'participations' => count($eventParticipation->getParticipants()),
-            'isPublic' => $eventParticipation->getEvent()->isPublic(),
-        ];
+            if (null !== $profile) {
+                $participationData['isParticipating'] = null !== $eventParticipation->getParticipant($profile);
+            }
 
-        if (null !== $profile) {
-            $participationData['isParticipating'] = null !== $eventParticipation->getParticipant($profile);
-        }
-
-        return $participationData;
+            return $participationData;
+            }
     }
 
     public function join(Profile $profile, Day $day): ?EventParticipation
@@ -157,24 +160,21 @@ class EventParticipationService
         );
     }
 
+    /**
+     * adds new event to the eventCollection
+     */
     private function addEventToDay(Day $day, ?Event $event): void
     {
         // new eventparticipation
-        if (null !== $event && null === $day->getEvent()) {
+        if (null !== $event && null === $day->getEvents()) {
             $eventParticipation = new EventParticipation($day, $event);
             $day->setEvent($eventParticipation);
-        } elseif (null !== $event && $day->getEvent()->getEvent()->getId() !== $event->getId()) {
-            // edit eventparticipation
-            $day->getEvent()->setEvent($event);
         }
     }
 
-    private function removeEventFromDay(Day $day): void
+    private function removeEventFromDay(Day $day, EventParticipation $event): void
     {
-        if (null !== $day->getEvent()) {
-            $this->em->remove($day->getEvent());
-            $day->setEvent(null);
-        }
+        $day->removeEvent($event);
     }
 
     private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): Participant

@@ -134,12 +134,12 @@ class ApiService
      */
     public function getEventParticipationInfo(Day $day): ?array
     {
-        if (null === $day->getEvent()) {
+        if (null === $day->getEvents()) {
             return null;
         }
 
         return [
-            'name' => $day->getEvent()->getEvent()->getTitle(),
+            'name' => $day->getEvents()->getEvent()->getTitle(),
             'participants' => $this->getEventParticipants($day),
         ];
     }

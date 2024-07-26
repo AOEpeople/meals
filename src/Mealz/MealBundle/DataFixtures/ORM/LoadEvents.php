@@ -29,6 +29,11 @@ class LoadEvents extends Fixture implements OrderedFixtureInterface
                 'public' => true,
                 'slug' => 'alumni-afterwork',
             ],
+            [
+                'title' => 'Lunch Roulette',
+                'public' => true,
+                'slug' => 'lunch-roulette',
+            ]
         ];
 
         foreach ($eventItems as $item) {

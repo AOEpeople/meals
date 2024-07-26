@@ -17,6 +17,7 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,7 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestPartiSrv;
+    private EventParticipationService $eventService;
 
     public function __construct(
         DishService $dishSrv,
@@ -101,7 +103,7 @@ class ApiController extends BaseController
                     'slots' => [],
                     'meals' => [],
                     'isEnabled' => $day->isEnabled(),
-                    'event' => $this->apiSrv->getEventParticipationData($day, $profile),
+                    'events' => [],
                 ];
 
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
@@ -180,7 +182,8 @@ class ApiController extends BaseController
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
 
-        $list['event'] = $this->apiSrv->getEventParticipationInfo($day);
+        $events =  $this->eventService->getEventParticipationData($day);
+        $list['events'] = [$events];
 
         $list['day'] = $day->getDateTime();
 

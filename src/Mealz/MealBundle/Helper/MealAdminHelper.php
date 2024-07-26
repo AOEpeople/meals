@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Helper;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 
@@ -31,8 +32,8 @@ class MealAdminHelper
         }
     }
 
-    public function handleEventParticipation(Day $day, ?int $eventId = null): void
+    public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
-        $this->eventService->handleEventParticipation($day, $eventId);
+        $this->eventService->handleEventParticipation($day, $event);
     }
 }

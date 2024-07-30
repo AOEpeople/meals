@@ -167,8 +167,8 @@ export function useEvents() {
      * Joins an event on a specific date and emits an {EventParticipationResponse}
      * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
      */
-    async function joinEvent(date: string) {
-        const { error, response } = await postJoinEvent(date);
+    async function joinEvent(date: string, eventId: number) {
+        const { error, response } = await postJoinEvent(date, eventId);
 
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
@@ -184,8 +184,8 @@ export function useEvents() {
      * Leaves an event on a specific date
      * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
      */
-    async function leaveEvent(date: string) {
-        const { error, response } = await deleteLeaveEvent(date);
+    async function leaveEvent(date: string, eventId: number) {
+        const { error, response } = await deleteLeaveEvent(date, eventId);
 
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
@@ -197,8 +197,8 @@ export function useEvents() {
         }
     }
 
-    async function getParticipantsForEvent(date: string) {
-        const { error, response } = await getEventParticipants(date);
+    async function getParticipantsForEvent(date: string, eventSlug: string) {
+        const { error, response } = await getEventParticipants(date, getEventIdBySlug(eventSlug));
 
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
@@ -225,7 +225,17 @@ export function useEvents() {
     function getEventBySlug(slug: string) {
         return EventsState.events.find((event) => event.slug === slug);
     }
-
+    /**
+     * Returns the eventId for the passed slug
+     * @param slug The slug of the event
+     */
+    function getEventIdBySlug(slug: string){
+        return EventsState.events.find((event) => event.slug === slug).id;
+    }
+    /**
+     * Returns the event with the given id from the EventsState
+     * @param eventId The id of the event
+     */
     function getEventById(eventId: number) {
         return EventsState.events.find((event) => event.id === eventId);
     }
@@ -248,6 +258,7 @@ export function useEvents() {
         deleteEventWithSlug,
         resetState,
         getEventBySlug,
+        getEventIdBySlug,
         getEventById,
         setFilter,
         joinEvent,

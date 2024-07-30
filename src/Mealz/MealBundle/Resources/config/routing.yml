@@ -216,12 +216,12 @@ MealzMealBundle_api_events_delete:
   methods: [ DELETE ]
 
 MealzMealBundle_api_events_join:
-  path: /api/events/participation/{date}
+  path: /api/events/participation/{date}/{eventId}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::join }
   methods: [ POST ]
 
 MealzMealBundle_api_events_leave:
-  path: /api/events/participation/{date}
+  path: /api/events/participation/{date}/{eventId}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::leave }
   methods: [ DELETE ]
 

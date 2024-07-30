@@ -70,7 +70,7 @@ const testDay: Ref<DayDTO> = ref({
     },
     enabled: true,
     id: 286,
-    event: null,
+    events: null,
     date: { date: '2023-07-10 12:00:00.000000', timezone_type: 3, timezone: 'Europe/Berlin' },
     lockDate: { date: '2023-07-9 12:00:00.000000', timezone_type: 3, timezone: 'Europe/Berlin' }
 });

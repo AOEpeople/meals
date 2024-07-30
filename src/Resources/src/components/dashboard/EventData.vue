@@ -79,9 +79,9 @@ async function handleClick() {
   }
   addLock(props.dayId);
   if (props.day.events.EventParticipation?.isParticipating === false) {
-    await joinEvent(props.day.date.date);
+    await joinEvent(props.day.date.date, props.day.events.EventParticipation.eventId);
   } else {
-    await leaveEvent(props.day.date.date);
+    await leaveEvent(props.day.date.date, props.day.events.EventParticipation.eventId);
   }
   removeLock(props.dayId);
 }

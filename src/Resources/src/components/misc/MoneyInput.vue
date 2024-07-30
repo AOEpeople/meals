@@ -31,7 +31,6 @@ const value = computed({
 function selectAllAndPlaceCursor(element: HTMLInputElement) {
   element.select();
   element.focus();
-  element.setSelectionRange(0, 0);
 }
 </script>
 

@@ -190,7 +190,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-    return;
     if (userDataStore.getState().roles?.includes('ROLE_GUEST') === true || userDataStore.getState().user === '') {
         if (to.name !== 'Guest' && to.name !== 'GuestEvent' && to.name !== 'Login' && to.name !== 'ParticipantList') {
             return { name: 'Login' };

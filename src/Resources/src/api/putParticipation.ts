@@ -7,8 +7,6 @@ export default async function putParticipation(mealId: number, profileId: string
 
     if (combiDishes !== undefined && combiDishes !== null && combiDishes.length === 2) {
         data = { combiDishes: combiDishes };
-    } else if (combiDishes !== undefined && combiDishes !== null && combiDishes.length !== 2) {
-        return;
     } else {
         data = {};
     }

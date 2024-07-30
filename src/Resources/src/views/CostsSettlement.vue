@@ -45,7 +45,7 @@ const props = defineProps<{
   hash: string;
 }>();
 
-const profile = ref<IProfile>(null);
+const profile = ref<IProfile | null>(null);
 const isConfirmed = ref(false);
 const loaded = ref(false);
 

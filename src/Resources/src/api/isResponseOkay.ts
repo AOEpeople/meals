@@ -7,7 +7,7 @@ import { type Ref } from 'vue';
  * @param response      Ref with the response object from the API call
  * @param typeChecker   Callback function to check the type of the response object
  */
-export function isResponseObjectOkay<T>(error: Ref<boolean>, response: Ref<T>, typeChecker?: (arg: T) => boolean) {
+export function isResponseObjectOkay<T>(error: Ref<boolean>, response: Ref<T | undefined>, typeChecker?: (arg: T) => boolean) {
     return (
         error.value === false &&
         response.value !== null &&
@@ -23,7 +23,7 @@ export function isResponseObjectOkay<T>(error: Ref<boolean>, response: Ref<T>, t
  * @param response      Ref with the response array from the API call
  * @param typeChecker   Callback function to check the type of the response array
  */
-export function isResponseArrayOkay<T>(error: Ref<boolean>, response: Ref<T[]>, typeChecker?: (arg: T) => boolean) {
+export function isResponseArrayOkay<T>(error: Ref<boolean>, response: Ref<T[] | undefined>, typeChecker?: (arg: T) => boolean) {
     return (
         error.value === false &&
         response.value !== null &&
@@ -52,7 +52,7 @@ export function isResponseDictOkay<T>(
     );
 }
 
-function checkArray<T>(response: Ref<T[]>, typeChecker?: (arg: T) => boolean) {
+function checkArray<T>(response: Ref<T[] | undefined>, typeChecker?: (arg: T) => boolean) {
     return (
         Array.isArray(response.value) &&
         (response.value.length > 0
@@ -63,8 +63,8 @@ function checkArray<T>(response: Ref<T[]>, typeChecker?: (arg: T) => boolean) {
     );
 }
 
-function checkObject<T>(response: Ref<T>, typeChecker?: (arg: T) => boolean) {
-    return typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined
+function checkObject<T>(response: Ref<T | undefined>, typeChecker?: (arg: T) => boolean) {
+    return response.value && typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined
         ? typeChecker(response.value)
         : true;
 }

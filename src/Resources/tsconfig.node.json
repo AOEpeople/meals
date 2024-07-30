@@ -8,20 +8,32 @@
     "playwright.config.*"
   ],
   "compilerOptions": {
+    "allowJs": false,
     "composite": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "noEmit": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
     "strict": true,
-    "types": ["node"]
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2020",
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "useDefineForClassFields": true
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "ES2015",
+      "module": "ESNext",
       "moduleResolution": "Node"
     }
   }

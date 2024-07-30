@@ -19,23 +19,23 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
                 'content-type': contentType
             }
         })
-            .then((res) => {
-                response.value = res.data as T;
-            })
-            .catch((err) => {
-                error.value = true;
+        .then((res) => {
+            response.value = res.data as T;
+        })
+        .catch((err) => {
+            error.value = true;
 
-                if (
-                    err.response !== null &&
-                    err.response !== undefined &&
-                    err.response.data !== null &&
-                    err.response.data !== undefined
-                ) {
-                    response.value = err.response.data;
-                } else if (err.status === null || err.status === undefined) {
-                    checkActiveSession();
-                }
-            });
+            if (
+                err.response !== null &&
+                err.response !== undefined &&
+                err.response.data !== null &&
+                err.response.data !== undefined
+            ) {
+                response.value = err.response.data;
+            } else if (err.status === null || err.status === undefined) {
+                checkActiveSession();
+            }
+        });
     };
     return { response, request, error };
 }

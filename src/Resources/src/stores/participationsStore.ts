@@ -93,7 +93,7 @@ export function useParticipations(weekId: number) {
         const { error, participations } = await getParticipations(weekId);
 
         if (isResponseObjectOkay<IMenuParticipationDays>(error, participations, isMenuParticipation) === true) {
-            menuParticipationsState.days = participations.value;
+            menuParticipationsState.days = (participations.value as IMenuParticipationDays);
             menuParticipationsState.error = '';
         } else {
             menuParticipationsState.error = 'Error on getting the participations';
@@ -159,7 +159,7 @@ export function useParticipations(weekId: number) {
      * @param profileFullname   The full name of the participant (is equivalent to the key in the dict).
      */
     function handleParticipationUpdate(
-        response: Ref<IMessage | IParticipationUpdate>,
+        response: Ref<IMessage | IParticipationUpdate | undefined>,
         error: Ref<boolean>,
         dayId: string,
         profileFullname: string

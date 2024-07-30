@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { RadarSpinner } from 'epic-spinners';
-import { loadScript } from '@paypal/paypal-js';
+import { loadScript, type PayPalNamespace } from '@paypal/paypal-js';
 import { transactionStore } from '@/stores/transactionStore';
 import { useI18n } from 'vue-i18n';
 import { type WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -57,76 +57,80 @@ onMounted(async () => {
       currency: 'EUR'
     });
 
-    paypal
-      .Buttons({
-        onInit: function (data, actions) {
-          periodicFetchActive.value = true;
-          if (amountFieldValue.value > 0.0) {
-            actions.enable();
-          } else {
-            actions.disable();
-          }
-
-          actionsWatcher.value = watch(
-            () => amountFieldValue.value,
-            () => {
-              if (amountFieldValue.value > 0.0) {
-                actions.enable();
-              } else {
-                actions.disable();
-              }
+    if (paypal && paypal.Buttons) {
+      paypal.Buttons({
+          onInit: function (data, actions) {
+            periodicFetchActive.value = true;
+            if (amountFieldValue.value > 0.0) {
+              actions.enable();
+            } else {
+              actions.disable();
             }
-          );
-        },
-        createOrder: function (data, actions) {
-          checkActiveSession();
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  value: formatCurrency(amountFieldValue.value),
-                  currency_code: 'EUR'
+
+            actionsWatcher.value = watch(
+              () => amountFieldValue.value,
+              () => {
+                if (amountFieldValue.value > 0.0) {
+                  actions.enable();
+                } else {
+                  actions.disable();
                 }
               }
-            ],
-            intent: 'CAPTURE'
-          });
-        },
-        onShippingChange: function (data, actions) {
-          return actions.resolve();
-        },
-        onApprove: async function (data, actions) {
-          isLoading.value = true;
-          try {
-            await actions.order.capture();
-
-            checkActiveSession(
-              JSON.stringify({
-                amount: amountFieldValue.value.toFixed(2),
-                orderId: data.orderID
-              })
             );
+          },
+          createOrder: function (data, actions) {
+            checkActiveSession();
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: formatCurrency(amountFieldValue.value),
+                    currency_code: 'EUR'
+                  }
+                }
+              ],
+              intent: 'CAPTURE'
+            });
+          },
+          onShippingChange: function (data, actions) {
+            return actions.resolve();
+          },
+          onApprove: async function (data, actions) {
+            isLoading.value = true;
+            try {
+              await actions.order?.capture();
 
-            const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
+              checkActiveSession(
+                JSON.stringify({
+                  amount: amountFieldValue.value.toFixed(2),
+                  orderId: data.orderID
+                })
+              );
 
-            if (response.ok) {
-              userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
-              transactionStore.fillStore();
-              // disable gray out and show spinner
-              emit('closePanel');
+              const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
+
+              if (response.ok) {
+                userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
+                transactionStore.fillStore();
+                // disable gray out and show spinner
+                emit('closePanel');
+              }
+              isLoading.value = false;
+            } catch (error) {
+              console.log(`error on approving: ${error}`);
+              isLoading.value = false;
             }
-            isLoading.value = false;
-          } catch (error) {
-            console.log(`error on approving: ${error}`);
-            isLoading.value = false;
           }
-        }
-      })
-      .render('#paypal-container')
-      .catch((error) => {
-        console.error('failed to render the PayPal Buttons', error);
-        isLoading.value = false;
-      });
+        })
+        .render('#paypal-container')
+        .catch((error) => {
+          console.error('failed to render the PayPal Buttons', error);
+          isLoading.value = false;
+        });
+    } else {
+      console.error('failed to load the PayPal JS SDK script');
+      isLoading.value = false;
+    }
   } catch (error) {
     console.error('failed to load the PayPal JS SDK script', error);
     isLoading.value = false;

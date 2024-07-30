@@ -20,7 +20,7 @@ export interface ITransactionHistory {
 }
 
 interface ITransactionHistoryState {
-    transactions: ITransactionHistory;
+    transactions: ITransactionHistory | undefined;
     error: string;
     isLoading: boolean;
 }
@@ -92,7 +92,7 @@ export function useAccounting() {
         const { error, transactions } = await getTransactionHistory();
 
         if (isResponseObjectOkay(error, transactions, isTransactionHistory) === true) {
-            TransactionState.transactions = transactions.value;
+            TransactionState.transactions = (transactions.value as ITransactionHistory);
             TransactionState.error = '';
         } else {
             TransactionState.error = 'Error on fetching the transaction history';

@@ -203,6 +203,11 @@ make run-psalm
 
 ## Developer information
 
+### Vite
+
+Vite has two different modes of operation. One where a production ready build is generated and a dev mode. The dev mode is best used to quickly iterate and rebuild over changes while working.
+
+
 ### User roles
 
 The following roles are in use:
@@ -222,6 +227,10 @@ IDP_SERVER=https://login.some-domain.com/
 IDP_CLIENT_ID=client-id
 IDP_CLIENT_SECRET=client-secret
 ```
+
+### Dev Warning
+
+In the Vite Dev mode browsers will typically send out a Warning("Source-Map-Fehler: No sources are declared in this source map."). This can be mitigated by using the build mode.
 
 ### API Error Messages
 *MealAdminController 1xx*

@@ -20,6 +20,7 @@ import MenuTableBody from '@/components/menuParticipants/MenuTableBody.vue';
 import MenuTableHead from './MenuTableHead.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import LoadingSpinner from '../misc/LoadingSpinner.vue';
+import process from 'node:process';
 
 const props = defineProps<{
   weekId: number;

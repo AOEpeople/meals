@@ -59,6 +59,7 @@ export default defineConfig({
   build: {
     outDir: '../../public/static',
     manifest: true,
+    sourcemap: true,
     rollupOptions: {
         input: {
             /* relative to the root option */
@@ -71,9 +72,9 @@ export default defineConfig({
           chunkFileNames: '[name]-[hash].js',
           entryFileNames: '[name]-[hash].js',
           assetFileNames: '[name]-[hash].[ext]',
-          // manualChunks: {
-          //   vue: ['vue']
-          // }
+          sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
+            return `src/${relativeSourcePath}`;
+          },
         }
     }
   },

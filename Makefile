@@ -15,6 +15,7 @@ help:
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
 	@echo "	run-lint           - Run code frontend linter (eslint)"
+	@echo " run-typecheck      - Run frontend type check"
 	@echo "	run-prettier-check - Run prettier with the check option"
 	@echo "	run-prettier       - Run prettier to format frontend files"
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
@@ -47,6 +48,9 @@ build-vite-dev:
 
 run-lint:
 	ddev exec npm run --prefix src/Resources lint
+
+run-typecheck:
+	ddev exec npm run --prefix src/Resources type-check
 
 run-prettier-check:
 	ddev exec npm run --prefix src/Resources format-check

@@ -6,7 +6,7 @@ import getDishCount from '@/api/getDishCount';
 import type { DayDTO, WeekDTO } from '@/interfaces/DayDTO';
 import { type Dictionary } from '@/types/types';
 import { reactive, readonly, ref, watch } from 'vue';
-import { isMessage } from '@/interfaces/IMessage';
+import { isMessage, type IMessage } from '@/interfaces/IMessage';
 import { isResponseArrayOkay } from '@/api/isResponseOkay';
 import getEmptyWeek from '@/api/getEmptyWeek';
 import useFlashMessage from '@/services/useFlashMessage';
@@ -54,7 +54,7 @@ interface MenuCountState {
  * Checks if the given object is of type Week.
  * @param week The week to check.
  */
-function isWeek(week: Week): week is Week {
+function isWeek(week: Week | undefined): week is Week {
     return (
         week !== null &&
         week !== undefined &&
@@ -108,7 +108,7 @@ export function useWeeks() {
     async function fetchLockDatesForWeek(weekId: number) {
         const { error, response } = await getLockDatesForWeek(weekId);
         if (error.value === false) {
-            lockDates.value = response.value;
+            lockDates.value = response.value ?? null;
         }
     }
 
@@ -118,7 +118,7 @@ export function useWeeks() {
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
         if (isResponseArrayOkay<Week>(error, weeks, isWeek) === true) {
-            WeeksState.weeks = weeks.value;
+            WeeksState.weeks = (weeks.value as Week[]);
             WeeksState.error = '';
         } else {
             setTimeout(fetchWeeks, TIMEOUT_PERIOD);
@@ -149,7 +149,7 @@ export function useWeeks() {
             }
         }
 
-        return response.value.calendarWeek;
+        return response.value?.calendarWeek;
     }
 
     /**
@@ -183,7 +183,7 @@ export function useWeeks() {
     async function updateWeek(week: WeekDTO) {
         const { error, response } = await putWeekUpdate(week);
         if (error.value === true || isMessage(response.value) === true) {
-            WeeksState.error = response.value?.message;
+            WeeksState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -231,8 +231,8 @@ export function useWeeks() {
         const week =
             weekId === null && calendarWeek !== undefined && calendarWeek !== null
                 ? getWeekByCalendarWeek(calendarWeek)
-                : getWeekById(weekId);
-        const day = getDayById(week, dayId);
+                : getWeekById(weekId as number);
+        const day = getDayById((week as Week), dayId);
 
         const menuDay: DayDTO = {
             meals: {},
@@ -280,7 +280,9 @@ export function useWeeks() {
     }
 
     function getDayByWeekIdAndDayId(weekId: number, dayId: string) {
-        return getDayById(getWeekById(weekId), dayId);
+        const week = getWeekById(weekId);
+        if (week === undefined || week === null) return undefined;
+        return getDayById(week, dayId);
     }
 
     function getWeekByCalendarWeek(isoWeek: number) {

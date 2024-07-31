@@ -46,7 +46,7 @@ export async function useTimeSlotData() {
         loaded.value = true;
     }
 
-    const timeslots = ref<TimeSlots>(convertResponseToTimeSlots(timeslotsResponse.value));
+    const timeslots = ref<TimeSlots>(convertResponseToTimeSlots(timeslotsResponse.value as ITimeSlotResponse[]));
 
     return { timeslots, error };
 }

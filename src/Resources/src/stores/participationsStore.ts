@@ -235,6 +235,7 @@ export function useParticipations(weekId: number) {
      * @param dishId    The id of the dish.
      */
     function countBookedMeal(dayId: string, dishId: number) {
+        if (dishId < 0) return 0;
         const day = menuParticipationsState.days[dayId];
 
         let count = 0;

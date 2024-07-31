@@ -22,7 +22,7 @@ export function useMealIdToDishId(weekId: number) {
 
         const week = getWeekById(weekId);
 
-        for (const day of Object.values(week.days)) {
+        for (const day of Object.values(week?.days ?? {})) {
             for (const meals of Object.values(day.meals)) {
                 meals.forEach((meal) => {
                     const dish = getDishBySlug(meal.dish);

@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { Week } from '@/stores/weeksStore';
+import { type Week } from '@/stores/weeksStore';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useWeeks } from '@/stores/weeksStore';

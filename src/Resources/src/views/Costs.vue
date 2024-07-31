@@ -43,7 +43,7 @@ const { fetchCosts } = useCosts();
 const loaded = ref(false);
 const filter = ref('');
 const showHidden = ref(false);
-const pdfCreator = ref(null);
+const pdfCreator = ref();
 
 onMounted(async () => {
   const progress = useProgress().start();

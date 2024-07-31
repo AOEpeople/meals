@@ -53,7 +53,7 @@ const props = withDefaults(
   {
     titleDe: '',
     titleEn: '',
-    slug: null,
+    slug: undefined,
     edit: false,
     diet: Diet.MEAT
   }

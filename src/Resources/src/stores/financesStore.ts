@@ -58,7 +58,7 @@ export function useFinances() {
     const { sendFlashMessage } = useFlashMessage();
 
     const FinancesState = reactive<FinancesState>({
-        finances: undefined,
+        finances: [],
         isLoading: false,
         error: ''
     });
@@ -83,10 +83,11 @@ export function useFinances() {
         const { finances, error } = await getFinances(dateRange);
 
         if (isResponseObjectOkay(error, finances, isFinances)) {
-            FinancesState.finances = finances.value;
+            FinancesState.finances = (finances.value as Finances[]);
             FinancesState.error = '';
         } else if (
             error.value === false &&
+            finances.value !== undefined &&
             finances.value[0] !== undefined &&
             finances.value[0] !== null &&
             typeof finances.value[0].heading === 'string'

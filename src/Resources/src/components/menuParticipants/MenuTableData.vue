@@ -97,8 +97,9 @@ async function closeCombiModal(combiMeals: number[]) {
     const dishSlugs = combiMeals.map((mealId) => {
       const dishId = mealIdToDishIdDict.get(mealId);
       return dishId !== -1 && typeof dishId === 'number' ? getDishById(dishId)?.slug : null;
-    }).filter(slug => typeof slug === 'string');
-    if (dishSlugs !== null) {
+    }).filter(slug => slug !== null && slug !== undefined);
+    if (dishSlugs !== null && dishSlugs !== undefined) {
+      // @ts-ignore
       await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
     }
   }

@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { IMealWithVariations } from '@/api/getShowParticipations';
+import { type IMealWithVariations } from '@/api/getShowParticipations';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 

@@ -20,10 +20,7 @@
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="
-            // @ts-ignore
-            (dish) => titleStringRepr
-          "
+          :displayValue="(dish) => titleStringRepr"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
@@ -102,10 +99,10 @@
 
 <script setup lang="ts">
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
-import { Dish, useDishes } from '@/stores/dishesStore';
+import { type Dish, useDishes } from '@/stores/dishesStore';
 import { useWeeks } from '@/stores/weeksStore';
 import { useI18n } from 'vue-i18n';
-import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { type WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuDishVariationsCombobox from './MenuDishVariationsCombobox.vue';
@@ -131,18 +128,18 @@ const openProp = ref(false);
 const selectedVariations = ref<Dish[]>([]);
 const selectedDish = ref<Dish | null>(null);
 const loadingFinished = ref<boolean>(false);
-let unwatch: WatchStopHandle = null;
+let unwatch: WatchStopHandle;
 
 onMounted(() => {
   // set initial value for dish
-  if (props.modelValue?.length > 0) {
-    props.modelValue.forEach((dish) => {
+  if (props.modelValue?.length ?? 0 > 0) {
+    props.modelValue?.forEach((dish) => {
       if (dish.parentId === null) {
         selectedDish.value = dish;
       }
     });
     // set initial value for variations (after dish is set, otherwise the watcher empties the array)
-    props.modelValue.forEach((dish) => {
+    props.modelValue?.forEach((dish) => {
       if (dish.parentId !== null) {
         selectedVariations.value.push(dish);
       }
@@ -179,6 +176,7 @@ const value = computed({
 
 watch(selectedVariations, (newSelctedVariations, oldSelectedVariations) => {
   if (
+    selectedDish.value !== null &&
     loadingFinished.value !== null &&
     loadingFinished.value !== undefined &&
     newSelctedVariations.length !== oldSelectedVariations.length
@@ -188,14 +186,13 @@ watch(selectedVariations, (newSelctedVariations, oldSelectedVariations) => {
 });
 
 const titleStringRepr = computed(() => {
-  return value.value
-    .map((dish) => {
+  return value.value?.map((dish) => {
       if (dish !== null && dish !== undefined) {
         return locale.value === 'en' ? dish.titleEn : dish.titleDe;
       }
       return '';
     })
-    .join(', ');
+    .join(', ') ?? '';
 });
 
 function handleClick() {

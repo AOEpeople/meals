@@ -6,8 +6,8 @@ export interface CreateDishDTO {
     titleDe: string;
     titleEn: string;
     oneServingSize: boolean;
-    descriptionDe?: string;
-    descriptionEn?: string;
+    descriptionDe: string;
+    descriptionEn: string;
     category?: number;
     diet?: Diet;
 }

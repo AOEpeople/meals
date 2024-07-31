@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import type { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import ParticipantsTableData from './ParticipantsTableData.vue';
 import { computed } from 'vue';
 

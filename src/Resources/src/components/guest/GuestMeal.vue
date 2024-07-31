@@ -93,7 +93,7 @@ const mealCSS = computed(() => {
 });
 
 const participationDisplayString = computed(() => {
-  const fixedCount = Math.ceil(parseFloat(meal.value.participations.toFixed(1)));
-  return meal.value.limit > 0 ? `${fixedCount}/${meal.value.limit}` : fixedCount;
+  const fixedCount = Math.ceil(parseFloat((meal.value.participations ?? 0).toFixed(1)));
+  return (meal.value.limit ?? 0) > 0 ? `${fixedCount}/${meal.value.limit}` : fixedCount;
 });
 </script>

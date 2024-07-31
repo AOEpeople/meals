@@ -87,8 +87,8 @@ export function useCosts() {
         const { error, costs } = await getCosts();
 
         if (isResponseObjectOkay(error, costs, isCosts) === true) {
-            CostsState.columnNames = costs.value.columnNames;
-            CostsState.users = costs.value.users;
+            CostsState.columnNames = (costs.value as ICosts).columnNames;
+            CostsState.users = (costs.value as ICosts).users;
             CostsState.error = '';
         } else {
             CostsState.error = 'Error on fetching Costs';

@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { IDay, IDish } from '@/api/getMealsNextThreeDays';
+import type { IDay, IDish } from '@/api/getMealsNextThreeDays';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';

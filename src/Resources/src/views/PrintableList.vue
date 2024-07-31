@@ -160,7 +160,7 @@ const progress = useProgress().start();
 const { t, locale } = useI18n();
 
 const { listData } = usePrintableListData();
-const pdfCreator = ref(null);
+const pdfCreator = ref();
 
 const mealNames = computed(() => {
   const names: string[] = [];

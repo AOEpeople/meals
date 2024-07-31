@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import type { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 
 defineProps<{

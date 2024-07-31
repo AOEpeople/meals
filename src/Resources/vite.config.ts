@@ -72,7 +72,7 @@ export default defineConfig({
           chunkFileNames: '[name]-[hash].js',
           entryFileNames: '[name]-[hash].js',
           assetFileNames: '[name]-[hash].[ext]',
-          sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
+          sourcemapPathTransform: (relativeSourcePath) => {
             return `src/${relativeSourcePath}`;
           },
         }

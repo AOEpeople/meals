@@ -14,6 +14,7 @@
       </p>
     </div>
     <GuestDay
+      v-if="invitation"
       :class="{ 'ring-2 ring-red': mealsMissing }"
       :guestData="invitation"
     />
@@ -84,15 +85,15 @@ receive('guestChosenMeals', (slug: string) => {
   }
 });
 
-receive('guestChosenSlot', (slot) => {
+receive('guestChosenSlot', (slot: number) => {
   form.chosenSlot = slot;
 });
 
-receive('guestChosenCombi', (dishes) => {
+receive('guestChosenCombi', (dishes: string[]) => {
   form.combiDishes = dishes;
 });
 
-const date = new Date(invitation.value.date.date);
+const date = new Date(invitation.value?.date?.date ?? '');
 const localeDate = computed(() =>
   date.toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' })
 );

@@ -6,9 +6,9 @@
       :key="`${menuIndex}-${menuDayId}`"
     >
       <slot
-        v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId).meals).length > 0"
+        v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId)?.meals ?? {}).length > 0"
         name="dayMeals"
-        v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId).meals) }"
+        v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId)?.meals ?? {}) }"
       />
     </template>
   </LazyTableRow>

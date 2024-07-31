@@ -18,7 +18,7 @@
           :key="`${String(meal.id)}.${String(mealIndex)}`"
           class="border-b-2 border-r-2 border-solid border-gray-200 p-2 text-center"
         >
-          <span>{{ countBookedMeal(dayId, mealIdToDishIdDict.get(meal.id)) }}</span>
+          <span>{{ countBookedMeal(dayId, mealIdToDishIdDict.get(meal.id) ?? -1) }}</span>
         </td>
       </template>
     </MenuTableRow>

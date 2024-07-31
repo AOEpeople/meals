@@ -34,8 +34,8 @@
       class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:flex-row min-[380px]:items-center"
     >
       <ParticipationCounter
-        :limit="variation.limit"
-        :mealCSS="mealCSS.get(String(variationID))"
+        :limit="variation.limit ?? 0"
+        :mealCSS="mealCSS.get(String(variationID)) ?? ''"
       >
         {{ getParticipationDisplayString(variation) }}
       </ParticipationCounter>
@@ -69,7 +69,7 @@ const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? prop
 
 const mealCSS = computed(() => {
   const css: Map<string, string> = new Map();
-  for (const [variationId, variation] of Object.entries(props.meal.variations)) {
+  for (const [variationId, variation] of Object.entries(props.meal.variations ?? {})) {
     let cssStr = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
     switch (generateMealState(variation as Meal)) {
       case (MealState.OFFERABLE, MealState.DISABLED):
@@ -88,6 +88,6 @@ const mealCSS = computed(() => {
 
 const getParticipationDisplayString = (variation: Meal) => {
   const fixedCount = Math.ceil(parseFloat((variation.participations ?? 0).toFixed(1)));
-  return variation.limit > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
+  return (variation.limit ?? 0) > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
 };
 </script>

@@ -9,32 +9,36 @@
   ],
   "compilerOptions": {
     "allowJs": false,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
     "composite": true,
     "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
+    "lib": ["ES2022"],
     "noEmit": true,
+    "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
+    "module": "ES2022",
     "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2020",
+    "target": "ES2022",
     "types": ["node"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "useDefineForClassFields": true
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "ESNext",
-      "moduleResolution": "Node"
+      "module": "ES2022",
+      "moduleResolution": "Node10"
     }
   }
 }

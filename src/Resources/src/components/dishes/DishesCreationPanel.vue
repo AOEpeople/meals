@@ -82,9 +82,9 @@ const props = withDefaults(
   defineProps<{
     titleDe?: string;
     titleEn?: string;
-    descriptionDe?: string | null;
-    descriptionEn?: string | null;
-    categoryId?: number | null;
+    descriptionDe?: string;
+    descriptionEn?: string;
+    categoryId?: number;
     oneSizeServing?: boolean;
     diet?: Diet;
     dishId?: number | null;
@@ -93,9 +93,9 @@ const props = withDefaults(
   {
     titleDe: '',
     titleEn: '',
-    descriptionDe: null,
-    descriptionEn: null,
-    categoryId: null,
+    descriptionDe: '',
+    descriptionEn: '',
+    categoryId: undefined,
     oneSizeServing: false,
     diet: Diet.MEAT,
     dishId: null,
@@ -133,13 +133,15 @@ const dishInput = reactive<CreateDishDTO>({
   descriptionEn: props.descriptionEn,
   oneServingSize: props.oneSizeServing,
   diet: props.diet,
-  category: null
+  category: undefined
 });
 
 watch(
-  () => categoryDropDown.value?.selectedCategory.id,
+  () => categoryDropDown.value?.selectedCategory?.id,
   () => {
-    dishInput.category = categoryDropDown.value?.selectedCategory.id;
+    if (categoryDropDown.value?.selectedCategory?.id !== undefined) {
+      dishInput.category = categoryDropDown.value.selectedCategory.id;
+    }
   }
 );
 
@@ -155,7 +157,7 @@ async function onSubmit() {
   if (dishInput.titleDe === '' || dishInput.titleEn === '') {
     return;
   }
-  if (props.edit === true) {
+  if (props.edit === true && props.dishId !== null) {
     await updateDish(props.dishId, dishInput);
   } else {
     await createDish(dishInput);

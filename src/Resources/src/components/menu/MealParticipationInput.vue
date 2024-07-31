@@ -1,7 +1,7 @@
 <template>
   <label class="flex flex-row">
     <span class="w-[70%] self-center truncate text-left text-xs font-medium text-[#173D7A]">
-      {{ locale === 'en' ? getDishBySlug(meal.dishSlug)?.titleEn : getDishBySlug(meal.dishSlug)?.titleDe }}
+      {{ locale === 'en' ? getDishBySlug(meal.dishSlug ?? '')?.titleEn : getDishBySlug(meal.dishSlug ?? '')?.titleDe }}
     </span>
     <input
       v-model.number="meal.participationLimit"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { MealDTO } from '@/interfaces/DayDTO';
+import { type MealDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
 

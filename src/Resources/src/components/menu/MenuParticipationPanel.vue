@@ -11,7 +11,7 @@
     </div>
     <MealParticipationInput
       v-for="meal in mealList"
-      :key="meal.dishSlug"
+      :key="meal.dishSlug ?? ''"
       :meal="meal"
       class="max-w-[300px] px-2"
     />

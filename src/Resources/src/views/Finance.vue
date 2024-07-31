@@ -37,7 +37,7 @@ import PdfCreator from '@/components/pdfCreator/PdfCreator.vue';
 const { fetchFinances, FinancesState } = useFinances();
 const loaded = ref(false);
 
-const pdfCreator = ref(null);
+const pdfCreator = ref();
 
 onMounted(async () => {
   await fetchFinances();

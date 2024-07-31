@@ -133,7 +133,10 @@ async function handleSubmit() {
     await updateWeek(menu);
     setUpDaysAndEnabled();
   } else {
-    const weekId = await createWeek(getWeekByCalendarWeek(calendarWeek.value).year, calendarWeek.value, menu);
+    const week = getWeekByCalendarWeek(calendarWeek.value);
+    if (week === undefined) return;
+
+    const weekId = await createWeek(week.year, calendarWeek.value, menu);
     if (typeof weekId === 'number') {
       parseWeekId.value = weekId;
       await router.push({ name: 'Menu', params: { week: weekId, create: null }, force: true, replace: true });
@@ -148,7 +151,7 @@ async function setUpDaysAndEnabled() {
     props.create === null || props.create !== 'create'
       ? getWeekById(parseWeekId.value)
       : getWeekByCalendarWeek(parseWeekId.value);
-  const dayKeys = Object.keys(week.days);
+  const dayKeys = Object.keys(week?.days ?? {});
   menu.days = dayKeys.map((dayId) => {
     if (props.create === null || props.create !== 'create') {
       return getMenuDay(dayId, menu.id);
@@ -156,7 +159,7 @@ async function setUpDaysAndEnabled() {
       return getMenuDay(dayId, null, parseWeekId.value);
     }
   });
-  menu.enabled = week.enabled;
-  calendarWeek.value = week.calendarWeek;
+  menu.enabled = week?.enabled ?? false;
+  calendarWeek.value = week?.calendarWeek ?? -1;
 }
 </script>

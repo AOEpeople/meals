@@ -33,10 +33,6 @@ class Day extends AbstractMessage implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'day', targetEntity: Meal::class, cascade: ['all'])]
     private Collection $meals;
 
-    // #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
-    // #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
-    // private ?EventParticipation $event = null;
-
     /**
      * @var Collection<int, EventParticipation>
      */
@@ -86,23 +82,24 @@ class Day extends AbstractMessage implements JsonSerializable
     }
     public function getEvents(): EventCollection
     {
-        if (false === ($this->events instanceof Collection)) {
+        if ($this->events instanceof Collection) {
             $this->events = new EventCollection();
         }
 
         return new EventCollection($this->events->toArray());
     }
 
+
     public function getEvent(Day $day, int $id):EventParticipation | null{
         foreach ($this->getEvents() as $event) {
-            if($event->getId() === $id && $event->getDay() == $day){
+            if($event->getId() === $id && $event->getDay() === $day){
                 return $event;
             }
     }
         return null;
     }
 
-    public function setEvent(EventParticipation $event){
+    public function addEvent(EventParticipation $event){
         $this->events->add($event);
     }
 
@@ -192,10 +189,12 @@ class Day extends AbstractMessage implements JsonSerializable
             }
         }
         foreach ($this->getEvents() as $event) {
-            if(null !== $event){
-                $event->jsonSerialize();
+            if ($event !== null && $event instanceof EventParticipation) {
+                $eventId = $event->getId();
+                if (isset($eventId)) {
+                    $events[$eventId] = $event->jsonSerialize();
+                }
             }
-
         }
 
         return [

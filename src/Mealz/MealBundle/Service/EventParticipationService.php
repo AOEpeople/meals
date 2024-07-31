@@ -170,7 +170,7 @@ final class EventParticipationService
         // new eventparticipation
         if (null !== $event && null === $day->getEvents()) {
             $eventParticipation = new EventParticipation($day, $event);
-            $day->setEvent($eventParticipation);
+            $day->addEvent($eventParticipation);
         }
     }
 

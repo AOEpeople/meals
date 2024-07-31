@@ -169,7 +169,7 @@ watch(selectedDishTwo, () => {
 
 watch(selectedEventOne, () => {
   try{
-    const firstKey = Object.keys(props.modelValue.events)[0];
+    const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value.id;
     if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
     selectedDishes.value.events[firstKey] = [{
       eventId: selectedEventOne.value.id,
@@ -187,7 +187,7 @@ watch(selectedEventOne, () => {
 
 watch(selectedEventTwo, () => {
   try{
-  const secondKey = Object.keys(props.modelValue.events)[1];
+  const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value.id;;
   if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
     selectedDishes.value.events[secondKey] = [{
       eventId: selectedEventTwo.value.id,

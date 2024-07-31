@@ -132,15 +132,15 @@ final class ApiService
      *
      * @psalm-return array{name: string, participants: array}|null
      */
-    public function getEventParticipationInfo(Day $day): ?array
+    public function getEventParticipationInfo(Day $day, Int $eventId): ?array
     {
         if (null === $day->getEvents()) {
             return null;
         }
 
         return [
-            'name' => $day->getEvents()->getEvent()->getTitle(),
-            'participants' => $this->getEventParticipants($day),
+            'name' => $day->getEvent($day, $eventId)->getEvent()->getTitle(),
+            'participants' => $this->getEventParticipants($day, $eventId),
         ];
     }
 
@@ -166,8 +166,17 @@ final class ApiService
         return $hasReachedLimit;
     }
 
-    private function getEventParticipants(Day $day): array
+    public function isMealOpen(Meal $meal): bool
     {
-        return $this->eventPartSrv->getParticipants($day);
+        return false === $meal->isLocked()
+            && true === $meal->isOpen()
+            && false === $meal->hasReachedParticipationLimit()
+            && (false === $meal->isCombinedMeal()
+            || false === $this->hasCombiReachedLimit($meal->getDay()));
+    }
+
+    private function getEventParticipants(Day $day, Int $eventId): array
+    {
+        return $this->eventPartSrv->getParticipants($day, $eventId);
     }
 }

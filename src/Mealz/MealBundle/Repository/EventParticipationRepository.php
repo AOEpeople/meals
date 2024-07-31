@@ -37,4 +37,18 @@ final class EventParticipationRepository extends BaseRepository implements Event
 
         return count($result) ? $result[0] : null;
     }
+    public function findByEventIdAndDay(Day $day, int $eventId): ?EventParticipation
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+
+        // WHERE
+        $queryBuilder->andWhere('m.day = :day');
+        $queryBuilder->andWhere('m.event = :event');
+        $queryBuilder->setParameter('day', $day->getId());
+        $queryBuilder->setParameter('event', $eventId);
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return count($result) ? $result[0] : null;
+    }
 }

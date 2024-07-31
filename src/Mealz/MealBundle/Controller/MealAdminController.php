@@ -3,6 +3,8 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
@@ -24,6 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Psr\Log\LoggerInterface;
 
 #[IsGranted('ROLE_KITCHEN_STAFF')]
 class MealAdminController extends BaseController
@@ -37,7 +40,8 @@ class MealAdminController extends BaseController
         private readonly DayService $dayService,
         private readonly DishService $dishService,
         private readonly EntityManagerInterface $em,
-        private readonly MealAdminHelper $mealAdminHelper
+        private readonly MealAdminHelper $mealAdminHelper,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -141,7 +145,6 @@ class MealAdminController extends BaseController
         ) {
             return new JsonResponse(['message' => '101: invalid json'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
         $days = $data['days'];
         $week->setEnabled($data['enabled']);
 
@@ -199,10 +202,14 @@ class MealAdminController extends BaseController
         if (null !== $day['enabled']) {
             $dayEntity->setEnabled($day['enabled']);
         }
-
         $this->setLockParticipationForDay($dayEntity, $day);
-        $mealCollection = $day['meals'];
+
         $eventCollection = $day['events'];
+        foreach ($eventCollection as $event) {
+            $this->handleEventArr($event, $dayEntity);
+        }
+
+        $mealCollection = $day['meals'];
         /*
          * 3 Meals are comprised of 2 main meals and a potential combined meal.
          * The combined meal is also in the collection, because meals that are
@@ -233,9 +240,9 @@ class MealAdminController extends BaseController
 
         $this->setLockParticipationForDay($day, $dayData);
 
-        $eventCollection = $day['events'];
-        foreach($eventCollection as $event){
-            $this->mealAdminHelper->handleEventParticipation($day, $event);
+        $eventCollection = $dayData['events'];
+        foreach($eventCollection as $eventArr){
+            $this->handleEventArr($eventArr, $day);
         }
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed
@@ -278,6 +285,21 @@ class MealAdminController extends BaseController
             } else {
                 $this->modifyMeal($meal, $dishEntity, $dayEntity);
             }
+        }
+    }
+    private function handleEventArr(array $eventArr, Day $day): void{
+        $this->logger->info('Handle Event Arr');
+            foreach($eventArr as $event){
+                    $this->addEvent($event, $day);
+            }
+    }
+    private function addEvent(array $event, Day $dayEntity){
+        $this->logger->info('addEvent');
+        $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
+        $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
+        if(!$eventExistsForDayAlready){
+            $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
+            $dayEntity->addEvent($eventParticipationEntity);
         }
     }
 

@@ -25,7 +25,7 @@ class EventParticipation
     #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
     private Day $day;
 
-    #[ORM\ManyToOne(targetEntity: Event::class)]
+    #[ORM\ManyToOne(targetEntity: Event::class, cascade: ["persist"])]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private Event $event;
 

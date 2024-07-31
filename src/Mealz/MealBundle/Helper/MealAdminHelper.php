@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Helper;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\EventParticipation;
+use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Repository\EventRepository;
+use App\Mealz\MealBundle\Repository\EventParticipationRepository;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 
 class MealAdminHelper
 {
-    private EventParticipationService $eventService;
-
     public function __construct(
-        EventParticipationService $eventService
-    ) {
-        $this->eventService = $eventService;
-    }
+        private readonly EventParticipationService $eventService,
+        private readonly EventRepository $eventRepository,
+        private readonly EventParticipationRepository $eventParticipationRepository
+    ) {}
 
     public function setParticipationLimit(Meal $mealEntity, array $meal): void
     {
@@ -31,9 +31,15 @@ class MealAdminHelper
             $mealEntity->setParticipationLimit(0);
         }
     }
-
-    public function handleEventParticipation(Day $day, EventParticipation $event): void
+    public function findEvent(int $eventId): Event
     {
-        $this->eventService->handleEventParticipation($day, $event);
+        return $this->eventRepository->find($eventId);
+    }
+    public function checkIfEventExistsForDay(int $eventId, Day $day): bool
+    {
+        if($this->eventParticipationRepository->findByEventIdAndDay($day, $eventId)){
+            return true;
+        }
+        return false;
     }
 }

@@ -78,7 +78,7 @@ export function useEvents() {
 
         const { error, events } = await getEvents();
         if (isResponseArrayOkay<Event>(error, events, isEvent) === true) {
-            EventsState.events = events.value;
+            EventsState.events = events.value as Event[];
             EventsState.error = '';
         } else {
             EventsState.error = 'Error on fetching events';
@@ -98,7 +98,7 @@ export function useEvents() {
         const { error, response } = await postCreateEvent(title, isPublic);
 
         if (error.value === true || isMessage(response.value) === true) {
-            EventsState.error = response.value?.message;
+            EventsState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -124,10 +124,12 @@ export function useEvents() {
             EventsState.error = (response.value as IMessage)?.message;
         } else if (error.value === false && isEvent(response.value as Event)) {
             const event = getEventBySlug(slug);
-            event.public = (response.value as Event).public;
-            event.title = (response.value as Event).title;
-            event.slug = (response.value as Event).slug;
-            event.id = (response.value as Event).id;
+            if (event !== undefined) {
+                event.public = (response.value as Event).public;
+                event.title = (response.value as Event).title;
+                event.slug = (response.value as Event).slug;
+                event.id = (response.value as Event).id;
+            }
 
             EventsState.error = '';
             sendFlashMessage({

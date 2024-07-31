@@ -27,7 +27,7 @@ export function useParticipationsListData(date: string) {
             await request();
             loaded.value = true;
 
-            listDataState.value = listData.value;
+            listDataState.value = listData.value as string[];
         }
     }
     return {

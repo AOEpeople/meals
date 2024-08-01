@@ -92,7 +92,7 @@ export function useAccounting() {
         const { error, transactions } = await getTransactionHistory();
 
         if (isResponseObjectOkay(error, transactions, isTransactionHistory) === true) {
-            TransactionState.transactions = (transactions.value as ITransactionHistory);
+            TransactionState.transactions = transactions.value as ITransactionHistory;
             TransactionState.error = '';
         } else {
             TransactionState.error = 'Error on fetching the transaction history';

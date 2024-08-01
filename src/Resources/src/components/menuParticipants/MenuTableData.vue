@@ -94,13 +94,14 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
 async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
   if (combiMeals !== undefined && combiMeals.length === 2) {
-    const dishSlugs = combiMeals.map((mealId) => {
-      const dishId = mealIdToDishIdDict.get(mealId);
-      return dishId !== -1 && typeof dishId === 'number' ? getDishById(dishId)?.slug : null;
-    }).filter(slug => slug !== null && slug !== undefined);
+    const dishSlugs = combiMeals
+      .map((mealId) => {
+        const dishId = mealIdToDishIdDict.get(mealId);
+        return dishId !== -1 && typeof dishId === 'number' ? getDishById(dishId)?.slug : null;
+      })
+      .filter((slug) => slug !== null && slug !== undefined);
     if (dishSlugs !== null && dishSlugs !== undefined) {
-      // @ts-ignore
-      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
+      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs as string[]);
     }
   }
 }

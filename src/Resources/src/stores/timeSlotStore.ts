@@ -93,7 +93,7 @@ export function useTimeSlots() {
         const { updateSlotEnabled } = useUpdateSlot();
 
         if (TimeSlotState.timeSlots[id].slug === undefined) return;
-        const { error, response } = await updateSlotEnabled((TimeSlotState.timeSlots[id].slug as string), state);
+        const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug as string, state);
 
         if (
             isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true &&
@@ -120,7 +120,7 @@ export function useTimeSlots() {
         const { error, response } = await updateTimeSlot(slot);
 
         if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true) {
-            updateTimeSlotState((response.value as TimeSlot), id);
+            updateTimeSlotState(response.value as TimeSlot, id);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'timeslot.updated'

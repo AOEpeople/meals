@@ -185,13 +185,16 @@ watch(selectedVariations, (newSelctedVariations, oldSelectedVariations) => {
 });
 
 const titleStringRepr = computed(() => {
-  return value.value?.map((dish) => {
-      if (dish !== null && dish !== undefined) {
-        return locale.value === 'en' ? dish.titleEn : dish.titleDe;
-      }
-      return '';
-    })
-    .join(', ') ?? '';
+  return (
+    value.value
+      ?.map((dish) => {
+        if (dish !== null && dish !== undefined) {
+          return locale.value === 'en' ? dish.titleEn : dish.titleDe;
+        }
+        return '';
+      })
+      .join(', ') ?? ''
+  );
 });
 
 function handleClick() {

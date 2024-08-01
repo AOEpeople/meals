@@ -21,7 +21,7 @@
     <table :class="'w-full scroll-m-0.5 overflow-y-scroll'">
       <tbody>
         <template
-          v-for="participant in filteredParticipants"
+          v-for="(participant, index) in filteredParticipants"
           :key="index"
         >
           <tr :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']">

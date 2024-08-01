@@ -68,6 +68,7 @@ import { type Day, type Meal } from '@/api/getDashboardData';
 import { useDishes } from '@/stores/dishesStore';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
+import { MealState } from '@/enums/MealState';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -84,7 +85,9 @@ const { getCombiDishes } = useDishes();
 
 const title = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de));
 
-const description = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.description?.en : meal.description?.de));
+const description = computed(() =>
+  locale.value.substring(0, 2) === 'en' ? meal.description?.en : meal.description?.de
+);
 const combiDescription = ref<string[]>([]);
 
 onMounted(async () => {
@@ -101,15 +104,13 @@ watch(
 const mealCSS = computed(() => {
   let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
   switch (meal.mealState) {
-    case 'disabled':
-    case 'offerable':
+    case (MealState.DISABLED, MealState.OFFERABLE):
       css += 'bg-[#80909F]';
       return css;
-    case 'open':
+    case MealState.OPEN:
       css += 'bg-primary-4';
       return css;
-    case 'tradeable':
-    case 'offering':
+    case (MealState.TRADEABLE, MealState.OFFERING):
       css += 'bg-highlight';
       return css;
     default:

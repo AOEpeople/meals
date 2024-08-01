@@ -58,7 +58,8 @@ onMounted(async () => {
     });
 
     if (paypal && paypal.Buttons) {
-      paypal.Buttons({
+      paypal
+        .Buttons({
           onInit: function (_data, actions) {
             periodicFetchActive.value = true;
             if (amountFieldValue.value > 0.0) {

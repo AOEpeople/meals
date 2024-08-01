@@ -96,20 +96,21 @@ const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, prop
 const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? meal?.title.en : meal?.title.de));
 
 const mealCSS = computed(() => {
-  const css : Map<string, string> = new Map();
-  for (const variation of Object.values(meal?.variations ?? {})) {
+  const css: Map<string, string> = new Map();
+  for (const [variationId, variation] of Object.entries(meal?.variations ?? {})) {
     let cssStr = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
     switch (variation.mealState) {
-      case MealState.DISABLED, MealState.OFFERABLE:
+      case (MealState.DISABLED, MealState.OFFERABLE):
         cssStr += 'bg-[#80909F]';
         break;
       case MealState.OPEN:
         cssStr += 'bg-primary-4';
         break;
-      case MealState.TRADEABLE, MealState.OFFERING:
+      case (MealState.TRADEABLE, MealState.OFFERING):
         cssStr += 'bg-highlight';
         break;
     }
+    css.set(variationId, cssStr);
   }
   return css;
 });

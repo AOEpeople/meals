@@ -1,8 +1,5 @@
 <template>
-  <div>
-    not allowed
-  </div>
+  <div>not allowed</div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>

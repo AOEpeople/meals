@@ -62,7 +62,7 @@ const props = withDefaults(
     dish: Dish;
   }>(),
   {
-    modelValue: null,
+    modelValue: null
   }
 );
 

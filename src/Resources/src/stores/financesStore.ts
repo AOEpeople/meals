@@ -83,7 +83,7 @@ export function useFinances() {
         const { finances, error } = await getFinances(dateRange);
 
         if (isResponseObjectOkay(error, finances, isFinances)) {
-            FinancesState.finances = (finances.value as Finances[]);
+            FinancesState.finances = finances.value as Finances[];
             FinancesState.error = '';
         } else if (
             error.value === false &&

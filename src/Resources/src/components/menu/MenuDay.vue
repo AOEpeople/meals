@@ -9,7 +9,7 @@
         :translate-x-min="'0%'"
         :translate-x-max="'-5%'"
       >
-        <template>
+        <template #button>
           <UserIcon
             class="row-start-1 size-5 cursor-pointer"
             :class="participationLimitNotZero ? 'text-highlight' : 'text-white'"
@@ -121,7 +121,11 @@ const selectedDishes = computed({
 
 const isStandardLockDate = computed(() => {
   const dayIds = props.lockDates !== null && props.lockDates !== undefined ? Object.keys(props.lockDates) : [];
-  if (props.lockDates !== null && dayIds.length > 0 && dayIds.map((id) => String(id)).includes(String(props.modelValue.id))) {
+  if (
+    props.lockDates !== null &&
+    dayIds.length > 0 &&
+    dayIds.map((id) => String(id)).includes(String(props.modelValue.id))
+  ) {
     return props.lockDates[props.modelValue.id].date === props.modelValue.lockDate.date;
   }
   return true;
@@ -168,10 +172,14 @@ watch(selectedEvent, () => {
 onMounted(() => {
   // get mealKeys
   selectedDishOne.value = getDishArrayBySlugs(
-    props.modelValue.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.dishSlug).filter(slug => slug !== null) as string[]
+    props.modelValue.meals[mealKeys.value[0]]
+      .map((meal: MealDTO) => meal.dishSlug)
+      .filter((slug) => slug !== null) as string[]
   );
   selectedDishTwo.value = getDishArrayBySlugs(
-    props.modelValue.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.dishSlug).filter(slug => slug !== null) as string[]
+    props.modelValue.meals[mealKeys.value[1]]
+      .map((meal: MealDTO) => meal.dishSlug)
+      .filter((slug) => slug !== null) as string[]
   );
 
   // set Event from modelValue to be the initial value of the selectedEvent

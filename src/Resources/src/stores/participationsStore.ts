@@ -93,7 +93,7 @@ export function useParticipations(weekId: number) {
         const { error, participations } = await getParticipations(weekId);
 
         if (isResponseObjectOkay<IMenuParticipationDays>(error, participations, isMenuParticipation) === true) {
-            menuParticipationsState.days = (participations.value as IMenuParticipationDays);
+            menuParticipationsState.days = participations.value as IMenuParticipationDays;
             menuParticipationsState.error = '';
         } else {
             menuParticipationsState.error = 'Error on getting the participations';

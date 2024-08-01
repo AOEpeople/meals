@@ -123,10 +123,10 @@ const props = defineProps<{
 
 const day = dashboardStore.getDay(props.weekID ?? -1, props.dayID ?? -1);
 const weekday = computed(() => {
-  if (day !== undefined)  {
-    return translateWeekday(day.date, locale)
+  if (day !== undefined) {
+    return translateWeekday(day.date, locale);
   }
-  return 'unknown'
+  return 'unknown';
 });
 const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
 const isEventDay = day?.event !== null;

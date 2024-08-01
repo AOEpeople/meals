@@ -73,7 +73,7 @@ export function useCategories() {
         const { categories, error } = await getCategoriesData();
 
         if (isResponseArrayOkay<Category>(error, categories, isCategory) === true) {
-            CategoriesState.categories = (categories.value as Category[]);
+            CategoriesState.categories = categories.value as Category[];
             CategoriesState.error = '';
         } else {
             setTimeout(fetchCategories, TIMEOUT_PERIOD);

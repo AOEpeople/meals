@@ -12,6 +12,7 @@ node_modules
 !.dockerignore
 !.env
 !.env.test
+!.eslintrc.cjs
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json

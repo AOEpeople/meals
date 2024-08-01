@@ -16,9 +16,12 @@
           class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
         >
           {{
-            new Date(getDayByWeekIdAndDayId(weekId, menuDayId)?.dateTime?.date ?? Date.now()).toLocaleDateString(locale, {
-              weekday: 'long'
-            })
+            new Date(getDayByWeekIdAndDayId(weekId, menuDayId)?.dateTime?.date ?? Date.now()).toLocaleDateString(
+              locale,
+              {
+                weekday: 'long'
+              }
+            )
           }}
         </th>
       </template>

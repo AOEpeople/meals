@@ -118,7 +118,7 @@ export function useWeeks() {
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
         if (isResponseArrayOkay<Week>(error, weeks, isWeek) === true) {
-            WeeksState.weeks = (weeks.value as Week[]);
+            WeeksState.weeks = weeks.value as Week[];
             WeeksState.error = '';
         } else {
             setTimeout(fetchWeeks, TIMEOUT_PERIOD);
@@ -232,7 +232,7 @@ export function useWeeks() {
             weekId === null && calendarWeek !== undefined && calendarWeek !== null
                 ? getWeekByCalendarWeek(calendarWeek)
                 : getWeekById(weekId as number);
-        const day = getDayById((week as Week), dayId);
+        const day = getDayById(week as Week, dayId);
 
         const menuDay: DayDTO = {
             meals: {},

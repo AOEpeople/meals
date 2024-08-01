@@ -18,9 +18,9 @@
         </template>
         <template #panel="{ close }">
           <SlotCreationPanel
+            :id="undefined"
             :header="t('slot.createHeader')"
             :submit="t('slot.submit')"
-            :id="undefined"
             @closePanel="close()"
           />
         </template>

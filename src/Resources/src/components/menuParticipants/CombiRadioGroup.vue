@@ -15,7 +15,9 @@
         :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#f4f7f9]'"
       >
         <span class="grow self-start justify-self-center text-primary">
-          {{ locale === 'en' ? getDishBySlug(meal.dishSlug ?? '')?.titleEn : getDishBySlug(meal.dishSlug ?? '')?.titleDe }}
+          {{
+            locale === 'en' ? getDishBySlug(meal.dishSlug ?? '')?.titleEn : getDishBySlug(meal.dishSlug ?? '')?.titleDe
+          }}
         </span>
         <CheckCircleIcon
           v-if="checked === true"

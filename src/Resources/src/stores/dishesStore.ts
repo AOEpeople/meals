@@ -125,7 +125,7 @@ export function useDishes() {
 
         const { dishes, error } = await getDishes();
         if (isResponseArrayOkay<Dish>(error, dishes, isDish) === true) {
-            DishesState.dishes = (dishes.value as Dish[]);
+            DishesState.dishes = dishes.value as Dish[];
             DishesState.error = '';
         } else {
             DishesState.error = 'Error on fetching dishes';
@@ -359,7 +359,9 @@ export function useDishes() {
      * @param slugs The slugs of the dishes to return
      */
     function getDishArrayBySlugs(slugs: string[]) {
-        const dishesFromSlugs: Dish[] = slugs.map((slug) => getDishBySlug(slug)).filter(dish => dish !== null && dish !== undefined) as Dish[];
+        const dishesFromSlugs: Dish[] = slugs
+            .map((slug) => getDishBySlug(slug))
+            .filter((dish) => dish !== null && dish !== undefined) as Dish[];
 
         const dishesWithParent: Dish[] = [];
 

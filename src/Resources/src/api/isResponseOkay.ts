@@ -7,7 +7,11 @@ import { type Ref } from 'vue';
  * @param response      Ref with the response object from the API call
  * @param typeChecker   Callback function to check the type of the response object
  */
-export function isResponseObjectOkay<T>(error: Ref<boolean>, response: Ref<T | undefined>, typeChecker?: (arg: T) => boolean) {
+export function isResponseObjectOkay<T>(
+    error: Ref<boolean>,
+    response: Ref<T | undefined>,
+    typeChecker?: (arg: T) => boolean
+) {
     return (
         error.value === false &&
         response.value !== null &&
@@ -23,7 +27,11 @@ export function isResponseObjectOkay<T>(error: Ref<boolean>, response: Ref<T | u
  * @param response      Ref with the response array from the API call
  * @param typeChecker   Callback function to check the type of the response array
  */
-export function isResponseArrayOkay<T>(error: Ref<boolean>, response: Ref<T[] | undefined>, typeChecker?: (arg: T) => boolean) {
+export function isResponseArrayOkay<T>(
+    error: Ref<boolean>,
+    response: Ref<T[] | undefined>,
+    typeChecker?: (arg: T) => boolean
+) {
     return (
         error.value === false &&
         response.value !== null &&

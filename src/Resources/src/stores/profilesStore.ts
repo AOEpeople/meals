@@ -79,7 +79,7 @@ export function useProfiles(weekId: number) {
 
         if (error.value === true && isMessage(profile) === true) {
             ProfilesState.error = (profile.value as IMessage).message;
-        } else if (isResponseObjectOkay(error, (profile as Ref<IProfile>), isProfile)) {
+        } else if (isResponseObjectOkay(error, profile as Ref<IProfile>, isProfile)) {
             return profile.value as IProfile;
         }
 

@@ -5,7 +5,7 @@
       :translate-x-min="'-5%'"
       :translate-x-max="'-5%'"
     >
-      <template>
+      <template #button>
         <ActionButton
           :action="Action.CREATE"
           :btn-text="t('dish.popover.variation.new')"
@@ -24,7 +24,7 @@
       :translate-x-min="'-5%'"
       :translate-x-max="'-5%'"
     >
-      <template>
+      <template #button>
         <ActionButton
           :action="Action.EDIT"
           :btn-text="t('button.edit')"

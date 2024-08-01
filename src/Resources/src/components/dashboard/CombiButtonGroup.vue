@@ -57,10 +57,10 @@ import { dashboardStore } from '@/stores/dashboardStore';
 import { type Meal } from '@/api/getDashboardData';
 
 interface DishInfo {
-  id: string | number,
-  title: string,
-  description: string,
-  slug: string
+  id: string | number;
+  title: string;
+  description: string;
+  slug: string;
 }
 
 const props = defineProps<{

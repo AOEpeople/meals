@@ -1,9 +1,9 @@
 import { useTimeSlots } from '@/stores/timeSlotStore';
-import { beforeEach, describe } from '@jest/globals';
 import { ref } from 'vue';
 import updatedSlot from '../fixtures/updatedSlot.json';
 import timeSlots from '../fixtures/getTimeSlots.json';
 import useApi from '@/api/api';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));

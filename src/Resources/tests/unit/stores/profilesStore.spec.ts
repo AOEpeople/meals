@@ -3,6 +3,7 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 import Profiles from '../fixtures/abstaining.json';
 import HashedProfile from '../fixtures/hashProfile.json';
+import { describe, it, expect, vi } from 'vitest';
 
 const WEEK_ID = 123;
 
@@ -28,7 +29,7 @@ const getMockedResponses = (method: string, url: string) => {
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+useApi = vi.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test profilesStore', () => {
     it('should not contain data before fetching', () => {

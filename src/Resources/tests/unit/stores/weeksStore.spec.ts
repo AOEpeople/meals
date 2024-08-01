@@ -3,6 +3,7 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 import Weeks from '../fixtures/getWeeks.json';
 import DishesCount from '../fixtures/dishesCount.json';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));

@@ -1,5 +1,6 @@
 import { DateTime } from '@/api/getDashboardData';
 import { translateWeekday, translateWeekdayWithoutRef, translateMonth } from '@/tools/localeHelper';
+import { describe, beforeAll, afterAll, it, expect, vi } from 'vitest';
 import { computed, ref } from 'vue';
 
 const dateTime: DateTime = {
@@ -20,12 +21,12 @@ const computedLocale = computed({
 
 describe('Test localeHelper', () => {
     beforeAll(() => {
-        jest.useFakeTimers();
-        jest.setSystemTime(new Date(2023, 3, 15));
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(2023, 3, 15));
     });
 
     afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('should return the correct weekday representation', () => {

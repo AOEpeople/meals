@@ -56,6 +56,13 @@ import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } 
 import { dashboardStore } from '@/stores/dashboardStore';
 import { type Meal } from '@/api/getDashboardData';
 
+interface DishInfo {
+  id: string | number,
+  title: string,
+  description: string,
+  slug: string
+}
+
 const props = defineProps<{
   weekID: number | string;
   dayID: number | string;
@@ -63,28 +70,28 @@ const props = defineProps<{
   meal: Meal;
 }>();
 
-const meal = props.meal !== undefined ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
+const meal = props.meal ?? dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
 const emit = defineEmits(['addEntry', 'removeEntry']);
 const selected = ref();
-let dishes = [];
+let dishes: DishInfo[] = [];
 let oldSlug = '';
 
 if (meal.variations) {
   for (const variationID in meal.variations) {
     dishes.push({
-      id: variationID,
+      id: parseInt(String(variationID)),
       title: meal.title.en,
       description: meal.variations[variationID].title.en,
-      slug: meal.variations[variationID].dishSlug
+      slug: meal.variations[variationID].dishSlug ?? ''
     });
   }
   selected.value = dishes[0];
 } else {
   dishes.push({
-    id: props.mealID,
+    id: parseInt(String(props.mealID)),
     title: meal.title.en,
-    description: meal.description.en,
-    slug: meal.dishSlug
+    description: meal.description?.en ?? '',
+    slug: meal.dishSlug ?? ''
   });
   selected.value = meal.dishSlug;
   emit('addEntry', meal.dishSlug);

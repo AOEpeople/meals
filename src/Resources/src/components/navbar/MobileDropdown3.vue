@@ -112,7 +112,7 @@ import { MenuItems, MenuItem } from '@headlessui/vue';
 import { CurrencyEuroIcon } from '@heroicons/vue/outline';
 import { useI18n } from 'vue-i18n';
 import Icons from '../misc/Icons.vue';
-import { INavigation } from '@/interfaces/INavigation';
+import { type INavigation } from '@/interfaces/INavigation';
 
 const { t, locale } = useI18n();
 

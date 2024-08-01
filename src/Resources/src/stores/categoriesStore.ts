@@ -3,7 +3,7 @@ import getCategoriesData from '@/api/getCategoriesData';
 import deleteCategory from '@/api/deleteCategory';
 import postCreateCategory from '@/api/postCreateCategory';
 import putCategoryUpdate from '@/api/putCategoryUpdate';
-import { isMessage } from '@/interfaces/IMessage';
+import { isMessage, type IMessage } from '@/interfaces/IMessage';
 import { isResponseObjectOkay, isResponseArrayOkay } from '@/api/isResponseOkay';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
@@ -73,7 +73,7 @@ export function useCategories() {
         const { categories, error } = await getCategoriesData();
 
         if (isResponseArrayOkay<Category>(error, categories, isCategory) === true) {
-            CategoriesState.categories = categories.value;
+            CategoriesState.categories = (categories.value as Category[]);
             CategoriesState.error = '';
         } else {
             setTimeout(fetchCategories, TIMEOUT_PERIOD);
@@ -89,7 +89,7 @@ export function useCategories() {
         const { error, response } = await deleteCategory(slug);
 
         if (error.value === true || isMessage(response.value) === true) {
-            CategoriesState.error = response.value?.message;
+            CategoriesState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -108,7 +108,7 @@ export function useCategories() {
         const { error, response } = await postCreateCategory(newCategory);
 
         if (error.value === true || isMessage(response.value) === true) {
-            CategoriesState.error = response.value?.message;
+            CategoriesState.error = (response.value as IMessage).message;
             return;
         }
 

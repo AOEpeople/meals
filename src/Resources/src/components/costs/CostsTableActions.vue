@@ -11,7 +11,7 @@
       :translate-x-min="'-5%'"
       :popup-styles="'right-0'"
     >
-      <template #button="{ open }">
+      <template>
         <ActionButton
           :action="Action.CREATE"
           :btn-text="''"

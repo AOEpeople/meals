@@ -10,7 +10,7 @@
         :translate-x-min="'-18%'"
         class="m-auto w-fit"
       >
-        <template #button="{ open }">
+        <template>
           <button
             class="hover:bg-highlight-2 btn-highlight-shadow mx-2 mb-6 mt-4 h-9 items-center rounded-btn bg-highlight px-[34px] text-center text-btn font-bold text-white shadow-btn drop-shadow-btn transition-all duration-300 ease-out active:translate-y-0.5 active:shadow-btn-active"
           >

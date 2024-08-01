@@ -99,7 +99,6 @@
 </template>
 
 <script setup lang="ts">
-import { type GuestDay } from '@/api/getInvitationData';
 import GuestButton from '@/components/dashboard/GuestButton.vue';
 import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';

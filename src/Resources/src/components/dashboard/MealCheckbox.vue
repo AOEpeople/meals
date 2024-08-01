@@ -107,6 +107,7 @@ const checkboxCSS = computed(() => {
         return cssResult;
       case MealState.OFFERING:
         cssResult += 'bg-highlight cursor-pointer border-0';
+        return cssResult;
       case MealState.OFFERABLE:
         cssResult += 'bg-primary-4 cursor-pointer border-0';
         return cssResult;

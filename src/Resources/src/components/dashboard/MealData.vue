@@ -38,11 +38,11 @@
     <div class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:items-center">
       <PriceTag
         class="align-center my-auto flex print:hidden"
-        :price="meal.price"
+        :price="meal.price ?? 0"
       />
       <ParticipationCounter
         :mealCSS="mealCSS"
-        :limit="meal.limit"
+        :limit="meal.limit ?? 0"
       >
         {{ participationDisplayString }}
       </ParticipationCounter>
@@ -77,14 +77,14 @@ const props = defineProps<{
   day: Day;
 }>();
 
-const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
+const meal = props.meal ?? dashboardStore.getMeal(props.weekID ?? -1, props.dayID ?? -1, props.mealID);
 
 const { t, locale } = useI18n();
 const { getCombiDishes } = useDishes();
 
 const title = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de));
 
-const description = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de));
+const description = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.description?.en : meal.description?.de));
 const combiDescription = ref<string[]>([]);
 
 onMounted(async () => {
@@ -118,14 +118,14 @@ const mealCSS = computed(() => {
 });
 
 const participationDisplayString = computed(() => {
-  const fixedCount = Math.ceil(parseFloat(meal.participations.toFixed(1)));
-  return meal.limit > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
+  const fixedCount = Math.ceil(parseFloat((meal.participations ?? 0).toFixed(1)));
+  return (meal.limit ?? 0) > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
 });
 
 async function getCombiDescription() {
   if (props.meal.isParticipating !== null && props.meal.dishSlug === 'combined-dish' && dayHasVariations()) {
     const combiDishes = await getCombiDishes(typeof props.mealID === 'string' ? parseInt(props.mealID) : props.mealID);
-    return combiDishes.map((dish) => (locale.value === 'de' ? dish.titleDe : dish.titleEn));
+    return (combiDishes ?? []).map((dish) => (locale.value === 'de' ? dish.titleDe : dish.titleEn));
   } else {
     return [];
   }
@@ -133,7 +133,7 @@ async function getCombiDescription() {
 
 function dayHasVariations() {
   for (const meal of Object.values(props.day.meals)) {
-    if ((meal as Meal).variations && Object.values((meal as Meal).variations).length > 0) {
+    if ((meal as Meal).variations && Object.values(meal.variations ?? {}).length > 0) {
       return true;
     }
   }

@@ -4,7 +4,7 @@
     class="flex flex-row items-stretch"
   >
     <div
-      v-for="(variation, index) in meal.variations"
+      v-for="variation in meal.variations"
       :key="variation.mealId"
       class="variations-class min-h-[24px] flex-1 border-l text-center"
     >

@@ -1,7 +1,7 @@
 <template>
   <div class="inline-flex divide-x-2 print:block print:h-screen">
     <div
-      v-for="(week, weekID, index) in weeks"
+      v-for="(weekID, index) in Object.keys(weeks)"
       :key="index"
       class="w-[585px] flex-initial print:mx-auto print:w-full print:last:hidden"
     >

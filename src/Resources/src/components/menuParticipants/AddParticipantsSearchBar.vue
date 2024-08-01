@@ -1,6 +1,5 @@
 <template>
   <Combobox
-    v-slot="{ open }"
     v-model="selectedProfile"
     as="span"
     class="relative w-full"

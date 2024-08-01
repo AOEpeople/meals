@@ -359,7 +359,7 @@ export function useDishes() {
      * @param slugs The slugs of the dishes to return
      */
     function getDishArrayBySlugs(slugs: string[]) {
-        const dishesFromSlugs: Dish[] = slugs.map((slug) => getDishBySlug(slug)).filter(dish => dish !== null && dish !== undefined);
+        const dishesFromSlugs: Dish[] = slugs.map((slug) => getDishBySlug(slug)).filter(dish => dish !== null && dish !== undefined) as Dish[];
 
         const dishesWithParent: Dish[] = [];
 

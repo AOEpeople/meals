@@ -1,6 +1,5 @@
 <template>
   <Combobox
-    v-slot="{ open }"
     v-model="value"
     as="span"
     class="relative w-full"

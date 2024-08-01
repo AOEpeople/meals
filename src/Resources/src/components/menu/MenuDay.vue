@@ -9,7 +9,7 @@
         :translate-x-min="'0%'"
         :translate-x-max="'-5%'"
       >
-        <template #button="{ open }">
+        <template>
           <UserIcon
             class="row-start-1 size-5 cursor-pointer"
             :class="participationLimitNotZero ? 'text-highlight' : 'text-white'"

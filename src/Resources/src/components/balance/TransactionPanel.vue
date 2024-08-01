@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { RadarSpinner } from 'epic-spinners';
-import { loadScript, type PayPalNamespace } from '@paypal/paypal-js';
+import { loadScript } from '@paypal/paypal-js';
 import { transactionStore } from '@/stores/transactionStore';
 import { useI18n } from 'vue-i18n';
 import { type WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -59,7 +59,7 @@ onMounted(async () => {
 
     if (paypal && paypal.Buttons) {
       paypal.Buttons({
-          onInit: function (data, actions) {
+          onInit: function (_data, actions) {
             periodicFetchActive.value = true;
             if (amountFieldValue.value > 0.0) {
               actions.enable();
@@ -78,7 +78,7 @@ onMounted(async () => {
               }
             );
           },
-          createOrder: function (data, actions) {
+          createOrder: function (_data, actions) {
             checkActiveSession();
             return actions.order.create({
               purchase_units: [
@@ -92,7 +92,7 @@ onMounted(async () => {
               intent: 'CAPTURE'
             });
           },
-          onShippingChange: function (data, actions) {
+          onShippingChange: function (_data, actions) {
             return actions.resolve();
           },
           onApprove: async function (data, actions) {

@@ -103,9 +103,11 @@ class MercureReceiver {
 
     private static async handleParticipationUpdate(data: Meal_Update): Promise<void> {
         for (const mealData of data.meals) {
-            const meal: Meal = this.getMealToUpdate(mealData, data);
-            this.setMealAttributes(meal, mealData);
-            this.setMealState(data, mealData, meal);
+            const meal: Meal | undefined = this.getMealToUpdate(mealData, data);
+            if (meal !== undefined) {
+                this.setMealAttributes(meal, mealData);
+                this.setMealState(data, mealData, meal);
+            }
         }
         removeLock(String(data.dayId));
     }
@@ -183,7 +185,7 @@ class MercureReceiver {
         if (data.participant === userDataStore.getState().fullname) {
             const { error, response } = await getIsParticipating(mealData.mealId);
             if (meal !== undefined && error.value === false) {
-                meal.isParticipating = response.value;
+                meal.isParticipating = response.value ?? null;
                 meal.mealState = generateMealState(meal);
             }
         }

@@ -4,7 +4,7 @@
     class="tabs mb-5 justify-center gap-4"
   >
     <tab
-      v-for="(week, weekID, index) in weeks"
+      v-for="(weekID, index) in Object.keys(weeks)"
       :key="`t${String(weekID)}`"
       :val="weekID"
       :label="t('dashboard.' + index)"
@@ -26,7 +26,7 @@
     :swipeable="true"
   >
     <tab-panel
-      v-for="(week, weekID, index) in weeks"
+      v-for="(weekID, index) in Object.keys(weeks)"
       :key="`tp${String(weekID)}`"
       :val="weekID"
     >

@@ -1,6 +1,5 @@
 <template>
   <Combobox
-    v-slot="{ open }"
     v-model="selectedDish"
     as="span"
     class="relative w-full"
@@ -20,7 +19,7 @@
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="(dish) => titleStringRepr"
+          :displayValue="() => titleStringRepr"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />

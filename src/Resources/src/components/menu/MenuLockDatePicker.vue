@@ -3,7 +3,7 @@
     :translate-x-max="'-5%'"
     :translate-x-min="'0%'"
   >
-    <template #button="{ open }">
+    <template>
       <CalendarIcon
         class="size-5 cursor-pointer"
         :class="isStandardLockDate ? 'text-white' : 'text-highlight'"

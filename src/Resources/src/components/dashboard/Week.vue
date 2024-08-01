@@ -24,7 +24,7 @@
     class="grid"
   >
     <Day
-      v-for="(day, dayID, d_index) in days"
+      v-for="(dayID, d_index) in Object.keys(days ?? {})"
       :key="dayID"
       :weekID="String(weekID)"
       :dayID="String(dayID)"

@@ -4,7 +4,7 @@
       :translate-x-max="'-30%'"
       :translate-x-min="'-30%'"
     >
-      <template #button="{ open }">
+      <template>
         <ActionButton
           :action="Action.EDIT"
           :btn-text="t('button.edit')"

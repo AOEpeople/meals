@@ -116,7 +116,7 @@ function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<
 }
 
 // expose functions for testing
-if (process.env.NODE_ENV === 'TEST') {
+if (process?.env?.NODE_ENV === 'TEST') {
   defineExpose({ scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations });
 }
 </script>

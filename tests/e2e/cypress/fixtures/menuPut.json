@@ -20,7 +20,6 @@
             },
             "id": 286,
             "enabled": false,
-            "event": null,
             "date": {
                 "date": "2023-07-10 12:00:00.000000",
                 "timezone_type": 3,
@@ -51,7 +50,6 @@
             },
             "id": 287,
             "enabled": true,
-            "event": null,
             "date": {
                 "date": "2023-07-11 12:00:00.000000",
                 "timezone_type": 3,
@@ -118,7 +116,6 @@
             },
             "id": 289,
             "enabled": true,
-            "event": null,
             "date": {
                 "date": "2023-07-13 12:00:00.000000",
                 "timezone_type": 3,
@@ -143,7 +140,6 @@
             },
             "id": 290,
             "enabled": true,
-            "event": null,
             "date": {
                 "date": "2023-07-14 12:00:00.000000",
                 "timezone_type": 3,

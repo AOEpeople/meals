@@ -49,7 +49,7 @@ onMounted(async () => {
 });
 
 // expose functions for testing
-if (process.env.NODE_ENV === 'TEST') {
+if (process?.env?.NODE_ENV === 'TEST') {
   defineExpose({ loaded });
 }
 </script>

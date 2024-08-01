@@ -113,7 +113,7 @@ export function useTimeSlots() {
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
-        if (slot.slug === null) {
+        if (slot.slug === null || slot.slug === undefined) {
             slot.slug = TimeSlotState.timeSlots[id].slug;
         }
 

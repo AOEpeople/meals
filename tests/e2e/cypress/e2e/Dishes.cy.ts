@@ -14,7 +14,7 @@ describe('Test Dishes View', () => {
         cy.intercept('DELETE', '**/api/dishes/variation/**').as('deleteVariation');
     });
 
-    it.skip("should be able to navigate to '/dishes' and have the header displayed", () => {
+    it("should be able to navigate to '/dishes' and have the header displayed", () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         cy.get('h2').should(ele => {
@@ -25,7 +25,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it.skip('should be able to switch the locale to english and back to german', () => {
+    it('should be able to switch the locale to english and back to german', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Switch language to english
@@ -55,7 +55,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it.skip('should be able to create, edit and delete a dish', () => {
+    it('should be able to create, edit and delete a dish', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
@@ -144,7 +144,7 @@ describe('Test Dishes View', () => {
         cy.get('span').contains('TestGericht5678').should('not.exist');
     });
 
-    it.skip('should be able to filter for a category', () => {
+    it('should be able to filter for a category', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
@@ -175,7 +175,7 @@ describe('Test Dishes View', () => {
         cy.contains('td', 'Dessert').should('not.exist');
     });
 
-    it.skip('should be able to filter for a dish', () => {
+    it('should be able to filter for a dish', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load

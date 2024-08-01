@@ -20,9 +20,9 @@
         {{ weekday }}
       </span>
       <GuestButton
-        v-if="!day?.isLocked && !emptyDay && day?.isEnabled && dayID && index"
+        v-if="!day?.isLocked && !emptyDay && day?.isEnabled && dayID"
         :dayID="dayID"
-        :index="index"
+        :index="index ?? 0"
         :invitation="Invitation.MEAL"
         :icon-white="true"
         class="row-start-3 w-[24px] pl-[3px] text-center"

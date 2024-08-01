@@ -25,6 +25,7 @@ help:
 	@echo "	run-tests-fe       - Run frontend-unit-tests"
 	@echo " run-cypress        - Run cypress"
 	@echo " run-cypress-headless - Run cypress headless"
+	@echo " run-cypress-headless-specific - Run one specific cypress test (needs to be adjusted in command)"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
 	@echo "	mailhog            - Open MailHog in the browser"
@@ -87,6 +88,9 @@ run-cypress:
 
 run-cypress-headless:
 	yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=https://meals.test/"
+
+run-cypress-headless-specific:
+	yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=https://meals.test/" --spec './cypress/e2e/MenuParticipations.cy.ts'
 
 ssh:
 	ddev ssh

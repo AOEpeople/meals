@@ -1,25 +1,25 @@
-import Dashboard from '@/views/Dashboard.vue';
-import Menu from '@/views/Menu.vue';
-import Dishes from '@/views/Dishes.vue';
-import Categories from '@/views/Categories.vue';
-import TimeSlots from '@/views/TimeSlots.vue';
-import Costs from '@/views/Costs.vue';
-import Finance from '@/views/Finance.vue';
-import Balance from '@/views/Balance.vue';
-import Guest from '@/views/Guest.vue';
-import NotAllowed from '@/views/NotAllowed.vue';
-import PrintableList from '@/views/PrintableList.vue';
-import ParticipantList from '@/views/ParticipantsList.vue';
-import Weeks from '@/views/Weeks.vue';
-import MenuParticipations from './views/MenuParticipations.vue';
-import CostsSettlement from './views/CostsSettlement.vue';
-import CashRegister from './views/CashRegister.vue';
-import Login from '@/views/Login.vue';
-import Events from './views/Events.vue';
-import GuestEvent from './views/GuestEvent.vue';
-
 import { createRouter, createWebHistory } from 'vue-router';
 import { userDataStore } from '@/stores/userDataStore';
+
+const Dashboard = () => import('@/views/Dashboard.vue');
+const Menu = () => import('@/views/Menu.vue');
+const Dishes = () => import('@/views/Dishes.vue');
+const Categories = () => import('@/views/Categories.vue');
+const TimeSlots = () => import('@/views/TimeSlots.vue');
+const Costs = () => import('@/views/Costs.vue');
+const Finance = () => import('@/views/Finance.vue');
+const Balance = () => import('@/views/Balance.vue');
+const Guest = () => import('@/views/Guest.vue');
+const NotAllowed = () => import('@/views/NotAllowed.vue');
+const PrintableList = () => import('@/views/PrintableList.vue');
+const ParticipantList = () => import('@/views/ParticipantsList.vue');
+const Weeks = () => import('@/views/Weeks.vue');
+const MenuParticipations = () => import('@/views/MenuParticipations.vue');
+const CostsSettlement = () => import('@/views/CostsSettlement.vue');
+const CashRegister = () => import('@/views/CashRegister.vue');
+const Login = () => import('@/views/Login.vue');
+const Events = () => import('@/views/Events.vue');
+const GuestEvent = () => import('@/views/GuestEvent.vue');
 
 declare module 'vue-router' {
     interface RouteMeta {

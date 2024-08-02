@@ -100,7 +100,8 @@ class Day extends AbstractMessage implements JsonSerializable
     }
 
     public function addEvent(EventParticipation $event){
-        $this->events->add($event);
+            $event->setDay($this);
+            $this->events->add($event);
     }
 
     public function removeEvent(EventParticipation $event){

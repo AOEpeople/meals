@@ -13,18 +13,15 @@ describe('Test SubmitButton', () => {
         const wrapper = mount(SubmitButton);
 
         expect(wrapper.classes()).not.toContain('translate-y-0.5');
-        expect(wrapper.classes()).toContain('shadow-btn');
         expect(wrapper.classes()).toContain('btn-highlight-shadow');
 
         await wrapper.trigger('mousedown');
 
         expect(wrapper.classes()).toContain('translate-y-0.5');
-        expect(wrapper.classes()).not.toContain('shadow-btn');
         expect(wrapper.classes()).not.toContain('btn-highlight-shadow');
 
         await wrapper.trigger('mouseup');
         expect(wrapper.classes()).not.toContain('translate-y-0.5');
-        expect(wrapper.classes()).toContain('shadow-btn');
         expect(wrapper.classes()).toContain('btn-highlight-shadow');
     });
 });

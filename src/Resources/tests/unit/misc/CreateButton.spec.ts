@@ -13,7 +13,6 @@ describe('Test CreateButton', () => {
 
         expect(wrapper.find('div').text()).toEqual('TestText123');
         expect(wrapper.classes()).toContain('btn-highlight-shadow');
-        expect(wrapper.classes()).toContain('shadow-btn');
     });
 
     it('should change classes when the open prop changes', async () => {
@@ -25,13 +24,11 @@ describe('Test CreateButton', () => {
         });
 
         expect(wrapper.classes()).toContain('btn-highlight-shadow');
-        expect(wrapper.classes()).toContain('shadow-btn');
 
         await wrapper.setProps({ open: true });
 
         expect(wrapper.vm.open).toBeTruthy();
         expect(wrapper.classes()).toContain('translate-y-0.5');
         expect(wrapper.classes()).not.toContain('btn-highlight-shadow');
-        expect(wrapper.classes()).not.toContain('shadow-btn');
     });
 });

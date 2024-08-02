@@ -1,6 +1,6 @@
 <template>
   <Combobox
-    v-model="value"
+    v-model="selectedEvent"
     as="span"
     class="relative w-full"
     nullable
@@ -19,7 +19,10 @@
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="() => (value ? value.title : '')"
+          :displayValue="
+          // @ts-ignore
+            (event) => titleStringRepr
+          "
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
@@ -81,13 +84,14 @@ import { XIcon } from '@heroicons/vue/solid';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EventIcon from '../misc/EventIcon.vue';
+import { EventParticipation } from '@/api/getDashboardData';
 
 const { setFilter, filteredEvents } = useEvents();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
-    modelValue: Event | null;
+    modelValue: EventParticipation | null;
   }>(),
   {
     modelValue: null
@@ -98,6 +102,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const openProp = ref(false);
 const combobox = ref<HTMLElement | null>(null);
+const selectedEvent = ref<EventParticipation | null>(null);
 
 const value = computed({
   get() {
@@ -107,6 +112,17 @@ const value = computed({
     openProp.value = false;
     emit('update:modelValue', value);
   }
+});
+
+const titleStringRepr = computed(() => {
+  return value.value
+    .map((event) => {
+      if (event !== null && event !== undefined) {
+        return locale.value === 'en' ? event.titleEn : event.titleDe;
+      }
+      return '';
+    })
+    .join(', ');
 });
 
 function handleClick() {

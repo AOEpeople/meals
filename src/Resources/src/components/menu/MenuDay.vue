@@ -218,7 +218,6 @@ onMounted(() => {
       .map((meal: MealDTO) => meal.dishSlug)
       .filter((slug) => slug !== null) as string[]
   );
-
   try {
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];

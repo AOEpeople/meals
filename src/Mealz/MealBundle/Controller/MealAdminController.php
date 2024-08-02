@@ -145,9 +145,9 @@ class MealAdminController extends BaseController
         ) {
             return new JsonResponse(['message' => '101: invalid json'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
         $days = $data['days'];
         $week->setEnabled($data['enabled']);
-
         try {
             foreach ($days as $day) {
                 $this->handleDay($day);
@@ -288,16 +288,15 @@ class MealAdminController extends BaseController
         }
     }
     private function handleEventArr(array $eventArr, Day $day): void{
-        $this->logger->info('Handle Event Arr');
             foreach($eventArr as $event){
                     $this->addEvent($event, $day);
             }
     }
     private function addEvent(array $event, Day $dayEntity){
-        $this->logger->info('addEvent');
         $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
         $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
         if(!$eventExistsForDayAlready){
+            $this->logger->info('addEvent');
             $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
             $dayEntity->addEvent($eventParticipationEntity);
         }

@@ -169,39 +169,43 @@ watch(selectedDishTwo, () => {
 });
 
 watch(selectedEventOne, () => {
-  try{
-    const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value.id;
-    if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
-    selectedDishes.value.events[firstKey] = [{
-      eventId: selectedEventOne.value.id,
-      eventSlug: selectedEventOne.value.slug,
-    }]
-  } else {
-    selectedDishes.value.events[firstKey][0].eventId = null;
-  }
-  }
-  catch(error){
-    console.error('Fehler: ', error)
-  }
+  try {
+    const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value?.id;
 
+    if (selectedEventOne.value) {
+      selectedDishes.value.events[firstKey] = [{
+        eventId: selectedEventOne.value.id,
+        eventSlug: selectedEventOne.value.slug,
+        eventTitle: selectedEventOne.value.title,
+        isPublic: selectedEventOne.value.public
+      }];
+    } else if (firstKey) {
+      selectedDishes.value.events[firstKey][0].eventId = null;
+    }
+  } catch (error) {
+    console.error('Fehler: ', error);
+  }
 });
 
 watch(selectedEventTwo, () => {
-  try{
-  const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value.id;;
-  if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
-    selectedDishes.value.events[secondKey] = [{
-      eventId: selectedEventTwo.value.id,
-      eventSlug: selectedEventTwo.value.slug,
-    }]
-  } else {
-    selectedDishes.value.events[secondKey][1].eventId = null;
-  }
-}
-  catch(error){
-    console.error('Fehler: ', error)
+  try {
+    const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
+
+    if (selectedEventTwo.value) {
+      selectedDishes.value.events[secondKey] = [{
+        eventId: selectedEventTwo.value.id,
+        eventSlug: selectedEventTwo.value.slug,
+        eventTitle: selectedEventTwo.value.title,
+        isPublic: selectedEventTwo.value.public
+      }];
+    } else if (secondKey) {
+      selectedDishes.value.events[secondKey][1].eventId = null;
+    }
+  } catch (error) {
+    console.error('Fehler: ', error);
   }
 });
+
 
 onMounted(() => {
   // get mealKeys
@@ -215,24 +219,33 @@ onMounted(() => {
       .map((meal: MealDTO) => meal.dishSlug)
       .filter((slug) => slug !== null) as string[]
   );
-  try{
+
+  try {
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];
-    // set Events from modelValue to be the initial value of the selectedEvents
-    if (selectedEventOne.value !== null && selectedEventOne.value !== undefined) {
-    selectedDishes.value.events[firstKey] = [{
-      eventId: selectedEventTwo.value.id,
-      eventSlug: selectedEventTwo.value.slug,
-    }]
+
+    if (props.modelValue.events[firstKey]) {
+      selectedEventOne.value = {
+        id: props.modelValue.events[firstKey][0].eventId,
+        slug: props.modelValue.events[firstKey][0].eventSlug,
+        title: props.modelValue.events[firstKey][0].eventTitle,
+        public: props.modelValue.events[firstKey][0].isPublic,
+      };
+    }
+
+    if (props.modelValue.events[secondKey]) {
+      selectedEventTwo.value = {
+        id: props.modelValue.events[secondKey][0].eventId,
+        slug: props.modelValue.events[secondKey][0].eventSlug,
+        title: props.modelValue.events[secondKey][0].eventTitle,
+        public: props.modelValue.events[secondKey][0].isPublic,
+      };
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Events: ', error);
   }
-  if (selectedEventTwo.value !== null && selectedEventTwo.value !== undefined) {
-    selectedDishes.value.events[secondKey] = [{
-      eventId: selectedEventTwo.value.id,
-      eventSlug: selectedEventTwo.value.slug,
-    }]
-  }
-  } catch(error){}
 });
+
 
 
 /**

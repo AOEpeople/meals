@@ -44,7 +44,6 @@ class EventParticipationService
         if (null === $event) {
             $this->removeEventFromDay($day, $event->getId());
         } else {
-            $event = $this->eventRepo->find($event->getId());
             $this->addEventToDay($day, $event);
         }
     }
@@ -165,11 +164,11 @@ class EventParticipationService
     /**
      * adds new event to the eventCollection
      */
-    private function addEventToDay(Day $day, ?Event $event): void
+    private function addEventToDay(Day $day, ?EventParticipation $event): void
     {
         // new eventparticipation
         if (null !== $event && null === $day->getEvents()) {
-            $eventParticipation = new EventParticipation($day, $event);
+            $eventParticipation = new EventParticipation($day, $event->getEvent());
             $day->addEvent($eventParticipation);
         }
     }

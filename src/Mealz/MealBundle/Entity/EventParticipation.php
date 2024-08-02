@@ -21,9 +21,10 @@ class EventParticipation
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'event', targetEntity: Day::class)]
+    #[ORM\ManyToOne(targetEntity: Day::class, inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
     private Day $day;
+
 
     #[ORM\ManyToOne(targetEntity: Event::class, cascade: ["persist"])]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
@@ -51,7 +52,7 @@ class EventParticipation
 
     public function setDay(Day $day): void
     {
-        $this->day = $day;
+        $this->day = $day;//
     }
 
     public function getEvent(): Event

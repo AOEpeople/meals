@@ -50,7 +50,7 @@
       class="col-start-2 row-span-1 row-start-3 border-b border-t-[3px] px-2 py-[12px] md:px-4"
     />
     <EventInput
-    v-if="selectedEventOne"
+      v-if="selectedEventOne"
       v-model="selectedEventTwo"
       class="col-start-2 row-span-1 row-start-4 px-2 py-[12px] md:px-4"
     />
@@ -219,7 +219,6 @@ onMounted(() => {
       .map((meal: MealDTO) => meal.dishSlug)
       .filter((slug) => slug !== null) as string[]
   );
-
   try {
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];

@@ -2,12 +2,12 @@ import DishVariationActions from '@/components/dishes/DishVariationActions.vue';
 import { Action } from '@/enums/Actions';
 import ActionButton from '@/components/misc/ActionButton.vue';
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from '@jest/globals';
 import Dishes from '../fixtures/getDishes.json';
+import { vi, describe, it, expect } from 'vitest';
 
-const mockDeleteDishVariationWithSlug = jest.fn();
+const mockDeleteDishVariationWithSlug = vi.fn();
 
-jest.mock('@/stores/dishesStore', () => ({
+vi.mock('@/stores/dishesStore', () => ({
     useDishes: () => ({
         deleteDishVariationWithSlug: mockDeleteDishVariationWithSlug
     })

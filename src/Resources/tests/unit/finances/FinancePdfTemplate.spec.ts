@@ -3,8 +3,8 @@ import FinancesFixture from '../fixtures/finances.json';
 import FinanceTable from '@/components/finance/FinanceTable.vue';
 import { mount } from '@vue/test-utils';
 import { Finances, useFinances } from '@/stores/financesStore';
-import useApi from '@/api/api';
 import { ref } from 'vue';
+import { vi, describe, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -16,9 +16,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-jest.mock('@/api/api');
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi.mockImplementation(() => mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test FinancePdfTemplate', () => {
     it('should not render anything when finances.transactions are not defined', () => {

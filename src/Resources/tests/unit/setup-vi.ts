@@ -19,10 +19,14 @@ vi.mock('@marcoschulte/vue3-progress', () => ({
 vi.mock('vue-router', () => ({
     useRouter: () => ({
         push: () => void 0
-    })
+    }),
+    createRouter: () => ({
+        beforeEach: () => void 0
+    }),
+    createWebHistory: () => void 0,
 }));
 
-vi.mock('tools/mercureReceiver', () => ({
+vi.mock('@/tools/mercureReceiver', () => ({
     mercureReceiver: {
         init: async () => new Promise((resolve) => resolve(undefined))
     }

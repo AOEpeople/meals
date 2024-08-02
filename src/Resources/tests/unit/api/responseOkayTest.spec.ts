@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { IMessage, isMessage } from '@/interfaces/IMessage';
 import { Dictionary } from '@/types/types';
 import { TimeSlot, isTimeSlot } from '@/stores/timeSlotStore';
+import { describe, it, expect } from 'vitest';
 
 describe('Test isResponseOkay', () => {
     it('should return true if the response is defined, not null and there are no errors', () => {
@@ -82,7 +83,7 @@ describe('Test isResponseOkay', () => {
 
         const response = ref(msgs);
         const error = ref(false);
-        // @ts-expect-error ts needs to be tricked to allow forbidden types
+
         expect(isResponseDictOkay<IMessage>(error, response, isMessage)).toBeFalsy();
     });
 

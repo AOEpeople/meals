@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import ErrorTrafficLight from '@/components/navbar/ErrorTrafficLight.vue';
-import { describe, it } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 describe('Test ErrorTrafficLight', () => {
     it('renders RefreshIcon if no errors are in props', () => {

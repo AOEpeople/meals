@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import FinanceTable from '@/components/finance/FinanceTable.vue';
 import Finances from '../fixtures/finances.json';
+import { describe, it, expect } from 'vitest';
 
 describe('Test FinanceTable', () => {
     it('should have 4 columns', () => {

@@ -4,6 +4,7 @@ import { MealDTO } from '@/interfaces/DayDTO';
 import { Ref, ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import { Diet } from '@/enums/Diet';
+import { describe, expect, it, vi } from 'vitest';
 
 const testMeal: Ref<MealDTO> = ref({
     dishSlug: 'TestDish',
@@ -11,7 +12,7 @@ const testMeal: Ref<MealDTO> = ref({
     participationLimit: 0
 });
 
-const mockGetDishBySlug = jest.fn((slug: string) => {
+const mockGetDishBySlug = vi.fn((slug: string) => {
     const mockDish: Dish = {
         id: 0,
         slug: slug,
@@ -26,7 +27,7 @@ const mockGetDishBySlug = jest.fn((slug: string) => {
     return mockDish;
 });
 
-jest.mock('@/stores/dishesStore', () => ({
+vi.mock('@/stores/dishesStore', () => ({
     useDishes: () => ({
         getDishBySlug: mockGetDishBySlug
     })

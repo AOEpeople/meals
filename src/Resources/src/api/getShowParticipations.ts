@@ -1,9 +1,9 @@
 import type { Dictionary } from '@/types/types';
 import { reactive, readonly } from 'vue';
 import type { DateTime } from './getDashboardData';
-import useApi from './api';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 import { Diet } from '@/enums/Diet';
+import getPrintParticipations from './getPrintParticipations';
 
 // timeout in ms between fetches of the participations
 const PERIODIC_TIMEOUT = 60000;
@@ -83,17 +83,16 @@ const loadedState = reactive<ILoadedState>({
  * Function performs a GET request to '/api/print/participations' and sets the IParticipationsState accordingly
  */
 async function fetchParticipations() {
-    const { response: listData, request, error } = useApi<IParticipationsState>('GET', '/api/print/participations');
+    const { response, error } = await getPrintParticipations();
 
-    await request();
-    if (listData.value !== null && listData.value !== undefined && error.value === false) {
+    if (response.value !== null && response.value !== undefined && error.value === false) {
         loadedState.error = '';
-        participationsState.data = listData.value.data;
-        participationsState.day = listData.value.day;
-        participationsState.meals = listData.value.meals;
+        participationsState.data = response.value.data;
+        participationsState.day = response.value.day;
+        participationsState.meals = response.value.meals;
         loadedState.loaded = true;
-    } else if (listData.value === null || listData.value === undefined) {
-        loadedState.error = 'ERROR while fetching listData for IParticipationState';
+    } else if (response.value === null || response.value === undefined) {
+        loadedState.error = 'ERROR while fetching response for IParticipationState';
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     } else if (error.value === true) {
         loadedState.error = 'Unknown error in getShowParticipations';

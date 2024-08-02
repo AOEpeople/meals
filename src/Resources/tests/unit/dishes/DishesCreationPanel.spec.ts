@@ -4,13 +4,13 @@ import Categories from '../fixtures/getCategories.json';
 import { ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import CategoriesDropDown from '@/components/categories/CategoriesDropDown.vue';
-import useApi from '@/api/api';
 import { useCategories } from '@/stores/categoriesStore';
 import Switch from '@/components/misc/Switch.vue';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
+import { vi, describe, beforeAll, it, expect } from 'vitest';
 
-const mockCreateDish = jest.fn();
-const mockUpdateDish = jest.fn();
+const mockCreateDish = vi.fn();
+const mockUpdateDish = vi.fn();
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
 };
@@ -21,11 +21,11 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-jest.mock('@/api/api');
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi.mockImplementation(() => mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
-jest.mock('@/stores/dishesStore', () => ({
+vi.mock('@/stores/dishesStore', () => ({
     useDishes: () => ({
         createDish: mockCreateDish,
         updateDish: mockUpdateDish

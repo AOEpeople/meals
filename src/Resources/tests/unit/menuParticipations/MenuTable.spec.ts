@@ -4,6 +4,7 @@ import Weeks from '../fixtures/getWeeks.json';
 import Dishes from '../fixtures/getDishes.json';
 import MenuTable from '@/components/menuParticipants/MenuTable.vue';
 import { flushPromises, shallowMount } from '@vue/test-utils';
+import { vi, describe, it, expect } from 'vitest';
 import useApi from '@/api/api';
 
 const asyncFunc: () => Promise<void> = async () => {
@@ -32,9 +33,9 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 describe('Test MenuTable', () => {
     it('should render the table without errors', async () => {

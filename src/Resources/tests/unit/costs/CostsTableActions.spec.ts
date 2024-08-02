@@ -2,12 +2,13 @@ import CostsTableActions from '@/components/costs/CostsTableActions.vue';
 import ActionButton from '@/components/misc/ActionButton.vue';
 import CostsActionSettlement from '@/components/costs/CostsActionSettlement.vue';
 import { mount } from '@vue/test-utils';
+import { vi, describe, it, expect } from 'vitest';
 
-const asyncFunc1 = jest.fn(async () => {
+const asyncFunc1 = vi.fn(async () => {
     new Promise((resolve) => resolve(undefined));
 });
 
-jest.mock('@/stores/costsStore', () => ({
+vi.mock('@/stores/costsStore', () => ({
     useCosts: () => ({
         hideUser: asyncFunc1
     })

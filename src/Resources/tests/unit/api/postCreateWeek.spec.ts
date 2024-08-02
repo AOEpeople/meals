@@ -1,7 +1,7 @@
 import postCreateWeek from '@/api/postCreateWeek';
 import { ref } from 'vue';
-import useApi from '@/api/api';
 import { MealDTO, DayDTO, WeekDTO } from '@/interfaces/DayDTO';
+import { vi, describe, it, expect } from 'vitest';
 
 const testMeal: MealDTO = {
     dishSlug: 'test',
@@ -43,10 +43,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test postCreateWeek', () => {
     it('should create a new week', async () => {

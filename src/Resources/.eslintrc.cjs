@@ -33,6 +33,7 @@ module.exports = {
                 allowedNames: ['vm'] // Allow `const vm= this`; `[]` by default
             }
         ],
+        "@typescript-eslint/ban-ts-comment": "error",
         'tailwindcss/no-custom-classname': 'off',
         'tailwindcss/enforces-negative-arbitrary-values': 'off',
         eqeqeq: 'error',

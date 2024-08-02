@@ -1,8 +1,8 @@
-import useApi from '@/api/api';
 import { ref } from 'vue';
 import Events from '../fixtures/getEvents.json';
 import { useEvents, Event } from '@/stores/eventsStore';
 import { flushPromises } from '@vue/test-utils';
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 
 const testEvent: Event = {
     id: 7,
@@ -51,9 +51,9 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 describe('Test EventsStore', () => {
     const {
@@ -73,7 +73,7 @@ describe('Test EventsStore', () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('should not contain data before fetching', () => {

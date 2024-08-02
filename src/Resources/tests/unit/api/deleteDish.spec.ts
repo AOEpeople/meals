@@ -1,6 +1,5 @@
 import deleteDish from '@/api/deleteDish';
-import useApi from '@/api/api';
-import { it, describe, expect } from '@jest/globals';
+import { vi, describe, it, expect } from 'vitest';
 import { ref } from 'vue';
 
 const asyncFunc: () => Promise<void> = async () => {
@@ -13,10 +12,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test deleteDish', () => {
     it('should return null', async () => {

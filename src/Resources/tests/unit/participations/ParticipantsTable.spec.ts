@@ -1,12 +1,11 @@
 import ParticipantsTable from '@/components/participations/ParticipationsTable.vue';
 import ParticipantsTableHead from '@/components/participations/ParticipantsTableHead.vue';
 import ParticipantsTableBody from '@/components/participations/ParticipantsTableBody.vue';
-import { describe, it, beforeEach } from '@jest/globals';
 import dashboard from '../fixtures/dashboard.json';
 import participations from '../fixtures/participations.json';
 import { shallowMount } from '@vue/test-utils';
 import { computed, nextTick, ref } from 'vue';
-import useApi from '@/api/api';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -31,14 +30,14 @@ const getMockedResponses = (url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 const mockedWindowWidth = ref(900);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-let mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);
-jest.mock('@/services/useComponentHeights', () => ({
+let mockSetTableHeadHeight = vi.fn((height: number, elementId: string) => void 0);
+vi.mock('@/services/useComponentHeights', () => ({
     useComponentHeights: () => ({
         maxTableHeight: computed(() => 300),
         setTableHeadHight: mockSetTableHeadHeight,
@@ -49,7 +48,7 @@ jest.mock('@/services/useComponentHeights', () => ({
 describe('Test ParticipantsTable', () => {
     beforeEach(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);
+        mockSetTableHeadHeight = vi.fn((height: number, elementId: string) => void 0);
     });
 
     it('should call setTableHeight onMounted', () => {

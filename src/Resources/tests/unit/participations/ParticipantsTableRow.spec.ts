@@ -1,8 +1,8 @@
 import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import ParticipantsTableRow from '@/components/participations/ParticipantsTableRow.vue';
 import { Diet } from '@/enums/Diet';
-import { describe, expect, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 
 const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
 const bookedDataTwo: IBookedData = { booked: [1, 3, 5], isOffering: [false] };

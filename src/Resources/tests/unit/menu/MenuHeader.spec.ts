@@ -1,6 +1,7 @@
 import MenuHeader from '@/components/menu/MenuHeader.vue';
 import { WeekDTO } from '@/interfaces/DayDTO';
 import { shallowMount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 
 const testWeek: WeekDTO = {
     id: 0,

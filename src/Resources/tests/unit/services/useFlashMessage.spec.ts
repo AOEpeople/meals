@@ -1,6 +1,7 @@
 import { FlashMessageType } from '@/enums/FlashMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { flushPromises } from '@vue/test-utils';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 const { flashMessages, sendFlashMessage, clearMessages } = useFlashMessage();
 

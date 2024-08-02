@@ -1,7 +1,8 @@
-import useApi from '@/api/api';
 import putEventUpdate from '@/api/putEventUpdate';
 import { Event } from '@/stores/eventsStore';
+import { vi, describe, it, expect } from 'vitest';
 import { ref } from 'vue';
+import useApi from '@/api/api';
 
 const testEvent: Event = {
     id: 0,
@@ -20,10 +21,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test putEventUpdate', () => {
     it('should call useApi and return an event', async () => {

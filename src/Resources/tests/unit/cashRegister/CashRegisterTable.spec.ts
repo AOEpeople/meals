@@ -1,6 +1,7 @@
 import CashRegisterTable from '@/components/cashRegister/CashRegisterTable.vue';
 import TransctionsHistory from '../fixtures/transactionHistory.json';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 
 describe('Test CashRegisterTable', () => {
     const wrapper = mount(CashRegisterTable, {

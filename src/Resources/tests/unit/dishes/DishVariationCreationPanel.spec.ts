@@ -1,11 +1,11 @@
 import DishVariationCreationPanel from '@/components/dishes/DishVariationCreationPanel.vue';
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from '@jest/globals';
+import { vi, describe, it, expect } from 'vitest';
 
-const mockCreateDishVariation = jest.fn();
-const mockUpdateDishVariation = jest.fn();
+const mockCreateDishVariation = vi.fn();
+const mockUpdateDishVariation = vi.fn();
 
-jest.mock('@/stores/dishesStore', () => ({
+vi.mock('@/stores/dishesStore', () => ({
     useDishes: () => ({
         createDishVariation: mockCreateDishVariation,
         updateDishVariation: mockUpdateDishVariation

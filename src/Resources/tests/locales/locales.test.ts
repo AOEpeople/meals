@@ -1,7 +1,6 @@
-import { describe, expect, test } from '@jest/globals';
-
 import en from '../../src/locales/en.json';
 import de from '../../src/locales/de.json';
+import { describe, test, expect } from 'vitest';
 
 type NestedStrings = NestedStringArray;
 type NestedStringArray = Array<NestedStrings | string>;

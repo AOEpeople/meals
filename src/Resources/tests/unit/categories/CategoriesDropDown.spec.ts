@@ -1,11 +1,10 @@
 import CategoriesDropDown from '@/components/categories/CategoriesDropDown.vue';
-import { describe, it } from '@jest/globals';
 import { ref } from 'vue';
 import Categories from '../fixtures/getCategories.json';
-import useApi from '@/api/api';
 import { useCategories } from '@/stores/categoriesStore';
 import { mount } from '@vue/test-utils';
 import { Listbox, ListboxButton, ListboxOption } from '@headlessui/vue';
+import { vi, describe, beforeAll, it, expect } from 'vitest';
 
 const { fetchCategories } = useCategories();
 
@@ -19,10 +18,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test CategoriesDropDown', () => {
     beforeAll(async () => {

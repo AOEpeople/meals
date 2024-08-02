@@ -1,8 +1,8 @@
-import { describe, expect, it } from '@jest/globals';
 import CategoriesCreationPanel from '@/components/categories/CategoriesCreationPanel.vue';
 import { mount } from '@vue/test-utils';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
+import { describe, it, expect } from 'vitest';
 
 describe('Test CategoriesCrearionPanel', () => {
     it('should contain a header, two InputLabel-components and a submit input', () => {

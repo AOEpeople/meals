@@ -1,7 +1,7 @@
 import CategoriesActions from '@/components/categories/CategoriesActions.vue';
-import { describe } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import Categories from '../fixtures/getCategories.json';
+import { describe, it, expect } from 'vitest';
 
 describe('Test CategoriesActions Component', () => {
     it('should contain two buttons with i18n texts', () => {

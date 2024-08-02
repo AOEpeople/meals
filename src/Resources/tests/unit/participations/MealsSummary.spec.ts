@@ -1,8 +1,8 @@
 import MealsSummary from '@/components/participations/MealsSummary.vue';
-import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import { IDay, IDish } from '@/api/getMealsNextThreeDays';
 import { Diet } from '@/enums/Diet';
+import { describe, it, expect } from 'vitest';
 
 const iDishesEn: IDish[] = [
     {

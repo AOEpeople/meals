@@ -1,5 +1,3 @@
-import useApi from '@/api/api';
-import { describe, jest, it } from '@jest/globals';
 import { ref } from 'vue';
 import nextThreeDays from '../fixtures/nextThreeDays.json';
 import participations from '../fixtures/participations.json';
@@ -7,33 +5,30 @@ import { flushPromises, mount } from '@vue/test-utils';
 import MealOverView from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import MealsSummary from '@/components/participations/MealsSummary.vue';
+import { vi, describe, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
 };
 
-const getMockedResponses = (url: string) => {
-    switch (url) {
-        case 'api/meals/nextThreeDays':
-            return {
-                response: ref(nextThreeDays.dataOne),
-                request: asyncFunc,
-                error: ref(false)
-            };
-        case '/api/print/participations':
-            return {
-                response: ref(participations),
-                request: asyncFunc,
-                error: ref(false)
-            };
-        default:
-            return {};
-    }
+const mockedReturnValue = {
+    response: ref(nextThreeDays.dataOne),
+    request: asyncFunc,
+    error: ref(false)
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
+
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
+
+vi.mock('./getPrintParticipations', () => ({
+    default: vi.fn(() => new Promise((resolve) => resolve({
+            response: ref(participations),
+            error: ref(false)
+        })
+    ))
+}));
 
 describe('Test MealOverView', () => {
     const { loadShowParticipations } = getShowParticipations();

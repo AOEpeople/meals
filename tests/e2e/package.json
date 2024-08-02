@@ -12,7 +12,7 @@
   "devDependencies": {
     "@types/node": "^20.1.2",
     "cross-env": "^7.0.3",
-    "cypress": "^13.13.2",
+    "cypress": "^12.12.0",
     "cypress-keycloak": "^2.0.0",
     "cypress-plugin-snapshots": "^1.4.4",
     "cypress-split": "^1.24.0",

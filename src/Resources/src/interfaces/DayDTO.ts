@@ -26,4 +26,6 @@ export interface MealDTO {
 export interface EventDTO {
     eventSlug: string | null;
     eventId: number | null;
+    eventTitle: string | null;
+    isPublic: boolean | null;
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## Version v3.1.3 (2024-08-05)
+
+### Fixes
+
+- fixed a overflowing image bug that was caused by a not supported tag in firefox 88 and fixed not truncated text (65827bae)
+
+### Chores and tidying
+
+- updated deprecated docker-compose command (1fab58b3)
+
+### Other
+
+- potential fix for flaky cypress test (0e5ec9be)
+- formatted code (935f0f70)
+
 ## Version v3.1.2 (2024-07-24)
 
 ### Fixes

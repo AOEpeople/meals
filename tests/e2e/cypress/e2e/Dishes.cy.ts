@@ -319,7 +319,6 @@ describe('Test Dishes View', () => {
             .click();
         cy.wait(['@deleteVariation', '@getDishes']);
         cy.log('delete variation');
-        cy.get('[data-cy="msgClose"]').click();
         cy.get('span')
             .contains('TestGericht1234')
             .parent()
@@ -328,7 +327,6 @@ describe('Test Dishes View', () => {
             .click();
         cy.wait(['@getDishes', '@deleteDishes']);
         cy.log('delete dish');
-        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish variation was deleted
         cy.get('span').contains('TestVariation5678').should('not.exist');

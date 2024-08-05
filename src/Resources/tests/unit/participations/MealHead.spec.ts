@@ -1,8 +1,8 @@
 import { IMealWithVariations } from '@/api/getShowParticipations';
 import MealHead from '@/components/participations/MealHead.vue';
 import { Diet } from '@/enums/Diet';
-import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 
 const mealOne: IMealWithVariations = {
     title: {

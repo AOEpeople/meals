@@ -67,8 +67,8 @@
 <script setup lang="ts">
 import Table from '@/components/misc/Table.vue';
 import { useI18n } from 'vue-i18n';
-import { Transaction } from '@/stores/financesStore';
-import { Dictionary } from '../../../types/types';
+import { type Transaction } from '@/stores/financesStore';
+import { type Dictionary } from '@/types/types';
 
 const { t, locale } = useI18n();
 

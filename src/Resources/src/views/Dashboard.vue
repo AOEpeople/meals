@@ -21,11 +21,11 @@ import DashboardWeekAll from '@/components/dashboard/DashboardWeekAll.vue';
 import PrintLink from '@/views/PrintLink.vue';
 import { userDataStore } from '@/stores/userDataStore';
 import { onMounted, ref } from 'vue';
-import { Dictionary } from 'types/types';
-import { Week } from '@/api/getDashboardData';
+import type { Dictionary } from '@/types/types';
+import type { Week } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
 import useEventsBus from '@/tools/eventBus';
-import { EventParticipationResponse } from '@/api/postJoinEvent';
+import type { EventParticipationResponse } from '@/api/postJoinEvent';
 
 const weeks = ref<Dictionary<Week>>({});
 const { fetchEvents } = useEvents();

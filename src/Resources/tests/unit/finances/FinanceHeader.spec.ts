@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils';
 import FinanceHeader from '@/components/finance/FinanceHeader.vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
+import { describe, expect, it, vi } from 'vitest';
 
-jest.mock('epic-spinners', () => ({
+vi.mock('epic-spinners', () => ({
     RadarSpinner: () => '<div>x</div>'
 }));
 

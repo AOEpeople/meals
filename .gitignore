@@ -12,6 +12,7 @@ node_modules
 !.dockerignore
 !.env
 !.env.test
+!.eslintrc.cjs
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json
@@ -55,3 +56,8 @@ src/Resources/style/output.css.map
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+###> pentatrion/vite-bundle ###
+/node_modules/
+/public/build/
+###< pentatrion/vite-bundle ###

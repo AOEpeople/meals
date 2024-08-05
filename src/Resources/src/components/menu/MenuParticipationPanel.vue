@@ -11,7 +11,7 @@
     </div>
     <MealParticipationInput
       v-for="meal in mealList"
-      :key="meal.dishSlug"
+      :key="meal.dishSlug ?? ''"
       :meal="meal"
       class="max-w-[300px] px-2"
     />
@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import { MealDTO } from '@/interfaces/DayDTO';
-import { Dictionary } from 'types/types';
+import { type MealDTO } from '@/interfaces/DayDTO';
+import { type Dictionary } from '@/types/types';
 import MealParticipationInput from './MealParticipationInput.vue';
 import { computed } from 'vue';
 import { XCircleIcon } from '@heroicons/vue/solid';

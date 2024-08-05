@@ -1,12 +1,11 @@
 import DishTableRow from '@/components/dishes/DishTableRow.vue';
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from '@jest/globals';
 import { ref } from 'vue';
 import Dishes from '../fixtures/getDishes.json';
 import Categories from '../fixtures/getCategories.json';
-import useApi from '@/api/api';
 import { useCategories } from '@/stores/categoriesStore';
 import { Dish } from '@/stores/dishesStore';
+import { vi, describe, beforeAll, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -18,9 +17,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-jest.mock('@/api/api');
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi.mockImplementation(() => mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 const { fetchCategories } = useCategories();
 
@@ -93,6 +92,6 @@ describe('Test DishTableRow', () => {
         });
 
         const tr = wrapper.findAll('tr').at(1);
-        expect(tr.classes()).toContain('topBottomShadow');
+        expect(tr?.classes()).toContain('topBottomShadow');
     });
 });

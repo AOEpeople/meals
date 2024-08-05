@@ -2,12 +2,13 @@ import CostsHeader from '@/components/costs/CostsHeader.vue';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import CashRegisterLink from '@/components/costs/CashRegisterLink.vue';
 import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
 
-jest.mock('epic-spinners', () => ({
+vi.mock('epic-spinners', () => ({
     RadarSpinner: () => '<div>x</div>'
 }));
 
-jest.mock('@/stores/userDataStore', () => ({
+vi.mock('@/stores/userDataStore', () => ({
     userDataStore: {
         roleAllowsRoute: () => true
     }

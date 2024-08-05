@@ -16,3 +16,6 @@ framework:
   php_errors:
     log: true
 
+  assets:
+    json_manifest_path: '%kernel.project_dir%/public/static/.vite/manifest.json'
+

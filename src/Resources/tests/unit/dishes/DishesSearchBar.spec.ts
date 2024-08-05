@@ -1,10 +1,10 @@
 import DishesSearchBar from '@/components/dishes/DishesSearchBar.vue';
-import { describe, it, expect } from '@jest/globals';
 import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
 
-const mockSetFilter = jest.fn();
+const mockSetFilter = vi.fn();
 
-jest.mock('@/stores/dishesStore', () => ({
+vi.mock('@/stores/dishesStore', () => ({
     useDishes: () => ({
         setFilter: mockSetFilter
     })

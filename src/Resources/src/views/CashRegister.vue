@@ -1,13 +1,13 @@
 <template>
   <div class="mx-[5%] xl:mx-auto">
     <CashRegisterTable
-      v-if="loaded === true && TransactionState.transactions.usersLastMonth !== null"
+      v-if="loaded === true && TransactionState.transactions && TransactionState.transactions.usersLastMonth !== null"
       :transactions="TransactionState.transactions.usersLastMonth"
       :date-range="TransactionState.transactions.lastMonth"
       class="mb-8"
     />
     <CashRegisterTable
-      v-if="loaded === true && TransactionState.transactions.usersThisMonth !== null"
+      v-if="loaded === true && TransactionState.transactions && TransactionState.transactions.usersThisMonth !== null"
       :transactions="TransactionState.transactions.usersThisMonth"
       :date-range="TransactionState.transactions.thisMonth"
     />

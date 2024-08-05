@@ -1,6 +1,7 @@
-import useApi from '@/api/api';
 import postHideUser from '@/api/postHideUser';
+import { vi, describe, it, expect } from 'vitest';
 import { ref } from 'vue';
+import useApi from '@/api/api';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -12,10 +13,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test postHideUser', () => {
     it('should call useApi with correct parameters and not return an error', async () => {

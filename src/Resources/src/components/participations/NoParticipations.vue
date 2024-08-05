@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { DateTime } from '@/api/getDashboardData';
+import { type DateTime } from '@/api/getDashboardData';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useComponentHeights } from '@/services/useComponentHeights';

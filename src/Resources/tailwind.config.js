@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
     content: ['./src/**/*.{html,js,jsx,vue,ts,tsx}'],
     presets: [require('./node_modules/aoe-group-web-cd/aoe.config.js')],
     theme: {
@@ -28,5 +29,6 @@ module.exports = {
                 triangle: '#585858 transparent transparent transparent'
             }
         }
-    }
+    },
+    plugins: []
 };

@@ -1,9 +1,8 @@
 import putDishVariationUpdate from '@/api/putDishVariationUpdate';
-import useApi from '@/api/api';
 import { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
-import { describe, it, expect } from '@jest/globals';
 import { ref } from 'vue';
 import Dishes from '../fixtures/getDishes.json';
+import { vi, describe, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -15,10 +14,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 const dish: CreateDishVariationDTO = {
     titleDe: 'TestVarDE',

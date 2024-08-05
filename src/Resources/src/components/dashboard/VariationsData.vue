@@ -6,7 +6,7 @@
     ><br />
   </div>
   <div
-    v-for="(variation, variationID, index) in meal.variations"
+    v-for="(variation, variationID, index) in meal?.variations"
     :key="index"
     class="mb-1.5 flex w-auto flex-col justify-around gap-1 last:mb-0 min-[380px]:flex-row min-[380px]:gap-2 xl:grid-cols-6"
   >
@@ -45,11 +45,11 @@
     >
       <PriceTag
         class="align-center my-auto flex print:hidden"
-        :price="variation.price"
+        :price="variation.price ?? 0"
       />
       <ParticipationCounter
-        :limit="variation.limit"
-        :mealCSS="mealCSS[String(variationID)]"
+        :limit="variation.limit ?? 0"
+        :mealCSS="mealCSS.get(String(variationID)) ?? ''"
       >
         {{ getParticipationDisplayString(variation) }}
       </ParticipationCounter>
@@ -71,12 +71,13 @@ import MealCheckbox from '@/components/dashboard/MealCheckbox.vue';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
-import useEventsBus from 'tools/eventBus';
+import useEventsBus from '@/tools/eventBus';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
-import { Day, Meal } from '@/api/getDashboardData';
+import { type Day, type Meal } from '@/api/getDashboardData';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
+import { MealState } from '@/enums/MealState';
 
 const { receive } = useEventsBus();
 
@@ -92,27 +93,26 @@ const props = defineProps<{
 
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
 
-const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de));
+const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? meal?.title.en : meal?.title.de));
 
 const mealCSS = computed(() => {
-  const array: string[] = [];
-  for (const variationId in meal.variations) {
-    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
-    switch (meal.variations[variationId].mealState) {
-      case 'disabled':
-      case 'offerable':
-        array[variationId] += 'bg-[#80909F]';
+  const css: Map<string, string> = new Map();
+  for (const [variationId, variation] of Object.entries(meal?.variations ?? {})) {
+    let cssStr = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
+    switch (variation.mealState) {
+      case (MealState.DISABLED, MealState.OFFERABLE):
+        cssStr += 'bg-[#80909F]';
         break;
-      case 'open':
-        array[variationId] += 'bg-primary-4';
+      case MealState.OPEN:
+        cssStr += 'bg-primary-4';
         break;
-      case 'tradeable':
-      case 'offering':
-        array[variationId] += 'bg-highlight';
+      case (MealState.TRADEABLE, MealState.OFFERING):
+        cssStr += 'bg-highlight';
         break;
     }
+    css.set(variationId, cssStr);
   }
-  return array;
+  return css;
 });
 
 const openPopover = ref(false);
@@ -123,8 +123,8 @@ receive('openOfferPanel_' + props.mealID, () => {
 });
 
 const getParticipationDisplayString = (variation: Meal) => {
-  const fixedCount = Math.ceil(parseFloat(variation.participations.toFixed(1)));
-  return variation.limit > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
+  const fixedCount = Math.ceil(parseFloat((variation.participations ?? 0).toFixed(1)));
+  return (variation.limit ?? 0) > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
 };
 </script>
 

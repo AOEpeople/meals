@@ -18,6 +18,7 @@
         </template>
         <template #panel="{ close }">
           <SlotCreationPanel
+            :id="undefined"
             :header="t('slot.createHeader')"
             :submit="t('slot.submit')"
             @closePanel="close()"
@@ -28,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Popover from '@/components/misc/Popover.vue';
 import SlotCreationPanel from '@/components/timeslots/SlotCreationPanel.vue';
 import { useI18n } from 'vue-i18n';

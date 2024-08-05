@@ -1,10 +1,10 @@
 import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import ParticipantsTableSlot from '@/components/participations/ParticipantsTableSlot.vue';
 import ParticipantsTableRow from '@/components/participations/ParticipantsTableRow.vue';
-import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import { Diet } from '@/enums/Diet';
+import { describe, it, expect } from 'vitest';
 
 const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
 const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: [false] };

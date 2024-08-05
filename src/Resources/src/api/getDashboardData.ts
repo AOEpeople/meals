@@ -1,5 +1,5 @@
 import useApi from '@/api/api';
-import { Dictionary } from '../../types/types';
+import { type Dictionary } from '@/types/types';
 import { ref } from 'vue';
 import { MealState } from '@/enums/MealState';
 import { Diet } from '@/enums/Diet';

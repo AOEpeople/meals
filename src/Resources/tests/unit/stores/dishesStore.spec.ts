@@ -1,13 +1,12 @@
 import { useDishes, Dish } from '@/stores/dishesStore';
 import { useCategories } from '@/stores/categoriesStore';
-import useApi from '@/api/api';
 import { ref } from 'vue';
-import { beforeAll, beforeEach, describe, expect, it } from '@jest/globals';
 import Dishes from '../fixtures/getDishes.json';
 import Categories from '../fixtures/getCategories.json';
 import { CreateDishDTO } from '@/api/postCreateDish';
 import combiDishes from '../fixtures/combiDishes.json';
 import { Diet } from '@/enums/Diet';
+import { vi, describe, beforeAll, beforeEach, it, expect } from 'vitest';
 
 const dish1: Dish = {
     id: 17,
@@ -69,9 +68,9 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 describe('Test dishesStore', () => {
     const {

@@ -1,5 +1,5 @@
-<template>not allowed</template>
+<template>
+  <div>not allowed</div>
+</template>
 
-<script setup></script>
-
-<style scoped></style>
+<script setup lang="ts"></script>

@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { IProfile, useProfiles } from '@/stores/profilesStore';
+import { type IProfile, useProfiles } from '@/stores/profilesStore';
 import { onMounted, ref } from 'vue';
 import { useCosts } from '@/stores/costsStore';
 import CreateButton from '@/components/misc/CreateButton.vue';
@@ -45,7 +45,7 @@ const props = defineProps<{
   hash: string;
 }>();
 
-const profile = ref<IProfile>(null);
+const profile = ref<IProfile | null>(null);
 const isConfirmed = ref(false);
 const loaded = ref(false);
 

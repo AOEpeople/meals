@@ -4,7 +4,7 @@
       :translate-x-max="'-30%'"
       :translate-x-min="'-30%'"
     >
-      <template #button="{ open }">
+      <template #button>
         <ActionButton
           :action="Action.EDIT"
           :btn-text="t('button.edit')"
@@ -30,7 +30,7 @@
       :btn-text="t('button.delete')"
       :row="true"
       :width-full="false"
-      @click="deleteSlotWithSlug(timeSlot.slug)"
+      @click="timeSlot.slug && deleteSlotWithSlug(timeSlot.slug)"
     />
     <Switch
       :sr="'Enable TimeSlot'"
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import Switch from '@/components/misc/Switch.vue';
 import { ref, watch } from 'vue';
-import { useTimeSlots, TimeSlot } from '@/stores/timeSlotStore';
+import { useTimeSlots, type TimeSlot } from '@/stores/timeSlotStore';
 import ActionButton from '@/components/misc/ActionButton.vue';
 import { useI18n } from 'vue-i18n';
 import { Action } from '@/enums/Actions';

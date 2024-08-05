@@ -4,7 +4,7 @@
     class="flex flex-row items-stretch"
   >
     <div
-      v-for="(variation, index) in meal.variations"
+      v-for="variation in meal.variations"
       :key="variation.mealId"
       class="variations-class min-h-[24px] flex-1 border-l text-center"
     >
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import type { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 
 defineProps<{

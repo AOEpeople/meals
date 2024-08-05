@@ -3,6 +3,7 @@ import { Event } from '@/stores/eventsStore';
 import { mount } from '@vue/test-utils';
 import ActionButton from '@/components/misc/ActionButton.vue';
 import { Action } from '@/enums/Actions';
+import { describe, it, expect } from 'vitest';
 
 const testEvent: Event = {
     id: 17,

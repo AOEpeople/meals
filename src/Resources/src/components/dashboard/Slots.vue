@@ -35,8 +35,8 @@
           <template v-for="slot in day.slots">
             <ListboxOption
               v-if="slot.id !== 0 || !isParticipating"
-              v-slot="{ active, selected }"
-              :key="slot.slug"
+              v-slot="{ selected }"
+              :key="slot.slug ?? ''"
               :value="slot"
               as="template"
             >
@@ -66,8 +66,8 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headless
 import { useI18n } from 'vue-i18n';
 import { useUpdateSelectedSlot } from '@/api/putUpdateSelectedSlot';
 import { ChevronDownIcon } from '@heroicons/vue/solid';
-import useEventsBus from 'tools/eventBus';
-import { Day } from '@/api/getDashboardData';
+import useEventsBus from '@/tools/eventBus';
+import { type Day } from '@/api/getDashboardData';
 
 const props = defineProps<{
   dayID: number | string | undefined;
@@ -117,12 +117,12 @@ if (props.dayID) {
     for (const mealId in props.day.meals) {
       if (props.day.meals[mealId].variations !== null) {
         for (const variationsId in props.day.meals[mealId].variations) {
-          if (props.day.meals[mealId].variations[variationsId].isParticipating) {
+          if (getIsParticipating(mealId, variationsId)) {
             return true;
           }
         }
       }
-      if (props.day.meals[mealId].isParticipating) {
+      if (getIsParticipating(mealId)) {
         return true;
       }
     }
@@ -132,5 +132,14 @@ if (props.dayID) {
 } else {
   const { emit } = useEventsBus();
   watch(selectedSlot, () => emit('guestChosenSlot', selectedSlot.value.id));
+}
+
+function getIsParticipating(mealId: string, variationsId?: string) {
+  const meal = props.day.meals[mealId];
+  if (variationsId !== undefined && meal.variations !== null) {
+    const variation = meal.variations[variationsId];
+    return variation.isParticipating;
+  }
+  return meal.isParticipating;
 }
 </script>

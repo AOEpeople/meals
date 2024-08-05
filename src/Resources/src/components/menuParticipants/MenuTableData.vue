@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { SimpleMeal } from '@/stores/weeksStore';
+import { type SimpleMeal } from '@/stores/weeksStore';
 import { useMealIdToDishId } from '@/services/useMealIdToDishId';
 import { useParticipations } from '@/stores/participationsStore';
 import { useDishes } from '@/stores/dishesStore';
@@ -69,7 +69,9 @@ const { getDishById } = useDishes();
 
 const isCombi = computed(() => props.meal.dish === 'combined-dish');
 const bookedCombi = computed(() => {
-  return hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id));
+  const dishId = mealIdToDishIdDict.get(props.meal.id);
+  if (dishId === undefined || dishId === null) return undefined;
+  return hasParticipantBookedCombiDish(props.dayId, props.participant, dishId);
 });
 const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id));
 
@@ -92,12 +94,14 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
 async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
   if (combiMeals !== undefined && combiMeals.length === 2) {
-    const dishSlugs = combiMeals.map((mealId) => {
-      const dishId = mealIdToDishIdDict.get(mealId);
-      return dishId !== -1 ? getDishById(dishId).slug : null;
-    });
-    if (dishSlugs !== null) {
-      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
+    const dishSlugs = combiMeals
+      .map((mealId) => {
+        const dishId = mealIdToDishIdDict.get(mealId);
+        return dishId !== -1 && typeof dishId === 'number' ? getDishById(dishId)?.slug : null;
+      })
+      .filter((slug) => slug !== null && slug !== undefined);
+    if (dishSlugs !== null && dishSlugs !== undefined) {
+      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs as string[]);
     }
   }
 }

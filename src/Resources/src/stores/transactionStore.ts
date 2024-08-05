@@ -1,5 +1,5 @@
 import { Store } from '@/stores/store';
-import { Transaction, useTransactionData } from '@/api/getTransactionData';
+import { type Transaction, useTransactionData } from '@/api/getTransactionData';
 
 type TransStore = {
     data: Transaction[];

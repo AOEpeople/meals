@@ -80,7 +80,7 @@
                       {{ String(participantName) }}
                     </td>
                     <td
-                      v-for="(meal, mealId) in listData.meals"
+                      v-for="mealId in Object.keys(listData.meals)"
                       :key="`${index}${String(mealId)}`"
                       class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500"
                     >
@@ -160,7 +160,7 @@ const progress = useProgress().start();
 const { t, locale } = useI18n();
 
 const { listData } = usePrintableListData();
-const pdfCreator = ref(null);
+const pdfCreator = ref();
 
 const mealNames = computed(() => {
   const names: string[] = [];

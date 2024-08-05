@@ -9,7 +9,7 @@
         :translate-x-min="'0%'"
         :translate-x-max="'-5%'"
       >
-        <template #button="{ open }">
+        <template #button>
           <UserIcon
             class="row-start-1 size-5 cursor-pointer"
             :class="participationLimitNotZero ? 'text-highlight' : 'text-white'"
@@ -60,9 +60,9 @@
 
 <script setup lang="ts">
 import MenuInput from '@/components/menu/MenuInput.vue';
-import { Ref, computed, onMounted, ref, watch } from 'vue';
-import { Dish } from '@/stores/dishesStore';
-import { MealDTO, DayDTO } from '@/interfaces/DayDTO';
+import { type Ref, computed, onMounted, ref, watch } from 'vue';
+import { type Dish } from '@/stores/dishesStore';
+import type { MealDTO, DayDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { translateWeekdayWithoutRef } from '@/tools/localeHelper';
 import { useI18n } from 'vue-i18n';
@@ -72,9 +72,9 @@ import Popover from '../misc/Popover.vue';
 import MenuParticipationPanel from './MenuParticipationPanel.vue';
 import MenuLockDatePicker from './MenuLockDatePicker.vue';
 import EventInput from './EventInput.vue';
-import { Event, useEvents } from '@/stores/eventsStore';
-import { DateTime } from '@/api/getDashboardData';
-import { Dictionary } from 'types/types';
+import { type Event, useEvents } from '@/stores/eventsStore';
+import { type DateTime } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
 
 const { getDishArrayBySlugs, getDishBySlug } = useDishes();
 const { locale, t } = useI18n();
@@ -121,7 +121,11 @@ const selectedDishes = computed({
 
 const isStandardLockDate = computed(() => {
   const dayIds = props.lockDates !== null && props.lockDates !== undefined ? Object.keys(props.lockDates) : [];
-  if (dayIds.length > 0 && dayIds.map((id) => String(id)).includes(String(props.modelValue.id))) {
+  if (
+    props.lockDates !== null &&
+    dayIds.length > 0 &&
+    dayIds.map((id) => String(id)).includes(String(props.modelValue.id))
+  ) {
     return props.lockDates[props.modelValue.id].date === props.modelValue.lockDate.date;
   }
   return true;
@@ -138,7 +142,7 @@ watch(selectedDishOne, () => {
       dishSlug: dishSlug,
       mealId: mealIds.length > 0 ? mealIds.shift() : null,
       participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[0])
-    };
+    } as MealDTO;
   });
 });
 
@@ -153,7 +157,7 @@ watch(selectedDishTwo, () => {
       dishSlug: dishSlug,
       mealId: mealIds.length > 0 ? mealIds.shift() : null,
       participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[1])
-    };
+    } as MealDTO;
   });
 });
 
@@ -168,14 +172,18 @@ watch(selectedEvent, () => {
 onMounted(() => {
   // get mealKeys
   selectedDishOne.value = getDishArrayBySlugs(
-    props.modelValue.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.dishSlug)
+    props.modelValue.meals[mealKeys.value[0]]
+      .map((meal: MealDTO) => meal.dishSlug)
+      .filter((slug) => slug !== null) as string[]
   );
   selectedDishTwo.value = getDishArrayBySlugs(
-    props.modelValue.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.dishSlug)
+    props.modelValue.meals[mealKeys.value[1]]
+      .map((meal: MealDTO) => meal.dishSlug)
+      .filter((slug) => slug !== null) as string[]
   );
 
   // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEvent.value = getEventById(props.modelValue.event);
+  selectedEvent.value = getEventById(props.modelValue.event ?? -1) ?? null;
 });
 
 /**

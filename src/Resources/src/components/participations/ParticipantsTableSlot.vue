@@ -22,9 +22,9 @@
 </template>
 
 <script setup lang="ts">
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import ParticipantsTableRow from './ParticipantsTableRow.vue';
-import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import { type IBookedData, type IMealWithVariations } from '@/api/getShowParticipations';
 import { computed } from 'vue';
 
 const props = defineProps<{

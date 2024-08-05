@@ -17,10 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { IBookedData, getShowParticipations } from '@/api/getShowParticipations';
+import { type IBookedData, getShowParticipations } from '@/api/getShowParticipations';
 import ParticipantsTableSlot from './ParticipantsTableSlot.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
+import process from 'node:process';
 
 const { participationsState, getMealsWithVariations, loadedState } = getShowParticipations();
 
@@ -115,7 +116,7 @@ function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<
 }
 
 // expose functions for testing
-if (process.env.NODE_ENV === 'TEST') {
+if (process?.env?.NODE_ENV === 'TEST') {
   defineExpose({ scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations });
 }
 </script>

@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { type GuestDay } from '@/api/getInvitationData';
 import { useI18n } from 'vue-i18n';
-import { translateWeekday } from 'tools/localeHelper';
+import { translateWeekday } from '@/tools/localeHelper';
 import { computed } from 'vue';
 import Slots from '@/components/dashboard/Slots.vue';
 import GuestMeal from '@/components/guest/GuestMeal.vue';

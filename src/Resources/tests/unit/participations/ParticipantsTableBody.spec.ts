@@ -4,9 +4,8 @@ import ParticipantsTableSlot from '@/components/participations/ParticipantsTable
 import participations from '../fixtures/participations.json';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import { ref } from 'vue';
-import { describe, expect, it, test } from '@jest/globals';
 import { flushPromises, mount, shallowMount } from '@vue/test-utils';
-import useApi from '@/api/api';
+import { vi, describe, test, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -18,10 +17,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test functions of ParticipantsTableBody', () => {
     test('scrollAmount to return a positive number', () => {

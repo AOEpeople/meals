@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { WeekDTO } from '@/interfaces/DayDTO';
+import { type WeekDTO } from '@/interfaces/DayDTO';
 import Switch from '../misc/Switch.vue';
 import { useI18n } from 'vue-i18n';
 

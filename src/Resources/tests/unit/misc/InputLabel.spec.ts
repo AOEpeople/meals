@@ -1,6 +1,6 @@
 import InputLabel from '@/components/misc/InputLabel.vue';
-import { describe, expect, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 import { ref } from 'vue';
 
 describe('Test InputLabel', () => {

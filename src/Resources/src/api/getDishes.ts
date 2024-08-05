@@ -1,4 +1,4 @@
-import { Dish } from '@/stores/dishesStore';
+import { type Dish } from '@/stores/dishesStore';
 import useApi from './api';
 
 /**

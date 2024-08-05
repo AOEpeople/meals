@@ -1,12 +1,12 @@
 import deleteDish from '@/api/deleteDish';
 import deleteDishVariation from '@/api/deleteDishVariation';
 import getDishes from '@/api/getDishes';
-import { Ref, computed, reactive, readonly, ref, watch } from 'vue';
-import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
-import postCreateDishVariation, { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
+import { type Ref, computed, reactive, readonly, ref, watch } from 'vue';
+import postCreateDish, { type CreateDishDTO } from '@/api/postCreateDish';
+import postCreateDishVariation, { type CreateDishVariationDTO } from '@/api/postCreateDishVariation';
 import putDishUpdate from '@/api/putDishUpdate';
 import putDishVariationUpdate from '@/api/putDishVariationUpdate';
-import { isMessage } from '@/interfaces/IMessage';
+import { isMessage, type IMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import { refThrottled } from '@vueuse/core';
@@ -102,7 +102,7 @@ export function useDishes() {
     /**
      * Determines wether a dish contains the search string in its title or in the title of one of its variations or in its diet
      */
-    function dishContainsString(dish: Dish, searchStr: string) {
+    function dishContainsString(dish: Dish, searchStr: string): boolean {
         return (
             dish.titleDe.toLowerCase().includes(searchStr.toLowerCase()) ||
             dish.titleEn.toLowerCase().includes(searchStr.toLowerCase()) ||
@@ -125,7 +125,7 @@ export function useDishes() {
 
         const { dishes, error } = await getDishes();
         if (isResponseArrayOkay<Dish>(error, dishes, isDish) === true) {
-            DishesState.dishes = dishes.value;
+            DishesState.dishes = dishes.value as Dish[];
             DishesState.error = '';
         } else {
             DishesState.error = 'Error on fetching dishes';
@@ -143,7 +143,7 @@ export function useDishes() {
         const { error, response } = await postCreateDish(dish);
 
         if (error.value === true || isMessage(response.value) === true) {
-            DishesState.error = response.value?.message;
+            DishesState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -162,7 +162,7 @@ export function useDishes() {
         const { error, response } = await deleteDish(slug);
 
         if (error.value === true || isMessage(response.value) === true) {
-            DishesState.error = response.value?.message;
+            DishesState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -182,7 +182,7 @@ export function useDishes() {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
         if (error.value === true || isMessage(response.value) === true) {
-            DishesState.error = response.value?.message;
+            DishesState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -201,7 +201,7 @@ export function useDishes() {
         const { error, response } = await deleteDishVariation(slug);
 
         if (error.value === true || isMessage(response.value) === true) {
-            DishesState.error = response.value?.message;
+            DishesState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -241,7 +241,13 @@ export function useDishes() {
      * @param dish DTO containing the new values for the dish
      */
     async function updateDish(id: number, dish: CreateDishDTO) {
-        const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
+        const oldDish = getDishById(id);
+        if (oldDish === null) {
+            DishesState.error = 'Error on updating a dish';
+            return;
+        }
+
+        const { error, response } = await putDishUpdate(oldDish.slug, dish);
 
         if (
             isMessage(response.value) === false &&
@@ -277,31 +283,35 @@ export function useDishes() {
      * Updates the DishesState with the new values of a dish
      */
     function updateDishesState(dish: Dish) {
-        const dishToUpdate: Dish = getDishById(dish.id);
+        const dishToUpdate = getDishById(dish.id);
 
-        dishToUpdate.slug = dish.slug;
-        dishToUpdate.titleDe = dish.titleDe;
-        dishToUpdate.titleEn = dish.titleEn;
-        dishToUpdate.oneServingSize = dish.oneServingSize;
-        dishToUpdate.descriptionDe = dish.descriptionDe;
-        dishToUpdate.descriptionEn = dish.descriptionEn;
-        dishToUpdate.categoryId = dish.categoryId;
-        dishToUpdate.diet = dish.diet;
+        if (dishToUpdate !== null) {
+            dishToUpdate.slug = dish.slug;
+            dishToUpdate.titleDe = dish.titleDe;
+            dishToUpdate.titleEn = dish.titleEn;
+            dishToUpdate.oneServingSize = dish.oneServingSize;
+            dishToUpdate.descriptionDe = dish.descriptionDe;
+            dishToUpdate.descriptionEn = dish.descriptionEn;
+            dishToUpdate.categoryId = dish.categoryId;
+            dishToUpdate.diet = dish.diet;
+        }
     }
 
     /**
      * Updates the DishesState with the new values of a dishVariation
      */
     function updateDishVariationInState(parentId: number, variation: Dish) {
-        const variationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
+        const variationToUpdate = getDishVariationByParentIdAndId(parentId, variation.id);
 
-        variationToUpdate.slug = variation.slug;
-        variationToUpdate.titleDe = variation.titleDe;
-        variationToUpdate.titleEn = variation.titleEn;
-        variationToUpdate.diet = variation.diet;
+        if (variationToUpdate !== undefined) {
+            variationToUpdate.slug = variation.slug;
+            variationToUpdate.titleDe = variation.titleDe;
+            variationToUpdate.titleEn = variation.titleEn;
+            variationToUpdate.diet = variation.diet;
+        }
     }
 
-    function getDishById(id: number) {
+    function getDishById(id: number): Dish | null {
         let dishToReturn: Dish | null = null;
 
         DishesState.dishes.forEach((dish) => {
@@ -321,7 +331,7 @@ export function useDishes() {
 
     function getDishVariationByParentIdAndId(parentId: number, variationId: number) {
         const parentDish = getDishById(parentId);
-        return parentDish.variations.find((variation) => variation.id === variationId);
+        return parentDish?.variations.find((variation) => variation.id === variationId);
     }
 
     function getDishBySlug(slug: string): Dish | null {
@@ -349,7 +359,9 @@ export function useDishes() {
      * @param slugs The slugs of the dishes to return
      */
     function getDishArrayBySlugs(slugs: string[]) {
-        const dishesFromSlugs: Dish[] = slugs.map((slug) => getDishBySlug(slug));
+        const dishesFromSlugs: Dish[] = slugs
+            .map((slug) => getDishBySlug(slug))
+            .filter((dish) => dish !== null && dish !== undefined) as Dish[];
 
         const dishesWithParent: Dish[] = [];
 
@@ -361,8 +373,10 @@ export function useDishes() {
             // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
             if (typeof dish.parentId === 'number' && parentDishInArray === false) {
                 const parentDish = getDishById(dish.parentId);
-                dishesWithParent.push(parentDish, dish);
-                parentDishInArray = true;
+                if (parentDish !== null) {
+                    dishesWithParent.push(parentDish, dish);
+                    parentDishInArray = true;
+                }
             } else if (typeof dish.parentId === 'number') {
                 // If the dish has a parent and the parent is already in the array, add the dish to the array of the parent
                 dishesWithParent.push(dish);

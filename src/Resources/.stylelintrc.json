@@ -1,21 +1,21 @@
 {
-  "extends": "stylelint-config-sass-guidelines",
-  "ignoreFiles": ["bower_components/**/*"],
-  "rules": {
-    "function-url-quotes": [
-      "always",
-      {
-        "except": ["empty"]
-      }
-    ],
-    "max-nesting-depth": 4,
-    "selector-no-qualifying-type": null,
-    "selector-max-compound-selectors": 5,
-    "selector-pseudo-element-no-unknown": [
-      true,
-      {
-        "ignorePseudoElements": ["::input-placeholder"]
-      }
-    ]
+    "extends": "stylelint-config-sass-guidelines",
+    "ignoreFiles": ["bower_components/**/*"],
+    "rules": {
+      "function-url-quotes": [
+        "always",
+        {
+          "except": ["empty"]
+        }
+      ],
+      "max-nesting-depth": 4,
+      "selector-no-qualifying-type": null,
+      "selector-max-compound-selectors": 5,
+      "selector-pseudo-element-no-unknown": [
+        true,
+        {
+          "ignorePseudoElements": ["::input-placeholder"]
+        }
+      ]
+    }
   }
-}

@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { WeekDTO } from '@/interfaces/DayDTO';
+import { type WeekDTO } from '@/interfaces/DayDTO';
 import NotifyButton from '@/components/menu/NotifyButton.vue';
 import EnableWeek from '@/components/menu/EnableWeek.vue';
 import { useI18n } from 'vue-i18n';

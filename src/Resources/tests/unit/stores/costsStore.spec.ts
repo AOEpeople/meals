@@ -1,7 +1,7 @@
-import useApi from '@/api/api';
 import { useCosts } from '@/stores/costsStore';
 import { ref } from 'vue';
 import Costs from '../fixtures/getCosts.json';
+import { vi, describe, beforeAll, afterAll, it, expect } from 'vitest';
 
 const PAYMENT_AMOUNT = 100;
 
@@ -43,18 +43,18 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 describe('Test CostsStore', () => {
     beforeAll(() => {
-        jest.useFakeTimers();
-        jest.setSystemTime(new Date(2023, 3, 1));
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(2023, 3, 1));
     });
 
     afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     const { CostsState, fetchCosts, hideUser, sendCashPayment, getColumnNames, getFullNameByUser } = useCosts();

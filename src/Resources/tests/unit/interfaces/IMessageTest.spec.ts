@@ -1,4 +1,5 @@
 import { isMessage, IMessage } from '@/interfaces/IMessage';
+import { describe, it, expect } from 'vitest';
 
 describe('Test isMessage', () => {
     it('should return true if the response is of type IMessage', () => {

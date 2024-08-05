@@ -7,7 +7,7 @@
       v-for="meal in meals"
       :key="`${meal.dishSlug}_${meal.mealId}`"
       v-slot="{ checked }"
-      :value="meal.mealId"
+      :value="meal.mealId ?? -1"
       class="flex gap-2 focus:outline-none"
     >
       <div
@@ -15,7 +15,9 @@
         :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#f4f7f9]'"
       >
         <span class="grow self-start justify-self-center text-primary">
-          {{ locale === 'en' ? getDishBySlug(meal.dishSlug).titleEn : getDishBySlug(meal.dishSlug).titleDe }}
+          {{
+            locale === 'en' ? getDishBySlug(meal.dishSlug ?? '')?.titleEn : getDishBySlug(meal.dishSlug ?? '')?.titleDe
+          }}
         </span>
         <CheckCircleIcon
           v-if="checked === true"
@@ -27,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { MealDTO } from '@/interfaces/DayDTO';
+import { type MealDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import { computed, onMounted } from 'vue';
@@ -54,6 +56,6 @@ const mealId = computed({
 });
 
 onMounted(() => {
-  mealId.value = props.meals[0].mealId;
+  mealId.value = props.meals[0].mealId ?? -1;
 });
 </script>

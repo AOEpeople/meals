@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { FlashMessage } from '@/services/useFlashMessage';
+import { type FlashMessage } from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import { CheckIcon } from '@heroicons/vue/outline';
 import { computed } from 'vue';

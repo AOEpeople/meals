@@ -8,7 +8,7 @@ export interface IMessage {
 export function isMessage(response: IMessage | unknown): response is IMessage {
     return (
         (response as IMessage)?.message !== undefined &&
-        Object.keys(response).length === 1 &&
+        Object.keys(response as IMessage).length === 1 &&
         typeof (response as IMessage).message === 'string'
     );
 }

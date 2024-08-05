@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import { ref } from 'vue';
+import { describe, it, expect, vi } from 'vitest';
 
 const TestComponent = {
     template: '<div><p>Test</p><span>Click</span></div>'
@@ -15,7 +16,7 @@ describe('Test useDetectClickOutside', () => {
         expect(wrapper.text()).toContain('Test');
 
         const componentRef = ref(wrapper.find('p').element);
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         useDetectClickOutside(componentRef, spy);
         await wrapper.find('span').trigger('click');

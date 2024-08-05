@@ -3,7 +3,7 @@
     :translate-x-max="'-5%'"
     :translate-x-min="'0%'"
   >
-    <template #button="{ open }">
+    <template #button>
       <CalendarIcon
         class="size-5 cursor-pointer"
         :class="isStandardLockDate ? 'text-white' : 'text-highlight'"
@@ -42,7 +42,7 @@
 import Popover from '../misc/Popover.vue';
 import { CalendarIcon } from '@heroicons/vue/solid';
 import { useI18n } from 'vue-i18n';
-import { DateTime } from '@/api/getDashboardData';
+import { type DateTime } from '@/api/getDashboardData';
 import { XCircleIcon } from '@heroicons/vue/solid';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import { computed } from 'vue';
@@ -74,6 +74,6 @@ function getLockDateAsStrRepr(date: Date) {
 
 // output format: 2023-07-13 16:00:00.000000
 function convertDateReprToLockDayFormat(date: string) {
-  return date.replaceAll(' ', 'T') + ':00.000000';
+  return date.replace(' ', 'T') + ':00.000000';
 }
 </script>

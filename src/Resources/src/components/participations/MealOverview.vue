@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import MealsSummary from './MealsSummary.vue';
-import { IDay, getNextThreeDays } from '@/api/getMealsNextThreeDays';
+import { type IDay, getNextThreeDays } from '@/api/getMealsNextThreeDays';
 import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { setMealOverviewHeight, windowWidth } = useComponentHeights();

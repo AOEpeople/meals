@@ -30,7 +30,7 @@ import SessionCheckerPopup from '@/components/misc/SessionCheckerPopup.vue';
 const route = useRoute();
 const { setNavBarHeight, windowWidth } = useComponentHeights();
 
-const navibar = ref(null);
+const navibar = ref<InstanceType<typeof NavBar> | null>(null);
 
 const showParticipations = computed(() => {
   return route.path === '/show/participations';

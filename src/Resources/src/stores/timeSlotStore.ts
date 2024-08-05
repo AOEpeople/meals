@@ -1,10 +1,10 @@
-import { Dictionary } from 'types/types';
+import { type Dictionary } from '@/types/types';
 import { reactive, readonly, watch } from 'vue';
 import { useTimeSlotData } from '@/api/getTimeSlotData';
 import { useUpdateSlot } from '@/api/putSlotUpdate';
 import postCreateSlot from '@/api/postCreateSlot';
 import deleteSlot from '@/api/deleteSlot';
-import { isMessage } from '@/interfaces/IMessage';
+import { isMessage, type IMessage } from '@/interfaces/IMessage';
 import { isResponseObjectOkay, isResponseDictOkay } from '@/api/isResponseOkay';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
@@ -92,11 +92,12 @@ export function useTimeSlots() {
     async function changeDisabledState(id: number, state: boolean) {
         const { updateSlotEnabled } = useUpdateSlot();
 
-        const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
+        if (TimeSlotState.timeSlots[id].slug === undefined) return;
+        const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug as string, state);
 
         if (
             isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true &&
-            response.value.enabled !== undefined
+            response.value?.enabled !== undefined
         ) {
             updateTimeSlotEnabled(response.value, id);
         } else {
@@ -112,14 +113,14 @@ export function useTimeSlots() {
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
-        if (slot.slug === null) {
+        if (slot.slug === null || slot.slug === undefined) {
             slot.slug = TimeSlotState.timeSlots[id].slug;
         }
 
         const { error, response } = await updateTimeSlot(slot);
 
         if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true) {
-            updateTimeSlotState(response.value, id);
+            updateTimeSlotState(response.value as TimeSlot, id);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'timeslot.updated'
@@ -154,7 +155,7 @@ export function useTimeSlots() {
         const { error, response } = await postCreateSlot(newSlot);
 
         if (error.value === true || isMessage(response.value) === true) {
-            TimeSlotState.error = response.value?.message;
+            TimeSlotState.error = (response.value as IMessage).message;
             return;
         }
 
@@ -173,7 +174,7 @@ export function useTimeSlots() {
         const { error, response } = await deleteSlot(slug);
 
         if (error.value === true || isMessage(response.value) === true) {
-            TimeSlotState.error = response.value?.message;
+            TimeSlotState.error = (response.value as IMessage).message;
             return;
         }
 

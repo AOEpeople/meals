@@ -1,0 +1,42 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*"
+  ],
+  "compilerOptions": {
+    "allowJs": false,
+    "allowUnreachableCode": false,
+    "alwaysStrict": true,
+    "composite": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "lib": ["ES2022", "DOM"],
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2022",
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "useDefineForClassFields": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "ES2022",
+      "moduleResolution": "Node10"
+    }
+  }
+}

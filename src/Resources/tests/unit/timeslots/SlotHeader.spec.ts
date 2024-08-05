@@ -1,7 +1,7 @@
-import { describe, expect } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import CreateButton from '@/components/misc/CreateButton.vue';
 import SlotHeader from '@/components/timeslots/SlotHeader.vue';
+import { describe, it, expect } from 'vitest';
 
 describe('Test SlotHeader', () => {
     it('should have a Header with the correct i18n text', () => {

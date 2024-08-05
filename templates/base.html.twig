@@ -5,8 +5,21 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>AOE Meals</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
+    {# <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" /> #}
+    {# <link rel="stylesheet" href="https://meals.test:5173/style/main.css" /> #}
     {% block head %}{% endblock %}
+    {% block stylesheets %}
+        {{ vite_entry_link_tags('app') }}
+        {{ vite_entry_link_tags('theme') }}
+    {% endblock %}
+    {# {% if vite_mode() == 'dev' %}
+        <script type="module" src="https://meals.test:5173/@vite/client"></script>
+        <script type="module" src="https://meals.test:5173/src/main.ts"></script>
+    {% else %} #}
+    {% block javascripts %}
+        {{ vite_entry_script_tags('app') }}
+    {% endblock %}
+    {# {% endif %} #}
 </head>
 <style>
 #loading-fallback-container {
@@ -47,8 +60,5 @@
 {% endif %}
 
 {% block body %}{% endblock %}
-
-<script src="{{ assets_server }}{{ asset('static/vendors.js') }}"></script>
-<script src="{{ assets_server }}{{ asset('static/app.js') }}"></script>
 </body>
 </html>

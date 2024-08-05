@@ -5,7 +5,7 @@
       :translate-x-min="'-5%'"
       :translate-x-max="'-5%'"
     >
-      <template #button="{ open }">
+      <template #button>
         <ActionButton
           :action="Action.CREATE"
           :btn-text="t('dish.popover.variation.new')"
@@ -24,7 +24,7 @@
       :translate-x-min="'-5%'"
       :translate-x-max="'-5%'"
     >
-      <template #button="{ open }">
+      <template #button>
         <ActionButton
           :action="Action.EDIT"
           :btn-text="t('button.edit')"
@@ -36,8 +36,8 @@
           :edit="true"
           :title-de="dish.titleDe"
           :title-en="dish.titleEn"
-          :description-de="dish.descriptionDe"
-          :description-en="dish.descriptionEn"
+          :description-de="dish.descriptionDe ?? ''"
+          :description-en="dish.descriptionEn ?? ''"
           :dish-id="dish.id"
           :category-id="dish.categoryId"
           :one-size-serving="dish.oneServingSize"
@@ -61,7 +61,7 @@ import ActionButton from '../misc/ActionButton.vue';
 import { useI18n } from 'vue-i18n';
 import { Action } from '@/enums/Actions';
 import { useDishes } from '@/stores/dishesStore';
-import { Dish } from '@/stores/dishesStore';
+import { type Dish } from '@/stores/dishesStore';
 import Popover from '../misc/Popover.vue';
 import DishesCreationPanel from './DishesCreationPanel.vue';
 import DishVariationCreationPanel from './DishVariationCreationPanel.vue';

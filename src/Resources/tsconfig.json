@@ -1,27 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "experimentalDecorators": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": ["webpack-env", "jest"],
-    "paths": {
-      "@/*": ["src/*"],
-      "tools/*": ["src/tools/*"],
-      "vue-i18n": ["vue-i18n/dist/vue-i18n.runtime.esm-bundler.js"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
-  },
-  "types": ["jest"],
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules"]
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
 }

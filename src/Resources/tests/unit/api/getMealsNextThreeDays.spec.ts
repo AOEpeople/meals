@@ -1,9 +1,8 @@
 import { ref } from 'vue';
 import nextThreeDays from '../fixtures/nextThreeDays.json';
-import useApi from '@/api/api';
-import { describe, expect } from '@jest/globals';
 import { IDay, IDish, getNextThreeDays } from '@/api/getMealsNextThreeDays';
 import { Diet } from '@/enums/Diet';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 const iDishesEn: IDish[] = [
     {
@@ -85,10 +84,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test getMealsNextThreeDays', () => {
     const { resetState } = getNextThreeDays();

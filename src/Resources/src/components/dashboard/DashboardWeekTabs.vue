@@ -4,7 +4,7 @@
     class="tabs mb-5 justify-center gap-4"
   >
     <tab
-      v-for="(week, weekID, index) in weeks"
+      v-for="(weekID, index) in Object.keys(weeks)"
       :key="`t${String(weekID)}`"
       :val="weekID"
       :label="t('dashboard.' + index)"
@@ -26,7 +26,7 @@
     :swipeable="true"
   >
     <tab-panel
-      v-for="(week, weekID, index) in weeks"
+      v-for="(weekID, index) in Object.keys(weeks)"
       :key="`tp${String(weekID)}`"
       :val="weekID"
     >
@@ -42,8 +42,8 @@ import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
 import WeekComp from './Week.vue';
-import { Dictionary } from 'types/types';
-import { Week } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
+import { type Week } from '@/api/getDashboardData';
 
 const props = defineProps<{
   weeks: Dictionary<Week>;

@@ -1,8 +1,8 @@
 import getAbsentingProfiles from '@/api/getAbsentingProfiles';
 import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
-import { reactive, readonly, watch } from 'vue';
+import { reactive, readonly, watch, type Ref } from 'vue';
 import getProfileWithHash from '@/api/getProfileWithHash';
-import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { type IMessage, isMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
@@ -62,7 +62,7 @@ export function useProfiles(weekId: number) {
         const { error, response } = await getAbsentingProfiles(weekId);
 
         if (isResponseArrayOkay<IProfile>(error, response, isProfile) === true) {
-            ProfilesState.profiles = response.value;
+            ProfilesState.profiles = response.value as IProfile[];
             ProfilesState.error = '';
         } else {
             ProfilesState.error = 'Error on fetching absenting Profiles';
@@ -79,7 +79,7 @@ export function useProfiles(weekId: number) {
 
         if (error.value === true && isMessage(profile) === true) {
             ProfilesState.error = (profile.value as IMessage).message;
-        } else if (isResponseObjectOkay(error, profile, isProfile)) {
+        } else if (isResponseObjectOkay(error, profile as Ref<IProfile>, isProfile)) {
             return profile.value as IProfile;
         }
 

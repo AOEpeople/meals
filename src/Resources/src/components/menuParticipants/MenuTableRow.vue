@@ -6,9 +6,9 @@
       :key="`${menuIndex}-${menuDayId}`"
     >
       <slot
-        v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId).meals).length > 0"
+        v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId)?.meals ?? {}).length > 0"
         name="dayMeals"
-        v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId).meals) }"
+        v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId)?.meals ?? {}) }"
       />
     </template>
   </LazyTableRow>
@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 import { useParticipations } from '@/stores/participationsStore';
-import { SimpleMeal, useWeeks } from '@/stores/weeksStore';
-import { Dictionary } from 'types/types';
+import { type SimpleMeal, useWeeks } from '@/stores/weeksStore';
+import { type Dictionary } from '@/types/types';
 import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const props = defineProps<{

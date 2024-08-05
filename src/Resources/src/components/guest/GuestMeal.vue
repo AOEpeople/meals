@@ -46,8 +46,8 @@ import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import GuestCheckbox from '@/components/guest/GuestCheckbox.vue';
-import { Dictionary } from 'types/types';
-import { Meal } from '@/api/getDashboardData';
+import { type Dictionary } from '@/types/types';
+import { type Meal } from '@/api/getDashboardData';
 import useMealState from '@/services/useMealState';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
@@ -93,7 +93,7 @@ const mealCSS = computed(() => {
 });
 
 const participationDisplayString = computed(() => {
-  const fixedCount = Math.ceil(parseFloat(meal.value.participations.toFixed(1)));
-  return meal.value.limit > 0 ? `${fixedCount}/${meal.value.limit}` : fixedCount;
+  const fixedCount = Math.ceil(parseFloat((meal.value.participations ?? 0).toFixed(1)));
+  return (meal.value.limit ?? 0) > 0 ? `${fixedCount}/${meal.value.limit}` : fixedCount;
 });
 </script>

@@ -2,7 +2,6 @@ import MenuDay from '@/components/menu/MenuDay.vue';
 import { mount } from '@vue/test-utils';
 import { DayDTO } from '@/interfaces/DayDTO';
 import { Ref, ref } from 'vue';
-import useApi from '@/api/api';
 import Weeks from '../fixtures/getWeeks.json';
 import DishesCount from '../fixtures/dishesCount.json';
 import Dishes from '../fixtures/getDishes.json';
@@ -10,6 +9,7 @@ import Categories from '../fixtures/getCategories.json';
 import { useDishes } from '@/stores/dishesStore';
 import { useCategories } from '@/stores/categoriesStore';
 import { useWeeks } from '@/stores/weeksStore';
+import { vi, describe, beforeEach, it, expect } from 'vitest';
 
 const { fetchCategories } = useCategories();
 const { fetchDishes } = useDishes();
@@ -59,9 +59,9 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 const testDay: Ref<DayDTO> = ref({
     meals: {

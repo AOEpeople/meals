@@ -1,10 +1,11 @@
 import EventCreationPanel from '@/components/events/EventCreationPanel.vue';
 import { mount } from '@vue/test-utils';
+import { vi, describe, afterEach, it, expect } from 'vitest';
 
-const mockCreateEvent = jest.fn();
-const mockUpdateEvent = jest.fn();
+const mockCreateEvent = vi.fn();
+const mockUpdateEvent = vi.fn();
 
-jest.mock('@/stores/eventsStore', () => ({
+vi.mock('@/stores/eventsStore', () => ({
     useEvents: () => ({
         createEvent: mockCreateEvent,
         updateEvent: mockUpdateEvent
@@ -12,7 +13,7 @@ jest.mock('@/stores/eventsStore', () => ({
 }));
 
 describe('Test EventCreationPanel', () => {
-    afterEach(() => jest.clearAllMocks());
+    afterEach(() => { vi.clearAllMocks() });
 
     it('should not call createEvent if title is empty', async () => {
         const wrapper = mount(EventCreationPanel);

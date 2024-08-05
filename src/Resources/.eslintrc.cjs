@@ -19,7 +19,7 @@ module.exports = {
 
     rules: {
         // override/add rules settings here, such as:
-        'vue/no-unused-vars': 'off',
+        'vue/no-unused-vars': 'warn',
         'vue/multi-word-component-names': 'off',
         'vue/require-prop-types': 'off',
         'vue/attribute-hyphenation': 'off',
@@ -33,6 +33,7 @@ module.exports = {
                 allowedNames: ['vm'] // Allow `const vm= this`; `[]` by default
             }
         ],
+        "@typescript-eslint/ban-ts-comment": "error",
         'tailwindcss/no-custom-classname': 'off',
         'tailwindcss/enforces-negative-arbitrary-values': 'off',
         eqeqeq: 'error',
@@ -40,7 +41,7 @@ module.exports = {
         'no-var': 'error'
     },
 
-    ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/'],
+    ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/', 'src/types/EpicSpinners.ts', 'src/types/VueTabs.ts'],
 
     overrides: [
         {

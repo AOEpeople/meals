@@ -1,4 +1,4 @@
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
 import { Diet } from '@/enums/Diet';
 
@@ -6,8 +6,8 @@ export interface CreateDishDTO {
     titleDe: string;
     titleEn: string;
     oneServingSize: boolean;
-    descriptionDe?: string;
-    descriptionEn?: string;
+    descriptionDe: string;
+    descriptionEn: string;
     category?: number;
     diet?: Diet;
 }

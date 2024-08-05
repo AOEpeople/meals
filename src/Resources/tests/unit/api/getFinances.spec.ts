@@ -1,7 +1,7 @@
 import getFinances from '@/api/getFinances';
-import useApi from '@/api/api';
 import Finances from '../fixtures/finances.json';
 import { ref } from 'vue';
+import { vi, describe, it, expect } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -13,10 +13,9 @@ const mockedReturnValue = {
     error: ref(false)
 };
 
-// @ts-expect-error ts doesn't like mocking with jest.fn()
-useApi = jest.fn(useApi);
-// @ts-expect-error continuation of expect error from line above
-useApi.mockReturnValue(mockedReturnValue);
+vi.mock('@/api/api', () => ({
+    default: vi.fn(() => { return mockedReturnValue })
+}));
 
 describe('Test getFinances', () => {
     it('should return a list of finances that contain transactions', async () => {

@@ -27,7 +27,7 @@ const url = ref('');
 onMounted(async () => {
   const { link, error } =
     props.invitation === Invitation.MEAL ? await useGuestLink(props.dayID) : await getEventGuestLink(props.dayID);
-  if (error.value === false) {
+  if (error.value === false && link.value !== undefined) {
     copyTextToClipboard(link.value.url);
     url.value = link.value.url;
   }

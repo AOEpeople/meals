@@ -1,6 +1,5 @@
 <template>
   <Combobox
-    v-slot="{ open }"
     v-model="selectedProfile"
     as="span"
     class="relative w-full"
@@ -81,7 +80,7 @@
 
 <script setup lang="ts">
 import useDetectClickOutside from '@/services/useDetectClickOutside';
-import { IProfile, useProfiles } from '@/stores/profilesStore';
+import { type IProfile, useProfiles } from '@/stores/profilesStore';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, ComboboxLabel } from '@headlessui/vue';
 import { computed, onMounted, ref, useSlots } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';

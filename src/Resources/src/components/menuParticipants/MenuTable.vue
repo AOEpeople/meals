@@ -20,6 +20,7 @@ import MenuTableBody from '@/components/menuParticipants/MenuTableBody.vue';
 import MenuTableHead from './MenuTableHead.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import LoadingSpinner from '../misc/LoadingSpinner.vue';
+import process from 'node:process';
 
 const props = defineProps<{
   weekId: number;
@@ -48,7 +49,7 @@ onMounted(async () => {
 });
 
 // expose functions for testing
-if (process.env.NODE_ENV === 'TEST') {
+if (process?.env?.NODE_ENV === 'TEST') {
   defineExpose({ loaded });
 }
 </script>

@@ -1,4 +1,4 @@
-import { describe, it } from '@jest/globals';
+import { describe, beforeEach, it, expect } from 'vitest';
 import { mockComposableInApp } from '../test-utils';
 import { useComponentHeights } from '@/services/useComponentHeights';
 

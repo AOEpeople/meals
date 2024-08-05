@@ -5,11 +5,11 @@ RUN apt-get update \
         build-essential \
         nodejs
 WORKDIR var/www/html/src/Resources
-COPY src/Resources/package.json src/Resources/yarn.lock ./
-RUN yarn install
+COPY src/Resources/package.json src/Resources/package-lock.json ./
+RUN npm install
 COPY src/Resources/ .
 COPY public .
-RUN NODE_ENV=production yarn run build
+RUN NODE_ENV=production npm run build
 
 # build production container
 FROM php:8.3-fpm-alpine

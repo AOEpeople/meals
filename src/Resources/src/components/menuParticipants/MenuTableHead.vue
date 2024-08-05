@@ -11,14 +11,17 @@
         :key="menuDayId"
       >
         <th
-          v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId).meals).length > 0"
+          v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId)?.meals ?? {}).length > 0"
           :colspan="getColspanFromMeals(menuDayId)"
           class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
         >
           {{
-            new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, {
-              weekday: 'long'
-            })
+            new Date(getDayByWeekIdAndDayId(weekId, menuDayId)?.dateTime?.date ?? Date.now()).toLocaleDateString(
+              locale,
+              {
+                weekday: 'long'
+              }
+            )
           }}
         </th>
       </template>
@@ -29,7 +32,7 @@
           class="sticky left-0 top-0 z-40 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-start"
         />
       </template>
-      <template #dayMeals="{ dayId, meals }">
+      <template #dayMeals="{ meals }">
         <th
           v-for="(meal, mealIndex) in meals"
           :key="`${String(meal.id)}_${String(mealIndex)}`"
@@ -63,7 +66,8 @@ const { menuParticipationsState } = useParticipations(props.weekId);
 
 function getColspanFromMeals(dayId: string) {
   let mealCount = 0;
-  for (const mealArr of Object.values(getDayByWeekIdAndDayId(props.weekId, dayId)?.meals)) {
+  const meals = getDayByWeekIdAndDayId(props.weekId, dayId)?.meals ?? {};
+  for (const mealArr of Object.values(meals)) {
     mealArr.forEach(() => mealCount++);
   }
   return mealCount;

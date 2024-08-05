@@ -1,7 +1,8 @@
 import MenuParticipationPanel from '@/components/menu/MenuParticipationPanel.vue';
 import { mount } from '@vue/test-utils';
 import { MealDTO } from '@/interfaces/DayDTO';
-import { Dictionary } from 'types/types';
+import { Dictionary } from '@/types/types';
+import { describe, it, expect } from 'vitest';
 
 const testMeals: Dictionary<MealDTO[]> = {
     1: [

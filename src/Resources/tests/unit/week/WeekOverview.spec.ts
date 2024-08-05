@@ -1,6 +1,7 @@
 import WeekOverview from '@/components/weeks/WeekOverview.vue';
 import { Week } from '@/stores/weeksStore';
 import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
 
 const weekOne: Week = {
     id: 57,

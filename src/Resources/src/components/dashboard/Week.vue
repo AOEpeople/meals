@@ -4,11 +4,11 @@
       {{ t('dashboard.' + index) }}
     </h2>
     <p class="description text-primary print:hidden">
-      {{ (startLocale + ' - ' + endLocale).replaceAll(',', '') }}
+      {{ (startLocale + ' - ' + endLocale).replace(/,/g, '') }}
     </p>
   </div>
   <div
-    v-if="Object.keys(days).length === 0 || !dashboardStore.getWeek(weekID).isEnabled"
+    v-if="Object.keys(days ?? {}).length === 0 || !dashboardStore.getWeek(weekID)?.isEnabled"
     class="mb-20 text-center text-[18px] tracking-[1.5px] text-[#acbdc7]"
   >
     <img
@@ -24,7 +24,7 @@
     class="grid"
   >
     <Day
-      v-for="(day, dayID, d_index) in days"
+      v-for="(dayID, d_index) in Object.keys(days ?? {})"
       :key="dayID"
       :weekID="String(weekID)"
       :dayID="String(dayID)"
@@ -52,12 +52,12 @@ const props = defineProps<{
 const week = dashboardStore.getWeek(props.weekID);
 const days = dashboardStore.getDays(props.weekID);
 
-const startDate = new Date(week.startDate.date);
+const startDate = new Date(week?.startDate?.date ?? '');
 const startLocale = computed(() =>
   startDate.toLocaleDateString(locale.value, { weekday: 'short', month: 'numeric', day: 'numeric' })
 );
 
-const endDate = new Date(week.endDate.date);
+const endDate = new Date(week?.endDate?.date ?? '');
 const endLocale = computed(() =>
   endDate.toLocaleDateString(locale.value, { weekday: 'short', month: 'numeric', day: 'numeric' })
 );

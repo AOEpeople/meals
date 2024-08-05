@@ -38,11 +38,11 @@
     <div class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:items-center">
       <PriceTag
         class="align-center my-auto flex print:hidden"
-        :price="meal.price"
+        :price="meal.price ?? 0"
       />
       <ParticipationCounter
         :mealCSS="mealCSS"
-        :limit="meal.limit"
+        :limit="meal.limit ?? 0"
       >
         {{ participationDisplayString }}
       </ParticipationCounter>
@@ -64,10 +64,11 @@ import { useI18n } from 'vue-i18n';
 import { computed, onMounted, ref, watch } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
-import { Day, Meal } from '@/api/getDashboardData';
+import { type Day, type Meal } from '@/api/getDashboardData';
 import { useDishes } from '@/stores/dishesStore';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
+import { MealState } from '@/enums/MealState';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -77,14 +78,16 @@ const props = defineProps<{
   day: Day;
 }>();
 
-const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
+const meal = props.meal ?? dashboardStore.getMeal(props.weekID ?? -1, props.dayID ?? -1, props.mealID);
 
 const { t, locale } = useI18n();
 const { getCombiDishes } = useDishes();
 
 const title = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de));
 
-const description = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de));
+const description = computed(() =>
+  locale.value.substring(0, 2) === 'en' ? meal.description?.en : meal.description?.de
+);
 const combiDescription = ref<string[]>([]);
 
 onMounted(async () => {
@@ -101,15 +104,13 @@ watch(
 const mealCSS = computed(() => {
   let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
   switch (meal.mealState) {
-    case 'disabled':
-    case 'offerable':
+    case (MealState.DISABLED, MealState.OFFERABLE):
       css += 'bg-[#80909F]';
       return css;
-    case 'open':
+    case MealState.OPEN:
       css += 'bg-primary-4';
       return css;
-    case 'tradeable':
-    case 'offering':
+    case (MealState.TRADEABLE, MealState.OFFERING):
       css += 'bg-highlight';
       return css;
     default:
@@ -118,14 +119,14 @@ const mealCSS = computed(() => {
 });
 
 const participationDisplayString = computed(() => {
-  const fixedCount = Math.ceil(parseFloat(meal.participations.toFixed(1)));
-  return meal.limit > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
+  const fixedCount = Math.ceil(parseFloat((meal.participations ?? 0).toFixed(1)));
+  return (meal.limit ?? 0) > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
 });
 
 async function getCombiDescription() {
   if (props.meal.isParticipating !== null && props.meal.dishSlug === 'combined-dish' && dayHasVariations()) {
     const combiDishes = await getCombiDishes(typeof props.mealID === 'string' ? parseInt(props.mealID) : props.mealID);
-    return combiDishes.map((dish) => (locale.value === 'de' ? dish.titleDe : dish.titleEn));
+    return (combiDishes ?? []).map((dish) => (locale.value === 'de' ? dish.titleDe : dish.titleEn));
   } else {
     return [];
   }
@@ -133,7 +134,7 @@ async function getCombiDescription() {
 
 function dayHasVariations() {
   for (const meal of Object.values(props.day.meals)) {
-    if ((meal as Meal).variations && Object.values((meal as Meal).variations).length > 0) {
+    if ((meal as Meal).variations && Object.values(meal.variations ?? {}).length > 0) {
       return true;
     }
   }

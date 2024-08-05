@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import { ref } from 'vue';
-import { TimeSlot } from '@/stores/timeSlotStore';
+import { type TimeSlot } from '@/stores/timeSlotStore';
 
 /**
  * Performs a PUT request to update a slot
@@ -37,7 +37,10 @@ export function useUpdateSlot() {
      * @param slot The slot as it should look after updating
      */
     async function updateTimeSlot(slot: TimeSlot) {
-        return putUpdateSlot(slot.slug, JSON.stringify({ title: slot.title, limit: slot.limit, order: slot.order }));
+        return putUpdateSlot(
+            slot.slug ?? '',
+            JSON.stringify({ title: slot.title, limit: slot.limit, order: slot.order })
+        );
     }
 
     return {

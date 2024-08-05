@@ -1,6 +1,6 @@
-import { IMessage } from '@/interfaces/IMessage';
+import { type IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
-import { DateTime } from './getDashboardData';
+import { type DateTime } from './getDashboardData';
 
 export interface EventInvitationData {
     date: DateTime;

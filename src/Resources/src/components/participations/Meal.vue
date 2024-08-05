@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations';
+import { type IMealWithVariations, type IMealData } from '@/api/getShowParticipations';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
 

@@ -1,7 +1,7 @@
 import SlotActions from '@/components/timeslots/SlotActions.vue';
-import { describe, expect, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import { TimeSlot } from '@/stores/timeSlotStore';
+import { describe, it, expect } from 'vitest';
 
 const timeSlot: TimeSlot = {
     title: 'TestSlot 1234',

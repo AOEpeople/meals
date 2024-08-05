@@ -6,9 +6,6 @@ import { Vue3ProgressPlugin } from '@marcoschulte/vue3-progress';
 import { userDataStore } from '@/stores/userDataStore';
 import { environmentStore } from '@/stores/environmentStore';
 
-// Style
-import '../style/output.css';
-
 // Vue Components
 import App from '@/App.vue';
 
@@ -19,8 +16,8 @@ import de from '@/locales/de.json';
 const i18n = createI18n({
     locale: navigator.language,
     fallbackLocale: 'de',
-    fallbackWarn: false,
-    missingWarn: false,
+    legacy: false,
+    warnHtmlInMessage: 'off',
     messages: {
         en,
         de
@@ -30,7 +27,7 @@ const i18n = createI18n({
 // fill stores with data
 Promise.all([userDataStore.fillStore(), environmentStore.fillStore()]).then(() => {
     const MainApp = createApp(App);
-    MainApp.config.performance = true; // enable Vue Devtools
+    MainApp.config.performance = process.env.NODE_ENV !== 'production'; // enable Vue Devtools
     MainApp.use(i18n);
     MainApp.use(router);
     MainApp.use(VueScreen);

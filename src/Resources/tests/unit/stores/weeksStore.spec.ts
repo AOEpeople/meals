@@ -1,8 +1,8 @@
 import { useWeeks } from '@/stores/weeksStore';
-import useApi from '@/api/api';
 import { ref } from 'vue';
 import Weeks from '../fixtures/getWeeks.json';
 import DishesCount from '../fixtures/dishesCount.json';
+import { describe, beforeEach, it, expect, vi } from 'vitest';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -36,9 +36,9 @@ const getMockedResponses = (method: string, url: string) => {
     }
 };
 
-// @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
+vi.mock('@/api/api', () => ({
+    default: vi.fn((method: string, url: string) => getMockedResponses(method, url))
+}));
 
 describe('Test weeksStore', () => {
     const {

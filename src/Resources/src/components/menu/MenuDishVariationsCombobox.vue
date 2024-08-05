@@ -50,7 +50,7 @@
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-import { Dish } from '@/stores/dishesStore';
+import { type Dish } from '@/stores/dishesStore';
 import { useWeeks } from '@/stores/weeksStore';
 
 const { MenuCountState } = useWeeks();
@@ -62,8 +62,7 @@ const props = withDefaults(
     dish: Dish;
   }>(),
   {
-    modelValue: null,
-    dish: null
+    modelValue: null
   }
 );
 

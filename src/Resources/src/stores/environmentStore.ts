@@ -1,5 +1,5 @@
 import { Store } from '@/stores/store';
-import { Env, useEnvs } from '@/api/getEnvironmentals';
+import { type Env, useEnvs } from '@/api/getEnvironmentals';
 
 class EnvironmentStore extends Store<Env> {
     protected data(): Env {

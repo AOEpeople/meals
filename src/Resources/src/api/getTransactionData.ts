@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import { ref } from 'vue';
-import { DateTime } from './getDashboardData';
+import { type DateTime } from './getDashboardData';
 
 export type Transactions = {
     data: Transaction[];

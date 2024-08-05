@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import LazyTableRow from '../misc/LazyTableRow.vue';
-import { Event } from '@/stores/eventsStore';
+import { type Event } from '@/stores/eventsStore';
 import { CheckIcon, XIcon } from '@heroicons/vue/outline';
 import EventsActions from './EventsActions.vue';
 

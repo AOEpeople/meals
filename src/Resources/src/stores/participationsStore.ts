@@ -1,11 +1,11 @@
-import { Dictionary } from 'types/types';
-import { Ref, reactive, readonly, watch } from 'vue';
+import type { Dictionary } from '@/types/types';
+import { type Ref, reactive, readonly, watch } from 'vue';
 import getParticipations from '@/api/getParticipations';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';
 import putParticipation from '@/api/putParticipation';
-import { isMessage, IMessage } from '@/interfaces/IMessage';
+import { isMessage, type IMessage } from '@/interfaces/IMessage';
 import deleteParticipation from '@/api/deleteParticipation';
-import { IProfile } from './profilesStore';
+import type { IProfile } from './profilesStore';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
@@ -93,7 +93,7 @@ export function useParticipations(weekId: number) {
         const { error, participations } = await getParticipations(weekId);
 
         if (isResponseObjectOkay<IMenuParticipationDays>(error, participations, isMenuParticipation) === true) {
-            menuParticipationsState.days = participations.value;
+            menuParticipationsState.days = participations.value as IMenuParticipationDays;
             menuParticipationsState.error = '';
         } else {
             menuParticipationsState.error = 'Error on getting the participations';
@@ -159,7 +159,7 @@ export function useParticipations(weekId: number) {
      * @param profileFullname   The full name of the participant (is equivalent to the key in the dict).
      */
     function handleParticipationUpdate(
-        response: Ref<IMessage | IParticipationUpdate>,
+        response: Ref<IMessage | IParticipationUpdate | undefined>,
         error: Ref<boolean>,
         dayId: string,
         profileFullname: string
@@ -235,6 +235,7 @@ export function useParticipations(weekId: number) {
      * @param dishId    The id of the dish.
      */
     function countBookedMeal(dayId: string, dishId: number) {
+        if (dishId < 0) return 0;
         const day = menuParticipationsState.days[dayId];
 
         let count = 0;

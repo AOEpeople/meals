@@ -2,7 +2,7 @@
   <div
     id="mealsList"
     ref="mealsList"
-    class="my-6 grid h-fit grid-flow-col auto-cols-[1fr] gap-4 p-0"
+    class="my-6 grid h-fit auto-cols-[1fr] grid-flow-col gap-4 p-0"
   >
     <Meal
       v-for="meal in mealsWithVariations"

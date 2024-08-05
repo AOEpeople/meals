@@ -4,13 +4,13 @@
     class="w-full table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white"
   >
     <thead
-      class="shadow-[0_15px_35px_0_#5B788F21] w-full"
+      class="w-full shadow-[0_15px_35px_0_#5B788F21]"
       :class="[meal.variations.length > 0 ? '' : 'rounded-b-lg']"
     >
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="grid w-full grid-flow-col justify-center gap-2 p-4 align-top break-all text-lg text-primary"
+          class="grid w-full grid-flow-col justify-center gap-2 break-all p-4 align-top text-lg text-primary"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
           <VeggiIcon

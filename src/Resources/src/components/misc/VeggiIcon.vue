@@ -38,7 +38,8 @@ withDefaults(
     maxHeight?: string;
   }>(),
   {
-    tooltipActive: true
+    tooltipActive: true,
+    maxHeight: ''
   }
 );
 </script>

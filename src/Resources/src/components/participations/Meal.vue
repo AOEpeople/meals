@@ -1,16 +1,16 @@
 <template>
   <table
     v-if="meal && meal.title.en !== 'Combined Dish'"
-    class="grow-1 table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white"
+    class="w-full table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white"
   >
     <thead
-      class="shadow-[0_15px_35px_0_#5B788F21]"
+      class="shadow-[0_15px_35px_0_#5B788F21] w-full"
       :class="[meal.variations.length > 0 ? '' : 'rounded-b-lg']"
     >
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="flex flex-row justify-center gap-2 p-4 align-top text-lg text-primary"
+          class="grid w-full grid-flow-col justify-center gap-2 p-4 align-top break-all text-lg text-primary"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
           <VeggiIcon
@@ -19,6 +19,7 @@
             class="self-center"
             :class="meal.diet === Diet.VEGAN ? 'h-[45px]' : 'h-[42px]'"
             :tooltip-active="false"
+            :maxHeight="meal.diet === Diet.VEGAN ? 'max-h-[45px]' : 'max-h-[42px]'"
           />
         </th>
       </tr>
@@ -29,19 +30,20 @@
         :key="index"
       >
         <td
-          class="flex min-h-[60px] flex-row content-center justify-center gap-2"
+          class="grid min-h-[60px] grid-flow-col content-center justify-center gap-2 p-2"
           :class="//@ts-ignore
           [meal.variations.length - 1 > index ? 'border-b border-solid' : 'border-none']"
         >
-          <span class="my-auto">
+          <span class="my-auto break-all">
             {{ getTitleForLocale(variation) }}
           </span>
           <VeggiIcon
             v-if="variation.diet && variation.diet !== Diet.MEAT"
             :diet="variation.diet"
             class="self-center"
-            :class="variation.diet === Diet.VEGAN ? 'h-[42px]' : 'h-[35px]'"
+            :class="variation.diet === Diet.VEGAN ? 'h-[31px]' : 'h-[36px]'"
             :tooltip-active="false"
+            :maxHeight="meal.diet === Diet.VEGAN ? 'max-h-[31px] h-[31px]' : 'max-h-[36px] h-[36px]'"
           />
         </td>
       </tr>

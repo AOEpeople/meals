@@ -336,8 +336,8 @@ jobs:
       - name: Test with docker compose
         run: |
           mkdir build
-          docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
-          docker-compose -f docker-compose-test.yaml down --remove-orphans
+          docker compose -f docker-compose-test.yaml up --abort-on-container-exit
+          docker compose -f docker-compose-test.yaml down --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         if: always()

@@ -3,6 +3,7 @@
     <img
       v-if="diet === Diet.VEGETARIAN"
       class="object-cover"
+      :class="maxHeight"
       src="../../../images/vegetarian.png"
       alt="vegetarian"
       data-cy="vegetarian-icon"
@@ -10,6 +11,7 @@
     <img
       v-else-if="diet === Diet.VEGAN"
       class="object-cover"
+      :class="maxHeight"
       src="../../../images/vegan.png"
       alt="vegan"
       data-cy="vegan-icon"
@@ -33,6 +35,7 @@ withDefaults(
   defineProps<{
     diet: Diet;
     tooltipActive?: boolean;
+    maxHeight?: string;
   }>(),
   {
     tooltipActive: true

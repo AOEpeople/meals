@@ -14,18 +14,19 @@
     >
       <td
         v-if="index < 3"
-        class="flex flex-row content-center justify-center gap-2 truncate"
+        class="grid grid-flow-col content-center justify-center gap-2 px-2"
         :class="[mealNameIsEmpty(String((meal as IDish).title)) ? 'h-[60px]' : 'h-[60px] border-b border-solid']"
       >
-        <span class="my-auto">
+        <span class="my-auto truncate">
           {{ String((meal as IDish).title) }}
         </span>
         <VeggiIcon
           v-if="(meal as IDish).diet && (meal as IDish).diet !== Diet.MEAT"
           :diet="(meal as IDish).diet"
           class="self-center"
-          :class="(meal as IDish).diet === Diet.VEGAN ? 'h-[42px]' : 'h-[35px]'"
+          :class="(meal as IDish).diet === Diet.VEGAN ? 'h-[31px]' : 'h-[36px]'"
           :tooltip-active="false"
+          :maxHeight="meal.diet === Diet.VEGAN ? 'max-h-[31px] h-[31px]' : 'max-h-[36px] h-[36px]'"
         />
       </td>
     </tr>

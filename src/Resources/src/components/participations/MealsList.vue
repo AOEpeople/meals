@@ -2,12 +2,11 @@
   <div
     id="mealsList"
     ref="mealsList"
-    class="my-6 flex h-fit flex-row gap-4 p-0"
+    class="my-6 grid h-fit auto-cols-[1fr] grid-flow-col gap-4 p-0"
   >
     <Meal
       v-for="meal in mealsWithVariations"
       :key="meal.mealId"
-      class="flex-1"
       :meal="meal"
     />
   </div>

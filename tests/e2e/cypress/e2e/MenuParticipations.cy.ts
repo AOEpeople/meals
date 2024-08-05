@@ -32,7 +32,7 @@ describe('Test Menu Participations View', () => {
         // Test Add Search Bar
         cy.get('input').first().click().type('meals');
         cy.wait(500);
-        cy.get('li').each(($el) => {
+        cy.get('span[data-cy="add-part-li"]').each(($el) => {
             expect($el.text()).to.match(/Meals, */);
         });
         cy.get('input').clear().first().type('bob');

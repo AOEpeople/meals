@@ -65,7 +65,10 @@
               class="relative cursor-pointer px-4 py-1 text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
               @click="selectProfile(profile as IProfile)"
             >
-              <span class="size-full truncate">
+              <span
+                data-cy="add-part-li"
+                class="size-full truncate"
+              >
                 {{ getDisplayName(profile as IProfile) }}
               </span>
             </LazyListItem>

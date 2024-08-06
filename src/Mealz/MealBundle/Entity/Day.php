@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
+use Psr\Log\LoggerInterface;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'day')]
@@ -41,14 +42,17 @@ class Day extends AbstractMessage implements JsonSerializable
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
-
-    public function __construct()
+    private LoggerInterface $logger;
+    public function __construct(
+        LoggerInterface $logger
+    )
     {
         $this->dateTime = new DateTime();
         $this->week = $this->getDefaultWeek($this->dateTime);
         $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
         $this->events = new EventCollection();
+        $this->logger = $logger;
     }
 
     public function getId(): ?int
@@ -190,6 +194,7 @@ class Day extends AbstractMessage implements JsonSerializable
             }
         }
         foreach ($this->getEvents() as $event) {
+            $this->logger->info('Jo ich bin hier lol');
             if ($event !== null && $event instanceof EventParticipation) {
                 $eventId = $event->getId();
                 if (isset($eventId)) {

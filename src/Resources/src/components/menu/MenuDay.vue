@@ -172,12 +172,12 @@ watch(selectedEventOne, () => {
     const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value?.id;
 
     if (selectedEventOne.value) {
-      selectedDishes.value.events[firstKey] = [{
+      selectedDishes.value.events[firstKey] = {
         eventId: selectedEventOne.value.id,
         eventSlug: selectedEventOne.value.slug,
         eventTitle: selectedEventOne.value.title,
         isPublic: selectedEventOne.value.public
-      }];
+      };
     } else if (firstKey) {
       selectedDishes.value.events[firstKey][0].eventId = null;
     }
@@ -191,12 +191,12 @@ watch(selectedEventTwo, () => {
     const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
 
     if (selectedEventTwo.value) {
-      selectedDishes.value.events[secondKey] = [{
+      selectedDishes.value.events[secondKey] = {
         eventId: selectedEventTwo.value.id,
         eventSlug: selectedEventTwo.value.slug,
         eventTitle: selectedEventTwo.value.title,
         isPublic: selectedEventTwo.value.public
-      }];
+      };
     } else if (secondKey) {
       selectedDishes.value.events[secondKey][1].eventId = null;
     }
@@ -207,6 +207,7 @@ watch(selectedEventTwo, () => {
 
 
 onMounted(() => {
+  console.log('onMounted Menu Day');
   // get mealKeys
   selectedDishOne.value = getDishArrayBySlugs(
     props.modelValue.meals[mealKeys.value[0]]
@@ -218,9 +219,12 @@ onMounted(() => {
       .map((meal: MealDTO) => meal.dishSlug)
       .filter((slug) => slug !== null) as string[]
   );
+
   try {
+    console.log('try Block');
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];
+    console.log(firstKey);
 
     if (props.modelValue.events[firstKey]) {
       selectedEventOne.value = {
@@ -230,7 +234,6 @@ onMounted(() => {
         public: props.modelValue.events[firstKey][0].isPublic,
       };
     }
-
     if (props.modelValue.events[secondKey]) {
       selectedEventTwo.value = {
         id: props.modelValue.events[secondKey][0].eventId,

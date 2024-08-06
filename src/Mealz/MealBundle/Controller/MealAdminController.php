@@ -206,6 +206,7 @@ class MealAdminController extends BaseController
 
         $eventCollection = $day['events'];
         foreach ($eventCollection as $event) {
+            $this->logger->info('Event '. implode($event));
             $this->handleEventArr($event, $dayEntity);
         }
 
@@ -288,11 +289,11 @@ class MealAdminController extends BaseController
         }
     }
     private function handleEventArr(array $eventArr, Day $day): void{
-            foreach($eventArr as $event){
-                    $this->addEvent($event, $day);
+                    $this->addEvent($eventArr, $day);
             }
-    }
+
     private function addEvent(array $event, Day $dayEntity){
+        $this->logger->info('EventId: '. $event['eventId']. ', name: '. $event['eventSlug']);
         $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
         $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
         if(!$eventExistsForDayAlready){

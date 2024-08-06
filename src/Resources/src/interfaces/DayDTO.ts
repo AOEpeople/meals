@@ -12,7 +12,7 @@ export interface DayDTO {
     meals: Dictionary<MealDTO[]>;
     enabled: boolean;
     id: number;
-    events: Dictionary<EventDTO[]>;
+    events: Dictionary<EventDTO>;
     date: DateTime;
     lockDate: DateTime;
 }

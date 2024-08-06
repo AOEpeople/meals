@@ -104,13 +104,15 @@ watch(
 const mealCSS = computed(() => {
   let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
   switch (meal.mealState) {
-    case (MealState.DISABLED, MealState.OFFERABLE):
+    case MealState.DISABLED:
+    case MealState.OFFERABLE:
       css += 'bg-[#80909F]';
       return css;
     case MealState.OPEN:
       css += 'bg-primary-4';
       return css;
-    case (MealState.TRADEABLE, MealState.OFFERING):
+    case MealState.TRADEABLE:
+    case MealState.OFFERING:
       css += 'bg-highlight';
       return css;
     default:

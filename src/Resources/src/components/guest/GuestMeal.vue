@@ -51,6 +51,7 @@ import { type Meal } from '@/api/getDashboardData';
 import useMealState from '@/services/useMealState';
 import VeggiIcon from '@/components/misc/VeggiIcon.vue';
 import { Diet } from '@/enums/Diet';
+import { MealState } from '@/enums/MealState';
 
 const props = defineProps<{
   meals: Dictionary<Meal>;
@@ -81,10 +82,11 @@ const description = computed(() => {
 const mealCSS = computed(() => {
   let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
   switch (meal.value.mealState) {
-    case 'disabled':
+    case MealState.OFFERABLE:
+    case MealState.DISABLED:
       css += 'bg-[#80909F]';
       return css;
-    case 'open':
+    case MealState.OPEN:
       css += 'bg-primary-4';
       return css;
     default:

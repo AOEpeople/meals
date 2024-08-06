@@ -100,13 +100,15 @@ const mealCSS = computed(() => {
   for (const [variationId, variation] of Object.entries(meal?.variations ?? {})) {
     let cssStr = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
     switch (variation.mealState) {
-      case (MealState.DISABLED, MealState.OFFERABLE):
+      case MealState.DISABLED:
+      case MealState.OFFERABLE:
         cssStr += 'bg-[#80909F]';
         break;
       case MealState.OPEN:
         cssStr += 'bg-primary-4';
         break;
-      case (MealState.TRADEABLE, MealState.OFFERING):
+      case MealState.TRADEABLE:
+      case MealState.OFFERING:
         cssStr += 'bg-highlight';
         break;
     }

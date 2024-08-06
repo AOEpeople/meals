@@ -148,9 +148,9 @@ You need to start the devbox before running any tests with cypress.
 
 ## Component testing
 
-To run specific component tests with JEST in isolation:
+To run specific component tests with Vitest in isolation:
 ```
-ddev exec yarn --cwd=src/Resources test -- -t "<test-filename> <testname>"
+ddev exec npm run --prefix src/Resources test:unit -- "<test-filename> <testname>"
 ```
 `<test-filename>` for a file with the name `xyz.spec.ts` would be `xyz`
 `<testname>` is optional, if no testname is specified the whole file is run
@@ -173,6 +173,12 @@ make run-prettier-check
 Frontend automated formatting
 ```
 make run-prettier
+```
+
+#### Vue-Tsc
+Check TypeScript types
+```
+make run-typecheck
 ```
 
 #### Php-CS-Fixer

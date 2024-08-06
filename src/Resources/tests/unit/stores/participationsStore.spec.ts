@@ -51,7 +51,6 @@ describe('Test participationsStore', () => {
     } = useParticipations(1);
 
     beforeEach(() => {
-        console.log('resetting states');
         resetStates();
     });
 

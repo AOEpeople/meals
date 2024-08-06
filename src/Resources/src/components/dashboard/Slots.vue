@@ -9,7 +9,7 @@
     <div class="relative">
       <ListboxButton
         :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
-        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center border-[#B4C1CE] bg-white pl-4 pr-2 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10 sm:w-64"
+        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center border-[#B4C1CE] bg-white pl-4 pr-2 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10"
       >
         <span class="text-gray block truncate text-[12px] leading-5 min-[380px]:text-note">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}

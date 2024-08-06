@@ -1,6 +1,6 @@
 <template>
   <div
-    class="day-shadow mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none"
+    class="mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white shadow-day sm:max-w-none"
   >
     <div
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
@@ -50,6 +50,7 @@
         <Slots
           :dayID="dayID"
           :day="day"
+          class="sm:w-64"
         />
       </div>
       <div

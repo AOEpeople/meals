@@ -21,7 +21,6 @@ import { type IBookedData, getShowParticipations } from '@/api/getShowParticipat
 import ParticipantsTableSlot from './ParticipantsTableSlot.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { type Dictionary } from '@/types/types';
-import process from 'node:process';
 
 const { participationsState, getMealsWithVariations, loadedState } = getShowParticipations();
 
@@ -116,7 +115,7 @@ function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<
 }
 
 // expose functions for testing
-if (process?.env?.NODE_ENV === 'TEST') {
+if (import.meta.env.VITE_ENV === 'TEST') {
   defineExpose({ scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations });
 }
 </script>

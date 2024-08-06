@@ -36,6 +36,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  define: {
+    'import.meta.env.VITE_ENV': JSON.stringify(process.env.NODE_ENV)
+  },
   server: {
     host: true,
     port: 5173,

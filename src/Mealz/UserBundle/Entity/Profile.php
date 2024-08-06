@@ -98,7 +98,11 @@ class Profile implements UserInterface, JsonSerializable
 
     public function getFullName(): string
     {
-        return "$this->name, $this->firstName";
+        $fullname = "$this->name, $this->firstName";
+        if ($this->isGuest()) {
+            $fullname .= $this->getCompany() === '' || $this->getCompany() === null ? ' (Guest)' : " ($this->company)";
+        }
+        return $fullname;
     }
 
     public function addRole(Role $role): static

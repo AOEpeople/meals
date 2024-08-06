@@ -19,10 +19,7 @@
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="
-          // @ts-ignore
-            (event) => titleStringRepr
-          "
+          :displayValue="() => (selectedEvent ? selectedEvent.title : '')"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
@@ -31,7 +28,7 @@
           aria-hidden="true"
           @click="
             setFilter('');
-            value = null;
+            selectedEvent = null;
           "
         />
       </div>
@@ -81,17 +78,16 @@ import useDetectClickOutside from '@/services/useDetectClickOutside';
 import { type Event, useEvents } from '@/stores/eventsStore';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 import { XIcon } from '@heroicons/vue/solid';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EventIcon from '../misc/EventIcon.vue';
-import { EventParticipation } from '@/api/getDashboardData';
 
 const { setFilter, filteredEvents } = useEvents();
-const { locale, t } = useI18n();
+const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
-    modelValue: EventParticipation | null;
+    modelValue: Event | null;
   }>(),
   {
     modelValue: null
@@ -102,9 +98,8 @@ const emit = defineEmits(['update:modelValue']);
 
 const openProp = ref(false);
 const combobox = ref<HTMLElement | null>(null);
-const selectedEvent = ref<EventParticipation | null>(null);
 
-const value = computed({
+const selectedEvent = computed({
   get() {
     return props.modelValue;
   },
@@ -114,16 +109,12 @@ const value = computed({
   }
 });
 
-const titleStringRepr = computed(() => {
-  return value.value
-    .map((event) => {
-      if (event !== null && event !== undefined) {
-        return locale.value === 'en' ? event.titleEn : event.titleDe;
-      }
-      return '';
-    })
-    .join(', ');
-});
+onMounted(() => {
+if(props.modelValue){
+  selectedEvent.value = props.modelValue;
+}
+}
+)
 
 function handleClick() {
   openProp.value = true;

@@ -23,8 +23,6 @@ class TransactionStore extends Store<TransStore> {
             this.state.data = transactions.value.data;
             this.state.difference = transactions.value.difference;
             this.state.isLoading = false;
-        } else {
-            console.log('could not receive Transactions');
         }
     }
 }

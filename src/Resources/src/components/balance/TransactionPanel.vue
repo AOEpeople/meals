@@ -118,7 +118,6 @@ onMounted(async () => {
               }
               isLoading.value = false;
             } catch (error) {
-              console.log(`error on approving: ${error}`);
               isLoading.value = false;
             }
           }

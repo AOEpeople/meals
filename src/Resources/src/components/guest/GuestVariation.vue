@@ -72,7 +72,8 @@ const mealCSS = computed(() => {
   for (const [variationId, variation] of Object.entries(props.meal.variations ?? {})) {
     let cssStr = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
     switch (generateMealState(variation as Meal)) {
-      case (MealState.OFFERABLE, MealState.DISABLED):
+      case MealState.OFFERABLE:
+      case MealState.DISABLED:
         cssStr += 'bg-[#80909F]';
         break;
       case MealState.OPEN:

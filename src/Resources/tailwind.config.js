@@ -22,7 +22,8 @@ export default {
                 }
             },
             boxShadow: {
-                tb: 'inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb'
+                tb: 'inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb',
+                day: '0 4px #ffffff75,0 15px 35px #d8e1e9cc'
             },
             colors: {
                 'tb-shadow': '#f4f6f9',

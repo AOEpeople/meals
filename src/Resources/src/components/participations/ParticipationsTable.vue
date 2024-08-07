@@ -43,7 +43,7 @@ onUpdated(() => {
   }
 });
 
-if (process?.env?.NODE_ENV === 'TEST') {
+if (import.meta.env.VITE_ENV === 'TEST') {
   defineExpose({ tableHeight });
 }
 </script>

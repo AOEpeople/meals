@@ -12,7 +12,7 @@
       </span>
       <VeggiIcon
         :diet="dish.diet"
-        class="h-6"
+        class="aspect-square h-6"
       />
     </td>
     <td
@@ -49,7 +49,7 @@
       </span>
       <VeggiIcon
         :diet="variation.diet"
-        class="h-6"
+        class="aspect-square h-6"
       />
     </td>
     <td

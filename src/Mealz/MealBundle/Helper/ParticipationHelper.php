@@ -115,6 +115,16 @@ class ParticipationHelper
         return $participationData;
     }
 
+    public function getParticipantName(Participant $participant): string
+    {
+        $fullname = $participant->getProfile()->getFullName();
+        if (true === $participant->getProfile()->isGuest()) {
+            $fullname .= ' (Guest)';
+        }
+
+        return $fullname;
+    }
+
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
     {
         $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
@@ -144,7 +154,7 @@ class ParticipationHelper
             $combinedDishes = $this->getCombinedDishesFromMeal($meal, $participant);
 
             if (true === $meal->isParticipant($participant) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
-                $slots[''][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                $slots[''][$this->getParticipantName($participant)] = $this->getParticipationData(
                     $meal,
                     $profile,
                     $participant,
@@ -154,7 +164,7 @@ class ParticipationHelper
             }
 
             if (true === $meal->isParticipant($participant)) {
-                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                $slots[$slot->getTitle()][$this->getParticipantName($participant)] = $this->getParticipationData(
                     $meal,
                     $profile,
                     $participant,

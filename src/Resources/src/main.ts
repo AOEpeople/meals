@@ -27,7 +27,7 @@ const i18n = createI18n({
 // fill stores with data
 Promise.all([userDataStore.fillStore(), environmentStore.fillStore()]).then(() => {
     const MainApp = createApp(App);
-    MainApp.config.performance = process.env.NODE_ENV !== 'production'; // enable Vue Devtools
+    MainApp.config.performance = import.meta.env.VITE_ENV !== 'production'; // enable Vue Devtools
     MainApp.use(i18n);
     MainApp.use(router);
     MainApp.use(VueScreen);

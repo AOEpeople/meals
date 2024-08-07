@@ -86,7 +86,7 @@ describe('Test GuestEventInvitation', () => {
                         .parent()
                         .find('table')
                         .find('td')
-                        .contains('John Doe');
+                        .contains('(Gast) Doe, John');
                 });
     });
 });

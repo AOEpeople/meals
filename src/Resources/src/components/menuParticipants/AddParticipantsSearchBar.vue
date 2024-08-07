@@ -92,7 +92,7 @@ const props = defineProps<{
   weekId: number;
 }>();
 
-const { ProfilesState, fetchAbsentingProfiles } = useProfiles(props.weekId);
+const { ProfilesState, fetchAbsentingProfiles, getDisplayName } = useProfiles(props.weekId);
 const { t } = useI18n();
 const slot = useSlots();
 
@@ -129,13 +129,6 @@ const filteredProfiles = computed(() => {
     else return 0;
   });
 });
-
-function getDisplayName(profile: IProfile) {
-  if (profile.roles.includes('ROLE_GUEST')) {
-    return `(${t('menu.guest')}) ${profile.fullName}`;
-  }
-  return profile.fullName;
-}
 
 function handleClick() {
   openProp.value = true;

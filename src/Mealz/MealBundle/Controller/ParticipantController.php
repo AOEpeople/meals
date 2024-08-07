@@ -438,8 +438,8 @@ class ParticipantController extends BaseController
         /** @var Participant $participant */
         foreach ($participants as $participant) {
             $participationData = $this->participationHelper->getParticipationMealData($participant);
-            $response[$day->getId()][$participant->getProfile()->getFullName()]['booked'][] = $participationData;
-            $response[$day->getId()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
+            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['booked'][] = $participationData;
+            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['profile'] = $participant->getProfile()->getUsername();
         }
 
         return $response;

@@ -5,6 +5,7 @@ import getProfileWithHash from '@/api/getProfileWithHash';
 import { type IMessage, isMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import { useI18n } from 'vue-i18n';
 
 interface IProfilesState {
     profiles: IProfile[];
@@ -41,6 +42,7 @@ export function useProfiles(weekId: number) {
     });
 
     const { sendFlashMessage } = useFlashMessage();
+    const { t } = useI18n();
 
     watch(
         () => ProfilesState.error,
@@ -86,9 +88,22 @@ export function useProfiles(weekId: number) {
         return null;
     }
 
+    /**
+     * Creates a localized string with the name of the profile.
+     * @param profile   The profile
+     * @returns         The localized string
+     */
+    function getDisplayName(profile: IProfile) {
+        if (profile.roles.includes('ROLE_GUEST')) {
+            return `(${t('menu.guest')}) ${profile.fullName}`;
+        }
+        return profile.fullName;
+    }
+
     return {
         ProfilesState: readonly(ProfilesState),
         fetchAbsentingProfiles,
-        fetchProfileWithHash
+        fetchProfileWithHash,
+        getDisplayName
     };
 }

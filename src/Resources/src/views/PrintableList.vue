@@ -77,7 +77,7 @@
                     :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']"
                   >
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-primary sm:pl-6">
-                      {{ String(participantName) }}
+                      {{ getDisplayName(String(participantName), t) }}
                     </td>
                     <td
                       v-for="mealId in Object.keys(listData.meals)"
@@ -155,6 +155,7 @@ import ActionButton from '@/components/misc/ActionButton.vue';
 import { Action } from '@/enums/Actions';
 import PrintListPdfTemplate from '@/components/printableList/PrintListPdfTemplate.vue';
 import PdfCreator from '@/components/pdfCreator/PdfCreator.vue';
+import getDisplayName from '@/services/useConvertDisplayName';
 
 const progress = useProgress().start();
 const { t, locale } = useI18n();

@@ -6,7 +6,7 @@
     >
       <div class="flex w-full flex-row">
         <span>
-          {{ getDisplayName(participantName) }}
+          {{ getDisplayName(participantName, t) }}
         </span>
         <svg
           v-if="isOfferingMeal"
@@ -42,6 +42,9 @@ import type { IBookedData, IMealWithVariations } from '@/api/getShowParticipatio
 import ParticipantsTableData from './ParticipantsTableData.vue';
 import { computed } from 'vue';
 import getDisplayName from '@/services/useConvertDisplayName';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   participantName: string;

@@ -1,8 +1,4 @@
-import { useI18n } from 'vue-i18n';
-
-export default function getDisplayName(fullname: string) {
-    const { t } = useI18n();
-
+export default function getDisplayName(fullname: string, t: (str: string) => string ) {
     if (fullname.includes('(Guest)')) {
         return `${fullname.split(' (Guest)')[0]} (${t('menu.guest')})`;
     }

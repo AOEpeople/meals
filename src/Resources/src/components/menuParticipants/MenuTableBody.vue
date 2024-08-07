@@ -45,11 +45,11 @@ const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
   if (getFilter() === '') {
-    return participants.value.map((participant) => getDisplayName(participant));
+    return participants.value.map((participant) => getDisplayName(participant, t));
   }
 
   return participants.value
     .filter((participant) => participant.toLowerCase().includes(getFilter().toLowerCase()))
-    .map((participant) => getDisplayName(participant));
+    .map((participant) => getDisplayName(participant, t));
 });
 </script>

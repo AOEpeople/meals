@@ -95,4 +95,9 @@ interface ParticipantRepositoryInterface extends ObjectRepository
      * Returns an array of all the participations for a given slot starting from the current week.
      */
     public function getParticipationsOfSlot(Slot $slot): array;
+
+    /**
+     * Returns the number of participations a profile has on a date.
+     */
+    public function getParticipationCountByProfile(Profile $profile, DateTime $date): int;
 }

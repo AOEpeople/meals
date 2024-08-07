@@ -50,6 +50,10 @@ class ParticipationService
      */
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
+        if (2 <= $this->participantRepo->getParticipationCountByProfile($profile, $meal->getDateTime())) {
+            return null;
+        }
+
         // user is attempting to take over an already booked meal by some participant
         if (true === $this->mealIsOffered($meal) && true === $this->allowedToAccept($meal)) {
             return $this->reassignOfferedMeal($meal, $profile, $dishSlugs);

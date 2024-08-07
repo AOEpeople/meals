@@ -37,7 +37,6 @@ node_modules
 ###< friendsofphp/php-cs-fixer ###
 
 /src/Resources/style/output.css
-/**/*.d.ts
 /src/Resources/style/output.css.map
 test_ci_cypress.sh
 tests/e2e/cypress/videos/

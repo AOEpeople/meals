@@ -11,6 +11,7 @@
           {{ title }}
           <VeggiIcon
             v-if="meal.diet && meal.diet !== Diet.MEAT"
+            class="aspect-square"
             :diet="meal.diet"
             :class="meal.diet === Diet.VEGAN ? 'h-[17px]' : 'ml-[2px] h-[14px]'"
           />

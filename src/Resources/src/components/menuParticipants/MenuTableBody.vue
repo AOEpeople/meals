@@ -32,6 +32,7 @@ import { useI18n } from 'vue-i18n';
 import MenuTableRow from './MenuTableRow.vue';
 import MenuTableDataRows from '@/components/menuParticipants/MenuTableDataRows.vue';
 import { computed } from 'vue';
+import getDisplayName from '@/services/useConvertDisplayName';
 
 const props = defineProps<{
   weekId: number;
@@ -43,7 +44,12 @@ const { t } = useI18n();
 const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
-  if (getFilter() === '') return participants.value;
-  return participants.value.filter((participant) => participant.toLowerCase().includes(getFilter().toLowerCase()));
+  if (getFilter() === '') {
+    return participants.value.map((participant) => getDisplayName(participant));
+  }
+
+  return participants.value
+    .filter((participant) => participant.toLowerCase().includes(getFilter().toLowerCase()))
+    .map((participant) => getDisplayName(participant));
 });
 </script>

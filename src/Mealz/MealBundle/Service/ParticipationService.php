@@ -248,7 +248,23 @@ class ParticipationService
 
     public function getParticipationList(Day $day): array
     {
-        return $this->participantRepo->getParticipantsByDay($day->getDateTime(), ['load_meal' => false]);
+        $participants = $this->participantRepo->getParticipantsByDay($day->getDateTime(), ['load_meal' => false]);
+
+        $profiles = array_map(
+            fn ($participant) => $participant->getProfile(),
+            $participants
+        );
+
+        $profileData = array_map(
+            fn ($profile) => [
+                'user' => $profile->getUsername(),
+                'fullName' => $profile->getFullName(),
+                'roles' => $profile->getRoles(),
+            ],
+            array_unique($profiles)
+        );
+
+        return $profileData;
     }
 
     /**

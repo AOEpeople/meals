@@ -25,23 +25,24 @@
           :key="index"
         >
           <tr :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']">
-            <td class="leading- h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary">
-              <div v-if="participant === 'noParticipants'">
-                {{ t('flashMessage.success.participations.no') }}
-              </div>
-              <div v-else>
-                {{ participant }}
+            <td class="h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary">
+              <div>
+                {{ getDisplayName(participant) }}
               </div>
             </td>
           </tr>
         </template>
       </tbody>
     </table>
+    <div v-if="filteredParticipants.length < 1">
+      {{ t('flashMessage.success.participations.no') }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { filterParticipantsList } from '@/services/filterParticipantsList';
+import { useProfiles } from '@/stores/profilesStore';
 import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
@@ -57,6 +58,7 @@ const props = defineProps<{
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
+const { getDisplayName } = useProfiles(0);
 const { t } = useI18n();
 
 const filterInput = ref('');

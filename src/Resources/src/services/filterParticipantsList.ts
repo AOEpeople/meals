@@ -1,8 +1,9 @@
 import { useParticipationsListData } from '@/api/getParticipationsByDay';
+import type { IProfile } from '@/stores/profilesStore';
 import { type Ref, computed, reactive } from 'vue';
 
 interface ParticipantState {
-    participants: Readonly<Ref<readonly string[]>>;
+    participants: Readonly<Ref<readonly IProfile[]>>;
     filterValue: string;
     isLoading: boolean;
     error: string;
@@ -10,8 +11,9 @@ interface ParticipantState {
 
 export function filterParticipantsList(date: string) {
     const { listData } = useParticipationsListData(date);
+
     const participations = reactive<ParticipantState>({
-        participants: listData,
+        participants: listData as Ref<readonly IProfile[]>,
         filterValue: '',
         isLoading: false,
         error: ''
@@ -27,8 +29,8 @@ export function filterParticipantsList(date: string) {
         );
     });
 
-    function participantsContainString(participant: string, filterInput: string) {
-        return participant.toLowerCase().includes(filterInput.toLowerCase());
+    function participantsContainString(participant: IProfile, filterInput: string) {
+        return participant.fullName.toLowerCase().includes(filterInput.toLowerCase());
     }
 
     return {

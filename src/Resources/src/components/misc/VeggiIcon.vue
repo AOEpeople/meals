@@ -1,5 +1,5 @@
 <template>
-  <div class="group relative my-auto grid aspect-square content-center">
+  <div class="group relative my-auto grid content-center">
     <img
       v-if="diet === Diet.VEGETARIAN"
       class="object-cover"

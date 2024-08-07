@@ -18,6 +18,7 @@
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
           <VeggiIcon
             v-if="variation.diet && variation.diet !== Diet.MEAT"
+            class="aspect-square"
             :diet="variation.diet"
             :class="variation.diet === Diet.VEGAN ? 'h-[17px]' : 'ml-[2px] h-[14px]'"
           />

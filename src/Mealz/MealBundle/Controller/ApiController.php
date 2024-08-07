@@ -200,16 +200,9 @@ class ApiController extends BaseController
             return new JsonResponse(['message' => 'Day not found'], 404);
         }
 
-        $list = [];
-        $data = $this->participationSrv->getParticipationList($day);
+        $participants = $this->participationSrv->getParticipationList($day);
 
-        foreach ($data as $participant) {
-            $list[] = $participant->getProfile()->getFirstName() . ' ' . $participant->getProfile()->getName();
-        }
-
-        $uniqueArray = array_unique($list);
-
-        return new JsonResponse(array_values($uniqueArray), 200);
+        return new JsonResponse($participants, 200);
     }
 
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void

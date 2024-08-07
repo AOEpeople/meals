@@ -77,7 +77,7 @@ const isLoading = ref(false);
 watch(showParticipations, async () => {
   if (showParticipations.value === true) {
     isLoading.value = true;
-    participations.value = (await getParticipantsForEvent(props.date)) as string[];
+    participations.value = ((await getParticipantsForEvent(props.date)) as string[]).sort();
     isLoading.value = false;
   }
 });

@@ -64,13 +64,13 @@ interface DishInfo {
 }
 
 const props = defineProps<{
-  weekID: number | string;
-  dayID: number | string;
+  weekID?: number | string;
+  dayID?: number | string;
   mealID: number | string;
   meal: Meal;
 }>();
 
-const meal = props.meal ?? dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
+const meal = props.meal ?? dashboardStore.getMeal(props.weekID ?? -1, props.dayID ?? -1, props.mealID);
 const emit = defineEmits(['addEntry', 'removeEntry']);
 const selected = ref();
 let dishes: DishInfo[] = [];

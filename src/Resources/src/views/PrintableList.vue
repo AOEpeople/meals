@@ -77,7 +77,7 @@
                     :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']"
                   >
                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-primary sm:pl-6">
-                      {{ getDisplayName(String(participantName)) }}
+                      {{ getDisplayName(String(participantName), t) }}
                     </td>
                     <td
                       v-for="mealId in Object.keys(listData.meals)"

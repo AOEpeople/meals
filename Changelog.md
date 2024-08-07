@@ -1,5 +1,56 @@
 # Changelog
 
+## Version v3.1.4 (2024-08-07)
+
+### Security Fixes
+
+- security fix for vue-template-compiler (e275564e)
+
+### Fixes
+
+- fixed typing issue (1af59607)
+- fixed broken cypress tests (2c0be0af)
+- fix for flaky test (5faf6f2c)
+- fixed missing shadow on GuestDay (5d754d82)
+- fixed broken button coloring (ce3bf666)
+- fixed missing background on participation counter (0e94f66e)
+- fixed cypress tests (d9f40df9)
+- fixed formatting (716fb012)
+- fixed remaining typing problems (bf649ef8)
+- fixed several typing issues (430cf7e2)
+- fixed several typing issues (dee97908)
+- fixed some typing problems (7af806e1)
+- fixed ddev setup process (7246021a)
+- fixed make commands / npm commands (16e980ce)
+- fixed some typing problems (37781bd4)
+
+### Chores and tidying
+
+- Updated Readme (6bfe1e12)
+- updated folder to Recources (2cbb1cf2)
+
+### Other
+
+- another fix for broken cypress test (a2fdcc9d)
+- added required optional parameter (b100d966)
+- adjusted formatting (1caecf7a)
+- removed console.logs (77c58f21)
+- added Guest label to displayed lists of participants (d69ce782)
+- implemented lazy loading of views to reduce initial bundle size (133d23a9)
+- changed node variable to vite env variable (6787e570)
+- reverted cypress version as a potential fix (d8ea4a5c)
+- changed yarn to npm in cypress build (7de083a8)
+- adjusted github actions pipeline to use vitest and vue-tsc (0d5c7f90)
+- migrated jest tests to vitest (f0482cc4)
+- started jest to vitest migration (ab1aab41)
+- finalised vite setup (884adab0)
+- added dev config (5ea42daf)
+- added vite config (7b96720e)
+- added symfony-vite-bundle (09437f5a)
+- adjusted imports to be compatiuble with vite, added missing packages and added some null checks (80483e4c)
+- copied files from webpack package (72dc98cb)
+- initialized basic vite config (afcbf06a)
+
 ## Version v3.1.3 (2024-08-05)
 
 ### Fixes

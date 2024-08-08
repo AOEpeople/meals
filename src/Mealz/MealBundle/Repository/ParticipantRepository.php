@@ -540,13 +540,13 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('p.id')
-            ->join('p.meal', 'm')
+            ->join('p.meal', 'm', 'ON')
             ->where('p.profile = :profile')
             ->andWhere('m.dateTime = :day')
-            ->setParameter('profile' , $profile->getUsername())
-            ->setParameter('day', $date, Types::DATE_MUTABLE);
+            ->setParameter('profile', $profile->getUsername())
+            ->setParameter('day', $date->format('Y-m-d H:i:s.u'));
 
-        $participations = $queryBuilder->getQuery()->getArrayResult();
+        $participations = $queryBuilder->getQuery()->execute();
 
         return count($participations);
     }

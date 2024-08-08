@@ -153,6 +153,20 @@ const dateString = computed(() => {
   });
 });
 
+// const participationCount = computed(() => {
+//   let count = 0;
+//   Object.values(day?.meals ?? {}).forEach(meal => {
+//     if (meal.variations) {
+//       Object.values(meal.variations).forEach(variation => {
+//         if (variation.isParticipating) count++;
+//       });
+//     } else {
+//       if (meal.isParticipating) count++;
+//     }
+//   });
+//   return count;
+// });
+
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;
 }

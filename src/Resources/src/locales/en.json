@@ -217,6 +217,9 @@
       },
       "guest": {
         "joined": "We are looking forward to meeting you."
+      },
+      "meal": {
+        "maxReached": "You may only book two meals per day. Please uncheck one meal to book another one."
       }
     },
     "print": {

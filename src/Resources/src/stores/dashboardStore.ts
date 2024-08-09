@@ -115,7 +115,12 @@ class DashboardStore extends Store<Dashboard> {
 
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
-        if (day !== null && day !== undefined && day.events.Dictionary !== null && day.events.Dictionary.eventId === eventId) {
+        if (
+            day !== null &&
+            day !== undefined &&
+            day.events.Dictionary !== null &&
+            day.events.Dictionary.eventId === eventId
+        ) {
             day.events.EventParticipation.participations = participations;
         }
     }

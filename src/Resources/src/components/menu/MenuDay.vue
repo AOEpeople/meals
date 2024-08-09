@@ -191,15 +191,12 @@ watch(selectedEventTwo, () => {
     const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
 
     if (selectedEventTwo.value) {
-      console.log('Second Event wird eingetragen')
-      console.log(selectedEventTwo.value);
       selectedDishes.value.events[secondKey] = {
         eventId: selectedEventTwo.value.id,
         eventSlug: selectedEventTwo.value.slug,
         eventTitle: selectedEventTwo.value.title,
         isPublic: selectedEventTwo.value.public
       };
-      console.log(Object.keys(props.modelValue.events)[1])
     } else if (secondKey) {
       selectedDishes.value.events[secondKey].eventId = null;
     }
@@ -208,9 +205,7 @@ watch(selectedEventTwo, () => {
   }
 });
 
-
 onMounted(() => {
-  console.log('onMounted Menu Day');
   // get mealKeys
   selectedDishOne.value = getDishArrayBySlugs(
     props.modelValue.meals[mealKeys.value[0]]
@@ -224,17 +219,15 @@ onMounted(() => {
   );
 
   try {
-    console.log('try Block');
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];
-    console.log('First key ' + firstKey);
 
     if (props.modelValue.events[firstKey]) {
       selectedEventOne.value = {
         id: props.modelValue.events[firstKey].eventId as number,
         slug: props.modelValue.events[firstKey].eventSlug as string,
         title: props.modelValue.events[firstKey].eventTitle as string,
-        public: props.modelValue.events[firstKey].isPublic as boolean,
+        public: props.modelValue.events[firstKey].isPublic as boolean
       };
     }
     if (props.modelValue.events[secondKey]) {
@@ -242,7 +235,7 @@ onMounted(() => {
         id: props.modelValue.events[secondKey].eventId as number,
         slug: props.modelValue.events[secondKey].eventSlug as string,
         title: props.modelValue.events[secondKey].eventTitle as string,
-        public: props.modelValue.events[secondKey].isPublic as boolean,
+        public: props.modelValue.events[secondKey].isPublic as boolean
       };
     }
   } catch (error) {

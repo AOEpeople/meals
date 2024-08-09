@@ -13,7 +13,10 @@
         :size="20"
       />
     </BannerSpacer>
-    <div v-for="(event, key) in day.events" :key="key">
+    <div
+      v-for="(event, key) in day.events"
+      :key="key"
+    >
       <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
         <span
           class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
@@ -48,7 +51,7 @@
       </div>
       <div />
     </div>
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

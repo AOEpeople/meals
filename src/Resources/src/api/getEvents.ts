@@ -6,10 +6,8 @@ import { type Event } from '@/stores/eventsStore';
  * and a value indicating if an error occured
  */
 export default async function getEvents() {
-    console.log('Get Events')
     const { error, request, response: events } = useApi<Event[]>('GET', 'api/events');
 
     await request();
-    console.log(JSON.stringify(events))
     return { error, events };
 }

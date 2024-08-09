@@ -7,7 +7,7 @@
       :class="[day?.isLocked || !day?.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2']"
     >
       <InformationButton
-        v-if="!day?.isLocked && !emptyDay"
+        v-if="!emptyDay"
         :dayID="dayID"
         :index="index"
         class="hover: row-start-1 size-[24px] cursor-pointer p-1 text-center"
@@ -152,20 +152,6 @@ const dateString = computed(() => {
     day: 'numeric'
   });
 });
-
-// const participationCount = computed(() => {
-//   let count = 0;
-//   Object.values(day?.meals ?? {}).forEach(meal => {
-//     if (meal.variations) {
-//       Object.values(meal.variations).forEach(variation => {
-//         if (variation.isParticipating) count++;
-//       });
-//     } else {
-//       if (meal.isParticipating) count++;
-//     }
-//   });
-//   return count;
-// });
 
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;

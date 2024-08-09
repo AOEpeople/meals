@@ -38,11 +38,14 @@
         <GuestVariation
           v-if="meal.variations && Object.values(meal.variations).length > 0"
           :meal="meal"
+          :meal-id="mealID"
+          :chosen-meals="chosenMeals"
         />
         <GuestMeal
           v-else
           :meals="guestData.meals"
           :mealId="mealID"
+          :chosen-meals="chosenMeals"
         />
       </div>
     </div>
@@ -70,6 +73,7 @@ const { t, locale } = useI18n();
 
 const props = defineProps<{
   guestData: GuestDay;
+  chosenMeals: string[];
 }>();
 
 const weekday = computed(() => translateWeekday(props.guestData.date, locale));

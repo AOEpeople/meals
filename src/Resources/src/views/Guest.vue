@@ -17,6 +17,7 @@
       v-if="invitation"
       :class="{ 'ring-2 ring-red': mealsMissing }"
       :guestData="invitation"
+      :chosen-meals="form.chosenMeals"
     />
     <GuestForm
       v-model:firstName="form.firstName"
@@ -42,6 +43,8 @@ import { useI18n } from 'vue-i18n';
 import GuestCompletion from '@/components/guest/GuestCompletion.vue';
 import GuestForm from '@/components/guest/GuestForm.vue';
 import GuestDay from '@/components/guest/GuestDay.vue';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 interface IForm {
   firstName: string;
@@ -58,6 +61,7 @@ const { invitation, error } = await useInvitationData(route.params.hash as strin
 const result = ref(error.value === true ? 'data_error' : '');
 const { receive } = useEventsBus();
 const { t, locale } = useI18n();
+const { sendFlashMessage } = useFlashMessage();
 
 const form = reactive<IForm>({
   firstName: '',
@@ -76,12 +80,19 @@ const lastNameMissing = ref(false);
 const companyMissing = ref(false);
 const mealsMissing = ref(false);
 
-receive('guestChosenMeals', (slug: string) => {
-  const index = form.chosenMeals.indexOf(slug);
+const reachedLimit = computed(() => form.chosenMeals.length >= 2);
+
+receive('guestChosenMeals', (mealId: string) => {
+  const index = form.chosenMeals.indexOf(mealId);
   if (index !== -1) {
     form.chosenMeals.splice(index, 1);
+  } else if (reachedLimit.value === true) {
+    sendFlashMessage({
+      type: FlashMessageType.INFO,
+      message: 'meal.maxReached'
+    });
   } else {
-    form.chosenMeals.push(slug);
+    form.chosenMeals.push(mealId);
   }
 });
 

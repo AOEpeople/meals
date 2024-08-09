@@ -37,6 +37,7 @@
       <GuestCheckbox
         :meals="meals"
         :mealId="mealId"
+        :chosen-meals="chosenMeals"
       />
     </div>
   </div>
@@ -57,6 +58,7 @@ import { MealState } from '@/enums/MealState';
 const props = defineProps<{
   meals: Dictionary<Meal>;
   mealId: number | string;
+  chosenMeals: string[];
 }>();
 
 const { t, locale } = useI18n();
@@ -81,7 +83,7 @@ const description = computed(() => {
 });
 
 const mealCSS = computed(() => {
-  let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
+  let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
   switch (meal.value.mealState) {
     case MealState.OFFERABLE:
     case MealState.DISABLED:

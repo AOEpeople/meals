@@ -535,4 +535,19 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         return $participations;
     }
+
+    public function getParticipationCountByProfile(Profile $profile, DateTime $date): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->join('p.meal', 'm', 'ON')
+            ->where('p.profile = :profile')
+            ->andWhere('m.dateTime = :day')
+            ->setParameter('profile', $profile->getUsername())
+            ->setParameter('day', $date->format('Y-m-d H:i:s.u'));
+
+        $participations = $queryBuilder->getQuery()->execute();
+
+        return count($participations);
+    }
 }

@@ -48,7 +48,6 @@
                     class="mt-2 grid"
                   >
                     <CombiButtonGroup
-                      v-if="weekID && dayID"
                       :key="key"
                       :weekID="weekID"
                       :dayID="dayID"
@@ -105,7 +104,7 @@ const props = defineProps<{
 const { t } = useI18n();
 const emit = defineEmits(['closeCombiModal']);
 const meals = props.meals ?? dashboardStore.getMeals(props.weekID ?? 0, props.dayID ?? 0);
-let keys = Object.keys(meals).filter((mealID) => meals[mealID].dishSlug !== 'combined-dish');
+const keys = computed(() => Object.keys(meals).filter((mealID) => meals[mealID].dishSlug !== 'combined-dish'));
 const slugs = ref<string[]>([]);
 const bookingDisabled = computed(() => slugs.value.length < 2);
 

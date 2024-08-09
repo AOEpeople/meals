@@ -43,6 +43,7 @@
       <GuestCheckbox
         :mealId="variationID"
         :meals="{ [variationID]: variation }"
+        :chosen-meals="chosenMeals"
       />
     </div>
   </div>
@@ -64,6 +65,8 @@ const { generateMealState } = useMealState();
 
 const props = defineProps<{
   meal: Meal;
+  mealId: string | number;
+  chosenMeals: string[];
 }>();
 
 const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de));
@@ -71,7 +74,7 @@ const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? prop
 const mealCSS = computed(() => {
   const css: Map<string, string> = new Map();
   for (const [variationId, variation] of Object.entries(props.meal.variations ?? {})) {
-    let cssStr = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
+    let cssStr = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
     switch (generateMealState(variation as Meal)) {
       case MealState.OFFERABLE:
       case MealState.DISABLED:

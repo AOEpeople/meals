@@ -68,7 +68,7 @@
 import MenuInput from '@/components/menu/MenuInput.vue';
 import { type Ref, computed, onMounted, ref, watch } from 'vue';
 import { type Dish } from '@/stores/dishesStore';
-import type { MealDTO, DayDTO, EventDTO } from '@/interfaces/DayDTO';
+import type { MealDTO, DayDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { translateWeekdayWithoutRef } from '@/tools/localeHelper';
 import { useI18n } from 'vue-i18n';
@@ -78,7 +78,7 @@ import Popover from '../misc/Popover.vue';
 import MenuParticipationPanel from './MenuParticipationPanel.vue';
 import MenuLockDatePicker from './MenuLockDatePicker.vue';
 import EventInput from './EventInput.vue';
-import { type Event, useEvents } from '@/stores/eventsStore';
+import { type Event } from '@/stores/eventsStore';
 import { type DateTime } from '@/api/getDashboardData';
 import { type Dictionary } from '@/types/types';
 
@@ -179,7 +179,7 @@ watch(selectedEventOne, () => {
         isPublic: selectedEventOne.value.public
       };
     } else if (firstKey) {
-      selectedDishes.value.events[firstKey][0].eventId = null;
+      selectedDishes.value.events[firstKey].eventId = null;
     }
   } catch (error) {
     console.error('Fehler: ', error);
@@ -191,14 +191,17 @@ watch(selectedEventTwo, () => {
     const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
 
     if (selectedEventTwo.value) {
+      console.log('Second Event wird eingetragen')
+      console.log(selectedEventTwo.value);
       selectedDishes.value.events[secondKey] = {
         eventId: selectedEventTwo.value.id,
         eventSlug: selectedEventTwo.value.slug,
         eventTitle: selectedEventTwo.value.title,
         isPublic: selectedEventTwo.value.public
       };
+      console.log(Object.keys(props.modelValue.events)[1])
     } else if (secondKey) {
-      selectedDishes.value.events[secondKey][1].eventId = null;
+      selectedDishes.value.events[secondKey].eventId = null;
     }
   } catch (error) {
     console.error('Fehler: ', error);
@@ -224,22 +227,22 @@ onMounted(() => {
     console.log('try Block');
     const firstKey = Object.keys(props.modelValue.events)[0];
     const secondKey = Object.keys(props.modelValue.events)[1];
-    console.log(firstKey);
+    console.log('First key ' + firstKey);
 
     if (props.modelValue.events[firstKey]) {
       selectedEventOne.value = {
-        id: props.modelValue.events[firstKey][0].eventId,
-        slug: props.modelValue.events[firstKey][0].eventSlug,
-        title: props.modelValue.events[firstKey][0].eventTitle,
-        public: props.modelValue.events[firstKey][0].isPublic,
+        id: props.modelValue.events[firstKey].eventId as number,
+        slug: props.modelValue.events[firstKey].eventSlug as string,
+        title: props.modelValue.events[firstKey].eventTitle as string,
+        public: props.modelValue.events[firstKey].isPublic as boolean,
       };
     }
     if (props.modelValue.events[secondKey]) {
       selectedEventTwo.value = {
-        id: props.modelValue.events[secondKey][0].eventId,
-        slug: props.modelValue.events[secondKey][0].eventSlug,
-        title: props.modelValue.events[secondKey][0].eventTitle,
-        public: props.modelValue.events[secondKey][0].isPublic,
+        id: props.modelValue.events[secondKey].eventId as number,
+        slug: props.modelValue.events[secondKey].eventSlug as string,
+        title: props.modelValue.events[secondKey].eventTitle as string,
+        public: props.modelValue.events[secondKey].isPublic as boolean,
       };
     }
   } catch (error) {

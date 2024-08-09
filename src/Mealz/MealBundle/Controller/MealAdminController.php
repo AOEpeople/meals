@@ -193,6 +193,7 @@ final class MealAdminController extends BaseController
 
     private function handleDay(array $day): void
     {
+        $this->logger->info('handleDay');
         // check if day exists
         $dayEntity = $this->dayRepository->find($day['id']);
         if (null === $dayEntity) {

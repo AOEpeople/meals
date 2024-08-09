@@ -110,6 +110,7 @@ const selectedEvent = computed({
 });
 
 onMounted(() => {
+  console.log('On Mounted EventInput, selected Event: '+ JSON.stringify(selectedEvent.value));
 if(props.modelValue){
   selectedEvent.value = props.modelValue;
 }

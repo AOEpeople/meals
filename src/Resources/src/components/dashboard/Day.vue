@@ -130,8 +130,8 @@ const weekday = computed(() => {
   return 'unknown';
 });
 const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
-const isEventDay = day?.event !== null;
-const eventId = day.events[Object.keys(day.events)[0]][0].eventId;
+const isEventDay = day?.events !== null;
+// const eventId = day?.events[Object.keys(day.events)[0][0]].eventId !== null;
 const date = computed(() => {
   if (day === null || day === undefined) {
     return '';

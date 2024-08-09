@@ -80,7 +80,7 @@ class Day extends AbstractMessage implements JsonSerializable
     }
     public function getEvents(): EventCollection
     {
-        if ($this->events instanceof Collection) {
+        if (false === ($this->events instanceof Collection)) {
             $this->events = new EventCollection();
         }
 

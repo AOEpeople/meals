@@ -223,14 +223,14 @@ export function useEvents() {
      * @param slug The slug of the event
      */
     function getEventBySlug(slug: string) {
-        return EventsState.events.find((event) => event.slug === slug);
+        return EventsState.events.find((event) => event.slug === slug)!;
     }
     /**
      * Returns the eventId for the passed slug
      * @param slug The slug of the event
      */
     function getEventIdBySlug(slug: string){
-        return EventsState.events.find((event) => event.slug === slug).id;
+        return EventsState.events.find((event) => event.slug === slug)!.id;
     }
     /**
      * Returns the event with the given id from the EventsState

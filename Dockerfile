@@ -1,10 +1,10 @@
 # generate frontend assets
-FROM node:20 as frontend
+FROM node:20 AS frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \
         nodejs
-WORKDIR var/www/html/src/Resources
+WORKDIR /var/www/html/src/Resources
 COPY src/Resources/package.json src/Resources/package-lock.json ./
 RUN npm install
 COPY src/Resources/ .

@@ -7,7 +7,7 @@
       :class="[day?.isLocked || !day?.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2']"
     >
       <InformationButton
-        v-if="!day?.isLocked && !emptyDay"
+        v-if="!emptyDay"
         :dayID="dayID"
         :index="index"
         class="hover: row-start-1 size-[24px] cursor-pointer p-1 text-center"

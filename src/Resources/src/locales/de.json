@@ -217,6 +217,9 @@
       },
       "guest": {
         "joined": "Wir freuen uns Sie dabei zu haben."
+      },
+      "meal": {
+        "maxReached": "Es dürfen maximal zwei Essen am Tag bestellt werden. Bitte wähle ein Essen ab um ein anderes Essen zu buchen."
       }
     },
     "print": {

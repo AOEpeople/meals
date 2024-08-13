@@ -159,6 +159,7 @@
       "201": "Es fehlen noch Informationen um das Gericht estellen zu können.",
       "202": "Ein oder mehrere Titel für das zu erstellende Gericht scheinen zu fehlen.",
       "203": "Es gab einen fehler beim zählen, wie häufig einzelne Gerichte bestellt wurden.",
+      "204": "Das Gericht kann nicht aktualisiert werden, da es in gebuchten Kombi-Meals enthalten ist.",
       "301": "Die gewählten Titel für die Kategorie fehlen oder existieren schon.",
       "401": "Um einen Benutzer zu einem Kombi-Gericht hinzuzufügen, müssen zwei Gerichte ausgewählt werden.",
       "402": "Etwas ist beim Buchen der Mahlzeit schiefgegangen.",

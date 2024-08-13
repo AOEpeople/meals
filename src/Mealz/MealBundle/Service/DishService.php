@@ -58,8 +58,8 @@ class DishService
      */
     public function updateHelper(Dish $dish, array $parameters): void
     {
-        $this->setTitleIfValid($dish, $parameters);
         $this->setServingSizeIfValid($dish, $parameters);
+        $this->setTitleIfValid($dish, $parameters);
         $this->setDescriptionIfValid($dish, $parameters);
         $this->setCategoryIfValid($dish, $parameters);
         $this->setDietIfValid($dish, $parameters);
@@ -119,6 +119,10 @@ class DishService
     private function setServingSizeIfValid(Dish $dish, array $parameters): void
     {
         if (true === $this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
+            if (true === $this->hasCombiMealsInFuture($dish)) {
+                throw new Exception('204: The servingSize cannot be adjusted, because there are booked combi-meals');
+            }
+
             $dish->setOneServingSize($parameters['oneServingSize']);
             if (true === $dish->hasVariations()) {
                 /** @var Dish $variation */
@@ -137,5 +141,10 @@ class DishService
         if (true === $this->apiService->isParamValid($parameters, 'titleEn', 'string')) {
             $dish->setTitleEn($parameters['titleEn']);
         }
+    }
+
+    private function hasCombiMealsInFuture(Dish $dish): bool
+    {
+        return $this->dishRepository->hasDishAssociatedCombiMealsInFuture($dish);
     }
 }

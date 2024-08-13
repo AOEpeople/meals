@@ -213,6 +213,10 @@ class MealAdminController extends BaseController
             throw new Exception('106: too many meals requested');
         }
 
+        if (false === $this->dayService->checkMealsUpdatable($dayEntity, $mealCollection)) {
+            throw new Exception('108: Meals must not have participations when being updated');
+        }
+
         $this->dayService->removeUnusedMeals($dayEntity, $mealCollection);
 
         // parentMeal is an array of either one meal without variations or 1-2 variations

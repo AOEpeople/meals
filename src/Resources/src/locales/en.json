@@ -159,6 +159,7 @@
       "201": "Information is still missing to be able to create the dish.",
       "202": "One or more titles for the dish being created appear to be missing.",
       "203": "There was an error when counting how often individual dishes were ordered.",
+      "204": "The dish can't be updated, because there are booked combi-meals containing it.",
       "301": "The selected titles for the category are missing or already exist.",
       "401": "To add a user to a combined meal, two dishes must be selected.",
       "402": "Something went wrong while booking the meal",

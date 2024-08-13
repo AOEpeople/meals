@@ -252,6 +252,7 @@ In the Vite Dev mode browsers will typically send out a Warning("Source-Map-Fehl
   * 201: There are parameters missing to create a dish
   * 202: One or more titles haven't been sent
   * 203: There was an error while counting the number of times dishes were taken
+  * 204: The servingSize cannot be adjusted, because there are booked combi-meals
 *CategoryController 3xx*
   * 301: The choosen titles for the category either are missing or do already exist
 *ParticipantController 4xx*

@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Repository;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -76,6 +77,43 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
         $query->from(Meal::class, 'm');
         $query->where('m.dish = :dish');
         $query->setParameter('dish', $dish->getId(), Types::INTEGER);
+
+        return 0 < $query->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function hasDishAssociatedCombiMealsInFuture(Dish $dish): bool
+    {
+        $today = new DateTime('today');
+        $formattedDate = $today->format('Y-m-d') . ' 12:00:00.000000';
+
+        $mealRepo = $this->getEntityManager()->getRepository(Meal::class);
+        $participantRepo = $this->getEntityManager()->getRepository(Participant::class);
+        $dayQuery = $mealRepo->createQueryBuilder('m')
+            ->select('DISTINCT d.id')
+            ->join('m.day', 'd')
+            ->join('m.dish', 'g')
+            ->where('g.slug = :slug')
+            ->setParameter('slug', 'combined-dish');
+
+        $mealQuery = $mealRepo->createQueryBuilder('m2')
+            ->select('m2.id')
+            ->where('m2.day IN (' . $dayQuery->getDQL() . ')')
+            ->andWhere('m2.dish = :dishId')
+            ->andWhere('m2.dateTime >= :now')
+            ->setParameter('dishId', $dish->getId())
+            ->setParameter('now', $formattedDate);
+
+        $query = $participantRepo->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->join('p.meal', 'm3')
+            ->where('m3.id IN (' . $mealQuery->getDQL() . ')')
+            ->setParameter('slug', 'combined-dish')
+            ->setParameter('dishId', $dish->getId())
+            ->setParameter('now', $formattedDate);
 
         return 0 < $query->getQuery()->getSingleScalarResult();
     }

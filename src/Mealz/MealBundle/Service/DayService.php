@@ -7,18 +7,22 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DayService
 {
     private MealRepositoryInterface $mealRepository;
+    private ParticipantRepositoryInterface $participantRepo;
     private EntityManagerInterface $em;
 
     public function __construct(
         MealRepositoryInterface $mealRepository,
+        ParticipantRepositoryInterface $participantRepo,
         EntityManagerInterface $entityManager
     ) {
         $this->mealRepository = $mealRepository;
+        $this->participantRepo = $participantRepo;
         $this->em = $entityManager;
     }
 
@@ -58,6 +62,25 @@ class DayService
         foreach ($day->getMeals() as $mealEntity) {
             $this->removeUnusedMealHelper($mealEntity, $mealCollection, $day);
         }
+    }
+
+    public function checkMealsUpdatable(Day $day, array $mealCollection): bool
+    {
+        $flattenedMeals = array_merge(...array_values($mealCollection));
+        $mealIdsOfCol = array_map(
+            fn ($meal) => $meal['mealId'],
+            $flattenedMeals
+        );
+        $mealsToUpdate = $day->getMeals()->filter(fn ($meal) => false === in_array($meal->getId(), $mealIdsOfCol));
+
+        /** @var Meal $meal */
+        foreach ($mealsToUpdate as $meal) {
+            if (true === $meal->hasParticipations()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function removeUnusedMealHelper(Meal $mealEntity, array $mealCollection, Day $day): void

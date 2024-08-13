@@ -218,9 +218,6 @@
     "psr/log": {
         "version": "1.1.4"
     },
-    "qipsius/tcpdf-bundle": {
-        "version": "2.0.2"
-    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
@@ -572,9 +569,6 @@
     },
     "symfony/yaml": {
         "version": "v5.3.6"
-    },
-    "tecnickcom/tcpdf": {
-        "version": "6.2.26"
     },
     "twig/twig": {
         "version": "v1.44.4"

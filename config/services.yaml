@@ -224,8 +224,6 @@ services:
       <<: *mm_service_args
       $webhookURL: '%app.notifier.mattermost.weekly_menu.webhook_url%'
 
-  Qipsius\TCPDFBundle\Controller\TCPDFController: '@qipsius.tcpdf'
-
   App\Mealz\MealBundle\Service\CombinedMealService:
     arguments:
       $combinedPrice: '%mealz.meal.combined.price%'

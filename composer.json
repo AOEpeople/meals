@@ -30,7 +30,6 @@
     "psr/container": "^1.0",
     "psr/link": "^1.0",
     "psr/log": "^1|^2",
-    "qipsius/tcpdf-bundle": "^2.0",
     "stof/doctrine-extensions-bundle": "^1.6",
     "symfony/asset": "^6.4",
     "symfony/config": "^6.4",

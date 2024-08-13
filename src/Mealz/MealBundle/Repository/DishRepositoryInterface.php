@@ -17,6 +17,8 @@ interface DishRepositoryInterface extends ObjectRepository
 
     public function hasDishAssociatedMeals(Dish $dish): bool;
 
+    public function hasDishAssociatedCombiMealsInFuture(Dish $dish): bool;
+
     /**
      * Counts the number of Dish was taken in the last X Weeks.
      */

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="day-shadow group grid aspect-[16/10] h-full cursor-pointer grid-cols-[24px_minmax(0,1fr)] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle transition-transform"
+    class="group grid aspect-[16/10] h-full cursor-pointer grid-cols-[24px_minmax(0,1fr)] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle shadow-day transition-transform"
     :class="{ 'hover:scale-[115%]': week.id }"
     @click="handleClick"
   >

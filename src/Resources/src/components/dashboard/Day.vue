@@ -161,11 +161,3 @@ function openModal() {
   openParticipantsModal.value = true;
 }
 </script>
-
-<style>
-.day-shadow {
-  box-shadow:
-    0 4px 0 hsla(0, 0%, 100%, 0.46),
-    0 15px 35px rgba(216, 225, 233, 0.8);
-}
-</style>

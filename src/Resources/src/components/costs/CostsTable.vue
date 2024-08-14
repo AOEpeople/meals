@@ -68,7 +68,9 @@ const filterRegex = computed(() => {
 const hiddenUsers = computed(() =>
   Object.entries(CostsState.users).filter((user) => {
     const value = user[1];
-    return value.hidden === false || (value.hidden === true && props.showHidden === true);
+    return (
+      (value.hidden === false && (value.costs.total > 0.01 || value.costs.total < -0.01)) || props.showHidden === true
+    );
   })
 );
 

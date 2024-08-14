@@ -73,11 +73,6 @@ class CostSheetController extends BaseController
                 fn ($cost) => (float) $cost,
                 $userCosts
             );
-
-            // if total amount is zero, remove user from rendered items
-            if (0.001 > (float) $userCosts['total'] && -0.001 < (float) $userCosts['total']) {
-                unset($users[$username]);
-            }
         }
 
         $users = $this->costSheetService->mergeDoubleUserTransactions($users);

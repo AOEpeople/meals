@@ -1,6 +1,6 @@
 <template>
   <div
-    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-4 rounded-lg border-0 border-none bg-white text-center align-middle sm:grid-cols-[24px_minmax(0,1fr)_72px]"
+    class="group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-3 rounded-lg border-0 border-none bg-white text-center align-middle shadow-day sm:grid-cols-[24px_minmax(0,1fr)_72px]"
   >
     <div
       class="col-start-1 row-span-4 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-primary-2 py-1"

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use DateTime;
 use Doctrine\Common\Collections\Selectable;
@@ -60,4 +61,11 @@ interface MealRepositoryInterface extends ObjectRepository, Selectable
      * @return Meal[]
      */
     public function getLockedMeals(): array;
+
+    /**
+     * Returns all Meals that are in the future and contain a specific dish.
+     *
+     * @return Meal[]
+     */
+    public function getFutureMealsForDish(Dish $dish): array;
 }

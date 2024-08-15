@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Repository;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -89,30 +88,27 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
     {
         $today = new DateTime('today');
         $formattedDate = $today->format('Y-m-d') . ' 12:00:00.000000';
+        if (true === $dish->hasVariations()) {
+            $variations = $dish->getVariations();
+            foreach ($variations as $variation) {
+                if (true === $this->hasDishAssociatedCombiMealsInFuture($variation)) {
+                    return true;
+                }
+            }
+        }
 
         $mealRepo = $this->getEntityManager()->getRepository(Meal::class);
-        $participantRepo = $this->getEntityManager()->getRepository(Participant::class);
-        $dayQuery = $mealRepo->createQueryBuilder('m')
-            ->select('DISTINCT d.id')
-            ->join('m.day', 'd')
-            ->join('m.dish', 'g')
+        $query = $mealRepo->createQueryBuilder('m2')
+            ->select('COUNT(m2)')
+            ->join('m2.day', 'd')
+            ->join('m2.dish', 'g')
+            ->join(Meal::class, 'm', 'WITH', 'm.day = d.id')
+            ->join('m2.participants', 'p')
             ->where('g.slug = :slug')
-            ->setParameter('slug', 'combined-dish');
-
-        $mealQuery = $mealRepo->createQueryBuilder('m2')
-            ->select('m2.id')
-            ->where('m2.day IN (' . $dayQuery->getDQL() . ')')
-            ->andWhere('m2.dish = :dishId')
-            ->andWhere('m2.dateTime >= :now')
-            ->setParameter('dishId', $dish->getId())
-            ->setParameter('now', $formattedDate);
-
-        $query = $participantRepo->createQueryBuilder('p')
-            ->select('COUNT(p.id)')
-            ->join('p.meal', 'm3')
-            ->where('m3.id IN (' . $mealQuery->getDQL() . ')')
+            ->andWhere('m.dish = :dish_id')
+            ->andWhere('m.dateTime >= :now')
             ->setParameter('slug', 'combined-dish')
-            ->setParameter('dishId', $dish->getId())
+            ->setParameter('dish_id', $dish->getId(), Types::INTEGER)
             ->setParameter('now', $formattedDate);
 
         return 0 < $query->getQuery()->getSingleScalarResult();

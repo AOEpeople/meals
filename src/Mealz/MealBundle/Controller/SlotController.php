@@ -65,7 +65,7 @@ class SlotController extends BaseListController
 
             return new JsonResponse($slot, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('slot update error', $this->getTrace($e));
+            $this->logger->info('slot update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
@@ -79,7 +79,7 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logger->error('slot delete error', $this->getTrace($e));
+            $this->logger->info('slot delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
@@ -111,7 +111,7 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logger->error('slot create error', $this->getTrace($e));
+            $this->logger->info('slot create error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

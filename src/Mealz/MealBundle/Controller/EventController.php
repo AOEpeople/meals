@@ -74,7 +74,7 @@ class EventController extends BaseListController
 
             return new JsonResponse($event, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('event update error', $this->getTrace($e));
+            $this->logger->info('event update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
@@ -91,7 +91,7 @@ class EventController extends BaseListController
 
             return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('event delete error', $this->getTrace($e));
+            $this->logger->info('event delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }

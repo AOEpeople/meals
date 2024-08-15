@@ -70,7 +70,7 @@ class ParticipantController extends BaseController
         try {
             $result = $this->participationSrv->join($profile, $meal, $slot, $parameters['dishSlugs']);
         } catch (Exception $e) {
-            $this->logger->error('join meal error', $this->getTrace($e));
+            $this->logger->info('join meal error', $this->getTrace($e));
 
             return new JsonResponse(['message' => '402: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -151,7 +151,7 @@ class ParticipantController extends BaseController
         } catch (ParticipationException $pex) {
             return new JsonResponse(['message' => $pex->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {
-            $this->logger->error('update combined meal error', $this->getTrace($e));
+            $this->logger->info('update combined meal error', $this->getTrace($e));
 
             return new JsonResponse(['message' => 'unexpected error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -289,7 +289,7 @@ class ParticipantController extends BaseController
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('error adding participant to meal', $this->getTrace($e));
+            $this->logger->info('error adding participant to meal', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -321,7 +321,7 @@ class ParticipantController extends BaseController
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('error removing participant from meal', $this->getTrace($e));
+            $this->logger->info('error removing participant from meal', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

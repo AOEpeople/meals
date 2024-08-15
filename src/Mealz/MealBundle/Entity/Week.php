@@ -117,4 +117,9 @@ class Week extends AbstractMessage implements JsonSerializable
             'enabled' => $this->isEnabled(),
         ];
     }
+
+    public function __toString()
+    {
+        return (string) $this->getCalendarWeek();
+    }
 }

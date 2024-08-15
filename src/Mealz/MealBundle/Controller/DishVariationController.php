@@ -57,7 +57,7 @@ class DishVariationController extends BaseController
 
             return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish variation create error', $this->getTrace($e));
+            $this->logger->info('dish variation create error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -85,7 +85,7 @@ class DishVariationController extends BaseController
 
             return new JsonResponse($dishVariation, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish variation update error', $this->getTrace($e));
+            $this->logger->info('dish variation update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -108,7 +108,7 @@ class DishVariationController extends BaseController
 
             return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish variation delete error', $this->getTrace($e));
+            $this->logger->info('dish variation delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

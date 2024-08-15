@@ -54,7 +54,7 @@ class CategoryController extends BaseListController
 
             return new JsonResponse($category, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('category update error', $this->getTrace($e));
+            $this->logger->info('category update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -69,7 +69,7 @@ class CategoryController extends BaseListController
             $this->em->remove($category);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logger->error('category delete error', $this->getTrace($e));
+            $this->logger->info('category delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

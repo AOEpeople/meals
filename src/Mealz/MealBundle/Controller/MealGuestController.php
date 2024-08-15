@@ -46,7 +46,7 @@ class MealGuestController extends BaseController
             $participants = $this->guestPartSrv->join($profile, $meals, $slot, $dishSlugs);
             $this->triggerJoinEvents($participants);
         } catch (Exception $e) {
-            $this->logger->error('guest join error', $this->getTrace($e));
+            $this->logger->info('guest join error', $this->getTrace($e));
 
             return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }

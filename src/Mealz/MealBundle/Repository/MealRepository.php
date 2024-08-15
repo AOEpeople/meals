@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -152,6 +153,24 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
             ->orderBy('m.dateTime', 'DESC');
 
         $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all CombiMeals that are in the future and contain a specific dish.
+     *
+     * @return Meal[]
+     */
+    public function getFutureMealsForDish(Dish $dish): array
+    {
+        $queryBuilder = $this->createQueryBuilder('m')
+            ->select('m')
+            ->join('m.day', 'd')
+            ->andWhere('m.dish = :dish_id')
+            ->andWhere('m.dateTime >= :now')
+            ->setParameter('dish_id', $dish->getId(), Types::INTEGER)
+            ->setParameter('now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }

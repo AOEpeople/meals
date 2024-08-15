@@ -29,7 +29,7 @@ class DishController extends BaseListController
         private readonly DishRepositoryInterface $dishRepository,
         private readonly DishService $dishService,
         private readonly EntityManagerInterface $em,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -98,7 +98,7 @@ class DishController extends BaseListController
 
             return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish create error', $this->getTrace($e));
+            $this->logger->info('dish create error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -121,7 +121,7 @@ class DishController extends BaseListController
 
             return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish delete error', $this->getTrace($e));
+            $this->logger->info('dish delete error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -134,15 +134,20 @@ class DishController extends BaseListController
     {
         try {
             $parameters = json_decode($request->getContent(), true);
+            $oneServingSize = $dish->hasOneServingSize();
 
             $this->dishService->updateHelper($dish, $parameters);
 
             $this->em->persist($dish);
             $this->em->flush();
 
+            if (true === isset($parameters['oneServingSize']) && $oneServingSize !== $parameters['oneServingSize']) {
+                $this->dishService->updateCombisForDish($dish);
+            }
+
             return new JsonResponse($dish, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logger->error('dish update error', $this->getTrace($e));
+            $this->logger->info('dish update error', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

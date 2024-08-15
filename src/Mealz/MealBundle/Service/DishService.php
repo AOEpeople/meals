@@ -8,9 +8,12 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Enum\Diet;
+use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use Exception;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DishService
 {
@@ -26,19 +29,25 @@ class DishService
     private ApiService $apiService;
     private CategoryRepository $categoryRepository;
     private DishRepository $dishRepository;
+    private EventDispatcherInterface $eventDispatcher;
+    private MealRepositoryInterface $mealRepo;
 
     public function __construct(
         int $newFlagThreshold,
         string $dishConsCountPeriod,
         ApiService $apiService,
         CategoryRepository $categoryRepository,
-        DishRepository $dishRepository
+        DishRepository $dishRepository,
+        EventDispatcherInterface $eventDispatcher,
+        MealRepositoryInterface $mealRepo,
     ) {
         $this->newFlagThreshold = $newFlagThreshold;
         $this->dishConsCountPeriod = $dishConsCountPeriod;
         $this->apiService = $apiService;
         $this->categoryRepository = $categoryRepository;
         $this->dishRepository = $dishRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->mealRepo = $mealRepo;
     }
 
     /**
@@ -92,6 +101,28 @@ class DishService
         return $uniqueMeals;
     }
 
+    public function updateCombisForDish(Dish $dish): void
+    {
+        $meals = $this->mealRepo->getFutureMealsForDish($dish);
+
+        if (true === $dish->hasVariations()) {
+            foreach ($dish->getVariations() as $variation) {
+                $res = $this->mealRepo->getFutureMealsForDish($variation);
+                $meals = array_merge($meals, $res);
+            }
+        }
+
+        $weeksToUpdate = array_map(
+            fn ($meal) => $meal->getDay()->getWeek(),
+            array_unique($meals)
+        );
+        $uniqueWeeks = array_unique($weeksToUpdate);
+
+        foreach ($uniqueWeeks as $week) {
+            $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, false));
+        }
+    }
+
     private function setDietIfValid(Dish $dish, array $parameters): void
     {
         if (true === $this->apiService->isParamValid($parameters, 'diet', 'string')) {
@@ -119,7 +150,7 @@ class DishService
     private function setServingSizeIfValid(Dish $dish, array $parameters): void
     {
         if (true === $this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
-            if (true === $this->hasCombiMealsInFuture($dish)) {
+            if (true === $parameters['oneServingSize'] && true === $this->hasBookedCombiMealsInFuture($dish)) {
                 throw new Exception('204: The servingSize cannot be adjusted, because there are booked combi-meals');
             }
 
@@ -143,7 +174,7 @@ class DishService
         }
     }
 
-    private function hasCombiMealsInFuture(Dish $dish): bool
+    private function hasBookedCombiMealsInFuture(Dish $dish): bool
     {
         return $this->dishRepository->hasDishAssociatedCombiMealsInFuture($dish);
     }

@@ -127,6 +127,7 @@ const checkboxCSS = computed(() => {
 });
 
 async function handle() {
+  console.log('click');
   // Meal is being offered by someone to be taken over
   if (mealOrVariation.value?.hasOffers === true && mealOrVariation.value.mealState === MealState.TRADEABLE) {
     let slugs = [mealOrVariation.value.dishSlug as string];
@@ -263,5 +264,6 @@ async function closeCombiModal(slugs: string[]) {
   if (slugs !== undefined) {
     await joinMeal(slugs);
   }
+  removeLock(String(props.dayID));
 }
 </script>

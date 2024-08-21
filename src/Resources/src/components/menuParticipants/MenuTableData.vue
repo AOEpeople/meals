@@ -71,9 +71,13 @@ const isCombi = computed(() => props.meal.dish === 'combined-dish');
 const bookedCombi = computed(() => {
   const dishId = mealIdToDishIdDict.get(props.meal.id);
   if (dishId === undefined || dishId === null) return undefined;
-  return hasParticipantBookedCombiDish(props.dayId, props.participant, dishId);
+  return hasParticipantBookedCombiDish(props.dayId, cleanParticipantName(props.participant), dishId);
 });
-const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id));
+const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, cleanParticipantName(props.participant), props.meal.id));
+
+function cleanParticipantName(name: string): string {
+  return name.replace(/\s\(gast\)\s*/i, ' (Guest)');
+}
 
 function handleClick() {
   if (props.edit === true && bookedMeal.value === true) {

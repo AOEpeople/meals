@@ -1,5 +1,12 @@
 # Changelog
 
+## Version v3.1.5 (2024-08-21)
+
+### Fixes
+
+- fixed formatting (53e33911)
+- fixed a bug that prevented booked Guest meals to be displayed in the participant list (ad609b22)
+
 ## Version v3.1.4 (2024-08-15)
 
 ### Security Fixes

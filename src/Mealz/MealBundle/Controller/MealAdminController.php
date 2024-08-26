@@ -206,6 +206,11 @@ final class MealAdminController extends BaseController
         $this->setLockParticipationForDay($dayEntity, $day);
 
         $eventCollection = $day['events'];
+        foreach ($dayEntity->getEvents() as $event) {
+            $this->em->remove($event);  // Hier wird sichergestellt, dass die Events tatsächlich aus der Datenbank gelöscht werden.
+        }
+        $dayEntity->removeEvents();
+        $this->em->flush();  // Alle Änderungen in die Datenbank schreiben.
         foreach ($eventCollection as $event) {
             $this->logger->info('Event '. implode($event));
             $this->handleEventArr($event, $dayEntity);
@@ -244,9 +249,13 @@ final class MealAdminController extends BaseController
             $day->setEnabled($dayData['enabled']);
         }
 
-        $this->setLockParticipationForDay($day, $dayData);
-
         $eventCollection = $dayData['events'];
+        $this->setLockParticipationForDay($day, $dayData);
+        foreach ($day->getEvents() as $event) {
+            $this->em->remove($event);  // Hier wird sichergestellt, dass die Events tatsächlich aus der Datenbank gelöscht werden.
+        }
+        $day->removeEvents();
+        $this->em->flush();  // Alle Änderungen in die Datenbank schreiben.
         foreach($eventCollection as $eventArr){
             $this->handleEventArr($eventArr, $day);
         }
@@ -294,7 +303,7 @@ final class MealAdminController extends BaseController
         }
     }
     private function handleEventArr(array $eventArr, Day $day): void{
-                    $this->addEvent($eventArr, $day);
+                $this->addEvent($eventArr, $day);
             }
 
     private function addEvent(array $event, Day $dayEntity){

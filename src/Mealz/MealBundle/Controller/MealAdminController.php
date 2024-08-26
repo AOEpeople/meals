@@ -308,12 +308,18 @@ final class MealAdminController extends BaseController
 
     private function addEvent(array $event, Day $dayEntity){
         $this->logger->info('EventId: '. $event['eventId']. ', name: '. $event['eventSlug']);
-        $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
-        $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
-        if(!$eventExistsForDayAlready){
-            $this->logger->info('addEvent');
-            $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
-            $dayEntity->addEvent($eventParticipationEntity);
+        if(!isset($event['eventId'])){
+            $this->logger->info('Event wird gelöscht');
+        } else{
+            $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
+            $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
+            if(!$eventExistsForDayAlready){
+                $this->logger->info('addEvent');
+                $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
+                $dayEntity->addEvent($eventParticipationEntity);
+            } else{
+                throw new Exception('Meal exists for day already');
+            }
         }
     }
 

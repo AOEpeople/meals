@@ -79,6 +79,7 @@ export function useEvents() {
         const { error, events } = await getEvents();
         if (isResponseArrayOkay<Event>(error, events, isEvent) === true) {
             EventsState.events = events.value as Event[];
+            console.log('fetch Events ' + JSON.stringify(EventsState.events));
             EventsState.error = '';
         } else {
             EventsState.error = 'Error on fetching events';
@@ -88,6 +89,27 @@ export function useEvents() {
         EventsState.error = '';
         EventsState.isLoading = false;
     }
+        /**
+     * Returns the event with the given slug from the EventsState
+     * @param slug The slug of the event
+     */
+        function getEventBySlug(slug: string) {
+            return EventsState.events.find((event) => event.slug === slug)!;
+        }
+        /**
+         * Returns the eventId for the passed slug
+         * @param slug The slug of the event
+         */
+        function getEventIdBySlug(slug: string) {
+            return EventsState.events.find((event) => event.slug === slug)!.id;
+        }
+        /**
+         * Returns the event with the given id from the EventsState
+         * @param eventId The id of the event
+         */
+        function getEventById(eventId: number) {
+            return EventsState.events.find((event) => event.id === eventId);
+        }
 
     /**
      * Creates an event with the given title and public status
@@ -218,27 +240,6 @@ export function useEvents() {
         filterStr.value = newFilter;
     }
 
-    /**
-     * Returns the event with the given slug from the EventsState
-     * @param slug The slug of the event
-     */
-    function getEventBySlug(slug: string) {
-        return EventsState.events.find((event) => event.slug === slug)!;
-    }
-    /**
-     * Returns the eventId for the passed slug
-     * @param slug The slug of the event
-     */
-    function getEventIdBySlug(slug: string) {
-        return EventsState.events.find((event) => event.slug === slug)!.id;
-    }
-    /**
-     * Returns the event with the given id from the EventsState
-     * @param eventId The id of the event
-     */
-    function getEventById(eventId: number) {
-        return EventsState.events.find((event) => event.id === eventId);
-    }
 
     /**
      * Resets the EventsState. Should only be used for Testing

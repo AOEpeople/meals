@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ApiService;
@@ -105,7 +106,11 @@ class ApiController extends BaseController
                     'isEnabled' => $day->isEnabled(),
                     'events' => [],
                 ];
-
+                $events = [];
+                foreach($day->getEvents() as $event){
+                    $events = $this->setEventData($event, $events);
+                }
+                $response[$week->getId()]['days'][$day->getId()]['events'] = $events;
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
                 /** @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
@@ -175,10 +180,7 @@ class ApiController extends BaseController
         foreach ($meals as $meal) {
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
-
-        $events =  $this->eventService->getEventParticipationData($day);
-        $list['events'] = [$events];
-
+        $list['events'] =  $this->eventService->getEventParticipationData($day);
         $list['day'] = $day->getDateTime();
 
         return new JsonResponse($list, Response::HTTP_OK);
@@ -407,5 +409,15 @@ class ApiController extends BaseController
         }
 
         return $collection;
+    }
+    private function setEventData(EventParticipation $event, array $events): array
+    {
+        $events[$event->getId()] = [
+            'id' => $event->getId(),
+            'event' => $event->getEvent(),
+            'day' => $event->getDay()->getId(),
+            'participants' => $event->getParticipants(),
+        ];
+        return $events;
     }
 }

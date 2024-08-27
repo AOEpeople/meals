@@ -35,6 +35,8 @@ class DashboardStore extends Store<Dashboard> {
         const week = this.getWeek(weekID);
         if (week !== undefined) {
             const day = week.days[dayID as number];
+            console.log(JSON.stringify(day.events));
+
             return day;
         }
         return undefined;

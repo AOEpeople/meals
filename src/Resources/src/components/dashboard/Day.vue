@@ -129,9 +129,6 @@ const weekday = computed(() => {
   }
   return 'unknown';
 });
-const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
-const isEventDay = day?.events !== null;
-// const eventId = day?.events[Object.keys(day.events)[0][0]].eventId !== null;
 const date = computed(() => {
   if (day === null || day === undefined) {
     return '';
@@ -139,6 +136,8 @@ const date = computed(() => {
   // format date (2023-12-23) without time stamp
   return day.date.date.split(' ')[0];
 });
+const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
+const isEventDay: boolean = day?.events !== undefined && Object.keys(day?.events).length >0;
 const dateString = computed(() => {
   if (day) {
     return new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {

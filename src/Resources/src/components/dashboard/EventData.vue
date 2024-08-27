@@ -1,6 +1,8 @@
 <template>
-  <div class="grid w-full grid-cols-1 grid-rows-[minmax(0,2fr)_auto_minmax(0,1fr)]">
-    <BannerSpacer>
+  <div class="grid w-full grid-cols-1 grid-rows-[repeat(2,minmax(0,1fr))]">
+    <BannerSpacer
+      class="!h-fit"
+    >
       <EventIcon
         class="w-[20px] self-center"
         :size="20"
@@ -16,12 +18,17 @@
     <div
       v-for="(event, key) in day.events"
       :key="key"
+      :class="
+      twoEvents
+      ? 'pb-2'
+      :'pb-0'
+      "
     >
       <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
         <span
           class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
         >
-          {{ getEventById(event.eventId)?.title }}
+        {{ event.event.title }}
         </span>
         <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
           <GuestButton
@@ -33,7 +40,7 @@
             class="col-start-1 w-[24px] text-center"
           />
           <EventPopup
-            :event-title="getEventById(event.eventId)?.title"
+            :event-title="event.event.title"
             :date="day.date.date"
           />
           <ParticipationCounter
@@ -72,8 +79,10 @@ const props = defineProps<{
   dayId: string;
 }>();
 
+const twoEvents: boolean = props.day?.events !== undefined && Object.keys(props.day?.events).length === 2;
+console.log('Events am Tag '+JSON.stringify(props.day.events));
 const { t } = useI18n();
-const { getEventById, joinEvent, leaveEvent } = useEvents();
+const { joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick() {
@@ -96,3 +105,4 @@ function isEventPast() {
   return isPast;
 }
 </script>
+

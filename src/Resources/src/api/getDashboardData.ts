@@ -41,10 +41,19 @@ export type Slot = {
 
 export type EventParticipation = {
     eventId: number;
+    event: Event;
+    day: Date;
     participationId: number;
     participations: number;
     isParticipating: boolean;
     isPublic: boolean;
+};
+
+export type Event = {
+    id : number;
+    title: string;
+    slug: string;
+    public: boolean;
 };
 
 export type Day = {
@@ -71,7 +80,6 @@ export type Dashboard = {
 
 export async function useDashboardData() {
     const { response: dashboardData, request } = useApi<Dashboard>('GET', 'api/dashboard');
-
     const loaded = ref(false);
 
     if (loaded.value === false) {

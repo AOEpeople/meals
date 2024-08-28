@@ -124,7 +124,15 @@ final class ApiService
 
     public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
-        return $this->eventPartSrv->getEventParticipationData($day, $profile);
+        return $this->eventPartSrv->getEventParticipationData($day,null, $profile);
+    }
+    public function getEventParticipationsData(Day $day, ?Profile $profile = null): ?array
+    {
+        $participations = [];
+        foreach($day->getEvents() as $eventParticipation){
+            $participations[] = $this->eventPartSrv->getEventParticipationData($day,$eventParticipation->getId(), $profile);
+        }
+        return $participations;
     }
 
     /**

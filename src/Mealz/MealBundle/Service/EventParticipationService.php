@@ -56,7 +56,7 @@ final class EventParticipationService
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null,): ?array
     {
         if($eventId === null){
-            return $day->getEvents();
+            return $day->getEvents()->toArray();
         } else{
             $eventParticipation = $day->getEvent($day,$eventId);
             if (null === $eventParticipation) {
@@ -178,9 +178,14 @@ final class EventParticipationService
         $day->removeEvent($event);
     }
 
-    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): Participant
+    private function createEventParticipation(Profile $profile, EventParticipation $eventParticipation): Participant
     {
-        return new Participant($profile, null, $eventParticiation);
+        $participant = new Participant($profile, null, $eventParticipation);
+        $eventParticipation->setParticipant($participant);
+        $this->em->persist($participant);
+        $this->em->persist($eventParticipation);
+        $this->em->flush();
+        return $participant;
     }
 
     private function getParticipantName(Participant $participant): string

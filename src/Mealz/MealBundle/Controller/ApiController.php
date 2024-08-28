@@ -104,13 +104,16 @@ final class ApiController extends BaseController
                     'slots' => [],
                     'meals' => [],
                     'isEnabled' => $day->isEnabled(),
-                    'events' => [],
+                    'events' => $this->apiSrv->getEventParticipationsData($day, $profile),
                 ];
-                $events = [];
-                foreach($day->getEvents() as $event){
-                    $events = $this->setEventData($event, $events);
-                }
-                $response[$week->getId()]['days'][$day->getId()]['events'] = $events;
+                // $events = [];
+                // // if($day->getId() == 1111){
+                // //     var_dump($this->apiSrv->getEventParticipationData($day, $profile));
+                // // }
+                // foreach($day->getEvents() as $event){
+                //     $events = $this->setEventData($event, $events);
+                // }
+                // $response[$week->getId()]['days'][$day->getId()]['events'] = $events;
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
                 /** @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {

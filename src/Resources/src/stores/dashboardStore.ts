@@ -35,8 +35,6 @@ class DashboardStore extends Store<Dashboard> {
         const week = this.getWeek(weekID);
         if (week !== undefined) {
             const day = week.days[dayID as number];
-            console.log(JSON.stringify(day.events));
-
             return day;
         }
         return undefined;
@@ -45,10 +43,11 @@ class DashboardStore extends Store<Dashboard> {
     public getDayByEventParticipationId(eventParticipationId: number): Day | undefined {
         for (const week of Object.values(this.state.weeks)) {
             for (const day of Object.values(week.days)) {
+                for(const event of Object.values(day.events))
                 if (
-                    day.events.EventParticipation.eventId !== null &&
-                    day.events.EventParticipation.eventId !== undefined &&
-                    day.events.EventParticipation.eventId === eventParticipationId
+                    event.id !== null &&
+                    event.id !== undefined &&
+                    event.id === eventParticipationId
                 ) {
                     return day;
                 }
@@ -110,20 +109,20 @@ class DashboardStore extends Store<Dashboard> {
 
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
-        if (
-            day !== null &&
-            day !== undefined &&
-            day.events.Dictionary !== null &&
-            day.events.Dictionary.eventId === eventId
-        ) {
-            day.events.EventParticipation.participations = participations;
-        }
+            if (
+                day !== null &&
+                day !== undefined &&
+                day.events !== null &&
+                day.events[eventId] !== undefined
+            ) {
+                day.events[eventId].participations = participations;
+            }
     }
 
     public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {
         const day = this.getDayByEventParticipationId(participationId);
-        if (day !== undefined) {
-            day.events.EventParticipation.isParticipating = isParticipating;
+        if (day !== undefined && day.events[participationId] !== undefined) {
+            day.events[participationId].isParticipating = isParticipating;
         }
     }
 

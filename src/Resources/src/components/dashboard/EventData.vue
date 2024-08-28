@@ -28,7 +28,7 @@
         <span
           class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
         >
-        {{ event.event.title }}
+        {{ getEventById(event?.id ?? -1)?.title }}
         </span>
         <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
           <GuestButton
@@ -40,7 +40,7 @@
             class="col-start-1 w-[24px] text-center"
           />
           <EventPopup
-            :event-title="event.event.title"
+            :event-title="getEventById(event?.id ?? -1)?.title"
             :date="day.date.date"
           />
           <ParticipationCounter
@@ -52,7 +52,7 @@
           <CheckBox
             :isActive="new Date(day.date.date) > new Date()"
             :isChecked="event?.isParticipating ?? false"
-            @click="handleClick"
+            @click="handleClick(event)"
           />
         </div>
       </div>
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Day } from '@/api/getDashboardData';
+import { type Day, type EventParticipation } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
 import ParticipationCounter from '../menuCard/ParticipationCounter.vue';
 import CheckBox from '../misc/CheckBox.vue';
@@ -80,20 +80,19 @@ const props = defineProps<{
 }>();
 
 const twoEvents: boolean = props.day?.events !== undefined && Object.keys(props.day?.events).length === 2;
-console.log('Events am Tag '+JSON.stringify(props.day.events));
 const { t } = useI18n();
-const { joinEvent, leaveEvent } = useEvents();
+const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
-async function handleClick() {
+async function handleClick(event: EventParticipation) {
   if (isLocked(props.dayId) === true || isEventPast() === true) {
     return;
   }
   addLock(props.dayId);
-  if (props.day.events.EventParticipation?.isParticipating === false) {
-    await joinEvent(props.day.date.date, props.day.events.EventParticipation.eventId);
+  if (event?.isParticipating === undefined || event?.isParticipating === false) {
+    await joinEvent(props.day.date.date, event.id);
   } else {
-    await leaveEvent(props.day.date.date, props.day.events.EventParticipation.eventId);
+    await leaveEvent(props.day.date.date, event.id);
   }
   removeLock(props.dayId);
 }

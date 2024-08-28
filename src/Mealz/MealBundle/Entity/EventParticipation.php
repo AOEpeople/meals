@@ -30,14 +30,15 @@ class EventParticipation
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     public Event $event;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class, cascade: ['persist', 'remove'])]
     public ?Collection $participants = null;
+
 
     public function __construct(Day $day, Event $event, ?Collection $participants = null)
     {
         $this->day = $day;
         $this->event = $event;
-        $this->participants = $participants;
+        $this->participants = $participants ?? new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,6 +79,11 @@ class EventParticipation
         }
 
         return null;
+    }
+
+    public function setParticipant(Participant $participant) : void
+    {
+        $this->participants->add($participant);
     }
 
     public function getParticipants(): ArrayCollection

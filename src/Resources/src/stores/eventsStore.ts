@@ -79,7 +79,6 @@ export function useEvents() {
         const { error, events } = await getEvents();
         if (isResponseArrayOkay<Event>(error, events, isEvent) === true) {
             EventsState.events = events.value as Event[];
-            console.log('fetch Events ' + JSON.stringify(EventsState.events));
             EventsState.error = '';
         } else {
             EventsState.error = 'Error on fetching events';
@@ -190,6 +189,7 @@ export function useEvents() {
      * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
      */
     async function joinEvent(date: string, eventId: number) {
+        console.log('Join event im EventStore ' + eventId);
         const { error, response } = await postJoinEvent(date, eventId);
 
         if (error.value === true && isMessage(response.value) === true) {

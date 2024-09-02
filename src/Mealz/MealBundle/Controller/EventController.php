@@ -110,7 +110,7 @@ final class EventController extends BaseListController
         if (new DateTime() > $day->getDateTime()->modify($eventLockModifier)) {
             return new JsonResponse(['message' => '804: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
+       //  var_dump($day->getDateTime()); exit;
         $eventParticipation = $this->eventPartSrv->join($profile, $day, $eventId);
         if (null === $eventParticipation) {
             return new JsonResponse(['message' => '802: User could not join the event'], Response::HTTP_INTERNAL_SERVER_ERROR);

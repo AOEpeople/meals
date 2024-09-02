@@ -357,7 +357,7 @@ MealzMealBundle_api_participations:
     methods: [ GET ]
 
 MealzMealBundle_api_event_participations:
-    path: /api/participations/event/{date}
+    path: /api/events/participation/{date}/{eventId}
     defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventParticipants }
     methods: [ GET ]
 

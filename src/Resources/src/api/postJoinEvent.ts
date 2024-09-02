@@ -13,8 +13,6 @@ export default async function postJoinEvent(date: string, eventId: number) {
         'POST',
         `api/events/participation/${date}/${eventId}`
     );
-
     await request();
-
     return { error, response };
 }

@@ -88,9 +88,9 @@ class Day extends AbstractMessage implements JsonSerializable
     }
 
 
-    public function getEvent(Day $day, int $id):EventParticipation | null{
+    public function getEvent(int $id):EventParticipation | null{
         foreach ($this->getEvents() as $event) {
-            if($event->getId() === $id && $event->getDay() === $day){
+            if($event->getId() === $id){
                 return $event;
             }
     }

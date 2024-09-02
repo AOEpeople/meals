@@ -106,7 +106,7 @@ export function useEvents() {
          * Returns the event with the given id from the EventsState
          * @param eventId The id of the event
          */
-        function getEventById(eventId: number) {
+        function getEventById(eventId: number){
             return EventsState.events.find((event) => event.id === eventId);
         }
 
@@ -189,9 +189,7 @@ export function useEvents() {
      * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
      */
     async function joinEvent(date: string, eventId: number) {
-        console.log('Join event im EventStore ' + eventId);
         const { error, response } = await postJoinEvent(date, eventId);
-
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
         } else if (error.value === true) {

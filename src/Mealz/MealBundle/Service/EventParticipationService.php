@@ -60,7 +60,7 @@ class EventParticipationService
         if($eventId === null){
             return $day->getEvents()->toArray();
         } else{
-            $eventParticipation = $day->getEvent($day,$eventId);
+            $eventParticipation = $day->getEvent($eventId);
             if (null === $eventParticipation) {
                 return null;
             }
@@ -81,7 +81,7 @@ class EventParticipationService
 
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
-        $eventParticipation = $day->getEvent($day, $eventId);
+        $eventParticipation = $day->getEvent($eventId);
         if (null !== $eventParticipation && true === $this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
             $participation = $this->createEventParticipation($profile, $eventParticipation);
             $this->em->persist($participation);
@@ -115,7 +115,7 @@ class EventParticipationService
 
         try {
             $this->em->persist($guestProfile);
-            $eventParticipation = $eventDay->getEvent($eventDay, $eventId);
+            $eventParticipation = $eventDay->getEvent($eventId);
             $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);
@@ -132,7 +132,7 @@ class EventParticipationService
 
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
-        $eventParticipation = $day->getEvent($day, $eventId);
+        $eventParticipation = $day->getEvent( $eventId);
         $participation = $eventParticipation->getParticipant($profile);
 
         if (null !== $participation) {
@@ -152,14 +152,14 @@ class EventParticipationService
      */
     public function getParticipants(Day $day, int $eventId): array
     {
-        $eventParticipation = $day->getEvent($day, $eventId);
+        $eventParticipation = $day->getEvent($eventId);
         if (null === $eventParticipation) {
             return [];
         }
 
         return array_map(
             fn (Participant $participant) => $this->getParticipantName($participant),
-            $day->getEvent($day, $eventId)->getParticipants()->toArray()
+            $day->getEvent( $eventId)->getParticipants()->toArray()
         );
     }
 

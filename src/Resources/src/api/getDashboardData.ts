@@ -40,9 +40,7 @@ export type Slot = {
 };
 
 export type EventParticipation = {
-    id: number;
-    event: Event;
-    day: Date;
+    eventId: number;
     participationId: number;
     participations: number;
     isParticipating: boolean;

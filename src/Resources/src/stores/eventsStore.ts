@@ -217,9 +217,10 @@ export function useEvents() {
         }
     }
 
-    async function getParticipantsForEvent(date: string, eventSlug: string) {
-        const { error, response } = await getEventParticipants(date, getEventIdBySlug(eventSlug));
-
+    async function getParticipantsForEvent(date: string, participationId: number) {
+        console.log('ParticipationId: '+participationId);
+        const { error, response } = await getEventParticipants(date, participationId);
+        participationId
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
         } else if (error.value === true) {

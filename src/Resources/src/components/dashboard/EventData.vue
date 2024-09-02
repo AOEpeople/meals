@@ -41,6 +41,7 @@
           />
           <EventPopup
             :event-title="getEventById(event?.eventId ?? -1)?.title"
+            :participationId="event.participationId"
             :date="day.date.date"
           />
           <ParticipationCounter
@@ -83,7 +84,6 @@ const twoEvents: boolean = props.day?.events !== undefined && Object.keys(props.
 const { t } = useI18n();
 const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
-
 async function handleClick(event: EventParticipation) {
   if (isLocked(props.dayId) === true || isEventPast() === true) {
     return;
@@ -95,6 +95,7 @@ async function handleClick(event: EventParticipation) {
   } else {
     await leaveEvent(props.day.date.date,event?.participationId);
     event.isParticipating = false;
+    event.participations = event.participations -1;
   }
   removeLock(props.dayId);
 }

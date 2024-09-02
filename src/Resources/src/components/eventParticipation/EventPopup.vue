@@ -64,6 +64,7 @@ const props = withDefaults(
   defineProps<{
     eventTitle?: string;
     date: string;
+    participationId: number;
   }>(),
   {
     eventTitle: ''
@@ -77,7 +78,8 @@ const isLoading = ref(false);
 watch(showParticipations, async () => {
   if (showParticipations.value === true) {
     isLoading.value = true;
-    participations.value = ((await getParticipantsForEvent(props.date, props.eventTitle)) as string[]).sort();
+    participations.value = ((await getParticipantsForEvent(props.date, props.participationId)) as string[]).sort();
+    console.log(participations.value);
     isLoading.value = false;
   }
 });

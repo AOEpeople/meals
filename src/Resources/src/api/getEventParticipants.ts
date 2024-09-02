@@ -1,10 +1,11 @@
 import useApi from './api';
 import { type IMessage } from '@/interfaces/IMessage';
 
-export default async function getEventParticipants(date: string, eventId: number) {
+export default async function getEventParticipants(date: string, participationId: number) {
+    console.log('getEventParticipants '+ participationId);
     const { error, response, request } = useApi<string[] | IMessage>(
         'GET',
-        `api/participations/event/${date}/${eventId}`
+        `api/events/participation/${date}/${participationId}`
     );
 
     await request();

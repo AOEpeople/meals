@@ -92,6 +92,7 @@ async function handleClick(event: EventParticipation) {
   if (event?.isParticipating === undefined || event?.isParticipating === false) {
     await joinEvent(props.day.date.date, event?.participationId);
     event.isParticipating = true;
+    event.participations = event.participations +1;
   } else {
     await leaveEvent(props.day.date.date,event?.participationId);
     event.isParticipating = false;

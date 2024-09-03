@@ -43,14 +43,14 @@ class DashboardStore extends Store<Dashboard> {
     public getDayByEventParticipationId(eventParticipationId: number): Day | undefined {
         for (const week of Object.values(this.state.weeks)) {
             for (const day of Object.values(week.days)) {
-                for(const event of Object.values(day.events))
-                if (
-                    event.id !== null &&
-                    event.id !== undefined &&
-                    event.id === eventParticipationId
-                ) {
-                    return day;
-                }
+                for (const event of Object.values(day.events))
+                    if (
+                        event.eventId !== null &&
+                        event.eventId !== undefined &&
+                        event.eventId === eventParticipationId
+                    ) {
+                        return day;
+                    }
             }
         }
     }
@@ -116,14 +116,9 @@ class DashboardStore extends Store<Dashboard> {
 
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
-            if (
-                day !== null &&
-                day !== undefined &&
-                day.events !== null &&
-                day.events[eventId] !== undefined
-            ) {
-                day.events[eventId].participations = participations;
-            }
+        if (day !== null && day !== undefined && day.events !== null && day.events[eventId] !== undefined) {
+            day.events[eventId].participations = participations;
+        }
     }
 
     public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {

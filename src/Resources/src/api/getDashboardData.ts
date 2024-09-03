@@ -48,7 +48,7 @@ export type EventParticipation = {
 };
 
 export type Event = {
-    id : number;
+    id: number;
     title: string;
     slug: string;
     public: boolean;

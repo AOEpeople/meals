@@ -1,8 +1,6 @@
 <template>
   <div class="grid w-full grid-cols-1 grid-rows-[repeat(2,minmax(0,1fr))]">
-    <BannerSpacer
-      class="!h-fit"
-    >
+    <BannerSpacer class="!h-fit">
       <EventIcon
         class="w-[20px] self-center"
         :size="20"
@@ -18,17 +16,13 @@
     <div
       v-for="(event, key) in day.events"
       :key="key"
-      :class="
-      twoEvents
-      ? 'pb-2'
-      :'pb-0'
-      "
+      :class="twoEvents ? 'pb-2' : 'pb-0'"
     >
       <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
         <span
           class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
         >
-        {{ getEventById(event?.eventId ?? -1)?.title }}
+          {{ getEventById(event?.eventId ?? -1)?.title }}
         </span>
         <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
           <GuestButton
@@ -84,6 +78,7 @@ const twoEvents: boolean = props.day?.events !== undefined && Object.keys(props.
 const { t } = useI18n();
 const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
+
 async function handleClick(event: EventParticipation) {
   if (isLocked(props.dayId) === true || isEventPast() === true) {
     return;
@@ -92,11 +87,11 @@ async function handleClick(event: EventParticipation) {
   if (event?.isParticipating === undefined || event?.isParticipating === false) {
     await joinEvent(props.day.date.date, event?.participationId);
     event.isParticipating = true;
-    event.participations = event.participations +1;
+    event.participations = event.participations + 1;
   } else {
-    await leaveEvent(props.day.date.date,event?.participationId);
+    await leaveEvent(props.day.date.date, event?.participationId);
     event.isParticipating = false;
-    event.participations = event.participations -1;
+    event.participations = event.participations - 1;
   }
   removeLock(props.dayId);
 }
@@ -108,4 +103,3 @@ function isEventPast() {
   return isPast;
 }
 </script>
-

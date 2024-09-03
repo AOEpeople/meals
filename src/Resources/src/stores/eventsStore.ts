@@ -88,27 +88,27 @@ export function useEvents() {
         EventsState.error = '';
         EventsState.isLoading = false;
     }
-        /**
+    /**
      * Returns the event with the given slug from the EventsState
      * @param slug The slug of the event
      */
-        function getEventBySlug(slug: string) {
-            return EventsState.events.find((event) => event.slug === slug)!;
-        }
-        /**
-         * Returns the eventId for the passed slug
-         * @param slug The slug of the event
-         */
-        function getEventIdBySlug(slug: string) {
-            return EventsState.events.find((event) => event.slug === slug)!.id;
-        }
-        /**
-         * Returns the event with the given id from the EventsState
-         * @param eventId The id of the event
-         */
-        function getEventById(eventId: number){
-            return EventsState.events.find((event) => event.id === eventId);
-        }
+    function getEventBySlug(slug: string) {
+        return EventsState.events.find((event) => event.slug === slug)!;
+    }
+    /**
+     * Returns the eventId for the passed slug
+     * @param slug The slug of the event
+     */
+    function getEventIdBySlug(slug: string) {
+        return EventsState.events.find((event) => event.slug === slug)!.id;
+    }
+    /**
+     * Returns the event with the given id from the EventsState
+     * @param eventId The id of the event
+     */
+    function getEventById(eventId: number) {
+        return EventsState.events.find((event) => event.id === eventId);
+    }
 
     /**
      * Creates an event with the given title and public status
@@ -218,9 +218,9 @@ export function useEvents() {
     }
 
     async function getParticipantsForEvent(date: string, participationId: number) {
-        console.log('ParticipationId: '+participationId);
+        console.log('ParticipationId: ' + participationId);
         const { error, response } = await getEventParticipants(date, participationId);
-        participationId
+        participationId;
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = (response.value as IMessage)?.message;
         } else if (error.value === true) {
@@ -238,7 +238,6 @@ export function useEvents() {
     function setFilter(newFilter: string) {
         filterStr.value = newFilter;
     }
-
 
     /**
      * Resets the EventsState. Should only be used for Testing

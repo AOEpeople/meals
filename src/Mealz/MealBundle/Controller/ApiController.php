@@ -106,14 +106,6 @@ class ApiController extends BaseController
                     'isEnabled' => $day->isEnabled(),
                     'events' => $this->apiSrv->getEventParticipationsData($day, $profile),
                 ];
-                // $events = [];
-                // // if($day->getId() == 1111){
-                // //     var_dump($this->apiSrv->getEventParticipationData($day, $profile));
-                // // }
-                // foreach($day->getEvents() as $event){
-                //     $events = $this->setEventData($event, $events);
-                // }
-                // $response[$week->getId()]['days'][$day->getId()]['events'] = $events;
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
                 /** @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
@@ -418,15 +410,5 @@ class ApiController extends BaseController
         }
 
         return $collection;
-    }
-    private function setEventData(EventParticipation $event, array $events): array
-    {
-        $events[$event->getId()] = [
-            'id' => $event->getId(),
-            'event' => $event->getEvent(),
-            'day' => $event->getDay()->getId(),
-            'participants' => $event->getParticipants(),
-        ];
-        return $events;
     }
 }

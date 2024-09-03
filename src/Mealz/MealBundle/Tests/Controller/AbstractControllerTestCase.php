@@ -147,7 +147,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function createEventParticipation(Day $day, Event $event): EventParticipation
     {
         $eventParticipation = new EventParticipation($day, $event);
-        $day->setEvent($eventParticipation);
+        $day->addEvent($eventParticipation);
         $this->persistAndFlushAll([$eventParticipation, $day]);
 
         return $eventParticipation;

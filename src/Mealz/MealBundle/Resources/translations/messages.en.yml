@@ -9,6 +9,7 @@ week:
       default: Log into your account at https://meals.aoe.com/ to get it!
     content:
       no_meals: No offers for this day
+      no_events: No events on this day
 
 entity:
   added: '%entityName% has been added.'

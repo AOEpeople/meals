@@ -137,7 +137,7 @@ const date = computed(() => {
   return day.date.date.split(' ')[0];
 });
 const emptyDay = Object.keys(day?.meals ?? {}).length === 0;
-const isEventDay: boolean = day?.events !== undefined && Object.keys(day?.events).length >0;
+const isEventDay: boolean = day?.events !== undefined && Object.keys(day?.events).length > 0;
 const dateString = computed(() => {
   if (day) {
     return new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {

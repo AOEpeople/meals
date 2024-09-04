@@ -226,7 +226,7 @@ MealzMealBundle_api_events_leave:
   methods: [ DELETE ]
 
 MealzMealBundle_Meal_api_guest_event_invitation:
-    path:  /event/invitation/{dayId}
+    path:  /event/invitation/{dayId}/{eventId}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::newGuestEventInvitation }
     requirements:
         dayId: '[1-9][0-9]*'

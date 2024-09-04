@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Repository;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\Exception\ORMException;
@@ -25,7 +26,7 @@ final class GuestInvitationRepository extends BaseRepository implements GuestInv
     #[Override]
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
     {
-        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
+        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation]);
 
         if (($invitation instanceof GuestInvitation) === false) {
             $invitation = new GuestInvitation($host, $day);

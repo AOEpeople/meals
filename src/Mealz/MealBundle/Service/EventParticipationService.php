@@ -69,6 +69,7 @@ class EventParticipationService
                 'participationId' => $eventParticipation->getId(),
                 'participations' => count($eventParticipation->getParticipants()),
                 'isPublic' => $eventParticipation->getEvent()->isPublic(),
+                'day' => $eventParticipation->getDay(),
             ];
 
             if (null !== $profile) {
@@ -101,21 +102,19 @@ class EventParticipationService
         string $lastName,
         string $company,
         Day $eventDay,
-        int $eventId
-    ): EventParticipation {
+        EventParticipation $eventParticipation,
+        ): EventParticipation {
         $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
             $company,
-            $eventDay->getDateTime(),
-            $eventId
+            $eventDay->getDateTime()
         );
 
         $this->em->beginTransaction();
 
         try {
-            $this->em->persist($guestProfile);
-            $eventParticipation = $eventDay->getEvent($eventId);
+            $this->em->persist($guestProfile);// $eventParticipation = $eventDay->getEvent($eventId);
             $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);

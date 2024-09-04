@@ -206,6 +206,7 @@ class Day extends AbstractMessage implements JsonSerializable
             'meals' => $meals,
             'events' => $events,
             'enabled' => $this->isEnabled(),
+            'dayId' => $this->getId(),
         ];
     }
 }

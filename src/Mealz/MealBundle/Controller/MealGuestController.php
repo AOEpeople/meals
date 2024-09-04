@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
@@ -61,14 +62,15 @@ class MealGuestController extends BaseController
     public function newGuestInvitation(
         #[MapEntity(id: 'dayId')]
         Day $mealDay,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        EventParticipation $eventParticipation,
     ): JsonResponse {
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
-        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $mealDay);
+        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $mealDay, $eventParticipation);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], Response::HTTP_OK);
     }
@@ -76,21 +78,23 @@ class MealGuestController extends BaseController
     #[IsGranted('ROLE_USER')]
     public function newGuestEventInvitation(
         Day $dayId,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        EventParticipation $eventParticipation,
     ): JsonResponse {
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $dayId);
+        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $dayId, $eventParticipation);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], Response::HTTP_OK);
     }
 
     public function getEventInvitationData(
         string $invitationId,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        EventParticipation $eventParticipation
     ): JsonResponse {
         /** @var GuestInvitation $invitation */
         $invitation = $guestInvitationRepo->find($invitationId);
@@ -101,7 +105,7 @@ class MealGuestController extends BaseController
         $guestData = [
             'date' => $invitation->getDay()->getDateTime(),
             'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
-            'event' => $invitation->getDay()->getEvent()->getEvent()->getTitle(),
+            'event' => $eventParticipation->getEvent()->getTitle(),
         ];
 
         return new JsonResponse($guestData, Response::HTTP_OK);
@@ -110,12 +114,13 @@ class MealGuestController extends BaseController
     public function joinEventAsGuest(
         string $invitationId,
         Request $request,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        EventParticipation $eventParticipation,
     ): JsonResponse {
         $parameters = json_decode($request->getContent(), true);
 
         /** @var GuestInvitation $invitation */
-        $invitation = $guestInvitationRepo->find($invitationId);
+        $invitation = $guestInvitationRepo->find($invitationId, $eventParticipation->getEvent()->getId());
         if (null === $invitation) {
             return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
         } elseif (false === isset($parameters['firstName']) || false === isset($parameters['lastName'])) {
@@ -131,7 +136,8 @@ class MealGuestController extends BaseController
                 $parameters['firstName'],
                 $parameters['lastName'],
                 $parameters['company'],
-                $invitation->getDay()
+                $invitation->getDay(),
+                $eventParticipation,
             );
 
             $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));

@@ -26,6 +26,12 @@ class GuestInvitation
     #[ORM\JoinColumn(name: 'meal_day_id', referencedColumnName: 'id', nullable: false, onDelete: 'NO ACTION')]
     private Day $day;
 
+    #[ORM\ManyToOne(targetEntity: EventParticipation::class)]
+    #[ORM\JoinColumn(name: 'eventParticipation', referencedColumnName: 'id', nullable: true, onDelete: 'NO ACTION')]
+    private ?EventParticipation $eventParticipation;
+
+
+
     /**
      * Initializes class instance.
      */
@@ -40,6 +46,10 @@ class GuestInvitation
         $this->id = $id;
 
         return $this;
+    }
+    public function getEventParticipation() : EventParticipation
+    {
+        return $this->eventParticipation;
     }
 
     /**

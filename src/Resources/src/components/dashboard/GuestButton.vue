@@ -13,6 +13,7 @@
       <GuestLink
         :dayID="String(dayID)"
         :invitation="invitation"
+        :eventParticipation="eventParticipation"
       />
     </PopoverPanel>
   </Popover>
@@ -23,11 +24,13 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import Icons from '@/components/misc/Icons.vue';
 import GuestLink from '@/components/dashboard/GuestLink.vue';
 import { Invitation } from '@/enums/Invitation';
+import type { EventParticipation } from '@/api/getDashboardData';
 
 defineProps<{
   dayID: number | string;
   index: number;
   invitation: Invitation;
   iconWhite: boolean;
+  eventParticipation?: EventParticipation;
 }>();
 </script>

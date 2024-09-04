@@ -45,6 +45,7 @@ export type EventParticipation = {
     participations: number;
     isParticipating: boolean;
     isPublic: boolean;
+    day:Day;
 };
 
 export type Event = {
@@ -63,6 +64,7 @@ export type Day = {
     slotsEnabled: boolean;
     isEnabled: boolean;
     events: Dictionary<EventParticipation>;
+    dayId: number;
 };
 
 export type Week = {

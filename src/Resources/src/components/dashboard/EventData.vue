@@ -31,6 +31,7 @@
             :index="0"
             :invitation="Invitation.EVENT"
             :icon-white="false"
+            :eventParticipation="event"
             class="col-start-1 w-[24px] text-center"
           />
           <EventPopup

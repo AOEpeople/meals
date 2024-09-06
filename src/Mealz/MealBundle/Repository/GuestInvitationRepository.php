@@ -18,7 +18,7 @@ use Override;
 final class GuestInvitationRepository extends BaseRepository implements GuestInvitationRepositoryInterface
 {
     /**
-     * Gets the guest invitation from a particular user on a particular day.
+     * Gets the event guest invitation from a particular user on a particular day.
      *
      * @throws ORMException
      * @throws OptimisticLockException
@@ -27,15 +27,33 @@ final class GuestInvitationRepository extends BaseRepository implements GuestInv
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
     {
         $entityManager = $this->getEntityManager();
-        $eventParticipation?
-        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation->getId()])
-        :
-        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
-        $entityManager->persist($eventParticipation);
-        $entityManager->persist($day);
+        if($eventParticipation){
+            $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation]);
+        }
+
 
         if (($invitation instanceof GuestInvitation) === false) {
             $invitation = new GuestInvitation($host, $day,$eventParticipation);
+            $entityManager->persist($invitation);
+            $entityManager->flush();
+        }
+
+        return $invitation;
+    }
+
+     /**
+     * Gets the guest invitation from a particular user on a particular day.
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
+    {
+        $entityManager = $this->getEntityManager();
+        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
+
+        if (($invitation instanceof GuestInvitation) === false) {
+            $invitation = new GuestInvitation($host, $day);
             $entityManager->persist($invitation);
             $entityManager->flush();
         }

@@ -44,7 +44,6 @@ final class Version20240802130923 extends AbstractMigration
         $this->addSql('ALTER TABLE profile_role ADD CONSTRAINT FK_E1A105FED60322AC FOREIGN KEY (role_id) REFERENCES role (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE transaction ADD CONSTRAINT FK_723705D18157AA0F FOREIGN KEY (profile) REFERENCES profile (id)');
         $this->addSql('ALTER TABLE session CHANGE sess_data sess_data LONGBLOB NOT NULL');
-        $this->addSql('ALTER TABLE session RENAME INDEX session_sess_lifetime_idx TO sess_lifetime_idx');
     }
 
     public function down(Schema $schema): void
@@ -56,7 +55,6 @@ final class Version20240802130923 extends AbstractMigration
         $this->addSql('ALTER TABLE participant_dish DROP FOREIGN KEY FK_41C99E869D1C3019');
         $this->addSql('ALTER TABLE participant_dish DROP FOREIGN KEY FK_41C99E86148EB0CB');
         $this->addSql('ALTER TABLE session CHANGE sess_data sess_data BLOB NOT NULL');
-        $this->addSql('ALTER TABLE session RENAME INDEX sess_lifetime_idx TO session_sess_lifetime_idx');
         $this->addSql('ALTER TABLE profile_role DROP FOREIGN KEY FK_E1A105FECCFA12B8');
         $this->addSql('ALTER TABLE profile_role DROP FOREIGN KEY FK_E1A105FED60322AC');
         $this->addSql('ALTER TABLE guest_invitation DROP FOREIGN KEY FK_CC0531331FB8D185');

@@ -24,12 +24,16 @@ class GuestInvitationRepository extends BaseRepository implements GuestInvitatio
      */
     public function findOrCreateInvitation(Profile $host, Day $day, ?EventParticipation $eventParticipation): GuestInvitation
     {
-        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation]);
+        $entityManager = $this->getEntityManager();
+        $eventParticipation?
+        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation->getId()])
+        :
+        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
+        $entityManager->persist($eventParticipation);
+        $entityManager->persist($day);
 
         if (($invitation instanceof GuestInvitation) === false) {
-            $invitation = new GuestInvitation($host, $day);
-
-            $entityManager = $this->getEntityManager();
+            $invitation = new GuestInvitation($host, $day,$eventParticipation);
             $entityManager->persist($invitation);
             $entityManager->flush();
         }

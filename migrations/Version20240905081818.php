@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240904132158 extends AbstractMigration
+final class Version20240905081818 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,6 +26,6 @@ final class Version20240904132158 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE session RENAME INDEX sess_lifetime_idx TO session_sess_lifetime_idx');
+        $this->addSql('ALTER TABLE guest_invitation CHANGE eventParticipation eventParticipation INT NOT NULL');
     }
 }

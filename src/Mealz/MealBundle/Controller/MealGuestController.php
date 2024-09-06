@@ -63,14 +63,14 @@ final class MealGuestController extends BaseController
         #[MapEntity(id: 'dayId')]
         Day $mealDay,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
-        EventParticipation $eventParticipation,
     ): JsonResponse {
+
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
-        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $mealDay, $eventParticipation);
+        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $mealDay);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], Response::HTTP_OK);
     }
@@ -79,6 +79,7 @@ final class MealGuestController extends BaseController
     public function newGuestEventInvitation(
         Day $dayId,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
+        #[MapEntity(id: 'eventId')]
         EventParticipation $eventParticipation,
     ): JsonResponse {
         $userProfile = $this->getProfile();

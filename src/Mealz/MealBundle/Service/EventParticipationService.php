@@ -114,7 +114,7 @@ class EventParticipationService
         $this->em->beginTransaction();
 
         try {
-            $this->em->persist($guestProfile);// $eventParticipation = $eventDay->getEvent($eventId);
+            $this->em->persist($guestProfile);
             $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);

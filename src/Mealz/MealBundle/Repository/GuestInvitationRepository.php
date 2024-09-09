@@ -51,7 +51,7 @@ class GuestInvitationRepository extends BaseRepository implements GuestInvitatio
         $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
 
         if (($invitation instanceof GuestInvitation) === false) {
-            $invitation = new GuestInvitation($host, $day);
+            $invitation = new GuestInvitation($host, $day, null);
             $entityManager->persist($invitation);
             $entityManager->flush();
         }

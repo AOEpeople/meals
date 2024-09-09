@@ -87,26 +87,26 @@ final class MealGuestController extends BaseController
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $dayId, $eventParticipation);
+        $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($userProfile, $dayId, $eventParticipation);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], Response::HTTP_OK);
     }
 
     public function getEventInvitationData(
         string $invitationId,
-        GuestInvitationRepositoryInterface $guestInvitationRepo,
-        EventParticipation $eventParticipation
+        GuestInvitationRepositoryInterface $guestInvitationRepo
     ): JsonResponse {
         /** @var GuestInvitation $invitation */
         $invitation = $guestInvitationRepo->find($invitationId);
         if (null === $invitation) {
             return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
         }
-
+        // es kommt hier nur die EventId an
+        // $this->logger->info('Event '. print_r($eventParticipation));
         $guestData = [
             'date' => $invitation->getDay()->getDateTime(),
             'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
-            'event' => $eventParticipation->getEvent()->getTitle(),
+            'event' => $invitation->getEventParticipation()->getEvent()->getTitle(),
         ];
 
         return new JsonResponse($guestData, Response::HTTP_OK);
@@ -116,12 +116,11 @@ final class MealGuestController extends BaseController
         string $invitationId,
         Request $request,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
-        EventParticipation $eventParticipation,
     ): JsonResponse {
         $parameters = json_decode($request->getContent(), true);
 
         /** @var GuestInvitation $invitation */
-        $invitation = $guestInvitationRepo->find($invitationId, $eventParticipation->getEvent()->getId());
+        $invitation = $guestInvitationRepo->find($invitationId);
         if (null === $invitation) {
             return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
         } elseif (false === isset($parameters['firstName']) || false === isset($parameters['lastName'])) {
@@ -138,7 +137,7 @@ final class MealGuestController extends BaseController
                 $parameters['lastName'],
                 $parameters['company'],
                 $invitation->getDay(),
-                $eventParticipation,
+                $invitation->getEventParticipation(),
             );
 
             $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));

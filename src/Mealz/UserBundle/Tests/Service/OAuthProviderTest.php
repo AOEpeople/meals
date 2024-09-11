@@ -20,6 +20,8 @@ class OAuthProviderTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
 
+    private const string AUTH_CLIENT_ID = 'meals-app';
+
     private OAuthUserProvider $sut;
 
     protected function setUp(): void
@@ -34,7 +36,8 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         $this->sut = new OAuthUserProvider(
             $em,
-            self::getContainer()->get(RoleRepositoryInterface::class)
+            self::getContainer()->get(RoleRepositoryInterface::class),
+            self::AUTH_CLIENT_ID
         );
     }
 
@@ -136,7 +139,11 @@ class OAuthProviderTest extends AbstractControllerTestCase
             'family_name' => $lastName,
             'given_name' => $firstName,
             'email' => $email,
-            'roles' => $roles,
+            'resource_access' => [
+                self::AUTH_CLIENT_ID => [
+                    'roles' => $roles,
+                ],
+            ],
         ];
         $responseProphet = $this->prophesize(UserResponseInterface::class);
         $responseProphet->getData()->shouldBeCalledOnce()->willReturn($userData);

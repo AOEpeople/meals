@@ -39,9 +39,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     ];
 
     public function __construct(
-        private string $authClientID,
-        private EntityManagerInterface $entityManager,
-        private RoleRepositoryInterface $roleRepo
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RoleRepositoryInterface $roleRepo,
+        private readonly string $authClientID
     ) {
     }
 

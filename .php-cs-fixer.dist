@@ -23,7 +23,8 @@ return $config
             ],
         ],
         'single_line_throw' => false,
-        'global_namespace_import' => true
+        'global_namespace_import' => true,
+        'trailing_comma_in_multiline' => false
     ])
     ->setUsingCache(false)
     ->setFinder($finder);

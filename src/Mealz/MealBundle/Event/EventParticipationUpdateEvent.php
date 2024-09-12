@@ -10,7 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * Event that is triggert when a event participation is updated.
  */
-class EventParticipationUpdateEvent extends Event
+class EventParticipationUpdateEvent extends EventParticipation
 {
     private EventParticipation $eventParticpation;
 

@@ -33,6 +33,8 @@ type Event_Participation_Update = {
     event: {
         eventId: number;
         participations: number;
+        eventParticipationId: number;
+        isParticipating: boolean;
     };
 };
 

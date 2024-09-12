@@ -218,7 +218,6 @@ export function useEvents() {
     }
 
     async function getParticipantsForEvent(date: string, participationId: number) {
-        console.log('ParticipationId: ' + participationId);
         const { error, response } = await getEventParticipants(date, participationId);
         participationId;
         if (error.value === true && isMessage(response.value) === true) {

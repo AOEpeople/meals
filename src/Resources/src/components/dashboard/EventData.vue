@@ -87,12 +87,8 @@ async function handleClick(event: EventParticipation) {
   addLock(props.dayId);
   if (event?.isParticipating === undefined || event?.isParticipating === false) {
     await joinEvent(props.day.date.date, event?.participationId);
-    event.isParticipating = true;
-    event.participations = event.participations + 1;
   } else {
     await leaveEvent(props.day.date.date, event?.participationId);
-    event.isParticipating = false;
-    event.participations = event.participations - 1;
   }
   removeLock(props.dayId);
 }

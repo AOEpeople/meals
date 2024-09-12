@@ -283,6 +283,11 @@ services:
       $logoutUrl: '%app.idp.endpoint.logout%'
       $baseUri: '%app.base_url%'
 
+  mealz.oauthuserprovider: '@App\Mealz\UserBundle\Provider\OAuthUserProvider'
+  App\Mealz\UserBundle\Provider\OAuthUserProvider:
+    arguments:
+      $authClientID: '%app.idp.client_id%'
+
   App\Mealz\UserBundle\Repository\ProfileRepository:
     arguments:
       $entityClass: App\Mealz\UserBundle\Entity\Profile

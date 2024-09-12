@@ -1,4 +1,2 @@
 services:
-    mealz.oauthuserprovider:
-        alias: App\Mealz\UserBundle\Provider\OAuthUserProvider
-
+  # Deprecated, do not define any services here. Use services.yaml in root level config directory instead.

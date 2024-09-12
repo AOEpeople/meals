@@ -38,13 +38,11 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         'aoe_employee' => self::ROLE_USER,
     ];
 
-    private EntityManagerInterface $entityManager;
-    private RoleRepositoryInterface $roleRepo;
-
-    public function __construct(EntityManagerInterface $entityManager, RoleRepositoryInterface $roleRepo)
-    {
-        $this->entityManager = $entityManager;
-        $this->roleRepo = $roleRepo;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RoleRepositoryInterface $roleRepo,
+        private readonly string $authClientID
+    ) {
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
@@ -69,8 +67,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $lastName = $response->getLastName() ?? '';
         $email = $response->getEmail();
 
-        $idpUserRoles = $response->getData()['roles'] ?? [];
-        $role = $this->toMealsRole($idpUserRoles);
+        $data = $response->getData();
+        $globalUserRoles = $data['roles'] ?? [];
+        $appUserRoles = $data['resource_access'][$this->authClientID]['roles'] ?? [];
+        $role = $this->toMealsRole(array_merge($globalUserRoles, $appUserRoles));
         $roles = (null === $role) ? [] : [$role];
 
         try {

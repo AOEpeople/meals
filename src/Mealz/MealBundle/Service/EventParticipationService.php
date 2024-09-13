@@ -68,6 +68,8 @@ class EventParticipationService
                 'eventId' => $eventParticipation->getEvent()->getId(),
                 'participationId' => $eventParticipation->getId(),
                 'participations' => count($eventParticipation->getParticipants()),
+                'isPublic' => $eventParticipation->getEvent()->isPublic(),
+                'day' => $eventParticipation->getDay(),
             ];
 
             if (null !== $profile) {

@@ -121,7 +121,6 @@ const props = defineProps<{
   dayID?: string;
   index?: number;
 }>();
-
 const day = dashboardStore.getDay(props.weekID ?? -1, props.dayID ?? -1);
 const weekday = computed(() => {
   if (day !== undefined) {

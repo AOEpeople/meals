@@ -74,6 +74,7 @@ const props = defineProps<{
   day: Day;
   dayId: string;
 }>();
+console.log(JSON.stringify(props.day.events));
 
 const twoEvents: boolean = props.day?.events !== undefined && Object.keys(props.day?.events).length === 2;
 const { t } = useI18n();

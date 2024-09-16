@@ -93,10 +93,10 @@ describe('Test dashboardStore', () => {
         const weekId = 7218;
         const dayId = 36088;
         const eventId = 537;
-        expect(dashboardStore.getDay(weekId, dayId).events.participations).toEqual(0);
-        expect(dashboardStore.getDay(weekId, dayId).events.eventId).toEqual(eventId);
+        expect(dashboardStore.getDay(weekId, dayId).events[0].participations).toEqual(0);
+        expect(dashboardStore.getDay(weekId, dayId).events[0].eventId).toEqual(eventId);
         const participations = 17;
         dashboardStore.updateEventParticipation(weekId, dayId, eventId, participations);
-        expect(dashboardStore.getDay(weekId, dayId).events.participations).toEqual(participations);
+        expect(dashboardStore.getDay(weekId, dayId).events[0].participations).toEqual(participations);
     });
 });

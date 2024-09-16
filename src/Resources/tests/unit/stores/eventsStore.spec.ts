@@ -18,7 +18,15 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const getMockedResponses = (method: string, url: string) => {
-    if (/api\/events/.test(url) && method === 'GET') {
+    if (url.includes('api/events/participation/') && method === 'GET') {
+        console.log(userStrings);
+        return {
+            response: ref(userStrings),
+            request: asyncFunc,
+            error: ref(false)
+        };
+    }
+    else if (/api\/events/.test(url) && method === 'GET') {
         return {
             response: ref(JSON.parse(JSON.stringify(Events))),
             request: asyncFunc,
@@ -39,12 +47,6 @@ const getMockedResponses = (method: string, url: string) => {
     } else if (url.includes('api/events') && method === 'DELETE') {
         return {
             response: ref(null),
-            request: asyncFunc,
-            error: ref(false)
-        };
-    } else if (url.includes('api/participations/event/') && method === 'GET') {
-        return {
-            response: ref(userStrings),
             request: asyncFunc,
             error: ref(false)
         };
@@ -106,7 +108,7 @@ describe('Test EventsStore', () => {
 
         expect(filteredEvents.value).toHaveLength(1);
         expect(filteredEvents.value[0]).toEqual({
-            id: 48,
+            id: 49,
             title: 'Alumni Afterwork',
             slug: 'alumni-afterwork',
             public: true
@@ -153,8 +155,9 @@ describe('Test EventsStore', () => {
     });
 
     it('should fetch all the users that participate in an event and return a list of their names', async () => {
-        const users = await getParticipantsForEvent('2024-01-24 12:00:00.000000','afterwork');
 
+        const users = await getParticipantsForEvent('2024-01-24 12:00:00.000000','afterwork');
+       //console.log(users);
         expect(users).toHaveLength(3);
         for (const user of userStrings) {
             expect(users).toContain(user);

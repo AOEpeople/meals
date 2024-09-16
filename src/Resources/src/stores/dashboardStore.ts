@@ -55,6 +55,7 @@ class DashboardStore extends Store<Dashboard> {
     public getEventParticipationById(eventParticipationId: number): EventParticipation | undefined {
         for (const week of Object.values(this.state.weeks)) {
             for (const day of Object.values(week.days)) {
+                if (!day || !day.events) continue;
                 for (const event of Object.values(day.events))
                     if (
                         event.eventId !== null &&

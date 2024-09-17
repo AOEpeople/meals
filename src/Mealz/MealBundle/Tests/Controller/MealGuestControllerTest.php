@@ -47,6 +47,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
         $url = '/event/invitation/' . $eventParticipation->getDay()->getId() . $eventParticipation->getId();
 
         $this->client->request('GET', $url);
+        $response = $this->client->getResponse();
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $guestLink = json_decode($this->client->getResponse()->getContent())->url;
@@ -67,9 +68,11 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
         $eventParticipation = $this->createFutureEvent();
         $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
+        $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($profile, $eventParticipation->getDay(), $eventParticipation);
 
         $this->client->request('GET', '/api/event/invitation/' . $eventInvitation->getId());
+           $response = $this->client->getResponse();
+
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -93,7 +96,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
         $eventParticipation = $this->createFutureEvent();
         $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
+        $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($profile, $eventParticipation->getDay(), $eventParticipation);
 
         // with company
         $this->client->request(

@@ -143,9 +143,10 @@ final class EventControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($day);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
-
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $eventParticipationId = $eventParticipation->getId();
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .'/'. $eventParticipationId;
         $this->client->request('POST', $url);
+        $response = $this->client->getResponse();
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -177,11 +178,13 @@ final class EventControllerTest extends AbstractControllerTestCase
         $day = $dayRepo->matching($criteria)->get(0);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
+        $eventParticipationId = $eventParticipation->getId();
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .$eventParticipationId;
         $this->client->request('POST', $url);
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .$eventParticipationId;
         $this->client->request('DELETE', $url);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
@@ -216,18 +219,20 @@ final class EventControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($day);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
+        $eventParticipationId = $eventParticipation->getId();
 
         $date = $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
 
         // Verify no participants in new event
-        $this->client->request('GET', '/api/participations/event/' . $date);
+        $url = '/api/events/participation/' . $date .'/'. $eventParticipationId;
+        $this->client->request('GET', $url);
         $participants = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($participants));
 
-        $this->client->request('POST', '/api/events/participation/' . $date);
+        $this->client->request('POST', '/api/events/participation/' . $date.'/'. $eventParticipationId);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/participations/event/' . $date);
+        $this->client->request('GET', '/api/events/participation/' . $date .'/'. $eventParticipationId);
         $participants = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, count($participants));

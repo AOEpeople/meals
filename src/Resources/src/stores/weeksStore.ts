@@ -30,7 +30,7 @@ export interface SimpleDay {
     enabled: boolean;
 }
 
-export interface  SimpleEvent {
+export interface SimpleEvent {
     id: number;
     event: {
         slug: string;
@@ -257,7 +257,7 @@ export function useWeeks() {
             for (const [key, meals] of Object.entries(day.meals)) {
                 menuDay.meals[key] = meals.map((meal) => createMealDTO(meal));
             }
-            if(day.events !== undefined){
+            if (day.events !== undefined) {
                 for (const [key, event] of Object.entries(day.events)) {
                     menuDay.events[key] = createEventDTO(event);
                 }

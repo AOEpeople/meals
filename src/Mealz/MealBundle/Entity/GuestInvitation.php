@@ -50,7 +50,7 @@ class GuestInvitation
 
         return $this;
     }
-    public function getEventParticipation() : EventParticipation
+    public function getEventParticipation(): ?EventParticipation
     {
         return $this->eventParticipation;
     }

@@ -9,6 +9,6 @@ export default async function getEventParticipants(date: string, participationId
     );
 
     await request();
-    console.log(response)
+    console.log(response);
     return { error, response };
 }

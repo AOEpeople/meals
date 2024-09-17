@@ -1,5 +1,13 @@
 import { Store } from '@/stores/store';
-import { type Dashboard, type Day, type EventParticipation, type Meal, type Slot, useDashboardData, type Week } from '@/api/getDashboardData';
+import {
+    type Dashboard,
+    type Day,
+    type EventParticipation,
+    type Meal,
+    type Slot,
+    useDashboardData,
+    type Week
+} from '@/api/getDashboardData';
 import { type Dictionary } from '@/types/types';
 import { mercureReceiver } from '@/tools/mercureReceiver';
 import useMealState from '@/services/useMealState';
@@ -43,12 +51,12 @@ class DashboardStore extends Store<Dashboard> {
     public getDayByEventParticipationId(participationId: number): Day | undefined {
         for (const week of Object.values(this.state.weeks)) {
             for (const day of Object.values(week.days)) {
-                for (const iterator in Object.values(day.events )){
-                    if( day.events[iterator].participationId === participationId){
+                for (const iterator in Object.values(day.events)) {
+                    if (day.events[iterator].participationId === participationId) {
                         return day;
                     }
                 }
-        }
+            }
         }
     }
 
@@ -122,9 +130,9 @@ class DashboardStore extends Store<Dashboard> {
 
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
-        if (day !== null && day !== undefined && day.events !== null ) {
-            for (const iterator in Object.values(day.events )){
-                if( day.events[iterator].eventId === eventId){
+        if (day !== null && day !== undefined && day.events !== null) {
+            for (const iterator in Object.values(day.events)) {
+                if (day.events[iterator].eventId === eventId) {
                     day.events[iterator].participations = participations;
                 }
             }
@@ -135,8 +143,8 @@ class DashboardStore extends Store<Dashboard> {
         const day = this.getDayByEventParticipationId(participationId);
         console.log(day);
         if (day !== undefined) {
-            for (const iterator in Object.values(day.events )){
-                if( day.events[iterator].participationId === participationId){
+            for (const iterator in Object.values(day.events)) {
+                if (day.events[iterator].participationId === participationId) {
                     day.events[iterator].isParticipating = isParticipating;
                 }
             }

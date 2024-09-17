@@ -106,7 +106,7 @@ class MealGuestController extends BaseController
         $guestData = [
             'date' => $invitation->getDay()->getDateTime(),
             'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
-            'event' => $invitation->getEventParticipation()->getEvent()->getTitle(),
+            'event' => $invitation->getEventParticipation() ? $invitation->getEventParticipation()->getEvent()->getTitle() : null,
         ];
 
         return new JsonResponse($guestData, Response::HTTP_OK);

@@ -45,7 +45,7 @@ export type EventParticipation = {
     participations: number;
     isParticipating: boolean;
     isPublic: boolean;
-    day:Day;
+    day: Day;
 };
 
 export type Event = {

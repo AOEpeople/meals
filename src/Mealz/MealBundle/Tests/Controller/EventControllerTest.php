@@ -146,7 +146,6 @@ final class EventControllerTest extends AbstractControllerTestCase
         $eventParticipationId = $eventParticipation->getId();
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .'/'. $eventParticipationId;
         $this->client->request('POST', $url);
-        $response = $this->client->getResponse();
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -181,10 +180,10 @@ final class EventControllerTest extends AbstractControllerTestCase
         $eventParticipationId = $eventParticipation->getId();
 
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .$eventParticipationId;
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .'/'.$eventParticipationId;
         $this->client->request('POST', $url);
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .$eventParticipationId;
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') .'/'.$eventParticipationId;
         $this->client->request('DELETE', $url);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 

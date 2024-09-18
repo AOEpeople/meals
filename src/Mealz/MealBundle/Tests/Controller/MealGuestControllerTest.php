@@ -44,7 +44,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $url = '/event/invitation/' . $eventParticipation->getDay()->getId() . $eventParticipation->getId();
+        $url = '/event/invitation/' . $eventParticipation->getDay()->getId() .'/'. $eventParticipation->getId();
 
         $this->client->request('GET', $url);
         $response = $this->client->getResponse();
@@ -58,7 +58,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($invitation);
         $this->assertEquals(
             $eventParticipation->getEvent()->getTitle(),
-            $invitation->getDay()->getEventParticipation()->getEvent()->getTitle()
+            $invitation->getEventParticipation()->getEvent()->getTitle()
         );
     }
 

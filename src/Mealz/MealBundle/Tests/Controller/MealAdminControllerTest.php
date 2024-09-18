@@ -156,7 +156,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": ' . $createdWeek->getDays()[0]->getId() . ',
-                    "event": null,
+                    "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $date->format('Y-m-d') . ' 12:00:00.000000",
@@ -177,7 +177,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": ' . $createdWeek->getDays()[1]->getId() . ',
-                    "event": null,
+                    "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $createdWeek->getDays()[1]->getDateTime()->format('Y-m-d') . ' 12:00:00.000000",
@@ -227,7 +227,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -1,
-                    "event": null,
+                    "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->format('Y-m-d') . ' 12:00:00.000000",
@@ -244,7 +244,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -2,
-                    "events": null,
+                      "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -262,7 +262,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -3,
-                    "events": null,
+                      "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -280,7 +280,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -4,
-                    "events": null,
+                     "events": {},
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -298,7 +298,14 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -5,
-                    "events": ' . $testEvent->getId() . ',
+                      "events": {
+                        "3": {
+                            "eventId": ' . $testEvent->getId() . ',
+                            "eventSlug": "' . $testEvent->getSlug() . '",
+                            "eventTitle": "' . $testEvent->getTitle() . '",
+                            "isPublic": ' . ($testEvent->isPublic() ? 'true' : 'false') . '
+                        }
+                    },
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -318,5 +325,6 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('POST', $routeStr, [], [], [], $weekJson);
+        https://meals.test/api/weeks/2024W40
     }
 }

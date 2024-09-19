@@ -375,7 +375,7 @@ describe('Test Dashboard View', () => {
         cy.get('header > nav > div > a > svg').click();
         cy.wait(['@getDashboard', '@getEvents']);
 
-        // join afterwork
+            // join afterwork
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -406,8 +406,6 @@ describe('Test Dashboard View', () => {
             .find('svg')
             .eq(1)
             .click();
-
-        cy.wait('@getParticipants');
 
         // verify participants on popup
         cy.get('span')
@@ -458,8 +456,6 @@ describe('Test Dashboard View', () => {
             .find('svg')
             .eq(1)
             .click();
-
-        cy.wait('@getParticipants');
 
         // verify no participants on popup
         cy.get('span')

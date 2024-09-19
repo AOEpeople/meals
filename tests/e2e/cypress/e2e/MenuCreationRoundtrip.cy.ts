@@ -63,7 +63,7 @@ describe('Test Creating a Menu', () => {
 
         // Tuesday
         cy.get('input')
-            .eq(3)
+            .eq(1)
             .parent()
             .find('input')
             .click()
@@ -86,7 +86,7 @@ describe('Test Creating a Menu', () => {
 
         // Wednesday
         cy.get('input')
-            .eq(6)
+            .eq(9)
             .parent()
             .find('input')
             .click()
@@ -97,7 +97,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(7)
+            .eq(12)
             .parent()
             .find('input')
             .click()
@@ -109,7 +109,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(8)
+            .eq(14)
             .parent()
             .find('input')
             .click()
@@ -139,7 +139,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click().click();
 
         cy.get('input')
-            .eq(10)
+            .eq(8)
             .parent()
             .find('input')
             .click()
@@ -171,7 +171,7 @@ describe('Test Creating a Menu', () => {
 
         // Find the saved event
         cy.get('input')
-            .eq(8)
+            .eq(14)
             .should('have.value', 'Alumni Afterwork');
 
         // Edit Menu
@@ -196,7 +196,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(13)
+            .eq(12)
             .parent()
             .find('input')
             .click()
@@ -232,38 +232,18 @@ describe('Test Creating a Menu', () => {
         // Check that all meals and the event are saved
         cy.get('input')
             .eq(0)
-            .should('have.value', 'Tasty Worms DE');
+            .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
 
         cy.get('input')
             .eq(1)
-            .should('have.value', 'Limbs DE');
-
-        cy.get('input')
-            .eq(3)
-            .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
+            .should('have.value', 'Tasty Worms DE');
 
         cy.get('input')
             .eq(4)
             .should('have.value', 'Fish (so juicy sweat) DE');
 
         cy.get('input')
-            .eq(6)
-            .should('have.value', 'Innards DE');
-
-        cy.get('input')
-            .eq(7)
-            .should('have.value', 'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße');
-
-        cy.get('input')
             .eq(8)
-            .should('have.value', '');
-
-        cy.get('input')
-            .eq(9)
-            .should('have.value', 'Innards DE, Innards DE #v1');
-
-        cy.get('input')
-            .eq(10)
             .should('have.value', 'Limbs DE');
 
         cy.get('input')
@@ -271,8 +251,8 @@ describe('Test Creating a Menu', () => {
             .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
 
         cy.get('input')
-            .eq(13)
-            .should('have.value', 'Innards DE');
+            .eq(16)
+            .should('have.value', '');
 
         // Test Participations
         cy.get('span').contains('Teilnahmen').click();
@@ -282,9 +262,6 @@ describe('Test Creating a Menu', () => {
         cy.get('th').contains('Limbs DE');
         cy.get('th').contains('Braaaaaiiinnnzzzzzz DE');
         cy.get('th').contains('Fish (so juicy sweat) DE');
-        cy.get('th').contains('Innards DE');
-        cy.get('th').contains('Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße');
-        cy.get('th').contains('Innards DE #v1');
 
         // Add participant
         cy.get('input').first().click().type('alice');

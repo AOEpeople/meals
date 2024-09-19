@@ -45,7 +45,7 @@ describe('Test Weeks View', () => {
 
         // change event
         cy.get('input')
-            .eq(8)
+            .eq(11)
             .parent()
             .find('input')
             .click()

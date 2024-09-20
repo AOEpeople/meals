@@ -12,7 +12,7 @@ use Doctrine\Persistence\ObjectRepository;
 /**
  * @template-extends ObjectRepository<EventParticipation>
  */
-interface EventParticipationRepositoryInterface extends ObjectRepository
+interface EventPartRepoInterface extends ObjectRepository
 {
     public function add($eventParticipation): void;
 

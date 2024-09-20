@@ -19,6 +19,7 @@ interface GuestInvitationRepositoryInterface extends ObjectRepository
      * Gets the guest invitation from a particular user on a particular day.
      */
     public function findOrCreateEventInvitation(Profile $host, Day $day, ?EventParticipation $eventParticipation): GuestInvitation;
+
     /**
      * Gets the guest invitation from a particular user on a particular day.
      */

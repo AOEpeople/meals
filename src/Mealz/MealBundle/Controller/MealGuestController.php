@@ -64,7 +64,6 @@ class MealGuestController extends BaseController
         Day $mealDay,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
     ): JsonResponse {
-
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);

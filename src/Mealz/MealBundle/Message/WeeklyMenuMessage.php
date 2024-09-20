@@ -136,7 +136,7 @@ class WeeklyMenuMessage implements MessageInterface
     private function eventsToString(array $events): string
     {
         $result = [];
-        foreach($events as $eventTitle) {
+        foreach ($events as $eventTitle) {
             $result[$eventTitle] = '**' . $eventTitle . '**';
         }
 

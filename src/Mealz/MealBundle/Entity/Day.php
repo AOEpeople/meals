@@ -40,6 +40,7 @@ class Day extends AbstractMessage implements JsonSerializable
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
+
     public function __construct()
     {
         $this->dateTime = new DateTime();
@@ -78,6 +79,7 @@ class Day extends AbstractMessage implements JsonSerializable
     {
         $this->week = $week;
     }
+
     public function getEvents(): EventCollection
     {
         if (false === ($this->events instanceof Collection)) {
@@ -87,28 +89,32 @@ class Day extends AbstractMessage implements JsonSerializable
         return new EventCollection($this->events->toArray());
     }
 
-
-    public function getEvent(int $id):EventParticipation | null{
+    public function getEvent(int $id): ?EventParticipation
+    {
         foreach ($this->getEvents() as $event) {
-            if($event->getId() === $id){
+            if ($event->getId() === $id) {
                 return $event;
             }
-    }
+        }
+
         return null;
     }
 
-    public function addEvent(EventParticipation $event){
-            $event->setDay($this);
-            $this->events->add($event);
+    public function addEvent(EventParticipation $event)
+    {
+        $event->setDay($this);
+        $this->events->add($event);
     }
 
-    public function removeEvent(EventParticipation $event){
-        if($this->events->contains($event)){
+    public function removeEvent(EventParticipation $event)
+    {
+        if ($this->events->contains($event)) {
             $this->events->removeElement($event);
         }
     }
 
-    public function removeEvents(){
+    public function removeEvents()
+    {
         $this->events->clear();
     }
 
@@ -191,7 +197,7 @@ class Day extends AbstractMessage implements JsonSerializable
             }
         }
         foreach ($this->getEvents() as $event) {
-            if ($event !== null && $event instanceof EventParticipation) {
+            if (null !== $event && $event instanceof EventParticipation) {
                 $eventId = $event->getId();
                 if (isset($eventId)) {
                     $events[$eventId] = $event->jsonSerialize();

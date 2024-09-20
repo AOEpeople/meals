@@ -6,11 +6,11 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
@@ -18,7 +18,6 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\MealBundle\Service\EventParticipationService;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -181,7 +180,7 @@ class ApiController extends BaseController
         foreach ($meals as $meal) {
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
-        $list['events'] =  $this->eventService->getEventParticipationData($day);
+        $list['events'] = $this->eventService->getEventParticipationData($day);
         $list['day'] = $day->getDateTime();
 
         return new JsonResponse($list, Response::HTTP_OK);
@@ -318,7 +317,11 @@ class ApiController extends BaseController
         ];
     }
 
-    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals
+    private function addMealWithVariations(
+        Meal $meal,
+        float $participationCount,
+        ?Profile $profile,
+        array &$meals
     ): void {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);

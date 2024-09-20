@@ -140,8 +140,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $profile->setUsername($username);
         $profile->setName($lastName);
         $profile->setFirstName($firstName);
-        $profile->setEmail($username);
-
+        $profile->setEmail($email);
 
         // set roles
         /** @var Role[] $roleObjs */

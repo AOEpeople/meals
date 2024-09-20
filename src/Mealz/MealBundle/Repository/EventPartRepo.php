@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 /**
  * @extends BaseRepository<int, EventParticipation>
  */
-class EventParticipationRepository extends BaseRepository implements EventParticipationRepositoryInterface
+class EventPartRepo extends BaseRepository implements EventPartRepoInterface
 {
     public function add($eventParticipation): void
     {
@@ -34,6 +34,7 @@ class EventParticipationRepository extends BaseRepository implements EventPartic
 
         return count($result) ? $result[0] : null;
     }
+
     public function findByEventIdAndDay(Day $day, int $eventId): ?EventParticipation
     {
         $queryBuilder = $this->createQueryBuilder('m');

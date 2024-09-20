@@ -33,7 +33,7 @@ class LoadEvents extends Fixture implements OrderedFixtureInterface
                 'title' => 'Lunch Roulette',
                 'public' => true,
                 'slug' => 'lunch-roulette',
-            ]
+            ],
         ];
 
         foreach ($eventItems as $item) {

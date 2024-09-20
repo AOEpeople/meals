@@ -6,7 +6,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,7 @@ final class EventParticipationService
 {
     private Doorman $doorman;
     private EntityManagerInterface $em;
-    private EventParticipationRepositoryInterface $eventPartRepo;
+    private EventPartRepoInterface $eventPartRepo;
     private EventRepositoryInterface $eventRepo;
     private GuestParticipationService $guestPartSrv;
 
@@ -24,7 +24,7 @@ final class EventParticipationService
         Doorman $doorman,
         EntityManagerInterface $em,
         EventRepositoryInterface $eventRepo,
-        EventParticipationRepositoryInterface $eventPartRepo,
+        EventPartRepoInterface $eventPartRepo,
         GuestParticipationService $guestPartSrv
     ) {
         $this->doorman = $doorman;
@@ -53,11 +53,11 @@ final class EventParticipationService
      *
      * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
      */
-    public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null,): ?array
+    public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {
-        if($eventId === null){
+        if (null === $eventId) {
             return $day->getEvents()->toArray();
-        } else{
+        } else {
             $eventParticipation = $day->getEvent($eventId);
             if (null === $eventParticipation) {
                 return null;
@@ -75,7 +75,7 @@ final class EventParticipationService
             }
 
             return $participationData;
-            }
+        }
     }
 
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
@@ -101,7 +101,7 @@ final class EventParticipationService
         string $company,
         Day $eventDay,
         EventParticipation $eventParticipation,
-        ): EventParticipation {
+    ): EventParticipation {
         $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
@@ -129,7 +129,7 @@ final class EventParticipationService
 
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
-        $eventParticipation = $day->getEvent( $eventId);
+        $eventParticipation = $day->getEvent($eventId);
         $participation = $eventParticipation->getParticipant($profile);
 
         if (null !== $participation) {
@@ -156,12 +156,12 @@ final class EventParticipationService
 
         return array_map(
             fn (Participant $participant) => $this->getParticipantName($participant),
-            $day->getEvent( $eventId)->getParticipants()->toArray()
+            $day->getEvent($eventId)->getParticipants()->toArray()
         );
     }
 
     /**
-     * adds new event to the eventCollection
+     * adds new event to the eventCollection.
      */
     private function addEventToDay(Day $day, ?EventParticipation $event): void
     {
@@ -184,6 +184,7 @@ final class EventParticipationService
         $this->em->persist($participant);
         $this->em->persist($eventParticipation);
         $this->em->flush();
+
         return $participant;
     }
 

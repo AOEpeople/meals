@@ -3,9 +3,8 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Event;
-use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
@@ -26,7 +25,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Psr\Log\LoggerInterface;
 
 #[IsGranted('ROLE_KITCHEN_STAFF')]
 final class MealAdminController extends BaseController
@@ -40,10 +38,8 @@ final class MealAdminController extends BaseController
         private readonly DayService $dayService,
         private readonly DishService $dishService,
         private readonly EntityManagerInterface $em,
-        private readonly MealAdminHelper $mealAdminHelper,
-        private readonly LoggerInterface $logger
-    ) {
-    }
+        private readonly MealAdminHelper $mealAdminHelper
+    ) {}
 
     public function getWeeks(): JsonResponse
     {
@@ -193,8 +189,6 @@ final class MealAdminController extends BaseController
 
     private function handleDay(array $day): void
     {
-        $this->logger->info('handleDay');
-        // check if day exists
         $dayEntity = $this->dayRepository->find($day['id']);
         if (null === $dayEntity) {
             throw new Exception('105: day not found');
@@ -204,15 +198,14 @@ final class MealAdminController extends BaseController
             $dayEntity->setEnabled($day['enabled']);
         }
         $this->setLockParticipationForDay($dayEntity, $day);
-        if(array_key_exists('events', $day)){
+        if (array_key_exists('events', $day)) {
             $eventCollection = $day['events'];
             foreach ($dayEntity->getEvents() as $event) {
-                $this->em->remove($event);  // Hier wird sichergestellt, dass die Events tatsächlich aus der Datenbank gelöscht werden.
+                $this->em->remove($event);
             }
             $dayEntity->removeEvents();
-            $this->em->flush();  // Alle Änderungen in die Datenbank schreiben.
+            $this->em->flush();
             foreach ($eventCollection as $event) {
-                $this->logger->info('Event '. implode($event));
                 $this->handleEventArr($event, $dayEntity);
             }
         }
@@ -249,11 +242,11 @@ final class MealAdminController extends BaseController
         $eventCollection = $dayData['events'];
         $this->setLockParticipationForDay($day, $dayData);
         foreach ($day->getEvents() as $event) {
-            $this->em->remove($event);  // Hier wird sichergestellt, dass die Events tatsächlich aus der Datenbank gelöscht werden.
+            $this->em->remove($event);
         }
         $day->removeEvents();
-        $this->em->flush();  // Alle Änderungen in die Datenbank schreiben.
-        foreach($eventCollection as $eventArr){
+        $this->em->flush();
+        foreach ($eventCollection as $eventArr) {
             $this->handleEventArr($eventArr, $day);
         }
         $mealCollection = $dayData['meals'];
@@ -299,22 +292,22 @@ final class MealAdminController extends BaseController
             }
         }
     }
-    private function handleEventArr(array $eventArr, Day $day): void{
-                $this->addEvent($eventArr, $day);
-            }
 
-    private function addEvent(array $event, Day $dayEntity){
-        $this->logger->info('EventId: '. $event['eventId']. ', name: '. $event['eventSlug']);
-        if(!isset($event['eventId'])){
-            $this->logger->info('Event wird gelöscht');
-        } else{
+    private function handleEventArr(array $eventArr, Day $day): void
+    {
+        $this->addEvent($eventArr, $day);
+    }
+
+    private function addEvent(array $event, Day $dayEntity)
+    {
+        if (!isset($event['eventId'])) {
+        } else {
             $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
             $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
-            if(!$eventExistsForDayAlready){
-                $this->logger->info('addEvent');
+            if (!$eventExistsForDayAlready) {
                 $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
                 $dayEntity->addEvent($eventParticipationEntity);
-            } else{
+            } else {
                 throw new Exception('Meal exists for day already');
             }
         }

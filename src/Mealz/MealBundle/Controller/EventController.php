@@ -35,8 +35,9 @@ final class EventController extends BaseListController
     public function getEventList(): JsonResponse
     {
         $events = $this->eventRepository->findBy(['deleted' => 0]);
-        $this->logger->info('Anzahl Events:' . count($events) );
+        $this->logger->info('Anzahl Events:' . count($events));
         $this->logger->info('Events:' . print_r($events, true));
+
         return new JsonResponse($events, Response::HTTP_OK);
     }
 
@@ -117,7 +118,7 @@ final class EventController extends BaseListController
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day,$eventId, $profile), Response::HTTP_OK);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $eventId, $profile), Response::HTTP_OK);
     }
 
     public function leave(DateTime $date, int $eventId): JsonResponse
@@ -136,7 +137,7 @@ final class EventController extends BaseListController
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day,$eventId, $profile), Response::HTTP_OK);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $eventId, $profile), Response::HTTP_OK);
     }
 
     public function getEventParticipants(DateTime $date, int $eventId): JsonResponse

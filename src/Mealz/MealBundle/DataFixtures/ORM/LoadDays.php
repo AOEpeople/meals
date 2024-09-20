@@ -52,6 +52,7 @@ final class LoadDays extends Fixture implements OrderedFixtureInterface
 
         $this->objectManager->flush();
     }
+
     private function addDay(Week $week, DateTime $dateTime, DateTime $lockDateTime): void
     {
         $day = new Day();

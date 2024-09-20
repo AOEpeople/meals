@@ -30,8 +30,6 @@ class GuestInvitation
     #[ORM\JoinColumn(name: 'eventParticipation', referencedColumnName: 'id', nullable: true, onDelete: 'NO ACTION')]
     private ?EventParticipation $eventParticipation = null;
 
-
-
     /**
      * Initializes class instance.
      */
@@ -39,7 +37,7 @@ class GuestInvitation
     {
         $this->host = $host;
         $this->day = $day;
-        if($eventParticipation){
+        if ($eventParticipation) {
             $this->eventParticipation = $eventParticipation;
         }
     }
@@ -50,6 +48,7 @@ class GuestInvitation
 
         return $this;
     }
+
     public function getEventParticipation(): ?EventParticipation
     {
         return $this->eventParticipation;
@@ -86,9 +85,9 @@ class GuestInvitation
     #[ORM\PrePersist]
     public function beforeCreate(): void
     {
-        if($this->eventParticipation){
-            $this->id = md5($this->host->getUsername() . $this->day->getId(). $this->eventParticipation->getId());
-        } else{
+        if ($this->eventParticipation) {
+            $this->id = md5($this->host->getUsername() . $this->day->getId() . $this->eventParticipation->getId());
+        } else {
             $this->id = md5($this->host->getUsername() . $this->day->getId());
         }
         $this->createdOn = new DateTime();

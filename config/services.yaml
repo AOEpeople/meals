@@ -110,7 +110,7 @@ services:
   App\Mealz\MealBundle\Repository\DishRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishRepository'
   App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishVariationRepository'
   App\Mealz\MealBundle\Repository\EventRepositoryInterface: '@App\Mealz\MealBundle\Repository\EventRepository'
-  App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface: '@App\Mealz\MealBundle\Repository\EventParticipationRepository'
+  App\Mealz\MealBundle\Repository\EventPartRepoInterface: '@App\Mealz\MealBundle\Repository\EventPartRepo'
   App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
   App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
   App\Mealz\MealBundle\Repository\MealRepositoryInterface: '@App\Mealz\MealBundle\Repository\MealRepository'
@@ -152,7 +152,7 @@ services:
     arguments:
       $entityClass: App\Mealz\MealBundle\Entity\Event
 
-  App\Mealz\MealBundle\Repository\EventParticipationRepository:
+  App\Mealz\MealBundle\Repository\EventPartRepo:
     arguments:
       $entityClass: App\Mealz\MealBundle\Entity\EventParticipation
 

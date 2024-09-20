@@ -141,7 +141,6 @@ class DashboardStore extends Store<Dashboard> {
 
     public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {
         const day = this.getDayByEventParticipationId(participationId);
-        console.log(day);
         if (day !== undefined) {
             for (const iterator in Object.values(day.events)) {
                 if (day.events[iterator].participationId === participationId) {

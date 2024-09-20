@@ -25,14 +25,12 @@ class EventParticipation
     #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
     private Day $day;
 
-
-    #[ORM\ManyToOne(targetEntity: Event::class, cascade: ["persist"])]
+    #[ORM\ManyToOne(targetEntity: Event::class, cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     public Event $event;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class, cascade: ['persist', 'remove'])]
     public ?Collection $participants = null;
-
 
     public function __construct(Day $day, Event $event, ?Collection $participants = null)
     {
@@ -53,7 +51,7 @@ class EventParticipation
 
     public function setDay(Day $day): void
     {
-        $this->day = $day;//
+        $this->day = $day;
     }
 
     public function getEvent(): Event
@@ -81,7 +79,7 @@ class EventParticipation
         return null;
     }
 
-    public function setParticipant(Participant $participant) : void
+    public function setParticipant(Participant $participant): void
     {
         $this->participants->add($participant);
     }

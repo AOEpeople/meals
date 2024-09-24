@@ -1,6 +1,6 @@
 <template>
   <div
-    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-4 rounded-lg border-0 border-none bg-white text-center align-middle sm:grid-cols-[24px_minmax(0,1fr)_72px]"
+    class="group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-3 rounded-lg border-0 border-none bg-white text-center align-middle shadow-day sm:grid-cols-[24px_minmax(0,1fr)_72px]"
   >
     <div
       class="col-start-1 row-span-4 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-primary-2 py-1"
@@ -47,9 +47,7 @@
       v-model="selectedEventOne"
       class="col-start-2 row-span-1 row-start-3 border-b border-t-[3px] px-2 py-[12px] md:px-4"
     />
-
     <EventInput
-    v-if="selectedEventOne"
       v-model="selectedEventTwo"
       class="col-start-2 row-span-1 row-start-4 px-2 py-[12px] md:px-4"
     />
@@ -167,11 +165,41 @@ watch(selectedDishTwo, () => {
   });
 });
 
-watch(selectedEvent, () => {
-  if (selectedEvent.value !== null && selectedEvent.value !== undefined) {
-    props.modelValue.event = selectedEvent.value.id;
-  } else {
-    props.modelValue.event = null;
+watch(selectedEventOne, () => {
+  try {
+    const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value?.id;
+
+    if (selectedEventOne.value) {
+      selectedDishes.value.events[firstKey] = {
+        eventId: selectedEventOne.value.id,
+        eventSlug: selectedEventOne.value.slug,
+        eventTitle: selectedEventOne.value.title,
+        isPublic: selectedEventOne.value.public
+      };
+    } else if (firstKey) {
+      selectedDishes.value.events[firstKey].eventId = null;
+    }
+  } catch (error) {
+    console.error('Fehler: ', error);
+  }
+});
+
+watch(selectedEventTwo, () => {
+  try {
+    const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
+
+    if (selectedEventTwo.value) {
+      selectedDishes.value.events[secondKey] = {
+        eventId: selectedEventTwo.value.id,
+        eventSlug: selectedEventTwo.value.slug,
+        eventTitle: selectedEventTwo.value.title,
+        isPublic: selectedEventTwo.value.public
+      };
+    } else if (secondKey) {
+      selectedDishes.value.events[secondKey].eventId = null;
+    }
+  } catch (error) {
+    console.error('Fehler: ', error);
   }
 });
 
@@ -188,10 +216,30 @@ onMounted(() => {
       .filter((slug) => slug !== null) as string[]
   );
 
-  // set Event from modelValue to be the initial value of the selectedEvent
-  selectedEvent.value = getEventById(props.modelValue.event ?? -1) ?? null;
-});
+  try {
+    const firstKey = Object.keys(props.modelValue.events)[0];
+    const secondKey = Object.keys(props.modelValue.events)[1];
 
+    if (props.modelValue.events[firstKey]) {
+      selectedEventOne.value = {
+        id: props.modelValue.events[firstKey].eventId as number,
+        slug: props.modelValue.events[firstKey].eventSlug as string,
+        title: props.modelValue.events[firstKey].eventTitle as string,
+        public: props.modelValue.events[firstKey].isPublic as boolean
+      };
+    }
+    if (props.modelValue.events[secondKey]) {
+      selectedEventTwo.value = {
+        id: props.modelValue.events[secondKey].eventId as number,
+        slug: props.modelValue.events[secondKey].eventSlug as string,
+        title: props.modelValue.events[secondKey].eventTitle as string,
+        public: props.modelValue.events[secondKey].isPublic as boolean
+      };
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der Events: ', error);
+  }
+});
 
 /**
  * Extract the slugs from the selected dishes. Returns the slugs of variations if there are selected variations.

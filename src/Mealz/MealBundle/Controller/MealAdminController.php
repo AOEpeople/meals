@@ -39,7 +39,8 @@ class MealAdminController extends BaseController
         private readonly DishService $dishService,
         private readonly EntityManagerInterface $em,
         private readonly MealAdminHelper $mealAdminHelper
-    ) {}
+    ) {
+    }
 
     public function getWeeks(): JsonResponse
     {
@@ -224,7 +225,7 @@ class MealAdminController extends BaseController
 
         // parentMeal is an array of either one meal without variations or 1-2 variations
         foreach ($mealCollection as $mealArr) {
-            $this->handleMealArray($mealArr, $dayEntity);
+            $this->mealAdminHelper->handleMealArray($mealArr, $dayEntity);
         }
     }
 
@@ -257,7 +258,7 @@ class MealAdminController extends BaseController
 
         // parentMeal is an array of either one meal without variations or 1-2 variations
         foreach ($mealCollection as $mealArr) {
-            $this->handleMealArray($mealArr, $day);
+            $this->mealAdminHelper->handleMealArray($mealArr, $day);
         }
     }
 
@@ -274,25 +275,6 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function handleMealArray(array $mealArr, Day $dayEntity): void
-    {
-        foreach ($mealArr as $meal) {
-            if (false === isset($meal['dishSlug'])) {
-                continue;
-            }
-            $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
-            if (null === $dishEntity) {
-                throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
-            }
-            // if mealId is null create meal
-            if (false === isset($meal['mealId'])) {
-                $this->createMeal($dishEntity, $dayEntity, $meal);
-            } else {
-                $this->modifyMeal($meal, $dishEntity, $dayEntity);
-            }
-        }
-    }
-
     private function handleEventArr(array $eventArr, Day $day): void
     {
         $this->addEvent($eventArr, $day);
@@ -303,54 +285,13 @@ class MealAdminController extends BaseController
         if (!isset($event['eventId'])) {
         } else {
             $eventEntity = $this->mealAdminHelper->findEvent($event['eventId']);
-            $eventExistsForDayAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
-            if (!$eventExistsForDayAlready) {
-                $eventParticipationEntity = new EventParticipation($dayEntity, $eventEntity);
-                $dayEntity->addEvent($eventParticipationEntity);
+            $eventExistsAlready = $this->mealAdminHelper->checkIfEventExistsForDay($event['eventId'], $dayEntity);
+            if (!$eventExistsAlready) {
+                $eventParticipation = new EventParticipation($dayEntity, $eventEntity);
+                $dayEntity->addEvent($eventParticipation);
             } else {
                 throw new Exception('Meal exists for day already');
             }
         }
-    }
-
-    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal): void
-    {
-        $mealEntity = new Meal($dishEntity, $dayEntity);
-        $mealEntity->setPrice($dishEntity->getPrice());
-        $this->mealAdminHelper->setParticipationLimit($mealEntity, $meal);
-        $dayEntity->addMeal($mealEntity);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity): void
-    {
-        $mealEntity = $this->mealRepository->find($meal['mealId']);
-        if (null === $mealEntity) {
-            // this happens because meals without participations are deleted, even though they
-            // could be modified later on (this shouldn't happen but might)
-            $mealEntity = new Meal($dishEntity, $dayEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
-            $dayEntity->addMeal($mealEntity);
-
-            return;
-        }
-
-        $this->mealAdminHelper->setParticipationLimit($mealEntity, $meal);
-        // check if the requested dish is the same as before
-        if ($mealEntity->getDish()->getId() === $dishEntity->getId()) {
-            return;
-        }
-
-        // check if meal already exists and can be modified (aka has no participations)
-        if (!$mealEntity->hasParticipations()) {
-            $mealEntity->setDish($dishEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
-
-            return;
-        }
-
-        throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
     }
 }

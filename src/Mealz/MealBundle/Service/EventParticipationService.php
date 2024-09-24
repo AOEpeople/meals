@@ -3,7 +3,6 @@
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
@@ -41,17 +40,17 @@ class EventParticipationService
      */
     public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
-        if (null === $event) {
-            $this->removeEventFromDay($day, $event->getId());
+        if (null === $event->getId()) {
+            $this->removeEventFromDay($day, $event);
         } else {
             $this->addEventToDay($day, $event);
         }
     }
 
     /**
-     * @return (bool|int|null)[]|null
+     * @return (Day|bool|int|null)[]|null
      *
-     * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
+     * @psalm-return array{day: \App\Mealz\MealBundle\Entity\Day, eventId: int, isParticipating?: bool, isPublic: bool, participationId: int|null, participations: int<0, max>} | array{\App\Mealz\MealBundle\Entity\EventParticipation}
      */
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {
@@ -166,7 +165,7 @@ class EventParticipationService
     private function addEventToDay(Day $day, ?EventParticipation $event): void
     {
         // new eventparticipation
-        if (null !== $event && null === $day->getEvents()) {
+        if (null !== $event) {
             $eventParticipation = new EventParticipation($day, $event->getEvent());
             $day->addEvent($eventParticipation);
         }

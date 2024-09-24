@@ -241,7 +241,6 @@ onMounted(() => {
   }
 });
 
-
 /**
  * Extract the slugs from the selected dishes. Returns the slugs of variations if there are selected variations.
  * Otherwise the slug of the parent dish is returned.

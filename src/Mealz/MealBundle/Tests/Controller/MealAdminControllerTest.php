@@ -325,6 +325,6 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('POST', $routeStr, [], [], [], $weekJson);
-        https://meals.test/api/weeks/2024W40
+        // https://meals.test/api/weeks/2024W40
     }
 }

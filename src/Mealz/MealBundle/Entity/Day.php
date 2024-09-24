@@ -81,7 +81,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->week = $week;
     }
 
-    public function getEvents(): EventCollection
+    public function getEvents(): ?EventCollection
     {
         if (false === ($this->events instanceof Collection)) {
             $this->events = new EventCollection();
@@ -182,7 +182,7 @@ class Day extends AbstractMessage implements JsonSerializable
     /**
      * @return (DateTime|array[][]|bool|int|null)[]
      *
-     * @psalm-return array{dateTime: DateTime, lockParticipationDateTime: DateTime, week: int|null, meals: array<''|int, non-empty-list<array>>, event: int|null, enabled: bool}
+     * @psalm-return array{dateTime: DateTime, dayId: int|null, enabled: bool, events: array<int, array<array-key, mixed>>, lockParticipationDateTime: DateTime, meals: array<''|int, non-empty-list<array{dateTime: DateTime, day: int|null, dish: null|string, id: int|null, lockTime: DateTime, participationLimit: int}>>, week: int|null}
      */
     #[Override]
     public function jsonSerialize(): array

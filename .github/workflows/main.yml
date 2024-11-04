@@ -364,7 +364,7 @@ jobs:
           name: reports
           path: build/artifacts/qa/
       - name: Publish unit-test results
-        uses: mikepenz/action-junit-report@v4
+        uses: mikepenz/action-junit-report@v5
         if: always()
         with:
           report_paths: 'build/artifacts/qa/*.xml'

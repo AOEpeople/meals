@@ -40,7 +40,8 @@ class ApiController extends BaseController
         ParticipationService $participationSrv,
         ApiService $apiSrv,
         OfferService $offerSrv,
-        GuestParticipationService $guestPartiSrv
+        GuestParticipationService $guestPartiSrv,
+        EventParticipationService $eventService
     ) {
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
@@ -49,6 +50,7 @@ class ApiController extends BaseController
         $this->apiSrv = $apiSrv;
         $this->offerSrv = $offerSrv;
         $this->guestPartiSrv = $guestPartiSrv;
+        $this->eventService = $eventService;
     }
 
     public function getEnvironmentVars(): JsonResponse

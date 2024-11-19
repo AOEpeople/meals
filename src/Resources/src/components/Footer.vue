@@ -44,7 +44,7 @@ const changeLocale = () => {
 };
 
 onMounted(() => {
-  if(localStorage.Lang != null) locale.value = localStorage.Lang;
+  if (localStorage.Lang !== null) locale.value = localStorage.Lang;
 });
 
 const year = ref(new Date().getFullYear());

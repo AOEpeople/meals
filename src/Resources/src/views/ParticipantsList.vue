@@ -1,16 +1,16 @@
 <template>
   <div class="size-full px-4">
     <MealsList
-      v-if="Object.entries(participationsState.meals).length > 0"
+      v-if="Object.keys(participationsState.meals ?? {}).length > 0"
       id="mealsList"
       ref="mealsList"
     />
     <ParticipationsTable
-      v-if="Object.entries(participationsState.meals).length > 0"
+      v-if="Object.keys(participationsState.meals ?? {}).length > 0"
       class="mx-auto"
     />
     <NoParticipations
-      v-if="Object.entries(participationsState.meals).length === 0 && loadedState.loaded === true"
+      v-if="Object.keys(participationsState.meals ?? {}).length === 0 && loadedState.loaded === true"
       :day="participationsState.day"
     />
     <MealOverview

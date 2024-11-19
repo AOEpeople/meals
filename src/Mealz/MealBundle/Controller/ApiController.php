@@ -169,6 +169,7 @@ class ApiController extends BaseController
 
         if (false === $day->isEnabled() || false === $day->getWeek()->isEnabled()) {
             $list['day'] = $day->getDateTime();
+
             return new JsonResponse($list, Response::HTTP_OK);
         }
 

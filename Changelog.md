@@ -1,5 +1,18 @@
 # Changelog
 
+## Version v3.1.6 (2024-11-19)
+
+### Fixes
+
+- Fix tv view when week or day is disabled but has participants (68dcde83)
+
+### Other
+
+- Bump cross-spawn from 7.0.3 to 7.0.6 in /tests/e2e (e166ff6a)
+- Bump micromatch from 4.0.7 to 4.0.8 in /tests/e2e (f983568e)
+- Bump rollup from 4.18.1 to 4.22.4 in /src/Resources (e723a467)
+- SSO: Use client specific user roles (#515) (5e564dd5)
+
 ## Version v3.1.5 (2024-08-21)
 
 ### Fixes

@@ -167,6 +167,11 @@ class ApiController extends BaseController
             return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
         }
 
+        if (false === $day->isEnabled() || false === $day->getWeek()->isEnabled()) {
+            $list['day'] = $day->getDateTime();
+            return new JsonResponse($list, Response::HTTP_OK);
+        }
+
         $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
 
         $meals = $this->participationSrv->getMealsForTheDay($day);

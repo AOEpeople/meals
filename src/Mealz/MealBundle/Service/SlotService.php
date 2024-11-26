@@ -125,7 +125,7 @@ class SlotService
      *
      * The return results are indexed by a composite key comprised of concatenated date and slot-ID.
      *
-     * @psalm-return \Closure(DateTime, Slot):int
+     * @psalm-return Closure(DateTime, Slot):int
      */
     private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): Closure
     {

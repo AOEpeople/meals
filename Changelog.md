@@ -1,5 +1,26 @@
 # Changelog
 
+## Version v3.1.6 (2024-11-26)
+
+### Fixes
+
+- fix linter messages (19da80a0)
+- fixed linting (beb94c5f)
+- Fix tv view when week or day is disabled but has participants (68dcde83)
+
+### Chores and tidying
+
+- update packages (bef3b09c)
+
+### Other
+
+- Bump cross-spawn from 7.0.3 to 7.0.6 in /tests/e2e (e166ff6a)
+- add check if Lang is undefined (d0366957)
+- Bump micromatch from 4.0.7 to 4.0.8 in /tests/e2e (f983568e)
+- Bump rollup from 4.18.1 to 4.22.4 in /src/Resources (e723a467)
+- Language selection is now stored in localStorage in browser and will appear as choosen on the next login. (3e32bce6)
+- SSO: Use client specific user roles (#515) (5e564dd5)
+
 ## Version v3.1.5 (2024-08-21)
 
 ### Fixes

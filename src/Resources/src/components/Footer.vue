@@ -33,14 +33,19 @@
 
 <script setup lang="ts">
 import Icons from '@/components/misc/Icons.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
 
-const changeLocale = () => {
+function changeLocale() {
   locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
-};
+  localStorage.Lang = locale.value;
+}
+
+onMounted(() => {
+  if (typeof localStorage.Lang !== 'undefined' && localStorage.Lang !== null) locale.value = localStorage.Lang;
+});
 
 const year = ref(new Date().getFullYear());
 </script>

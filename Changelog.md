@@ -1,5 +1,14 @@
 # Changelog
 
+## Version v3.1.7 (2024-12-16)
+
+### Other
+
+- Bump nanoid from 3.3.7 to 3.3.8 in /src/Resources (e41c4050)
+- set new prices (1af33e44)
+- Bump micromatch from 4.0.7 to 4.0.8 in /src/Resources (210c1d93)
+- Bump @intlify/core-base and vue-i18n in /src/Resources (768e28c4)
+
 ## Version v3.1.6 (2024-11-26)
 
 ### Fixes

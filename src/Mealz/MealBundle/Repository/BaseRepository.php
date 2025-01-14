@@ -36,7 +36,7 @@ abstract class BaseRepository implements ObjectRepository, Selectable
         $this->entityClass = $entityClass;
         $this->entityManager = $entityManager;
 
-        /** @psalm-var  objectRepository<T> */
+        /** @psalm-var  ObjectRepository<T> */
         $this->objectRepository = $this->entityManager->getRepository($this->entityClass);
     }
 

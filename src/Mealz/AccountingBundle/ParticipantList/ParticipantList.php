@@ -18,7 +18,7 @@ class ParticipantList
     protected $profiles;
 
     /**
-     * @param \App\Mealz\MealBundle\Entity\Participant[] $participations
+     * @param Participant[] $participations
      */
     public function __construct(array $participations)
     {

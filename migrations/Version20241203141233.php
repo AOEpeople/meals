@@ -25,13 +25,11 @@ final class Version20241203141233 extends AbstractMigration
         $this->addSql('ALTER TABLE participant CHANGE event event_participation INT DEFAULT NULL');
         $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B118F0C52E3 FOREIGN KEY (event_participation) REFERENCES event_participation (id)');
         $this->addSql('CREATE INDEX IDX_D79F6B118F0C52E3 ON participant (event_participation)');
-        $this->addSql('ALTER TABLE session RENAME INDEX session_sess_lifetime_idx TO sess_lifetime_idx');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE session RENAME INDEX sess_lifetime_idx TO session_sess_lifetime_idx');
         $this->addSql('ALTER TABLE participant DROP FOREIGN KEY FK_D79F6B118F0C52E3');
         $this->addSql('DROP INDEX IDX_D79F6B118F0C52E3 ON participant');
         $this->addSql('ALTER TABLE participant CHANGE event_participation event INT DEFAULT NULL');

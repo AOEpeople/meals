@@ -156,7 +156,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
-        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $part = $partRepo->findOneBy(['event_participation' => $eventPart->getId()]);
         $this->assertNotNull($part);
 
         $this->assertEquals(self::USER_KITCHEN_STAFF, $part->getProfile()->getUsername());
@@ -194,7 +194,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
-        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $part = $partRepo->findOneBy(['event_participation' => $eventPart->getId()]);
         $this->assertNull($part);
     }
 

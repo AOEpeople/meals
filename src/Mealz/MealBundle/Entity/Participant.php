@@ -101,14 +101,14 @@ class Participant
         return $this->id;
     }
 
-    public function getEvent(): ?EventParticipation
+    public function getEventParticipation(): ?EventParticipation
     {
         return $this->event_participation;
     }
 
-    public function setEvent(EventParticipation $event): void
+    public function setEventParticipation(EventParticipation $event_participation): void
     {
-        $this->event_participation = $event;
+        $this->event_participation = $event_participation;
     }
 
     public function setMeal(Meal $meal): void

@@ -192,17 +192,7 @@ class MealAdminController extends BaseController
         $dayEntity = $this->getDayEntity($day['id']);
         $this->updateDaySettings($dayEntity, $day);
         $this->updateEvents($dayEntity, $day['events'] ?? []);
-        $this->updateMeals($dayEntity, $day['meals']);
-    }
-
-    private function getDayEntity(int $dayId): Day
-    {
-        $dayEntity = $this->dayRepository->find($dayId);
-        if (null === $dayEntity) {
-            throw new Exception('105: day not found');
-        }
-
-        return $dayEntity;
+        $this->updateMeals($dayEntity, $day['meals'], 3);
     }
 
     private function handleNewDay($dayData, Day $day): void
@@ -213,7 +203,7 @@ class MealAdminController extends BaseController
 
         $this->updateDaySettings($day, $dayData);
         $this->updateEvents($day, $dayData['events']);
-        $this->updateMeals($day, $dayData['meals']);
+        $this->updateMeals($day, $dayData['meals'], 2);
     }
 
     private function updateDaySettings(Day $day, array $dayData): void
@@ -251,6 +241,16 @@ class MealAdminController extends BaseController
         }
     }
 
+    private function getDayEntity(int $dayId): Day
+    {
+        $dayEntity = $this->dayRepository->find($dayId);
+        if (null === $dayEntity) {
+            throw new Exception('105: day not found');
+        }
+
+        return $dayEntity;
+    }
+
     private function removeOldEvents(Day $dayEntity, array $newEventIds): void
     {
         foreach ($dayEntity->getEvents() as $existingEvent) {
@@ -261,10 +261,14 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function updateMeals(Day $day, array $mealCollection): void
+    private function updateMeals(Day $day, array $mealCollection, int $count): void
     {
-        if (3 < count($mealCollection)) {
+        if ($count < count($mealCollection)) {
             throw new Exception('106: too many meals requested');
+        }
+        // when updating a day remove old meals
+        if (3 === $count) {
+            $this->dayService->removeUnusedMeals($day, $mealCollection);
         }
 
         foreach ($mealCollection as $mealArr) {

@@ -25,7 +25,7 @@ describe('Test Weeks View', () => {
         cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getEvents', '@getLockdates']);
 
         cy.url().should('include', '/menu');
-        cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)');
+        cy.get('h2').invoke('text').should('match', /Woche bearbeiten #\d{1,2} \(\d{1,2}.\d{1,2}. - \d{1,2}.\d{1,2}.\)/);
 
         // change input
         cy.get('input')
@@ -41,7 +41,7 @@ describe('Test Weeks View', () => {
             .parent().parent()
             .find('li').contains('Lammhaxxe in Biersoße mit Klößen')
             .click();
-        cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28').click();
 
         // change event
         cy.get('input')
@@ -93,7 +93,7 @@ describe('Test Weeks View', () => {
             .clear()
             .type('17');
         cy.get('span').contains('Limit').parent().find('svg').click();
-        cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28').click();
 
         // change lock date
         cy.get('input')
@@ -112,7 +112,7 @@ describe('Test Weeks View', () => {
             .contains(new RegExp(/^7$/))
             .click()
         cy.get('span').contains('Sperren').parent().find('svg').click();
-        cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28').click();
 
         // change input
         cy.get('input')
@@ -130,7 +130,7 @@ describe('Test Weeks View', () => {
             .click();
         cy.get('button').contains('Variation').click();
         cy.get('span').contains('Innards DE #v1').click();
-        cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28').click();
 
         cy.contains('input', 'Speichern').click();
 

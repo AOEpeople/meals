@@ -106,6 +106,13 @@ class DashboardStore extends Store<Dashboard> {
         return undefined;
     }
 
+    public getToday() {
+        const today = new Date();
+        return Object.values({ ...this.state.weeks })
+            .flatMap((week) => Object.values(week.days))
+            .find((day) => new Date(day.date.date).getUTCDay() === today.getUTCDay());
+    }
+
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
         if (day !== null && day !== undefined && day.event !== null && day.event.eventId === eventId) {

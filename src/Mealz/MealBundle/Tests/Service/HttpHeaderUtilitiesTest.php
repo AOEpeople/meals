@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Service\HttpHeaderUtility;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
-class HttpHeaderUtilitiesTest extends TestCase
+final class HttpHeaderUtilitiesTest extends TestCase
 {
     /**
      * @dataProvider provideDataForTestGetLocale

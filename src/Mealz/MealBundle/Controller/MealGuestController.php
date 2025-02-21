@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class MealGuestController extends BaseController
+final class MealGuestController extends BaseController
 {
     public function __construct(
         private readonly EventParticipationService $eventPartSrv,

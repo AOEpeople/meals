@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service\Notification;
 
 use Exception;
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -33,6 +34,7 @@ class MattermostNotifier implements NotifierInterface
     /**
      * Sends a message to configured Mattermost channel.
      */
+    #[Override]
     public function send(MessageInterface $message): bool
     {
         if (false === $this->enabled) {

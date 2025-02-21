@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
  * This is done for portability. Should we decide to switch the urls to use the title instead of the
  * id, then we just have to change this here and not in all templates. Also this is easier readable in templates.
  */
-class Link
+final class Link
 {
     protected RouterInterface $router;
 

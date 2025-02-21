@@ -7,14 +7,16 @@ namespace App\Mealz\UserBundle\DataFixtures\ORM;
 use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadRoles extends Fixture
+final class LoadRoles extends Fixture
 {
     /**
      * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 1;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getRoles() as $role) {

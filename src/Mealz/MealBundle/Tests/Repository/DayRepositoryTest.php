@@ -13,11 +13,13 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Override;
 
-class DayRepositoryTest extends AbstractDatabaseTestCase
+final class DayRepositoryTest extends AbstractDatabaseTestCase
 {
     private DayRepositoryInterface $dayRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

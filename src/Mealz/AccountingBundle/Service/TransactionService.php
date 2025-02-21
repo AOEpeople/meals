@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TransactionService
+final class TransactionService
 {
     private const PAYMENT_METHOD_PAYPAL = '0';
 
@@ -147,7 +147,7 @@ class TransactionService
      *
      * @throws BadDataException
      */
-    private function jsonDecode($json): array
+    private function jsonDecode(string $json): array
     {
         if (!is_string($json) || '' === $json) {
             return [];

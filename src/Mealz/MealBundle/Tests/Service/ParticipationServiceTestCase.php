@@ -16,11 +16,13 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 
-class ParticipationServiceTestCase extends AbstractParticipationServiceTestCase
+final class ParticipationServiceTestCase extends AbstractParticipationServiceTestCase
 {
     private DayRepository $dayRepo;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -397,6 +399,7 @@ class ParticipationServiceTestCase extends AbstractParticipationServiceTestCase
         }
     }
 
+    #[Override]
     protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
     ): void {
         $this->assertSame($meal->getId(), $participant->getMeal()->getId());

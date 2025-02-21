@@ -8,14 +8,16 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
+use Override;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class RoleRepositoryTest extends AbstractDatabaseTestCase
+final class RoleRepositoryTest extends AbstractDatabaseTestCase
 {
     private RoleRepositoryInterface $roleRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

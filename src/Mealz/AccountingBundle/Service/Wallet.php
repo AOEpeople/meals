@@ -8,7 +8,7 @@ use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 
-class Wallet
+final class Wallet
 {
     private ParticipantRepositoryInterface $participantRepo;
 

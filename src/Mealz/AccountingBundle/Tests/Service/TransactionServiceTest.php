@@ -16,6 +16,7 @@ use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,10 +25,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TransactionServiceTest extends AbstractDatabaseTestCase
+final class TransactionServiceTest extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
+    #[Override]
     protected function setUp(): void
     {
         self::bootKernel();

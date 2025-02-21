@@ -11,9 +11,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 use RuntimeException;
 
-class LoadTransactions extends Fixture implements OrderedFixtureInterface
+final class LoadTransactions extends Fixture implements OrderedFixtureInterface
 {
     /**
      * User guaranteed to have a transaction.
@@ -45,6 +46,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -74,6 +76,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

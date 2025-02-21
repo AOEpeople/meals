@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class FrontendController extends BaseController
+final class FrontendController extends BaseController
 {
     public function renderIndex(): Response
     {

@@ -3,13 +3,15 @@
 namespace App\Mealz;
 
 use Closure;
+use Override;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
-class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
+final class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
     /**
      * @psalm-return 'PUBLIC_ACCESS'|'ROLE_USER'|null
      */
+    #[Override]
     public function getEnv($prefix, $name, Closure $getEnv): ?string
     {
         if ('auth-mode' !== $prefix) {
@@ -29,6 +31,7 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
      *
      * @psalm-return array{'auth-mode': 'string'}
      */
+    #[Override]
     public static function getProvidedTypes(): array
     {
         return [

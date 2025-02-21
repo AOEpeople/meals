@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-class EventController extends BaseListController
+final class EventController extends BaseListController
 {
     public function __construct(
         private readonly DayRepositoryInterface $dayRepository,

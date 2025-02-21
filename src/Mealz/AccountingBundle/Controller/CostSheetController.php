@@ -27,7 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class CostSheetController extends BaseController
+final class CostSheetController extends BaseController
 {
     public function __construct(
         private readonly CostSheetService $costSheetService,

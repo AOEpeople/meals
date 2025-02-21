@@ -7,9 +7,9 @@ namespace App\Mealz\AccountingBundle\Tests\Service;
 use App\Mealz\AccountingBundle\Service\CostSheetService;
 use PHPUnit\Framework\TestCase;
 
-class CostSheetServiceTest extends TestCase
+final class CostSheetServiceTest extends TestCase
 {
-    public function testMergeArrayByKey()
+    public function testMergeArrayByKey(): void
     {
         $costSheetService = new CostSheetService();
 
@@ -48,7 +48,7 @@ class CostSheetServiceTest extends TestCase
         $this->assertEquals($expectedArr, $fncOutput, 'Arrays are not equal');
     }
 
-    public function testMergeDoubleUsers()
+    public function testMergeDoubleUsers(): void
     {
         $costSheetService = new CostSheetService();
 

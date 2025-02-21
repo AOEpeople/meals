@@ -5,7 +5,7 @@ namespace App\Mealz\MealBundle\Tests\Service;
 use App\Mealz\MealBundle\Service\Workday;
 use PHPUnit\Framework\TestCase;
 
-class WorkdayTest extends TestCase
+final class WorkdayTest extends TestCase
 {
     /**
      * @dataProvider getDataForTestBasic

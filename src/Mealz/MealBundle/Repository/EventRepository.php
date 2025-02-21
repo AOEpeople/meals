@@ -9,6 +9,6 @@ use App\Mealz\MealBundle\Entity\Event;
 /**
  * @extends BaseRepository<int, Event>
  */
-class EventRepository extends BaseRepository implements EventRepositoryInterface
+final class EventRepository extends BaseRepository implements EventRepositoryInterface
 {
 }

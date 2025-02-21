@@ -10,7 +10,7 @@ use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DayService
+final class DayService
 {
     private MealRepositoryInterface $mealRepository;
     private ParticipantRepositoryInterface $participantRepo;

@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class MealOfferedEvent extends Event
+final class MealOfferedEvent extends Event
 {
     private Participant $participant;
 

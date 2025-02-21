@@ -75,7 +75,7 @@
     "doctrine/doctrine-fixtures-bundle": "^3.6",
     "friendsofphp/php-cs-fixer": "3.80.0",
     "phploc/phploc": "^7.0",
-    "phpmd/phpmd": "~2.2",
+    "phpmd/phpmd": "^2.15",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9.5",
     "psalm/plugin-symfony": "^5.2.7",

@@ -12,8 +12,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 
-class LoadMeals extends Fixture implements OrderedFixtureInterface
+final class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -48,6 +49,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -97,6 +99,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->addReference('meal-' . $this->counter++, $meal);
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as seventh

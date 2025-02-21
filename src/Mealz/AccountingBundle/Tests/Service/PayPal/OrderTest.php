@@ -8,7 +8,7 @@ use App\Mealz\AccountingBundle\Service\PayPal\Order;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class OrderTest extends TestCase
+final class OrderTest extends TestCase
 {
     public function testInstantiate(): void
     {

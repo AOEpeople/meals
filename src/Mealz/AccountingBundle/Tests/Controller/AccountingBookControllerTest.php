@@ -15,13 +15,15 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AccountingBookControllerTest.
  */
-class AccountingBookControllerTest extends AbstractControllerTestCase
+final class AccountingBookControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

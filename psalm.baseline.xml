@@ -1,272 +1,412 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.13.1@5cf660f63b548ccd4a56f62d916ee4d6028e01a3">
-  <file src="src/Mealz/AccountingBundle/Controller/AccountingAdminController.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>Profile</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;getDoctrine()-&gt;getManager()-&gt;find(Profile::class, $profileId)</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="src/Mealz/AccountingBundle/Controller/AccountingBookController.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>0</code>
-    </InvalidScalarArgument>
-    <TooManyArguments occurrences="1">
-      <code>create</code>
-    </TooManyArguments>
-    <UndefinedConstant occurrences="3">
-      <code>PDF_PAGE_FORMAT</code>
-      <code>PDF_PAGE_ORIENTATION</code>
-      <code>PDF_UNIT</code>
-    </UndefinedConstant>
-  </file>
+<files psalm-version="6.8.4@7ee919229d510c5834af3112072f4b12cd7bb51a">
   <file src="src/Mealz/AccountingBundle/Controller/CostSheetController.php">
-    <InvalidArgument occurrences="3">
-      <code>$receiver</code>
-      <code>$secret</code>
-      <code>$this-&gt;getParameter('app.base_url')</code>
+    <InvalidArgument>
+      <code><![CDATA[$secret]]></code>
+      <code><![CDATA[$this->getParameter('app.base_url')]]></code>
     </InvalidArgument>
+    <InvalidOperand>
+      <code><![CDATA[$result * -1]]></code>
+      <code><![CDATA[-1 * abs($wallet->getBalance($profile))]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/AccountingBundle/Controller/Payment/CashController.php">
-    <InvalidDocblock occurrences="1"/>
-    <MissingDocblockType occurrences="1">
-      <code>$participation</code>
-    </MissingDocblockType>
+  <file src="src/Mealz/AccountingBundle/DataFixtures/ORM/LoadTransactions.php">
+    <InvalidOperand>
+      <code><![CDATA[$i]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/Mealz/AccountingBundle/Entity/TransactionRepository.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>\Doctrine\DBAL\DBALException</code>
-    </UndefinedDocblockClass>
+  <file src="src/Mealz/AccountingBundle/Entity/Transaction.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$this->profile]]></code>
+    </ImplicitToStringCast>
   </file>
   <file src="src/Mealz/AccountingBundle/ParticipantList/ParticipantList.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$price</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>int</code>
-    </InvalidReturnType>
+    <InvalidOperand>
+      <code><![CDATA[$price += $participation->getMeal()->getPrice()]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/AccountingBundle/Service/Wallet.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>bcsub($transactions, $costs, 2)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>float</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
-      <code>$costs</code>
-      <code>$transactions</code>
-    </InvalidScalarArgument>
+  <file src="src/Mealz/AccountingBundle/Service/TransactionService.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[!is_string($json)]]></code>
+    </TypeDoesNotContainType>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Controller/AccountingBookControllerTest.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>0</code>
-    </InvalidScalarArgument>
-    <UndefinedInterfaceMethod occurrences="4">
-      <code>clear</code>
-      <code>clear</code>
-      <code>clear</code>
-      <code>findUserDataAndTransactionAmountForGivenPeriod</code>
-    </UndefinedInterfaceMethod>
+    <InvalidOperand>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Controller/CostSheetControllerTest.php">
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>getTotalAmount</code>
-      <code>getTotalAmount</code>
-    </UndefinedInterfaceMethod>
+    <InvalidOperand>
+      <code><![CDATA[random_int(10, 120) + 0.13]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Controller/Payment/CashControllerTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$amount]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Repository/TransactionRepositoryTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$subDays]]></code>
+      <code><![CDATA[$subDays]]></code>
+      <code><![CDATA[random_int(10, 120) + 0.13]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Service/PayPal/PayPalServiceTest.php">
-    <TooManyArguments occurrences="3">
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </TooManyArguments>
+    <InvalidOperand>
+      <code><![CDATA[$httpStatusCode]]></code>
+    </InvalidOperand>
+    <UndefinedMagicMethod>
+      <code><![CDATA[execute]]></code>
+      <code><![CDATA[execute]]></code>
+      <code><![CDATA[execute]]></code>
+    </UndefinedMagicMethod>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Service/TransactionServiceTest.php">
-    <TooManyArguments occurrences="2">
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </TooManyArguments>
+    <UndefinedMagicMethod>
+      <code><![CDATA[getOrder]]></code>
+      <code><![CDATA[getUser]]></code>
+    </UndefinedMagicMethod>
   </file>
   <file src="src/Mealz/MealBundle/Controller/BaseController.php">
-    <InvalidParamDefault occurrences="1">
-      <code>bool</code>
-    </InvalidParamDefault>
-    <InvalidScalarArgument occurrences="1">
-      <code>$referenceType</code>
-    </InvalidScalarArgument>
-  </file>
-  <file src="src/Mealz/MealBundle/Controller/BaseListController.php">
-    <FalsableReturnStatement occurrences="1">
-      <code>$renderedForm-&gt;getContent()</code>
-    </FalsableReturnStatement>
+    <InvalidOperand>
+      <code><![CDATA[$exc->getLine()]]></code>
+      <code><![CDATA[$i]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Controller/MealAdminController.php">
-    <InvalidArgument occurrences="1">
-      <code>$dateTimeModifier</code>
+    <InvalidArgument>
+      <code><![CDATA[$dateTimeModifier]]></code>
     </InvalidArgument>
-    <InvalidScalarArgument occurrences="4">
-      <code>$dateTime-&gt;format('W')</code>
-      <code>$dateTime-&gt;format('o')</code>
-      <code>$modifiedDateTime-&gt;format('W')</code>
-      <code>$modifiedDateTime-&gt;format('o')</code>
+    <InvalidOperand>
+      <code><![CDATA[$i]]></code>
+    </InvalidOperand>
+    <InvalidScalarArgument>
+      <code><![CDATA[$modifiedDateTime->format('W')]]></code>
+      <code><![CDATA[$modifiedDateTime->format('o')]]></code>
     </InvalidScalarArgument>
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>isClicked</code>
-      <code>isClicked</code>
-    </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Entity/Dish.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;title_de</code>
-    </NullableReturnStatement>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadCategories.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter++]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/MealBundle/Entity/ParticipantRepository.php">
-    <TooManyArguments occurrences="2">
-      <code>orX</code>
-      <code>where</code>
-    </TooManyArguments>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadCombinations.php">
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Form/DataTransformer/EntityToIdTransformer.php">
-    <ParamNameMismatch occurrences="2">
-      <code>$entity</code>
-      <code>$identifier</code>
-    </ParamNameMismatch>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDays.php">
+    <InvalidOperand>
+      <code><![CDATA[$i]]></code>
+      <code><![CDATA[$this->counter++]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Form/DataTransformer/ProfileToStringTransformer.php">
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$value</code>
-    </MoreSpecificImplementedParamType>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDishVariations.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter++]]></code>
+      <code><![CDATA[count($dish->getVariations()) + 1]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Form/MealAdmin/MealForm.php">
-    <TypeDoesNotContainNull occurrences="1">
-      <code>null === $meal-&gt;getDateTime()</code>
-    </TypeDoesNotContainNull>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDishes.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter++]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Form/Type/DishSelectorCreatorType.php">
-    <UndefinedClass occurrences="1">
-      <code>DishStringToValuesTransformer</code>
-    </UndefinedClass>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadMeals.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter++]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadParticipants.php">
+    <InvalidOperand>
+      <code><![CDATA[$day->getId()]]></code>
+      <code><![CDATA[$meal->getDay()->getId()]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
+    <UndefinedMethod>
+      <code><![CDATA[getReferences]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadSlots.php">
+    <InvalidOperand>
+      <code><![CDATA[++$key]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadWeeks.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter++]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/GuestInvitation.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->day->getId()]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/Meal.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$this->getDish()]]></code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/Participant.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$this->getMeal()]]></code>
+      <code><![CDATA[$this->getProfile()]]></code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Mealz/MealBundle/EventListener/ParticipantPersistenceListener.php">
+    <ImplicitToStringCast>
+      <code><![CDATA[$participant]]></code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Mealz/MealBundle/Repository/ParticipantRepository.php">
+    <InvalidOperand>
+      <code><![CDATA[$item['slot_id']]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/ApiService.php">
+    <InvalidOperand>
+      <code><![CDATA[$costDifference += $transaction->getAmount()]]></code>
+      <code><![CDATA[$costDifference -= $participation->getMeal()->getPrice()]]></code>
+      <code><![CDATA[$mealId]]></code>
+      <code><![CDATA[$timestamp]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Service/Doorman.php">
-    <UndefinedInterfaceMethod occurrences="3">
-      <code>getProfile</code>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getProfile]]></code>
+      <code><![CDATA[getProfile]]></code>
+      <code><![CDATA[getProfile]]></code>
     </UndefinedInterfaceMethod>
   </file>
+  <file src="src/Mealz/MealBundle/Service/HttpHeaderUtility.php">
+    <InvalidOperand>
+      <code><![CDATA[$quality * 1000]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Mealz/MealBundle/Service/Link.php">
-    <NullArgument occurrences="1">
-      <code>$action</code>
+    <NullArgument>
+      <code><![CDATA[$action]]></code>
     </NullArgument>
   </file>
+  <file src="src/Mealz/MealBundle/Service/ParticipationCountService.php">
+    <InvalidOperand>
+      <code><![CDATA[$configuredLimit - ($totalCount - $currentCount)]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/ParticipationServiceTrait.php">
+    <InvalidOperand>
+      <code><![CDATA[count($dishSlugs)]]></code>
+      <code><![CDATA[count($dishes)]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/SlotService.php">
+    <InvalidOperand>
+      <code><![CDATA[$bss['slot']]]></code>
+      <code><![CDATA[$slot->getId()]]></code>
+      <code><![CDATA[$slot->getId()]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/WeekService.php">
+    <InvalidOperand>
+      <code><![CDATA[$i]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Mealz/MealBundle/Service/Workday.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$year</code>
+    <InvalidScalarArgument>
+      <code><![CDATA[$year]]></code>
     </InvalidScalarArgument>
   </file>
   <file src="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>Registry</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>static::$kernel-&gt;getContainer()-&gt;get('doctrine')</code>
-    </NullableReturnStatement>
+    <InvalidOperand>
+      <code><![CDATA[$rand]]></code>
+      <code><![CDATA[$rand]]></code>
+      <code><![CDATA[$rand]]></code>
+      <code><![CDATA[$uniqueSuffix]]></code>
+      <code><![CDATA[$uniqueSuffix]]></code>
+      <code><![CDATA[mt_rand()]]></code>
+      <code><![CDATA[mt_rand()]]></code>
+      <code><![CDATA[mt_rand()]]></code>
+      <code><![CDATA[mt_rand()]]></code>
+      <code><![CDATA[mt_rand()]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php">
-    <ImplicitToStringCast occurrences="1">
-      <code>$user-&gt;getRoles()</code>
-    </ImplicitToStringCast>
-  </file>
-  <file src="src/Mealz/MealBundle/Tests/Controller/CategoryControllerTest.php">
-    <InvalidArrayOffset occurrences="1">
-      <code>$form['category']['category']</code>
-    </InvalidArrayOffset>
+    <InvalidOperand>
+      <code><![CDATA[mt_rand()]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php">
-    <InvalidArgument occurrences="1">
-      <code>$host</code>
-    </InvalidArgument>
-    <InvalidNullableReturnType occurrences="1">
-      <code>DishVariation</code>
-    </InvalidNullableReturnType>
-    <InvalidOperand occurrences="1">
-      <code>$dishId</code>
-    </InvalidOperand>
-    <InvalidReturnStatement occurrences="1">
-      <code>$dishId</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Crawler</code>
-    </InvalidReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$dishVariation</code>
-    </NullableReturnStatement>
-    <RedundantCondition occurrences="3">
-      <code>count($result)</code>
-      <code>is_array($result)</code>
-      <code>is_array($result) &amp;&amp; count($result)</code>
+    <RedundantCondition>
+      <code><![CDATA[count($result)]]></code>
+      <code><![CDATA[is_array($result) && count($result)]]></code>
     </RedundantCondition>
   </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/MealAdminControllerTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$createdWeek->getId()]]></code>
+      <code><![CDATA[$createdWeek->getId()]]></code>
+      <code><![CDATA[$testEvent->getId()]]></code>
+    </InvalidOperand>
+  </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php">
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getOutdatedMeals</code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMethod occurrences="1">
-      <code>$form['invitation_form[day][meals]']</code>
-    </UndefinedMethod>
+    <InvalidOperand>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/MealGuestControllerTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$eventParticipation->getDay()->getId()]]></code>
+      <code><![CDATA[time()]]></code>
+      <code><![CDATA[time()]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php">
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getOutdatedMeals</code>
-    </UndefinedInterfaceMethod>
+    <InvalidOperand>
+      <code><![CDATA[$currentWeek->getId()]]></code>
+      <code><![CDATA[$meal->getId()]]></code>
+      <code><![CDATA[$mealToAdd->getId()]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$time]]></code>
+      <code><![CDATA[$weekEntity->getId()]]></code>
+      <code><![CDATA[$weekEntity->getId()]]></code>
+      <code><![CDATA[$weekEntity->getId()]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/MealBundle/Tests/Service/AbstractParticipationServiceTest.php">
-    <TooManyArguments occurrences="2">
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </TooManyArguments>
+  <file src="src/Mealz/MealBundle/Tests/Entity/DayTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$i + 1.99]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/MealBundle/Twig/Extension/Doorman.php">
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>array</code>
-    </LessSpecificImplementedReturnType>
-    <TooManyArguments occurrences="1">
-      <code>isOfferAvailable</code>
-    </TooManyArguments>
+  <file src="src/Mealz/MealBundle/Tests/Repository/DishRepositoryTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$dishes]]></code>
+      <code><![CDATA[$dishes]]></code>
+      <code><![CDATA[$dishes]]></code>
+      <code><![CDATA[$dishes]]></code>
+    </InvalidArgument>
+    <UndefinedDocblockClass>
+      <code><![CDATA[list<App\Mealz\MealBundle\Entity\Dish>]]></code>
+    </UndefinedDocblockClass>
+    <UndefinedMagicMethod>
+      <code><![CDATA[getLocale]]></code>
+    </UndefinedMagicMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Validator/Constraints/DishConstraintValidator.php">
-    <ParamNameMismatch occurrences="1">
-      <code>$entity</code>
-    </ParamNameMismatch>
-    <TooManyArguments occurrences="1">
-      <code>flush</code>
-    </TooManyArguments>
+  <file src="src/Mealz/MealBundle/Tests/Service/AbstractParticipationServiceTestCase.php">
+    <UndefinedMagicMethod>
+      <code><![CDATA[isKitchenStaff]]></code>
+      <code><![CDATA[isUserAllowedToJoin]]></code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Service/GuestParticipationServiceTestCase.php">
+    <InvalidArgument>
+      <code><![CDATA[$meals]]></code>
+      <code><![CDATA[$meals]]></code>
+    </InvalidArgument>
+    <InvalidNullableReturnType>
+      <code><![CDATA[GuestParticipationService|\App\Mealz\MealBundle\Service\ParticipationService|\App\Mealz\MealBundle\Service\ParticipationService|null|null]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[null]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Service/ParticipationCountServiceTestCase.php">
+    <InvalidOperand>
+      <code><![CDATA[$totalCounts[$mealDishSlug] += $meal->getParticipants()->count()]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTestCase.php">
+    <InvalidArgument>
+      <code><![CDATA[$combinedMeal]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Service/WeekServiceTest.php">
+    <InvalidOperand>
+      <code><![CDATA[$i]]></code>
+    </InvalidOperand>
   </file>
   <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadAnonymousUsers.php">
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>getConnection</code>
-      <code>getConnection</code>
-    </UndefinedInterfaceMethod>
+    <InvalidOperand>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+      <code><![CDATA[$key]]></code>
+    </InvalidOperand>
   </file>
-  <file src="src/Mealz/UserBundle/Tests/Service/OAuthProviderTest.php">
-    <TooManyArguments occurrences="5">
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </TooManyArguments>
-  </file>
-  <file src="src/Resources/node_modules/flatted/php/flatted.php">
-    <UndefinedPropertyFetch occurrences="2">
-      <code>$value-&gt;value</code>
-      <code>$value-&gt;value</code>
-    </UndefinedPropertyFetch>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;value</code>
-    </UndefinedThisPropertyAssignment>
+  <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->counter]]></code>
+      <code><![CDATA[$this->counter++]]></code>
+      <code><![CDATA[rand()]]></code>
+    </InvalidOperand>
+    <TooFewArguments>
+      <code><![CDATA[getReference]]></code>
+      <code><![CDATA[getReference]]></code>
+    </TooFewArguments>
   </file>
 </files>

@@ -24,6 +24,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
@@ -40,6 +41,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
     /** @var ParticipationService|GuestParticipationService */
     private $sut;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -300,12 +302,15 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         return $combinedMeal;
     }
 
+    /**
+     * @return GuestParticipationService|ParticipationService
+     */
     protected function getParticipationService()
     {
         return $this->sut;
     }
 
-    protected function setParticipationService($service): void
+    protected function setParticipationService(ParticipationService|GuestParticipationService $service): void
     {
         $this->sut = $service;
     }

@@ -6,6 +6,7 @@ namespace App\Mealz\AccountingBundle\Command;
 
 use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsCommand(name: 'meals:payment:check-paypal-order')]
-class PayPalCheckOrderCommand extends Command
+final class PayPalCheckOrderCommand extends Command
 {
     private PayPalService $paypalService;
     private TranslatorInterface $translator;
@@ -28,6 +29,7 @@ class PayPalCheckOrderCommand extends Command
         $this->translator = $translator;
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -38,6 +40,7 @@ class PayPalCheckOrderCommand extends Command
     /**
      * @psalm-return 0|1
      */
+    #[Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $orderID = $input->getOption('order-id');

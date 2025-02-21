@@ -11,11 +11,12 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Override;
 
 /**
  * @extends BaseRepository<int, Transaction>
  */
-class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
+final class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
     /**
      * Get total amount of transactions. Prevent unnecessary ORM mapping.
@@ -23,6 +24,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Override]
     public function getTotalAmount(string $username): float
     {
         $queryBuilder = $this->createQueryBuilder('t');
@@ -42,6 +44,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      *
      * @return Transaction[]
      */
+    #[Override]
     public function getSuccessfulTransactionsOnDays(DateTime $minDate, DateTime $maxDate, Profile $profile): array
     {
         $queryBuilder = $this->createQueryBuilder('t');
@@ -72,6 +75,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      *
      * @psalm-return array<string, array{firstName: string, name: string, amount: string, paymethod: string|null}>
      */
+    #[Override]
     public function findUserDataAndTransactionAmountForGivenPeriod(
         ?DateTime $minDate = null,
         ?DateTime $maxDate = null,
@@ -122,6 +126,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      *
      * @psalm-return array<array-key, non-empty-list<array{amount: float, date: string, firstName: string, name: string}>>
      */
+    #[Override]
     public function findAllTransactionsInDateRange(DateTime $minDate, DateTime $maxDate): array
     {
         $queryBuilder = $this->createQueryBuilder('t');

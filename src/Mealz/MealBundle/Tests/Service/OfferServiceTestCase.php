@@ -16,9 +16,11 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\Collection;
+use Override;
 
-class OfferServiceTestCase extends AbstractParticipationServiceTestCase
+final class OfferServiceTestCase extends AbstractParticipationServiceTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -369,6 +371,7 @@ class OfferServiceTestCase extends AbstractParticipationServiceTestCase
         return $participants;
     }
 
+    #[Override]
     protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
     ): void {
         echo 'not implemented.';

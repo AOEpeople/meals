@@ -7,11 +7,13 @@ namespace App\Mealz\MealBundle\Tests\Entity;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 
-class DishTest extends AbstractDatabaseTestCase
+final class DishTest extends AbstractDatabaseTestCase
 {
     private EntityManagerInterface $entityManager;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

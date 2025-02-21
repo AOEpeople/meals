@@ -7,13 +7,14 @@ namespace App\Mealz\MealBundle\Validator\Constraints;
 use App\Mealz\MealBundle\Entity\NullDish;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
+use Override;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * @Annotation
  */
-class DishConstraintValidator extends ConstraintValidator
+final class DishConstraintValidator extends ConstraintValidator
 {
     private EntityManagerInterface $entityManager;
 
@@ -22,6 +23,7 @@ class DishConstraintValidator extends ConstraintValidator
         $this->entityManager = $entityManager;
     }
 
+    #[Override]
     public function validate($value, Constraint $constraint): void
     {
         if (!($value->getDish() instanceof NullDish)) {

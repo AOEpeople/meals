@@ -12,7 +12,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-class EventParticipationService
+final class EventParticipationService
 {
     private Doorman $doorman;
     private EntityManagerInterface $em;

@@ -10,11 +10,13 @@ use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use DateTimeImmutable;
+use Override;
 
-class WeekRepositoryTest extends AbstractDatabaseTestCase
+final class WeekRepositoryTest extends AbstractDatabaseTestCase
 {
     protected WeekRepositoryInterface $weekRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

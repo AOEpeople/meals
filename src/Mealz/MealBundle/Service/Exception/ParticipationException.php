@@ -7,7 +7,7 @@ namespace App\Mealz\MealBundle\Service\Exception;
 use Exception;
 use Throwable;
 
-class ParticipationException extends Exception
+final class ParticipationException extends Exception
 {
     public const ERR_MEAL_NOT_BOOKABLE = 1;
     public const ERR_GUEST_REG_MEAL_NOT_FOUND = 2;

@@ -8,14 +8,16 @@ use App\Mealz\MealBundle\Entity\Event;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadEvents extends Fixture implements OrderedFixtureInterface
+final class LoadEvents extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 5;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $eventItems = [
@@ -43,6 +45,7 @@ class LoadEvents extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

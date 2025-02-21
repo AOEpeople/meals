@@ -6,7 +6,7 @@ use App\Mealz\MealBundle\Entity\LocalizedRepository;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use Doctrine\ORM\EntityManagerInterface;
 
-class LocalizedRepositoryFactory
+final class LocalizedRepositoryFactory
 {
     protected EntityManagerInterface $entityManager;
 

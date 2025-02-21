@@ -9,11 +9,12 @@ use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Override;
 
 /**
  * @extends BaseRepository<int, GuestInvitation>
  */
-class GuestInvitationRepository extends BaseRepository implements GuestInvitationRepositoryInterface
+final class GuestInvitationRepository extends BaseRepository implements GuestInvitationRepositoryInterface
 {
     /**
      * Gets the guest invitation from a particular user on a particular day.
@@ -21,6 +22,7 @@ class GuestInvitationRepository extends BaseRepository implements GuestInvitatio
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Override]
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
     {
         $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);

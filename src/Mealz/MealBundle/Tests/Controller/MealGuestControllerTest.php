@@ -14,10 +14,12 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
-class MealGuestControllerTest extends AbstractControllerTestCase
+final class MealGuestControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

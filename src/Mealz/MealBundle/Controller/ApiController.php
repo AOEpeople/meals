@@ -21,7 +21,7 @@ use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiController extends BaseController
+final class ApiController extends BaseController
 {
     private DishService $dishSrv;
     private SlotService $slotSrv;

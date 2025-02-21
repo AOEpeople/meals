@@ -6,6 +6,6 @@ namespace App\Mealz\MealBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class KeepAliveConnectionEvent extends Event
+final class KeepAliveConnectionEvent extends Event
 {
 }

@@ -19,12 +19,14 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Override;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class ParticipationCountServiceTestCase extends AbstractParticipationServiceTestCase
+final class ParticipationCountServiceTestCase extends AbstractParticipationServiceTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -674,6 +676,7 @@ class ParticipationCountServiceTestCase extends AbstractParticipationServiceTest
         }
     }
 
+    #[Override]
     protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
     ): void {
         echo 'not implemented.';

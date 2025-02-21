@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Service;
 
-class CostSheetService
+final class CostSheetService
 {
     /**
      * @psalm-return array{?array}

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Tests;
 
+use Override;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class RoleHierarchyTest extends KernelTestCase
+final class RoleHierarchyTest extends KernelTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         static::bootKernel();

@@ -18,10 +18,12 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

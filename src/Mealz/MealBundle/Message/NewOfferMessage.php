@@ -6,9 +6,10 @@ namespace App\Mealz\MealBundle\Message;
 
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Service\OfferService;
+use Override;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class NewOfferMessage extends AbstractOfferMessage
+final class NewOfferMessage extends AbstractOfferMessage
 {
     private Participant $participant;
     private OfferService $offerService;
@@ -21,6 +22,7 @@ class NewOfferMessage extends AbstractOfferMessage
         $this->offerService = $offerService;
     }
 
+    #[Override]
     public function getContent(): string
     {
         $offerCount = $this->offerService->getOfferCount($this->participant->getMeal()->getDateTime());

@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class WeekTest extends TestCase
+final class WeekTest extends TestCase
 {
     /**
      * @testdox Week starts on Monday at 00:00:00.

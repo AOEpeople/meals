@@ -13,7 +13,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class ParticipationUpdateController extends BaseController
+final class ParticipationUpdateController extends BaseController
 {
     public function updateSlot(
         Request $request,

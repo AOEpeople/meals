@@ -8,14 +8,16 @@ use App\Mealz\MealBundle\Entity\Slot;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadSlots extends Fixture implements OrderedFixtureInterface
+final class LoadSlots extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 4;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $slotItems = [
@@ -64,6 +66,7 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

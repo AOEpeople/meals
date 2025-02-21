@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * Event when all offers for a meal are gone.
  */
-class MealOfferCancelledEvent extends Event
+final class MealOfferCancelledEvent extends Event
 {
     private Participant $participant;
 

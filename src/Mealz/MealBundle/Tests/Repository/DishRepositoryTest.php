@@ -9,10 +9,11 @@ use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 // @TODO: check if load_category=false option is working
-class DishRepositoryTest extends AbstractDatabaseTestCase
+final class DishRepositoryTest extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
@@ -21,6 +22,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected $locale;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -154,7 +156,12 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue(1 == $result);
     }
 
-    protected function sortDishByTitle(&$dishes): void
+    /**
+     * @param Dish[] $dishes
+     *
+     * @psalm-param list<App\Mealz\MealBundle\Entity\Dish> $dishes
+     */
+    protected function sortDishByTitle(array &$dishes): void
     {
         usort($dishes, function ($firstDish, $secondDish) {
             /* @var Dish $firstDish */
@@ -206,7 +213,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
      *
      * @psalm-return list<\App\Mealz\MealBundle\Entity\Category>
      */
-    protected function createMultipleCategories($count): array
+    protected function createMultipleCategories(int|float $count): array
     {
         $categories = [];
         for ($i = 0; $i < $count; ++$i) {
@@ -218,7 +225,14 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         return $categories;
     }
 
-    protected function assertNoQueryResultDiff($dishes, $options): void
+    /**
+     * @param bool[] $options
+     * @param Dish[] $dishes
+     *
+     * @psalm-param array{load_category: true, orderBy_category: bool} $options
+     * @psalm-param array<Dish> $dishes
+     */
+    protected function assertNoQueryResultDiff(array $dishes, array $options): void
     {
         $queryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($options);
         $result = $queryBuilder->getQuery()->execute();

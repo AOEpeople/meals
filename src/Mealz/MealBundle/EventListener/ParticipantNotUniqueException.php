@@ -4,6 +4,6 @@ namespace App\Mealz\MealBundle\EventListener;
 
 use LogicException;
 
-class ParticipantNotUniqueException extends LogicException
+final class ParticipantNotUniqueException extends LogicException
 {
 }

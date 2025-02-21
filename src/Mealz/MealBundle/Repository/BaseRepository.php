@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
+use Override;
 
 /**
  * @template TKey as array-key
@@ -50,26 +51,31 @@ abstract class BaseRepository implements ObjectRepository, Selectable
             ->from($this->entityClass, $alias, $indexBy);
     }
 
+    #[Override]
     public function findAll(): array
     {
         return $this->objectRepository->findBy([]);
     }
 
+    #[Override]
     public function find($id)
     {
         return $this->objectRepository->find($id);
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
     {
         return $this->objectRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
+    #[Override]
     public function findOneBy(array $criteria): ?object
     {
         return $this->objectRepository->findOneBy($criteria);
     }
 
+    #[Override]
     public function getClassName(): string
     {
         return $this->entityClass;
@@ -84,6 +90,7 @@ abstract class BaseRepository implements ObjectRepository, Selectable
      * Select all elements from a selectable that match the expression and
      * return a new collection containing these elements.
      */
+    #[Override]
     public function matching(Criteria $criteria)
     {
         $persister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityClass);

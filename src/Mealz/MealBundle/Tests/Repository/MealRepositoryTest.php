@@ -8,12 +8,14 @@ use App\Mealz\MealBundle\Repository\MealRepository;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
+use Override;
 
-class MealRepositoryTest extends AbstractDatabaseTestCase
+final class MealRepositoryTest extends AbstractDatabaseTestCase
 {
     /** @var MealRepository */
     protected $mealRepository;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -136,6 +137,7 @@ class Slot implements JsonSerializable
      *
      * @psalm-return array{id: int|null, title: string, limit: int, order: int, enabled: bool, slug: null|string}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [

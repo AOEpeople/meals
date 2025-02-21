@@ -7,7 +7,7 @@ use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class UserController extends BaseController
+final class UserController extends BaseController
 {
     private Wallet $wallet;
 

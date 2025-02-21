@@ -7,9 +7,11 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Override;
 
-class SlotControllerTest extends AbstractControllerTestCase
+final class SlotControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

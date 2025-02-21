@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Service\HttpHeaderUtility;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class EntityLocalisationListener extends LocalisationListener
+final class EntityLocalisationListener extends LocalisationListener
 {
     protected RequestStack $requestStack;
 

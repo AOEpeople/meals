@@ -10,13 +10,15 @@ use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 
-class SlotServiceTest extends AbstractDatabaseTestCase
+final class SlotServiceTest extends AbstractDatabaseTestCase
 {
     private EntityManagerInterface $em;
     private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

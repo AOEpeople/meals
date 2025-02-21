@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_KITCHEN_STAFF')]
-class DishVariationController extends BaseController
+final class DishVariationController extends BaseController
 {
     public function __construct(
         private readonly float $price,

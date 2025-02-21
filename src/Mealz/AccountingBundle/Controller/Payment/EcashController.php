@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
 
 #[IsGranted('ROLE_USER')]
-class EcashController extends BaseController
+final class EcashController extends BaseController
 {
     private LoggerInterface $logger;
 

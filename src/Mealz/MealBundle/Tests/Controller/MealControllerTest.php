@@ -21,9 +21,11 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Override;
 
-class MealControllerTest extends AbstractControllerTestCase
+final class MealControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

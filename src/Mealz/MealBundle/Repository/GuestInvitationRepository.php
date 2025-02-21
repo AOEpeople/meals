@@ -46,6 +46,7 @@ final class GuestInvitationRepository extends BaseRepository implements GuestInv
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Override]
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
     {
         $entityManager = $this->getEntityManager();

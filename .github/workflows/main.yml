@@ -22,6 +22,7 @@ jobs:
     continue-on-error: false
     env:
       PHP_CS_FIXER_FUTURE_MODE: 1
+      PHP_CS_FIXER_IGNORE_ENV: 1
     steps:
       - uses: actions/checkout@v4
       - name: Setup PHP environment
@@ -32,7 +33,7 @@ jobs:
       - name: Check code formatting with PHP-CS-Fixer
         run: |
           rm composer.json composer.lock
-          composer require friendsofphp/php-cs-fixer:^3.57
+          composer require friendsofphp/php-cs-fixer:^3.69
           vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
 
   lint:

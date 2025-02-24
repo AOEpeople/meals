@@ -111,7 +111,7 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         foreach ($this->referenceRepository->getReferencesByClass()[Dish::class] as $referenceName => $reference) {
             if (($reference instanceof Dish) && !($reference instanceof DishVariation)) {
                 // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
+                // getReference() does some doctrine magic that getReferencesByClass() does not
                 /** @var Dish $dish */
                 $dish = $this->getReference($referenceName, Dish::class);
 

@@ -13,7 +13,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
-class PayPalServiceTest extends TestCase
+final class PayPalServiceTest extends TestCase
 {
     use ProphecyTrait;
 

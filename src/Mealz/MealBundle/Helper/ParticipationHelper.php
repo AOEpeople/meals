@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 
-class ParticipationHelper
+final class ParticipationHelper
 {
     private ProfileRepositoryInterface $profileRepo;
     private ParticipationCountService $partCountSrv;

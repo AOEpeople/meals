@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'day')]
@@ -147,6 +148,7 @@ class Day extends AbstractMessage implements JsonSerializable
      *
      * @psalm-return array{dateTime: DateTime, lockParticipationDateTime: DateTime, week: int|null, meals: array<''|int, non-empty-list<array>>, event: int|null, enabled: bool}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         $meals = [];

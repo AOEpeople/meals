@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
@@ -17,12 +18,14 @@ use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 
-class CombinedMealServiceTest extends AbstractDatabaseTestCase
+final class CombinedMealServiceTest extends AbstractDatabaseTestCase
 {
     private CombinedMealService $cms;
     private Dish $combinedDish;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +33,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
         $this->loadFixtures([
             new LoadWeeks(),
             new LoadDays(),
+            new LoadCategories(),
             new LoadDishes(),
             new LoadDishVariations(),
             new LoadMeals(),

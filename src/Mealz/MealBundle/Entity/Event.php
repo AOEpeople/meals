@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -91,6 +92,7 @@ class Event implements JsonSerializable
      *
      * @psalm-return array{id: int, title: string, slug: null|string, public: bool}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [

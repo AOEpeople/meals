@@ -15,10 +15,12 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
-class MealAdminControllerTest extends AbstractControllerTestCase
+final class MealAdminControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

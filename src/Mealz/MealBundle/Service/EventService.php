@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EventService
+final class EventService
 {
     private EventDispatcherInterface $eventDispatcher;
 

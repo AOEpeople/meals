@@ -14,11 +14,12 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
+use Override;
 
 /**
  * @extends BaseRepository<int, Dish>
  */
-class DishRepository extends BaseRepository implements DishRepositoryInterface
+final class DishRepository extends BaseRepository implements DishRepositoryInterface
 {
     protected array $defaultOptions = [
         'load_category' => true,
@@ -36,6 +37,7 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
         $this->localisationListener = $listener;
     }
 
+    #[Override]
     public function getSortedDishesQueryBuilder(array $options = []): QueryBuilder
     {
         $currentLocale = $this->localisationListener->getLocale();
@@ -69,6 +71,7 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Override]
     public function hasDishAssociatedMeals(Dish $dish): bool
     {
         $query = $this->getEntityManager()->createQueryBuilder();
@@ -84,6 +87,7 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Override]
     public function hasDishAssociatedCombiMealsInFuture(Dish $dish): bool
     {
         $today = new DateTime('today');
@@ -120,6 +124,7 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Override]
     public function countNumberDishWasTaken(Dish $dish, string $countPeriod): int
     {
         // prepare sql statement counting all meals taken

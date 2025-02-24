@@ -9,8 +9,9 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadDishVariations extends Fixture implements OrderedFixtureInterface
+final class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -26,6 +27,7 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -47,6 +49,7 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as sixth
@@ -55,12 +58,10 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 
     protected function loadDishes(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Dish) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->dishes[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Dish::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferencesByClass() does not
+            $this->dishes[] = $this->getReference($key, Dish::class);
         }
     }
 

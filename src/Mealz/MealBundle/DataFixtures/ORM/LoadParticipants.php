@@ -16,9 +16,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 use RuntimeException;
 
-class LoadParticipants extends Fixture implements OrderedFixtureInterface
+final class LoadParticipants extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -50,6 +51,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -226,6 +228,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         return $dishes;
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as eight
@@ -234,16 +237,16 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
 
     protected function loadReferences(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Meal) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->meals[] = $this->getReference($referenceName);
-            } elseif ($reference instanceof Profile) {
-                $this->profiles[] = $this->getReference($referenceName);
-            } elseif ($reference instanceof Slot) {
-                $this->slots[] = $this->getReference($referenceName);
-            }
+        foreach ($this->referenceRepository->getReferencesByClass()[Meal::class] as $key => $reference) {
+            $this->meals[] = $this->getReference($key, Meal::class);
+        }
+
+        foreach ($this->referenceRepository->getReferencesByClass()[Profile::class] as $key => $reference) {
+            $this->profiles[] = $this->getReference($key, Profile::class);
+        }
+
+        foreach ($this->referenceRepository->getReferencesByClass()[Slot::class] as $key => $reference) {
+            $this->slots[] = $this->getReference($key, Slot::class);
         }
     }
 

@@ -13,7 +13,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * listener that ensures that there won't be duplicate entries for the same participant in the database.
  */
-class ParticipantPersistenceListener
+final class ParticipantPersistenceListener
 {
     public function prePersist(PrePersistEventArgs $args): void
     {

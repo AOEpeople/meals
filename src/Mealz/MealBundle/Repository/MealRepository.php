@@ -10,11 +10,12 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use InvalidArgumentException;
 use LogicException;
+use Override;
 
 /**
  * @extends BaseRepository<int, Meal>
  */
-class MealRepository extends BaseRepository implements MealRepositoryInterface
+final class MealRepository extends BaseRepository implements MealRepositoryInterface
 {
     /**
      * @param string $dish           Dish slug
@@ -25,6 +26,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      * @throws LogicException
      * @throws InvalidArgumentException
      */
+    #[Override]
     public function findOneByDateAndDish(DateTime $date, string $dish, array $userSelections = []): ?Meal
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -63,6 +65,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
     /**
      * @return Meal[]
      */
+    #[Override]
     public function findAllOn(DateTime $date): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -78,6 +81,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
     /**
      * @return Meal[]
      */
+    #[Override]
     public function findAllBetween(DateTime $startDate, DateTime $endDate): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -95,6 +99,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      *
      * @psalm-return list<array{id: int}>
      */
+    #[Override]
     public function getMealsOnADayWithVariationOptions(): array
     {
         $entityManager = $this->getEntityManager();
@@ -113,6 +118,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      *
      * @return Meal[]
      */
+    #[Override]
     public function getFutureMeals(): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -127,6 +133,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      *
      * @return Meal[]
      */
+    #[Override]
     public function getOutdatedMeals(): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
@@ -141,6 +148,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      *
      * @return Meal[]
      */
+    #[Override]
     public function getLockedMeals(): array
     {
         $entityManager = $this->getEntityManager();
@@ -162,6 +170,7 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
      *
      * @return Meal[]
      */
+    #[Override]
     public function getFutureMealsForDish(Dish $dish): array
     {
         $queryBuilder = $this->createQueryBuilder('m')

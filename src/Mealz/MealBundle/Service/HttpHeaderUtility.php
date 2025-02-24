@@ -4,7 +4,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use InvalidArgumentException;
 
-class HttpHeaderUtility
+final class HttpHeaderUtility
 {
     /**
      * @var string[]
@@ -73,10 +73,8 @@ class HttpHeaderUtility
 
     /**
      * get the part before the first hyphen ("-") in a language string.
-     *
-     * @return string
      */
-    protected function parseShortAcceptLanguage($acceptLanguage)
+    protected function parseShortAcceptLanguage(string|false $acceptLanguage): string|false
     {
         $rpos = strrpos($acceptLanguage, '-');
         if (false !== $rpos) {
@@ -91,7 +89,7 @@ class HttpHeaderUtility
      *
      * @return float|int
      */
-    protected function parseQuality($qualityString)
+    protected function parseQuality(string $qualityString)
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {

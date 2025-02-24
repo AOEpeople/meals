@@ -55,12 +55,10 @@ final class LoadCombinations extends Fixture implements OrderedFixtureInterface
 
     protected function loadWeeks(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Week) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->weeks[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Week::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferencesByClass() does not
+            $this->weeks[] = $this->getReference($key, Week::class);
         }
     }
 

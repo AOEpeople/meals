@@ -237,16 +237,16 @@ final class LoadParticipants extends Fixture implements OrderedFixtureInterface
 
     protected function loadReferences(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Meal) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->meals[] = $this->getReference($referenceName);
-            } elseif ($reference instanceof Profile) {
-                $this->profiles[] = $this->getReference($referenceName);
-            } elseif ($reference instanceof Slot) {
-                $this->slots[] = $this->getReference($referenceName);
-            }
+        foreach ($this->referenceRepository->getReferencesByClass()[Meal::class] as $key => $reference) {
+            $this->meals[] = $this->getReference($key, Meal::class);
+        }
+
+        foreach ($this->referenceRepository->getReferencesByClass()[Profile::class] as $key => $reference) {
+            $this->profiles[] = $this->getReference($key, Profile::class);
+        }
+
+        foreach ($this->referenceRepository->getReferencesByClass()[Slot::class] as $key => $reference) {
+            $this->slots[] = $this->getReference($key, Slot::class);
         }
     }
 

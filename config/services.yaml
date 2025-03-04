@@ -243,16 +243,12 @@ services:
     resource: '../src/Mealz/AccountingBundle/Controller/'
     tags: [ 'controller.service_arguments' ]
 
-  # PayPal SDK environment
-  paypal.sdk.env:
-    class: '%app.paypal.environment.class%'
+  # PayPal Server Sdk
+  App\Mealz\AccountingBundle\Service\PayPal\PayPalService:
     arguments:
-      - '%app.paypal.client_id%'
-      - '%app.paypal.client_secret%'
-
-  PayPalCheckoutSdk\Core\PayPalHttpClient:
-    arguments:
-      - '@paypal.sdk.env'
+      $clientId: '%app.paypal.client_id%'
+      $clientSecret: '%app.paypal.client_secret%'
+      $environment: '%env(APP_ENV)%'
 
   mealz_accounting.wallet:
     class: App\Mealz\AccountingBundle\Service\Wallet

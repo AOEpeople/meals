@@ -1,5 +1,16 @@
 # Changelog
 
+## Version v3.1.8 (2025-02-20)
+
+### Chores and tidying
+
+- updated PrintLink to only show up when the current day is enabled to prevent an error on navigation to PrintableList (f3b70ee3)
+
+### Other
+
+- Bump undici from 5.28.4 to 5.28.5 in /tests/e2e (84bfd985)
+- changed headline matching date to regex to prevent test from breaking on new year (4d0eb355)
+
 ## Version v3.1.7 (2024-12-16)
 
 ### Other

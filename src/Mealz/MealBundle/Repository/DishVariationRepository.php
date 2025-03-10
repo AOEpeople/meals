@@ -9,6 +9,6 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 /**
  * @extends BaseRepository<int, DishVariation>
  */
-class DishVariationRepository extends BaseRepository implements DishVariationRepositoryInterface
+final class DishVariationRepository extends BaseRepository implements DishVariationRepositoryInterface
 {
 }

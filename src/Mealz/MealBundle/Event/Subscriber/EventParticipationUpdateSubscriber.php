@@ -7,9 +7,10 @@ namespace App\Mealz\MealBundle\Event\Subscriber;
 use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EventParticipationUpdateSubscriber implements EventSubscriberInterface
+final class EventParticipationUpdateSubscriber implements EventSubscriberInterface
 {
     private const PUBLISH_TOPIC = 'event-participation-updates';
     private const PUBLISH_MSG_TYPE = 'eventParticipationUpdate';
@@ -25,6 +26,7 @@ class EventParticipationUpdateSubscriber implements EventSubscriberInterface
         $this->eventPartSrv = $eventPartSrv;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

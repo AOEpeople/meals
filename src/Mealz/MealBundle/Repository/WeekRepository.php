@@ -8,22 +8,25 @@ use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Override;
 
 /**
  * @extends BaseRepository<int, Week>
  */
-class WeekRepository extends BaseRepository implements WeekRepositoryInterface
+final class WeekRepository extends BaseRepository implements WeekRepositoryInterface
 {
     protected array $defaultOptions = [
         'load_participants' => true,
         'only_enabled_days' => false,
     ];
 
+    #[Override]
     public function getCurrentWeek(array $options = []): ?Week
     {
         return $this->findWeekByDate(new DateTime(), $options);
     }
 
+    #[Override]
     public function getNextWeek(?DateTime $date = null, array $options = []): ?Week
     {
         $date = (($date instanceof DateTime) === false) ? new DateTime() : $date;
@@ -36,6 +39,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Override]
     public function getWeeksMealCount(Week $week): int
     {
         $query = $this->createQueryBuilder('w');
@@ -48,6 +52,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
         return (int) $query->getQuery()->getSingleScalarResult();
     }
 
+    #[Override]
     public function findWeekByDate(DateTime $date, array $options = []): ?Week
     {
         $options = array_merge($this->defaultOptions, $options);

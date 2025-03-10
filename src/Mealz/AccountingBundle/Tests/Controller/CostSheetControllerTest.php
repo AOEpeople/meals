@@ -13,14 +13,16 @@ use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
+use Override;
 
 /**
  * Class CostSheetControllerTest.
  */
-class CostSheetControllerTest extends AbstractControllerTestCase
+final class CostSheetControllerTest extends AbstractControllerTestCase
 {
     private Wallet $wallet;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

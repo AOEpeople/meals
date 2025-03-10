@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Slot;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SlotAllocationUpdateEvent extends Event
+final class SlotAllocationUpdateEvent extends Event
 {
     private Day $day;
 

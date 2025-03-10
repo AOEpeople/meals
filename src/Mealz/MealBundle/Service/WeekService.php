@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use DateTime;
 
-class WeekService
+final class WeekService
 {
     private WeekRepositoryInterface $weekRepo;
 

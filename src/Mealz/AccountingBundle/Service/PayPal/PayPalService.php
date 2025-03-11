@@ -109,9 +109,9 @@ class PayPalService
      *
      * @throws RuntimeException
      */
-    private function toOrderAmount($purchaseUnits): float
+    private function toOrderAmount(array $purchaseUnits): float
     {
-        if (!is_array($purchaseUnits) || !isset($purchaseUnits[0])) {
+        if (!isset($purchaseUnits[0])) {
             throw new RuntimeException('invalid order response; purchase units not found');
         }
         if (!is_object($purchaseUnits[0]->getAmount())) {

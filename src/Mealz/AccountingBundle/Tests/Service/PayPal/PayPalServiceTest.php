@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Tests\Service\PayPal;
 
 use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
-use PayPalHttp\HttpResponse;
+use PaypalServerSdkLib\Http\ApiResponse;
+use PaypalServerSdkLib\Http\HttpRequest;
+use PaypalServerSdkLib\Models\Builders\AmountWithBreakdownBuilder;
+use PaypalServerSdkLib\Models\Builders\PurchaseUnitBuilder;
+use PaypalServerSdkLib\Models\Order;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
@@ -18,24 +19,20 @@ class PayPalServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @testdox PayPalService::getOrder() returns NULL if no order with given order-id exists.
+     * @testdox PayPalService::evaluateResponse() returns NULL if no order with given order-id exists.
      */
     public function testGetOrderFailureOrderNotFound(): void
     {
-        $response = new HttpResponse(404, [], []);
+        $response = new ApiResponse(null, 404, null, null, null, null);
+        $paypalService = new PayPalService('clientId', 'clientSecret', 'dev');
 
-        $paypalClientProphet = $this->prophesize(PayPalHttpClient::class);
-        $paypalClientProphet->execute(Argument::type(OrdersGetRequest::class))->willReturn($response);
-        $paypalClientMock = $paypalClientProphet->reveal();
-
-        $paypalService = new PayPalService($paypalClientMock);
-        $order = $paypalService->getOrder('12345');
+        $order = $paypalService->evaluateResponse($response);
 
         $this->assertNull($order);
     }
 
     /**
-     * @testdox PayPalService::getOrder() throws RuntimeException if PayPal api replies with status code other than 200 or 404.
+     * @testdox PayPalService::evaluateResponse() throws RuntimeException if PayPal api replies with status code other than 200 or 404.
      */
     public function testGetOrderFailureAPIResponseNotOkay(): void
     {
@@ -43,60 +40,51 @@ class PayPalServiceTest extends TestCase
             range(100, 103), range(201, 208), [226], range(300, 308),
             range(400, 403), range(405, 451), range(500, 511),
         );
+        $mockRequest = $this->prophesize(HttpRequest::class);
 
         foreach ($httpStatusCodes as $httpStatusCode) {
-            $response = new HttpResponse($httpStatusCode, [], []);
-
-            $clientProphet = $this->prophesize(PayPalHttpClient::class);
-            $clientProphet->execute(Argument::type(OrdersGetRequest::class))->willReturn($response);
-            $paypalClientMock = $clientProphet->reveal();
-
-            $paypalService = new PayPalService($paypalClientMock);
+            $response = new ApiResponse($mockRequest->reveal(), $httpStatusCode, null, null, null, null);
+            $mockRequest->getQueryUrl()->willReturn('http://test.path');
+            $mockRequest->getHttpMethod()->willReturn('GET');
+            $paypalService = new PayPalService('clientId', 'clientSecret', 'dev');
 
             try {
-                $paypalService->getOrder('12345');
+                $paypalService->evaluateResponse($response);
                 $this->fail('expected RuntimeException'); // should never reach here
             } catch (RuntimeException $rte) {
                 $this->assertSame(1633425374, $rte->getCode());
-                $this->assertStringContainsString('unexpected api response, status: ' . $httpStatusCode, $rte->getMessage());
+                $this->assertEquals('unexpected api response, status: ' . $httpStatusCode . ', path: http://test.path, method: GET', $rte->getMessage());
             }
         }
     }
 
     /**
-     * @testdox PayPalService::getOrder() returns Order object on success.
+     * @testdox PayPalService::evaluateResponse() returns Order object on success.
      */
     public function testGetOrderSuccess(): void
     {
         $orderID = '123';
-        $orderAmount = 10.35;
+        $orderAmount = '10.35';
         $orderDateTime = gmdate('Y-m-d\TH:i:s\Z');
 
-        $responseBody = (object) [
-            'id' => $orderID,
-            'status' => 'COMPLETED',
-            'update_time' => $orderDateTime,
-            'purchase_units' => [
-                0 => (object) [
-                    'amount' => (object) [
-                        'value' => $orderAmount,
-                    ],
-                ],
-            ],
-        ];
+        $purchaseUnit = PurchaseUnitBuilder::init()
+            ->amount(AmountWithBreakdownBuilder::init('EUR', $orderAmount)->build())
+            ->build();
 
-        $response = new HttpResponse(200, $responseBody, []);
+        $responseBody = new Order();
+        $responseBody->setId($orderID);
+        $responseBody->setStatus('COMPLETED');
+        $responseBody->setUpdateTime($orderDateTime);
+        $responseBody->setPurchaseUnits([$purchaseUnit]);
 
-        $paypalClientProphet = $this->prophesize(PayPalHttpClient::class);
-        $paypalClientProphet->execute(Argument::type(OrdersGetRequest::class))->willReturn($response);
-        $paypalClientMock = $paypalClientProphet->reveal();
+        $response = new ApiResponse(null, 200, null, null, $responseBody, $responseBody);
 
-        $paypalService = new PayPalService($paypalClientMock);
-        $order = $paypalService->getOrder($orderID);
+        $paypalService = new PayPalService('clientId', 'clientSecret', 'dev');
+        $order = $paypalService->evaluateResponse($response);
 
         $this->assertSame($orderID, $order->getId());
         $this->assertTrue($order->isCompleted());
-        $this->assertSame($orderAmount, $order->getAmount());
+        $this->assertSame((float) $orderAmount, $order->getAmount());
         $this->assertSame($orderDateTime, $order->getDateTime()->format('Y-m-d\TH:i:s\Z'));
     }
 }

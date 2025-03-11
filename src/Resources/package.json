@@ -23,7 +23,7 @@
     "@paypal/paypal-js": "^8.0.4",
     "@vuepic/vue-datepicker": "^5.4.0",
     "@vueuse/core": "^10.6.1",
-    "axios": "^1.7.2",
+    "axios": "^1.8.2",
     "dom-to-image": "^2.6.0",
     "epic-spinners": "^2.0.0",
     "jspdf": "^2.5.1",

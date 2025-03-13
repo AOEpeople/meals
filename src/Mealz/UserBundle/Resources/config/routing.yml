@@ -15,4 +15,9 @@ MealzUserBundle_api_user_data:
 MealzUserBundle_api_login:
     path: /api/login
     defaults: { _controller: App\Mealz\UserBundle\Controller\SecurityController::login }
-    methods: POST
+    methods: [POST]
+
+MealzUserBundle_api_create_guest:
+    path: /api/guest
+    defaults: { _controller: App\Mealz\UserBundle\Controller\ }
+    methods: [POST]

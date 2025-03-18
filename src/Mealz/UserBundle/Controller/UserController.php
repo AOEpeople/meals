@@ -25,7 +25,7 @@ class UserController extends BaseController
                 [
                     'roles' => [Role::ROLE_GUEST],
                     'name' => null,
-                    'fullname' => null,
+                    'fullName' => null,
                     'balance' => 0,
                 ]
             );

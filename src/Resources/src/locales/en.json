@@ -238,12 +238,16 @@
   },
   "guest": {
     "form": {
+      "add": "Add a guest to the list",
       "firstname": "First name",
       "firstnamePlaceholder": "Your first name",
+      "firstnamePlaceholderNonPersonal": "The firstname of the guest",
       "lastname": "Last name",
       "lastnamePlaceholder": "Your last name",
+      "lastnamePlaceholderNonPersonal": "The lastname of the guest",
       "company": "Company",
-      "companyPlaceholder": "Your company"
+      "companyPlaceholder": "Your company",
+      "companyPlaceholderNonPersonal": "The company of the guest"
     },
     "submit": "Book meals",
     "data_error": "Invalid Invitation.",
@@ -287,6 +291,7 @@
     "total": "Total",
     "participations": "Participations",
     "add": "Add a participant",
+    "addGuest": "Add Guest",
     "notFound": "No profiles found for this query",
     "shortQuery": "Min. 3 Buchstaben für Suche eingeben",
     "search": "Filter participant",

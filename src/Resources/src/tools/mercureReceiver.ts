@@ -182,7 +182,7 @@ class MercureReceiver {
     }
 
     private static async setMealState(data: Meal_Update, mealData: Meal_Participation_Update, meal: Meal) {
-        if (data.participant === userDataStore.getState().fullname) {
+        if (data.participant === userDataStore.getState().fullName) {
             const { error, response } = await getIsParticipating(mealData.mealId);
             if (meal !== undefined && error.value === false) {
                 meal.isParticipating = response.value ?? null;

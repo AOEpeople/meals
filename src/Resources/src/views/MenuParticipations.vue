@@ -1,6 +1,9 @@
 <template>
   <div class="z-0 max-[1000px]:px-2">
-    <h2>{{ t('menu.participations') }}</h2>
+    <div class="flex flex-col justify-between text-center sm:flex-row">
+      <h2>{{ t('menu.participations') }}</h2>
+      <GuestCreationPanel :week-id="parseInt(week)" />
+    </div>
     <div class="z-20 grid w-full min-[650px]:grid-cols-[minmax(300px,400px)_1fr_minmax(300px,400px)]">
       <AddParticipantsSearchBar
         :week-id="parseInt(week)"
@@ -36,6 +39,7 @@ import { useParticipations } from '@/stores/participationsStore';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import { ref, watch } from 'vue';
 import { refThrottled } from '@vueuse/core';
+import GuestCreationPanel from '@/components/guest/GuestCreationPanel.vue';
 
 const props = defineProps<{
   week: string;

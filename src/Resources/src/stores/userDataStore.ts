@@ -7,7 +7,7 @@ class UserDataStore extends Store<UserData> {
         return {
             roles: [],
             user: '',
-            fullname: '',
+            fullName: '',
             balance: 0.0
         };
     }
@@ -25,7 +25,7 @@ class UserDataStore extends Store<UserData> {
         if (userData.value !== undefined && this.isUserdata(userData.value)) {
             this.state.roles = userData.value.roles;
             this.state.user = userData.value.user;
-            this.state.fullname = userData.value.fullname;
+            this.state.fullName = userData.value.fullName;
             this.state.balance = userData.value.balance;
         }
     }

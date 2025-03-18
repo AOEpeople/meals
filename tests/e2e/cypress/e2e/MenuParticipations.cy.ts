@@ -14,6 +14,7 @@ describe('Test Menu Participations View', () => {
         cy.intercept('PUT', '**/api/participation/*/*', { fixture: 'putParticipation.json', statusCode: 200 }).as('putParticipation');
         cy.intercept('DELETE', '**/api/participation/*/*', { fixture: 'deleteParticipation.json', statusCode: 200 }).as('deleteParticipation');
         cy.intercept('GET', '**/api/week/lockdates/*', { fixture: 'lockdates.json', statusCode: 200 }).as('getLockdates');
+        cy.intercept('POST', '**/api/guest', { fixture: 'postGuest.json', statusCode: 200 }).as('postGuest');
     });
 
     it('should be able to visit the menu participations page', () => {
@@ -131,5 +132,72 @@ describe('Test Menu Participations View', () => {
         cy.get('table').find('th').eq(3).should('contain', 'Mittwoch');
         cy.get('table').find('th').eq(4).should('contain', 'Donnerstag');
         cy.get('table').find('th').eq(5).should('contain', 'Freitag');
+    });
+
+    it('should be able to add a guest and book a meal for them', () => {
+        cy.get('span > a').contains('Mahlzeiten').click();
+
+        cy.wait(['@getWeeks']);
+
+        cy.get('h4').eq(1).contains('Woche').click();
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getLockdates']);
+
+        cy.get('span').contains('Teilnahmen').click();
+        cy.wait(['@getParticipations', '@getAbstaining']);
+
+        cy.get('[data-cy="create-guest-btn"]').click();
+
+        cy.get('[data-cy="guest-form"]')
+            .find('input')
+            .first()
+            .type('John');
+        cy.get('[data-cy="guest-form"]')
+            .find('input')
+            .eq(1)
+            .type('Doe');
+        cy.get('[data-cy="guest-form"]')
+            .find('input')
+            .eq(2)
+            .type('Test Corp');
+        cy.get('[data-cy="guest-form"]')
+            .find('button')
+            .click();
+
+        cy.wait(['@postGuest']);
+
+        cy.get('[data-cy="search-bar-input"]').type('Doe, John');
+
+        // Add Participation
+        cy.get('table')
+            .find('span')
+            .contains('Doe, John')
+            .click()
+            .parent()
+            .parent()
+            .parent()
+            .find('td')
+            .eq(4)
+            .click()
+            .find('svg')
+            .should('exist');
+
+        cy.get('table')
+            .find('span')
+            .contains('Doe, John')
+            .click();
+
+        // Remove Participation
+        cy.get('table')
+            .find('span')
+            .contains('Doe, John')
+            .click()
+            .parent()
+            .parent()
+            .parent()
+            .find('td')
+            .eq(4)
+            .click()
+            .find('svg')
+            .should('not.exist');
     });
 });

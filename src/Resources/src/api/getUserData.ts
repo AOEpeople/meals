@@ -4,7 +4,7 @@ import { ref } from 'vue';
 export type UserData = {
     roles: Array<string>;
     user: string | null;
-    fullname: string | null;
+    fullName: string | null;
     balance: number;
 };
 

@@ -19,5 +19,5 @@ MealzUserBundle_api_login:
 
 MealzUserBundle_api_create_guest:
     path: /api/guest
-    defaults: { _controller: App\Mealz\UserBundle\Controller\ }
+    defaults: { _controller: App\Mealz\UserBundle\Controller\GuestController::createGuestProfile }
     methods: [POST]

@@ -8,6 +8,7 @@ import deleteParticipation from '@/api/deleteParticipation';
 import type { IProfile } from './profilesStore';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import replaceStrings from '@/tools/stringReplacer';
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays;
@@ -164,6 +165,7 @@ export function useParticipations(weekId: number) {
         dayId: string,
         profileFullname: string
     ) {
+        const formattedName = replaceStrings(profileFullname, ' (Guest)', ' (Gast)');
         if (
             isMessage(response.value) === false &&
             isResponseObjectOkay<IParticipationUpdate>(
@@ -173,12 +175,12 @@ export function useParticipations(weekId: number) {
             )
         ) {
             menuParticipationsState.error = '';
-            if (menuParticipationsState.days[dayId][profileFullname] !== undefined) {
-                menuParticipationsState.days[dayId][profileFullname].booked = (
+            if (menuParticipationsState.days[dayId][formattedName] !== undefined) {
+                menuParticipationsState.days[dayId][formattedName].booked = (
                     response.value as IMenuParticipation
                 ).booked;
             } else {
-                menuParticipationsState.days[dayId][profileFullname] = {
+                menuParticipationsState.days[dayId][formattedName] = {
                     booked: (response.value as IMenuParticipation).booked,
                     profile: (response.value as IMenuParticipation).profile
                 };
@@ -221,9 +223,10 @@ export function useParticipations(weekId: number) {
      * @param participant   The full name of the participant.
      */
     function getProfileId(participant: string) {
+        const strippedParticipant = replaceStrings(participant, ' (Guest)', ' (Gast)');
         for (const day of Object.values(menuParticipationsState.days)) {
-            if (typeof day[participant]?.profile === 'string') {
-                return day[participant].profile;
+            if (typeof day[strippedParticipant]?.profile === 'string') {
+                return day[strippedParticipant].profile;
             }
         }
         return null;

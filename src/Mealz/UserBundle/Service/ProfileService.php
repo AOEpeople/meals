@@ -8,6 +8,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 
@@ -37,6 +38,7 @@ class ProfileService
             ];
         } else {
             $profile = new Profile();
+            $profile->setUsername(sprintf('%s.%s_%s', $firstName, $lastName, (new DateTime())->format('Y-m-d')));
             $profile->setFirstName($firstName);
             $profile->setName($lastName);
             if (0 < strlen($company)) {

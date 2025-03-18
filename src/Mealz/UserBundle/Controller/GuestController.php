@@ -21,7 +21,7 @@ class GuestController extends BaseController
         $this->profileService = $profileService;
     }
 
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function createGuestProfile(Request $request): JsonResponse
     {
         try {

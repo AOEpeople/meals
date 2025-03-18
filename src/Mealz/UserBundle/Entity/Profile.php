@@ -198,13 +198,13 @@ class Profile implements UserInterface, JsonSerializable
     /**
      * @return (string|string|string[])[]
      *
-     * @psalm-return array{user: string, fullname: string, roles: array<string>}
+     * @psalm-return array{user: string, fullName: string, roles: array<string>}
      */
     public function jsonSerialize(): array
     {
         return [
             'user' => $this->username,
-            'fullname' => $this->getFullName(),
+            'fullName' => $this->getFullName(),
             'roles' => $this->getRoles(),
         ];
     }

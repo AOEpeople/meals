@@ -238,12 +238,16 @@
   },
   "guest": {
     "form": {
+      "add": "Gast der Liste hinzufügen",
       "firstname": "Vorname",
       "firstnamePlaceholder": "Dein Vorname",
+      "firstnamePlaceholderNonPersonal": "Der Vorname des Gastes",
       "lastname": "Nachname",
       "lastnamePlaceholder": "Dein Nachname",
+      "lastnamePlaceholderNonPersonal": "Der Nachname des Gastes",
       "company": "Betrieb",
-      "companyPlaceholder": "Dein Betrieb"
+      "companyPlaceholder": "Dein Betrieb",
+      "companyPlaceholderNonPersonal": "Der Betrieb des Gastes"
     },
     "submit": "Gerichte buchen",
     "data_error": "Diese Einladung ist leider ungültig.",
@@ -287,6 +291,7 @@
     "total": "Gesamt",
     "participations": "Teilnahmen",
     "add": "Teilnehmer hinzufügen",
+    "addGuest": "Gast hinzufügen",
     "notFound": "Keine Profile für diese Anfrage gefunden",
     "shortQuery": "Min. 3 Buchstaben für Suche eingeben",
     "search": "Teilnehmer filtern",

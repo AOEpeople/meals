@@ -19,6 +19,7 @@
       >
         <ComboboxInput
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
+          data-cy="search-bar-input"
           @change="filter = $event.target.value"
         />
         <XIcon

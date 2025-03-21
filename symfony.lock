@@ -151,16 +151,13 @@
         "version": "2.10.0"
     },
     "pentatrion/vite-bundle": {
-        "version": "6.4",
+        "version": "8.0",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
-            "version": "1.0",
-            "ref": "4d98e6cbe66f6cd2dadc8375b035c7a1c30100c0"
-        },
-        "files": [
-            "config/routes/dev/pentatrion_vite.yaml"
-        ]
+            "version": "6.5",
+            "ref": "3a6673f248f8fc1dd364dadfef4c5b381d1efab6"
+        }
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

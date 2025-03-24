@@ -49,6 +49,7 @@ import { FlashMessageType } from '@/enums/FlashMessage';
 import { useLockRequests } from '@/services/useLockRequests';
 import { MealState } from '@/enums/MealState';
 import useMealState from '@/services/useMealState';
+import { useEvents } from '@/stores/eventsStore';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -60,6 +61,7 @@ const props = defineProps<{
 }>();
 const { sendFlashMessage } = useFlashMessage();
 const { addLock, isLocked, removeLock } = useLockRequests();
+const { getEventById } = useEvents();
 
 const day = props.day ?? dashboardStore.getDay(props.weekID ?? 0, props.dayID ?? 0);
 const mealOrVariation = ref<Meal>();
@@ -146,6 +148,10 @@ async function handle() {
     // User is participating
     if (isParticipating.value) {
       await leaveMeal();
+      let lunchrouletteToday = getEventSlugs();
+      if (lunchrouletteToday) {
+        alert('Du bist beim Lunchroulette noch angemeldet. Willst du dich dort auch abmelden?');
+      }
     } else if (mealOrVariation.value.reachedLimit === false) {
       let slugs = [mealOrVariation.value.dishSlug];
       if (isCombiBox === true) {
@@ -180,8 +186,18 @@ function getDishSlugs(): string[] {
       }
     }
   }
-
   return slugs;
+}
+
+function getEventSlugs(): boolean {
+  for (let eventParticipation in day.events) {
+    if (
+      getEventById(day.events[eventParticipation].eventId ?? -1)?.slug === 'lunch-roulette' &&
+      day.events[eventParticipation].isParticipating
+    )
+      return true;
+  }
+  return false;
 }
 
 async function joinMeal(dishSlugs: string[]) {

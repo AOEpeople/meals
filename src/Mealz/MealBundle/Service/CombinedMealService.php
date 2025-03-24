@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CombinedMealService
+final class CombinedMealService
 {
     private const string COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 

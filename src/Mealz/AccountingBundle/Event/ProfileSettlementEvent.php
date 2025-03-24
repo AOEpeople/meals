@@ -7,7 +7,7 @@ namespace App\Mealz\AccountingBundle\Event;
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ProfileSettlementEvent extends Event
+final class ProfileSettlementEvent extends Event
 {
     public const NAME = 'meals.account.settled';
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\DependencyInjection;
 
 use Exception;
+use Override;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -15,13 +16,14 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class MealzMealExtension extends ConfigurableExtension
+final class MealzMealExtension extends ConfigurableExtension
 {
     /**
      * @throws Exception
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    #[Override]
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

@@ -15,10 +15,11 @@ use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MealOfferSubscriber implements EventSubscriberInterface
+final class MealOfferSubscriber implements EventSubscriberInterface
 {
     private const PUBLISH_TOPIC = 'meal-offer-updates';
     private const PUBLISH_MSG_TYPE = 'mealOfferUpdate';
@@ -47,6 +48,7 @@ class MealOfferSubscriber implements EventSubscriberInterface
         $this->translator = $translator;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

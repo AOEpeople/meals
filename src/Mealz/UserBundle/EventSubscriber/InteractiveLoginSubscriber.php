@@ -6,11 +6,12 @@ namespace App\Mealz\UserBundle\EventSubscriber;
 
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 
-class InteractiveLoginSubscriber implements EventSubscriberInterface
+final class InteractiveLoginSubscriber implements EventSubscriberInterface
 {
     private EntityManagerInterface $entityManager;
 
@@ -22,6 +23,7 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
         $this->profileRepository = $profileRepository;
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

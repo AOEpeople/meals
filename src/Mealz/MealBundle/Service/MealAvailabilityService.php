@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 
-class MealAvailabilityService
+final class MealAvailabilityService
 {
     private ParticipantRepositoryInterface $participantRepo;
 

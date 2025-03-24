@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Override;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'week')]
@@ -99,6 +100,7 @@ class Week extends AbstractMessage implements JsonSerializable
      *
      * @psalm-return array{id: int|null, year: int, calendarWeek: int, days: array<array-key|mixed, mixed>, enabled: bool}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         $days = [];

@@ -10,9 +10,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class LoadCombinations extends Fixture implements OrderedFixtureInterface
+final class LoadCombinations extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -36,6 +37,7 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -45,6 +47,7 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;
@@ -52,12 +55,10 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
 
     protected function loadWeeks(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Week) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->weeks[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Week::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferencesByClass() does not
+            $this->weeks[] = $this->getReference($key, Week::class);
         }
     }
 

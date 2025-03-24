@@ -9,6 +9,6 @@ use App\Mealz\MealBundle\Entity\Category;
 /**
  * @extends BaseRepository<int, Category>
  */
-class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
+final class CategoryRepository extends BaseRepository implements CategoryRepositoryInterface
 {
 }

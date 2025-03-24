@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.8.4@7ee919229d510c5834af3112072f4b12cd7bb51a">
+<files psalm-version="6.9.4@e052de4275fb6cdbfedfef1d883a7e90732ea609">
   <file src="src/Mealz/AccountingBundle/Controller/CostSheetController.php">
     <InvalidArgument>
       <code><![CDATA[$secret]]></code>
@@ -9,18 +9,6 @@
       <code><![CDATA[$result * -1]]></code>
       <code><![CDATA[-1 * abs($wallet->getBalance($profile))]]></code>
     </InvalidOperand>
-  </file>
-  <file src="src/Mealz/AccountingBundle/DataFixtures/ORM/LoadTransactions.php">
-    <InvalidOperand>
-      <code><![CDATA[$i]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/Mealz/AccountingBundle/Entity/Transaction.php">
     <ImplicitToStringCast>
@@ -37,37 +25,20 @@
       <code><![CDATA[!is_string($json)]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="src/Mealz/AccountingBundle/Tests/Controller/AccountingBookControllerTest.php">
-    <InvalidOperand>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Mealz/AccountingBundle/Tests/Controller/CostSheetControllerTest.php">
     <InvalidOperand>
       <code><![CDATA[random_int(10, 120) + 0.13]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Mealz/AccountingBundle/Tests/Controller/Payment/CashControllerTest.php">
-    <InvalidOperand>
-      <code><![CDATA[$amount]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Mealz/AccountingBundle/Tests/Repository/TransactionRepositoryTest.php">
     <InvalidOperand>
-      <code><![CDATA[$subDays]]></code>
-      <code><![CDATA[$subDays]]></code>
       <code><![CDATA[random_int(10, 120) + 0.13]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Service/PayPal/PayPalServiceTest.php">
-    <InvalidOperand>
-      <code><![CDATA[$httpStatusCode]]></code>
-    </InvalidOperand>
     <UndefinedMagicMethod>
-      <code><![CDATA[execute]]></code>
-      <code><![CDATA[execute]]></code>
-      <code><![CDATA[execute]]></code>
+      <code><![CDATA[getHttpMethod]]></code>
+      <code><![CDATA[getQueryUrl]]></code>
     </UndefinedMagicMethod>
   </file>
   <file src="src/Mealz/AccountingBundle/Tests/Service/TransactionServiceTest.php">
@@ -76,116 +47,19 @@
       <code><![CDATA[getUser]]></code>
     </UndefinedMagicMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Controller/BaseController.php">
-    <InvalidOperand>
-      <code><![CDATA[$exc->getLine()]]></code>
-      <code><![CDATA[$i]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Mealz/MealBundle/Controller/MealAdminController.php">
     <InvalidArgument>
       <code><![CDATA[$dateTimeModifier]]></code>
     </InvalidArgument>
-    <InvalidOperand>
-      <code><![CDATA[$i]]></code>
-    </InvalidOperand>
     <InvalidScalarArgument>
       <code><![CDATA[$modifiedDateTime->format('W')]]></code>
       <code><![CDATA[$modifiedDateTime->format('o')]]></code>
     </InvalidScalarArgument>
   </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadCategories.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter++]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadCombinations.php">
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDays.php">
-    <InvalidOperand>
-      <code><![CDATA[$i]]></code>
-      <code><![CDATA[$this->counter++]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDishVariations.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter++]]></code>
-      <code><![CDATA[count($dish->getVariations()) + 1]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadDishes.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter++]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadMeals.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter++]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
   <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadParticipants.php">
     <InvalidOperand>
       <code><![CDATA[$day->getId()]]></code>
       <code><![CDATA[$meal->getDay()->getId()]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
-    <UndefinedMethod>
-      <code><![CDATA[getReferences]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadSlots.php">
-    <InvalidOperand>
-      <code><![CDATA[++$key]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/MealBundle/DataFixtures/ORM/LoadWeeks.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter++]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Entity/GuestInvitation.php">
@@ -209,17 +83,11 @@
       <code><![CDATA[$participant]]></code>
     </ImplicitToStringCast>
   </file>
-  <file src="src/Mealz/MealBundle/Repository/ParticipantRepository.php">
-    <InvalidOperand>
-      <code><![CDATA[$item['slot_id']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Mealz/MealBundle/Service/ApiService.php">
     <InvalidOperand>
       <code><![CDATA[$costDifference += $transaction->getAmount()]]></code>
       <code><![CDATA[$costDifference -= $participation->getMeal()->getPrice()]]></code>
       <code><![CDATA[$mealId]]></code>
-      <code><![CDATA[$timestamp]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Service/Doorman.php">
@@ -244,47 +112,16 @@
       <code><![CDATA[$configuredLimit - ($totalCount - $currentCount)]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Mealz/MealBundle/Service/ParticipationServiceTrait.php">
-    <InvalidOperand>
-      <code><![CDATA[count($dishSlugs)]]></code>
-      <code><![CDATA[count($dishes)]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Mealz/MealBundle/Service/SlotService.php">
     <InvalidOperand>
-      <code><![CDATA[$bss['slot']]]></code>
       <code><![CDATA[$slot->getId()]]></code>
       <code><![CDATA[$slot->getId()]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/MealBundle/Service/WeekService.php">
-    <InvalidOperand>
-      <code><![CDATA[$i]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Service/Workday.php">
     <InvalidScalarArgument>
       <code><![CDATA[$year]]></code>
     </InvalidScalarArgument>
-  </file>
-  <file src="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php">
-    <InvalidOperand>
-      <code><![CDATA[$rand]]></code>
-      <code><![CDATA[$rand]]></code>
-      <code><![CDATA[$rand]]></code>
-      <code><![CDATA[$uniqueSuffix]]></code>
-      <code><![CDATA[$uniqueSuffix]]></code>
-      <code><![CDATA[mt_rand()]]></code>
-      <code><![CDATA[mt_rand()]]></code>
-      <code><![CDATA[mt_rand()]]></code>
-      <code><![CDATA[mt_rand()]]></code>
-      <code><![CDATA[mt_rand()]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php">
-    <InvalidOperand>
-      <code><![CDATA[mt_rand()]]></code>
-    </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php">
     <RedundantCondition>
@@ -296,30 +133,11 @@
     <InvalidOperand>
       <code><![CDATA[$createdWeek->getId()]]></code>
       <code><![CDATA[$createdWeek->getId()]]></code>
-      <code><![CDATA[$testEvent->getId()]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php">
-    <InvalidOperand>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/MealGuestControllerTest.php">
     <InvalidOperand>
       <code><![CDATA[$eventParticipation->getDay()->getId()]]></code>
-      <code><![CDATA[time()]]></code>
-      <code><![CDATA[time()]]></code>
     </InvalidOperand>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php">
@@ -327,9 +145,6 @@
       <code><![CDATA[$currentWeek->getId()]]></code>
       <code><![CDATA[$meal->getId()]]></code>
       <code><![CDATA[$mealToAdd->getId()]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
-      <code><![CDATA[$time]]></code>
       <code><![CDATA[$weekEntity->getId()]]></code>
       <code><![CDATA[$weekEntity->getId()]]></code>
       <code><![CDATA[$weekEntity->getId()]]></code>
@@ -365,9 +180,6 @@
       <code><![CDATA[$meals]]></code>
       <code><![CDATA[$meals]]></code>
     </InvalidArgument>
-    <InvalidNullableReturnType>
-      <code><![CDATA[GuestParticipationService|\App\Mealz\MealBundle\Service\ParticipationService|\App\Mealz\MealBundle\Service\ParticipationService|null|null]]></code>
-    </InvalidNullableReturnType>
     <NullableReturnStatement>
       <code><![CDATA[null]]></code>
     </NullableReturnStatement>
@@ -381,32 +193,5 @@
     <InvalidArgument>
       <code><![CDATA[$combinedMeal]]></code>
     </InvalidArgument>
-  </file>
-  <file src="src/Mealz/MealBundle/Tests/Service/WeekServiceTest.php">
-    <InvalidOperand>
-      <code><![CDATA[$i]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadAnonymousUsers.php">
-    <InvalidOperand>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-      <code><![CDATA[$key]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php">
-    <InvalidOperand>
-      <code><![CDATA[$this->counter]]></code>
-      <code><![CDATA[$this->counter++]]></code>
-      <code><![CDATA[rand()]]></code>
-    </InvalidOperand>
-    <TooFewArguments>
-      <code><![CDATA[getReference]]></code>
-      <code><![CDATA[getReference]]></code>
-    </TooFewArguments>
   </file>
 </files>

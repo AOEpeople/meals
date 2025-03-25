@@ -1,5 +1,8 @@
 <template>
-  <TransitionRoot as="template" :show="isOpen">
+  <TransitionRoot
+    as="template"
+    :show="isOpen"
+  >
     <Dialog class="relative z-50">
       <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)] p-4">
         <TransitionChild
@@ -13,12 +16,12 @@
         >
           <DialogPanel class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6">
             <p class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm">
-              {{t('events.lunchroulette')}}
+              {{ t('flashMessage.success.events.lunchroulette') }}
             </p>
             <div class="mt-4 flex justify-center">
               <CancelButton
                 :btn-text="t('debt.ok')"
-                class="cursor-pointer"
+                class="flex-1 cursor-pointer"
                 @click="closePopup"
               />
             </div>

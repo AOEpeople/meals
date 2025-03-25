@@ -17,6 +17,7 @@
     :meals="day.meals"
     @closeCombiModal="closeCombiModal"
   />
+  <LunchroulettePopup ref="lunchroulettePopup" />
   <TransitionRoot
     :show="openPopover"
     enter="transition-opacity ease-linear duration-300"
@@ -50,6 +51,7 @@ import { useLockRequests } from '@/services/useLockRequests';
 import { MealState } from '@/enums/MealState';
 import useMealState from '@/services/useMealState';
 import { useEvents } from '@/stores/eventsStore';
+import LunchroulettePopup from '../events/LunchroulettePopup.vue';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -62,6 +64,7 @@ const props = defineProps<{
 const { sendFlashMessage } = useFlashMessage();
 const { addLock, isLocked, removeLock } = useLockRequests();
 const { getEventById } = useEvents();
+const lunchroulettePopup = ref<InstanceType<typeof LunchroulettePopup> | null>(null);
 
 const day = props.day ?? dashboardStore.getDay(props.weekID ?? 0, props.dayID ?? 0);
 const mealOrVariation = ref<Meal>();
@@ -150,7 +153,7 @@ async function handle() {
       await leaveMeal();
       let lunchrouletteToday = getEventSlugs();
       if (lunchrouletteToday) {
-        alert('Du bist beim Lunchroulette noch angemeldet. Willst du dich dort auch abmelden?');
+        lunchroulettePopup.value?.openPopup();
       }
     } else if (mealOrVariation.value.reachedLimit === false) {
       let slugs = [mealOrVariation.value.dishSlug];

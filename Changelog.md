@@ -1,5 +1,30 @@
 # Changelog
 
+## Version v3.1.8 (2025-03-21)
+
+### Chores and tidying
+
+- updated PrintLink to only show up when the current day is enabled to prevent an error on navigation to PrintableList (f3b70ee3)
+
+### Other
+
+- Bump pentatrion/vite-bundle to be compatible with vite-bundle-symfony and perform migration because of new major version (7fe5573a)
+- Bump jspdf from 2.5.1 to 3.0.1 in /src/Resources (f6084aec)
+- Bump vue version (9950021e)
+- Bump vue-i18n from 9.14.2 to 9.14.3 in /src/Resources (22f790c8)
+- Bump esbuild, vite-plugin-symfony, @vitejs/plugin-vue, vite, vite-plugin-vue-devtools and vitest (228608ab)
+- Bump axios from 1.7.4 to 1.8.2 in /src/Resources (e385b6c5)
+- Bump @babel/runtime from 7.24.8 to 7.26.10 in /src/Resources (59255683)
+- Bump undici from 5.28.4 to 5.28.5 in /tests/e2e (84bfd985)
+- Bump canvg from 3.0.10 to 3.0.11 in /src/Resources (2285edfb)
+- add type to method argument (b7447af7)
+- changed headline matching date to regex to prevent test from breaking on new year (4d0eb355)
+- added fe components to create a guest and add them to a meal (30bda04d)
+- Bump node from 20 to 23 (07219eb0)
+- replace abandoned paypal sdk (d0ad642a)
+- added endpoint to create guest profile (7b51fa97)
+- Bump vite from 5.3.4 to 5.4.14 in /src/Resources (3b1de60b)
+
 ## Version v3.1.7 (2024-12-16)
 
 ### Other

@@ -52,7 +52,9 @@
         :class="{ 'w-full': !isGuest }"
         @click="emit('submitForm')"
       >
-        {{ t('guest.submit') }}
+        <slot name="submit">
+          {{ t('guest.submit') }}
+        </slot>
       </button>
     </div>
   </div>

@@ -51,7 +51,7 @@ class ParticipationService
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
         if (2 <= $this->participantRepo->getParticipationCountByProfile($profile, $meal->getDateTime())) {
-            return null;
+            throw new ParticipationException('106: max 2 meals per day');
         }
 
         // user is attempting to take over an already booked meal by some participant

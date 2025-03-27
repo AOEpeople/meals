@@ -121,6 +121,7 @@ export function useParticipations(weekId: number) {
             return;
         }
 
+        menuParticipationsState.error = '';
         const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
         handleParticipationUpdate(response, error, dayId, profileFullname);

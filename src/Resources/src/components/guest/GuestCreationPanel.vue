@@ -29,9 +29,14 @@
           }
         "
       >
-        <h3 class="text-center">
-          {{ t('guest.form.add') }}
-        </h3>
+        <template #default>
+          <h3 class="text-center">
+            {{ t('guest.form.add') }}
+          </h3>
+        </template>
+        <template #submit>
+          {{ t('menu.addGuest') }}
+        </template>
       </GuestForm>
     </template>
   </Popover>

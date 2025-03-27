@@ -175,7 +175,9 @@
       "802": "Dem Event konnte nicht beigetreten werden",
       "803": "Das Event konnte nicht verlassen werden",
       "804": "Dem Event kann nicht mehr beigetreten werden",
-      "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner."
+      "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner.",
+      "1001": "Mindestens eines Felder Vorname oder Nachname fehlt.",
+      "1002": "Das Profil existiert, aber ist versteckt."
     },
     "success": {
       "menu": {

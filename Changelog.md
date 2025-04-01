@@ -1,5 +1,15 @@
 # Changelog
 
+## Version v3.1.9 (2025-03-31)
+
+### Fixes
+
+- fix typos, localization related issues and error messaging (f84b6222)
+
+### Other
+
+- Bump vite from 6.2.2 to 6.2.4 in /src/Resources (b6d73f93)
+
 ## Version v3.1.8 (2025-03-21)
 
 ### Chores and tidying

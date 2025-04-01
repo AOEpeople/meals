@@ -175,7 +175,9 @@
       "802": "Couldn't join the event",
       "803": "Couldn't leave the event",
       "804": "Can't join the event anymore",
-      "903": "You are already registered. If you have any questions please message your contact person."
+      "903": "You are already registered. If you have any questions please message your contact person.",
+      "1001": "At least one of the Parameters firstname or lastname are missing.",
+      "1002": "The profile exists but is hidden."
     },
     "success": {
       "menu": {
@@ -207,8 +209,8 @@
         "empty": "There are no transactions for the selected timeframe"
       },
       "participations": {
-        "added": "A user was successfully added a meal.",
-        "removed": "A user was succefully removed fromm a meal.",
+        "added": "A user was successfully added to a meal.",
+        "removed": "A user was succefully removed from a meal.",
         "no": "No participations found."
       },
       "timeslot": {

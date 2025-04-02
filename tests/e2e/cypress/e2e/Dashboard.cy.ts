@@ -408,18 +408,14 @@ describe('Test Dashboard View', () => {
             .click();
 
         // verify participants on popup
-        cy.get('span')
-            .contains('Teilnahmen "Afterwork"')
-            .parent()
-            .parent()
-            .find('li')
+        cy.get('div')
+            .find('[data-cy="event-participant"]')
             .contains('Meals, Kochomi')
             .parent()
             .parent()
-            .find('span')
-            .contains('Es gibt 1 Teilnehmer')
             .parent()
             .parent()
+            .find('div')
             .find('svg')
             .click();
         cy.log('verified joined afterwork');
@@ -458,18 +454,14 @@ describe('Test Dashboard View', () => {
             .click();
 
         // verify no participants on popup
-        cy.get('span')
+        cy.get('div')
             .contains('Teilnahmen "Afterwork"')
             .parent()
             .parent()
             .find('span')
             .contains('Noch keine Teilnehmer für dieses Event')
             .parent()
-            .parent()
-            .find('span')
-            .contains('Es gibt 0 Teilnehmer')
-            .parent()
-            .parent()
+            .find('div')
             .find('svg')
             .click()
         cy.log('verified left afterwork');

@@ -40,10 +40,11 @@
                 :key="`${String(participation)}_${index}`"
               >
                 <tr :class="[index === 0 ? 'border-t border-gray-300' : 'border-b border-gray-200', 'border-b']">
-                  <td class="h-6 w-full whitespace-nowrap py-1 text-[12px] font-light text-primary">
-                    <div>
-                      {{ String(participation) }}
-                    </div>
+                  <td
+                    class="h-6 w-full whitespace-nowrap py-1 text-[12px] font-light text-primary"
+                    data-cy="event-participant"
+                  >
+                    {{ String(participation) }}
                   </td>
                 </tr>
               </template>

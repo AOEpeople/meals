@@ -114,12 +114,9 @@ describe('Test GuestEventInvitation', () => {
                     .eq(1)
                     .click();
 
-                cy.get('span')
-                    .contains('Teilnahmen "Afterwork"')
-                    .parent()
-                    .parent()
-                    .find('ul')
-                    .contains('Doe, John (District 17)');
+                    cy.get('div')
+                    .find('[data-cy="event-participant"]')
+                    .contains('Doe, John (District 17)')
             });
     });
 });

@@ -1,5 +1,5 @@
 # generate frontend assets
-FROM node:23 AS frontend
+FROM node:24 AS frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \

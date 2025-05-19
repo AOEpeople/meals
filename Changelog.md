@@ -1,5 +1,12 @@
 # Changelog
 
+## Version v3.1.10 (2025-05-16)
+
+### Other
+
+- Bump undici from 5.28.5 to 5.29.0 in /tests/e2e (fc1e03a7)
+- add ordering of weeks by startdate to prevent false ordering by week id (0773fec2)
+
 ## Version v3.1.9 (2025-03-31)
 
 ### Fixes

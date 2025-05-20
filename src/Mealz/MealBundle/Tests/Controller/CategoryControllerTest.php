@@ -10,16 +10,18 @@ use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CategoryAbstractControllerTest.
  */
-class CategoryControllerTest extends AbstractControllerTestCase
+final class CategoryControllerTest extends AbstractControllerTestCase
 {
     private EntityManagerInterface $em;
     private CategoryRepositoryInterface $categoryRepo;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

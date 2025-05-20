@@ -5,7 +5,7 @@ namespace App\Mealz\AccountingBundle\ParticipantList;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
 
-class ParticipantList
+final class ParticipantList
 {
     /**
      * @var Participant[]
@@ -77,9 +77,9 @@ class ParticipantList
     }
 
     /**
-     * @return int
+     * @psalm-return 0|float
      */
-    public function countAccountableParticipations(Profile $profile)
+    public function countAccountableParticipations(Profile $profile): int|float
     {
         $price = 0;
         $participations = $this->getAccountableParticipations($profile);

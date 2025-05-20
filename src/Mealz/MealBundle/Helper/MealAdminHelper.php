@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 
-class MealAdminHelper
+final class MealAdminHelper
 {
     private EventParticipationService $eventService;
 

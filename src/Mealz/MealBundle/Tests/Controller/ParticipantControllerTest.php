@@ -22,10 +22,11 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
+use Override;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 
-class ParticipantControllerTest extends AbstractControllerTestCase
+final class ParticipantControllerTest extends AbstractControllerTestCase
 {
     protected static $participantFirstName;
     protected static $participantLastName;
@@ -36,6 +37,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected static $userLastName;
     protected static $meal;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

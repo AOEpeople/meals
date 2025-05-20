@@ -7,7 +7,7 @@ use App\Mealz\MealBundle\Service\WeekService;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
-class WeekServiceTest extends TestCase
+final class WeekServiceTest extends TestCase
 {
     /**
      * @test

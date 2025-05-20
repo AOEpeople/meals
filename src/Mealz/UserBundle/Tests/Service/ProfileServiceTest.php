@@ -13,6 +13,7 @@ use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use App\Mealz\UserBundle\Service\ProfileService;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class ProfileServiceTest extends AbstractDatabaseTestCase
@@ -23,6 +24,7 @@ class ProfileServiceTest extends AbstractDatabaseTestCase
     private RoleRepositoryInterface $roleRepository;
     private ProfileService $profileService;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

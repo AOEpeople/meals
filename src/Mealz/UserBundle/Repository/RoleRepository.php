@@ -7,15 +7,17 @@ namespace App\Mealz\UserBundle\Repository;
 use App\Mealz\MealBundle\Repository\BaseRepository;
 use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\DBAL\ArrayParameterType;
+use Override;
 
 /**
  * @extends BaseRepository<int, Role>
  */
-class RoleRepository extends BaseRepository implements RoleRepositoryInterface
+final class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {
     /**
      * @return Role[]
      */
+    #[Override]
     public function findBySID(array $sids): array
     {
         $queryBuilder = $this->createQueryBuilder('r');

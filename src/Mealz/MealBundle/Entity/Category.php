@@ -5,6 +5,7 @@ namespace App\Mealz\MealBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -96,6 +97,7 @@ class Category implements JsonSerializable
      *
      * @psalm-return array{id: int|null, titleDe: string, titleEn: string, slug: null|string}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [

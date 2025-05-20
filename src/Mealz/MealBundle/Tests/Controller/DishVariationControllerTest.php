@@ -10,13 +10,15 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Dirk Rauscher <dirk.rauscher@aoe.com>
  */
-class DishVariationControllerTest extends AbstractControllerTestCase
+final class DishVariationControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -162,7 +164,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         return $dish;
     }
 
-    private function getDishVariationBy(string $attribute, $value, bool $throwError = true): ?DishVariation
+    private function getDishVariationBy(string $attribute, ?int $value, bool $throwError = true): ?DishVariation
     {
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 

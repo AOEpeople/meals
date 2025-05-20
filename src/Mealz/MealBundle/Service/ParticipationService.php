@@ -18,7 +18,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ParticipationService
+final class ParticipationService
 {
     use ParticipationServiceTrait;
 

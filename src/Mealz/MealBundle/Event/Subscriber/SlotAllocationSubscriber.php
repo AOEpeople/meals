@@ -9,9 +9,10 @@ use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\MealBundle\Service\SlotService;
 use DateTime;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SlotAllocationSubscriber implements EventSubscriberInterface
+final class SlotAllocationSubscriber implements EventSubscriberInterface
 {
     private const string PUBLISH_TOPIC = 'slot-allocation-updates';
     private const string PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
@@ -27,6 +28,7 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
      *
      * @psalm-return array{SlotAllocationUpdateEvent::class: 'onSlotAllocationUpdate'}
      */
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

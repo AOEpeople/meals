@@ -46,7 +46,7 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.5.1",
-    "aoe-group-web-cd": "git+https://aoe-group-web-cd:VB8F3WcfJ_hUcspHuuFH@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
+    "aoe-group-web-cd": "git+https://aoe-group-web-cd:xMAUfGLtrhnHwL5JxTTS@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
     "autoprefixer": "^10.4.19",
     "cssnano": "^7.0.4",
     "cssnano-preset-advanced": "^7.0.4",

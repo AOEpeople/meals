@@ -6,9 +6,10 @@ namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\KeepAliveConnectionEvent;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class KeepAliveConnectionSubscriber implements EventSubscriberInterface
+final class KeepAliveConnectionSubscriber implements EventSubscriberInterface
 {
     private const string PUBLISH_TOPIC = 'keep-alive-connection';
     private const string PUBLISH_MSG_TYPE = 'keepAliveConnection';
@@ -18,6 +19,7 @@ class KeepAliveConnectionSubscriber implements EventSubscriberInterface
     ) {
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

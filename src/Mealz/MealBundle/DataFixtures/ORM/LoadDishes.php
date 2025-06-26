@@ -10,8 +10,9 @@ use App\Mealz\MealBundle\Enum\Diet;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadDishes extends Fixture implements OrderedFixtureInterface
+final class LoadDishes extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -24,6 +25,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -59,15 +61,14 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
     public function loadCategories(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Category) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->categories[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Category::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferencesByClass() does not
+            $this->categories[] = $this->getReference($key, Category::class);
         }
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as fifth

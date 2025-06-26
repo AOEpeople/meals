@@ -3,26 +3,38 @@
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AccountingBookControllerTest.
  */
-class AccountingBookControllerTest extends AbstractControllerTestCase
+final class AccountingBookControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
             new LoadUsers(self::getContainer()->get('security.user_password_hasher')),

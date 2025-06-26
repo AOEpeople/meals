@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service\Publisher;
 
 use Exception;
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
-class MercurePublisher implements PublisherInterface
+final class MercurePublisher implements PublisherInterface
 {
     public function __construct(
         private HubInterface $hub,
@@ -17,6 +18,7 @@ class MercurePublisher implements PublisherInterface
     ) {
     }
 
+    #[Override]
     public function publish(string $topic, array $data, string $type): bool
     {
         $result = '';

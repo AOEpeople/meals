@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -17,6 +18,7 @@ abstract class BaseController extends AbstractController
      *
      * @psalm-return array<\Symfony\Contracts\Service\Attribute\SubscribedService|string>
      */
+    #[Override]
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

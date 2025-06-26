@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Provider;
 
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 /**
  * Class LogoutSuccessHandler.
  */
-class LogoutSuccessHandler implements EventSubscriberInterface
+final class LogoutSuccessHandler implements EventSubscriberInterface
 {
     private string $logoutUrl;
 
@@ -45,6 +46,7 @@ class LogoutSuccessHandler implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

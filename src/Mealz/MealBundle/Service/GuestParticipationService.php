@@ -25,7 +25,7 @@ use Exception;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 
-class GuestParticipationService
+final class GuestParticipationService
 {
     use ParticipationServiceTrait;
 

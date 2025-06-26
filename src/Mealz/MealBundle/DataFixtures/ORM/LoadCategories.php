@@ -8,8 +8,9 @@ use App\Mealz\MealBundle\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadCategories extends Fixture implements OrderedFixtureInterface
+final class LoadCategories extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -18,6 +19,7 @@ class LoadCategories extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $categories = [
@@ -38,6 +40,7 @@ class LoadCategories extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as fourth

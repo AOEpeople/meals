@@ -12,8 +12,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 
-class LoadMeals extends Fixture implements OrderedFixtureInterface
+final class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -48,6 +49,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -97,6 +99,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->addReference('meal-' . $this->counter++, $meal);
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as seventh
@@ -105,12 +108,12 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
 
     protected function loadDishes(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
+        foreach ($this->referenceRepository->getReferencesByClass()[Dish::class] as $key => $reference) {
             if (($reference instanceof Dish) && !($reference instanceof DishVariation)) {
                 // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
+                // getReference() does some doctrine magic that getReferencesByClass() does not
                 /** @var Dish $dish */
-                $dish = $this->getReference($referenceName);
+                $dish = $this->getReference($key, Dish::class);
 
                 if ($dish->hasVariations()) {
                     $this->dishesWithVar[] = $dish;
@@ -123,12 +126,10 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
 
     protected function loadDays(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Day) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->days[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Day::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferencesByClass() does not
+            $this->days[] = $this->getReference($key, Day::class);
         }
     }
 

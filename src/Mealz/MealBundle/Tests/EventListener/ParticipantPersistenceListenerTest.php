@@ -8,9 +8,11 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManager;
+use Override;
 
-class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
+final class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

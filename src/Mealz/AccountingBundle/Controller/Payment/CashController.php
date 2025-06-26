@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_KITCHEN_STAFF')]
-class CashController extends BaseController
+final class CashController extends BaseController
 {
     public function __construct(private readonly LoggerInterface $logger)
     {

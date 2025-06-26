@@ -4,6 +4,6 @@ namespace App\Mealz\MealBundle\EventListener;
 
 use Exception;
 
-class ProfileExistsException extends Exception
+final class ProfileExistsException extends Exception
 {
 }

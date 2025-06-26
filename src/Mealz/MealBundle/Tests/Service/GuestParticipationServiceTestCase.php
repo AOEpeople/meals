@@ -14,17 +14,20 @@ use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Override;
 
-class GuestParticipationServiceTestCase extends AbstractParticipationServiceTestCase
+final class GuestParticipationServiceTestCase extends AbstractParticipationServiceTestCase
 {
     private Profile $profile;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -164,6 +167,7 @@ class GuestParticipationServiceTestCase extends AbstractParticipationServiceTest
         $this->checkJoinCombinedMealWithEmptySlugFail($this->profile);
     }
 
+    #[Override]
     protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
     ): void {
         $this->assertTrue($participant->isCostAbsorbed());
@@ -186,7 +190,11 @@ class GuestParticipationServiceTestCase extends AbstractParticipationServiceTest
         }
     }
 
-    protected function getParticipationService(): ?GuestParticipationService
+    /**
+     * @psalm-suppress InvalidNullableReturnType
+     */
+    #[Override]
+    protected function getParticipationService(): GuestParticipationService|ParticipationService|null
     {
         if (parent::getParticipationService() instanceof GuestParticipationService) {
             return parent::getParticipationService();

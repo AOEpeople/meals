@@ -1,5 +1,23 @@
 # Changelog
 
+## Version v3.1.10 (2025-06-26)
+
+### Fixes
+
+- fix empty weeks on menu creation (f53d31e5)
+
+### Chores and tidying
+
+- Update token (71d3facb)
+- Update token (ac7257a4)
+
+### Other
+
+- Bump node from 23 to 24 (34b4c0e6)
+- Bump vite from 6.2.4 to 6.3.4 in /src/Resources (0a860d20)
+- Bump undici from 5.28.5 to 5.29.0 in /tests/e2e (fc1e03a7)
+- add ordering of weeks by startdate to prevent false ordering by week id (0773fec2)
+
 ## Version v3.1.9 (2025-03-31)
 
 ### Fixes

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Message;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\Notification\MessageInterface;
@@ -44,7 +45,7 @@ class WeeklyMenuMessage implements MessageInterface
                 ],
                 'messages'
             );
-            $tableHeader = "\n|Day|Meals|\n|:-----|:-----|\n";
+            $tableHeader = "\n|Day|Meals|Events|\n|:-----|:-----|\n";
             $body = $this->getDishesByWeek($this->week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }
@@ -73,12 +74,35 @@ class WeeklyMenuMessage implements MessageInterface
     {
         $body = $day->getDateTime()->format('l') . ' | ';
 
-        if (!$day->isEnabled() || (0 === count($day->getMeals()))) {
-            return $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages') . ' | ';
+        $dishes = [];
+        $events = [];
+
+        $dishes = $this->handleDishes($day);
+        /** @var EventParticipation $event */
+        foreach ($day->getEvents() as $event) {
+            $events[$event->getEvent()->getTitle()] = $event->getEvent()->getTitle();
         }
 
-        $dishes = [];
+        if (!$day->isEnabled() || (0 === count($day->getMeals()))) {
+            $body = $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages') . ' | ';
+            if (0 === count($day->getEvents())) {
+                return $body . $this->translator->trans('week.notification.content.no_events', [], 'messages') . ' | ';
+            } else {
+                return $body . $this->eventsToString($events);
+            }
+        } elseif (!$day->isEnabled() || (0 === count($day->getEvents()))) {
+            $body = $body . $this->toString($dishes);
 
+            return $body . $this->translator->trans('week.notification.content.no_events', [], 'messages') . ' | ';
+        } else {
+            $body = $body . $this->toString($dishes);
+
+            return $body . $this->eventsToString($events);
+        }
+    }
+
+    private function handleDishes(Day $day)
+    {
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             if ($meal->isCombinedMeal()) {
@@ -95,7 +119,7 @@ class WeeklyMenuMessage implements MessageInterface
             }
         }
 
-        return $body . $this->toString($dishes);
+        return $dishes;
     }
 
     /**
@@ -111,6 +135,19 @@ class WeeklyMenuMessage implements MessageInterface
             if (!empty($dishVarTitles)) {
                 $result[$dishTitle] .= sprintf(' (%s)', implode(', ', $dishVarTitles));
             }
+        }
+
+        return implode(', ', $result) . ' |';
+    }
+
+    /**
+     * @param array<string, string> $events
+     */
+    private function eventsToString(array $events): string
+    {
+        $result = [];
+        foreach ($events as $eventTitle) {
+            $result[$eventTitle] = '**' . $eventTitle . '**';
         }
 
         return implode(', ', $result) . ' |';

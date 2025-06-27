@@ -32,9 +32,11 @@ class Day extends AbstractMessage implements JsonSerializable
     #[ORM\OneToMany(mappedBy: 'day', targetEntity: Meal::class, cascade: ['all'])]
     private Collection $meals;
 
-    #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
-    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
-    private ?EventParticipation $event = null;
+    /**
+     * @var Collection<int, EventParticipation>
+     */
+    #[ORM\OneToMany(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
+    private Collection $event_participations;
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
@@ -45,6 +47,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->week = $this->getDefaultWeek($this->dateTime);
         $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
+        $this->event_participations = new EventCollection();
     }
 
     public function getId(): ?int
@@ -77,14 +80,47 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->week = $week;
     }
 
-    public function getEvent(): ?EventParticipation
+    public function getEvents(): ?EventCollection
     {
-        return $this->event;
+        if (false === ($this->event_participations instanceof Collection)) {
+            $this->event_participations = new EventCollection();
+        }
+
+        return new EventCollection($this->event_participations->toArray());
     }
 
-    public function setEvent(?EventParticipation $event): void
+    public function getEvent(int $id): ?EventParticipation
     {
-        $this->event = $event;
+        foreach ($this->getEvents() as $event) {
+            if ($event->getId() === $id) {
+                return $event;
+            }
+        }
+
+        return null;
+    }
+
+    public function addEvent(EventParticipation $event)
+    {
+        $event->setDay($this);
+        $this->event_participations->add($event);
+    }
+
+    public function removeEvent(EventParticipation $event)
+    {
+        if ($this->event_participations->contains($event)) {
+            $this->event_participations->removeElement($event);
+        }
+    }
+
+    public function removeEvents()
+    {
+        $this->event_participations->clear();
+    }
+
+    public function setEvents(EventCollection $events): void
+    {
+        $this->event_participations = $events;
     }
 
     public function getMeals(): MealCollection
@@ -145,11 +181,12 @@ class Day extends AbstractMessage implements JsonSerializable
     /**
      * @return (DateTime|array[][]|bool|int|null)[]
      *
-     * @psalm-return array{dateTime: DateTime, lockParticipationDateTime: DateTime, week: int|null, meals: array<''|int, non-empty-list<array>>, event: int|null, enabled: bool}
+     * @psalm-return array{dateTime: DateTime, dayId: int|null, enabled: bool, events: array<int, array<array-key, mixed>>, lockParticipationDateTime: DateTime, meals: array<''|int, non-empty-list<array{dateTime: DateTime, day: int|null, dish: null|string, id: int|null, lockTime: DateTime, participationLimit: int}>>, week: int|null}
      */
     public function jsonSerialize(): array
     {
         $meals = [];
+        $events = [];
 
         foreach ($this->getMeals() as $meal) {
             $parent = $meal->getDish()->getParent();
@@ -159,14 +196,23 @@ class Day extends AbstractMessage implements JsonSerializable
                 $meals[$meal->getDish()->getId()][] = $meal->jsonSerialize();
             }
         }
+        foreach ($this->getEvents() as $event) {
+            if (null !== $event && $event instanceof EventParticipation) {
+                $eventId = $event->getId();
+                if (isset($eventId)) {
+                    $events[$eventId] = $event->jsonSerialize();
+                }
+            }
+        }
 
         return [
             'dateTime' => $this->getDateTime(),
             'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
             'meals' => $meals,
-            'event' => $this->event?->getEvent()->getId(),
+            'events' => $events,
             'enabled' => $this->isEnabled(),
+            'dayId' => $this->getId(),
         ];
     }
 }

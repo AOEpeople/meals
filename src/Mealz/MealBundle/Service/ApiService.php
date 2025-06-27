@@ -124,7 +124,17 @@ class ApiService
 
     public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
-        return $this->eventPartSrv->getEventParticipationData($day, $profile);
+        return $this->eventPartSrv->getEventParticipationData($day, null, $profile);
+    }
+
+    public function getEventParticipationsData(Day $day, ?Profile $profile = null): ?array
+    {
+        $participations = [];
+        foreach ($day->getEvents() as $eventParticipation) {
+            $participations[] = $this->eventPartSrv->getEventParticipationData($day, $eventParticipation->getId(), $profile);
+        }
+
+        return $participations;
     }
 
     /**
@@ -132,15 +142,15 @@ class ApiService
      *
      * @psalm-return array{name: string, participants: array}|null
      */
-    public function getEventParticipationInfo(Day $day): ?array
+    public function getEventParticipationInfo(Day $day, int $eventId): ?array
     {
-        if (null === $day->getEvent()) {
+        if (null === $day->getEvents()) {
             return null;
         }
 
         return [
-            'name' => $day->getEvent()->getEvent()->getTitle(),
-            'participants' => $this->getEventParticipants($day),
+            'name' => $day->getEvent($eventId)->getEvent()->getTitle(),
+            'participants' => $this->getEventParticipants($day, $eventId),
         ];
     }
 
@@ -166,8 +176,17 @@ class ApiService
         return $hasReachedLimit;
     }
 
-    private function getEventParticipants(Day $day): array
+    public function isMealOpen(Meal $meal): bool
     {
-        return $this->eventPartSrv->getParticipants($day);
+        return false === $meal->isLocked()
+            && true === $meal->isOpen()
+            && false === $meal->hasReachedParticipationLimit()
+            && (false === $meal->isCombinedMeal()
+                || false === $this->hasCombiReachedLimit($meal->getDay()));
+    }
+
+    private function getEventParticipants(Day $day, int $eventId): array
+    {
+        return $this->eventPartSrv->getParticipants($day, $eventId);
     }
 }

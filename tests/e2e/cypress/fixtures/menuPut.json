@@ -20,6 +20,7 @@
             },
             "id": 286,
             "enabled": false,
+            "events": {},
             "date": {
                 "date": "2023-07-10 12:00:00.000000",
                 "timezone_type": 3,
@@ -50,6 +51,7 @@
             },
             "id": 287,
             "enabled": true,
+            "events": {},
             "date": {
                 "date": "2023-07-11 12:00:00.000000",
                 "timezone_type": 3,
@@ -85,7 +87,14 @@
             },
             "id": 288,
             "enabled": true,
-            "event": 349,
+            "events": {
+                "349": {
+                    "eventId": 349,
+                    "eventSlug": "alumni-afterwork",
+                    "eventTitle": "Alumni Afterwork",
+                    "isPublic": true
+                }
+            },
             "date": {
                 "date": "2023-07-12 12:00:00.000000",
                 "timezone_type": 3,
@@ -116,6 +125,7 @@
             },
             "id": 289,
             "enabled": true,
+            "events": {},
             "date": {
                 "date": "2023-07-13 12:00:00.000000",
                 "timezone_type": 3,
@@ -140,6 +150,7 @@
             },
             "id": 290,
             "enabled": true,
+            "events": {},
             "date": {
                 "date": "2023-07-14 12:00:00.000000",
                 "timezone_type": 3,

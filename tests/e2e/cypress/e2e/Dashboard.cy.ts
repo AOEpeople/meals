@@ -375,7 +375,7 @@ describe('Test Dashboard View', () => {
         cy.get('header > nav > div > a > svg').click();
         cy.wait(['@getDashboard', '@getEvents']);
 
-        // join afterwork
+            // join afterwork
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -407,21 +407,15 @@ describe('Test Dashboard View', () => {
             .eq(1)
             .click();
 
-        cy.wait('@getParticipants');
-
         // verify participants on popup
-        cy.get('span')
-            .contains('Teilnahmen "Afterwork"')
-            .parent()
-            .parent()
-            .find('li')
+        cy.get('div')
+            .find('[data-cy="event-participant"]')
             .contains('Meals, Kochomi')
             .parent()
             .parent()
-            .find('span')
-            .contains('Es gibt 1 Teilnehmer')
             .parent()
             .parent()
+            .find('div')
             .find('svg')
             .click();
         cy.log('verified joined afterwork');
@@ -459,21 +453,15 @@ describe('Test Dashboard View', () => {
             .eq(1)
             .click();
 
-        cy.wait('@getParticipants');
-
         // verify no participants on popup
-        cy.get('span')
+        cy.get('div')
             .contains('Teilnahmen "Afterwork"')
             .parent()
             .parent()
             .find('span')
             .contains('Noch keine Teilnehmer für dieses Event')
             .parent()
-            .parent()
-            .find('span')
-            .contains('Es gibt 0 Teilnehmer')
-            .parent()
-            .parent()
+            .find('div')
             .find('svg')
             .click()
         cy.log('verified left afterwork');

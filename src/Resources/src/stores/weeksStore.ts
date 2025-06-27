@@ -26,8 +26,18 @@ export interface SimpleDay {
     lockParticipationDateTime: DateTime;
     week: number;
     meals: Dictionary<SimpleMeal[]>;
-    event: number | null;
+    events: Dictionary<SimpleEvent>;
     enabled: boolean;
+}
+
+export interface SimpleEvent {
+    id: number;
+    event: {
+        slug: string;
+        id: number;
+        title: string;
+        public: boolean;
+    };
 }
 
 export interface SimpleMeal {
@@ -238,7 +248,7 @@ export function useWeeks() {
             meals: {},
             id: parseInt(dayId),
             enabled: day.enabled,
-            event: day.event,
+            events: {},
             date: day.dateTime,
             lockDate: day.lockParticipationDateTime
         };
@@ -246,6 +256,11 @@ export function useWeeks() {
         if (week !== undefined && week !== null && day !== undefined && day !== null) {
             for (const [key, meals] of Object.entries(day.meals)) {
                 menuDay.meals[key] = meals.map((meal) => createMealDTO(meal));
+            }
+            if (day.events !== undefined) {
+                for (const [key, event] of Object.entries(day.events)) {
+                    menuDay.events[key] = createEventDTO(event);
+                }
             }
             // make sure to have 2 meals
             const mealsLength = Object.keys(menuDay.meals).length;
@@ -268,6 +283,19 @@ export function useWeeks() {
             dishSlug: meal.dish,
             mealId: meal.id,
             participationLimit: meal.participationLimit
+        };
+    }
+    /**
+     * Creates a EventDTO for a meal.
+     * @param event  The event to create the DTO for.
+     */
+    function createEventDTO(event: SimpleEvent) {
+        return {
+            id: event.id,
+            eventSlug: event.event.slug,
+            eventId: event.event.id,
+            eventTitle: event.event.title,
+            isPublic: event.event.public
         };
     }
 

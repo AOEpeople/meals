@@ -9,6 +9,5 @@ export default async function getEvents() {
     const { error, request, response: events } = useApi<Event[]>('GET', 'api/events');
 
     await request();
-
     return { error, events };
 }

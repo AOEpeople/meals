@@ -26,13 +26,20 @@ class GuestInvitation
     #[ORM\JoinColumn(name: 'meal_day_id', referencedColumnName: 'id', nullable: false, onDelete: 'NO ACTION')]
     private Day $day;
 
+    #[ORM\ManyToOne(targetEntity: EventParticipation::class)]
+    #[ORM\JoinColumn(name: 'eventParticipation', referencedColumnName: 'id', nullable: true, onDelete: 'NO ACTION')]
+    private ?EventParticipation $eventParticipation = null;
+
     /**
      * Initializes class instance.
      */
-    public function __construct(Profile $host, Day $day)
+    public function __construct(Profile $host, Day $day, ?EventParticipation $eventParticipation)
     {
         $this->host = $host;
         $this->day = $day;
+        if ($eventParticipation) {
+            $this->eventParticipation = $eventParticipation;
+        }
     }
 
     public function setId(string $id): static
@@ -40,6 +47,11 @@ class GuestInvitation
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getEventParticipation(): ?EventParticipation
+    {
+        return $this->eventParticipation;
     }
 
     /**
@@ -73,7 +85,11 @@ class GuestInvitation
     #[ORM\PrePersist]
     public function beforeCreate(): void
     {
-        $this->id = md5($this->host->getUsername() . $this->day->getId());
+        if ($this->eventParticipation) {
+            $this->id = md5($this->host->getUsername() . $this->day->getId() . $this->eventParticipation->getId());
+        } else {
+            $this->id = md5($this->host->getUsername() . $this->day->getId());
+        }
         $this->createdOn = new DateTime();
     }
 }

@@ -127,7 +127,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36087": {
                     "date": {
@@ -238,7 +238,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36088": {
                     "date": {
@@ -349,11 +349,21 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": {
-                        "eventId": 348,
-                        "participations": 17,
-                        "isParticipating": true
-                    }
+                    "events":
+                    [
+                        {
+                            "eventId": 348,
+                            "participations": 17,
+                            "participationId":27,
+                            "isParticipating": true
+                        },
+                        {
+                            "eventId": 349,
+                            "participations": 17,
+                            "participationId":28,
+                            "isParticipating": true
+                        }
+                    ]
                 },
                 "36089": {
                     "date": {
@@ -464,7 +474,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36090": {
                     "date": {
@@ -552,7 +562,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 }
             },
             "isEnabled": true
@@ -655,7 +665,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36092": {
                     "date": {
@@ -766,7 +776,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36093": {
                     "date": {
@@ -906,7 +916,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36094": {
                     "date": {
@@ -1017,7 +1027,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 },
                 "36095": {
                     "date": {
@@ -1105,7 +1115,7 @@
                         }
                     },
                     "isEnabled": true,
-                    "event": null
+                    "events": []
                 }
             },
             "isEnabled": true

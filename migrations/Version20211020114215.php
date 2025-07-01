@@ -34,7 +34,7 @@ final class Version20211020114215 extends AbstractMigration
             '`slug` VARCHAR(128) NOT NULL, '.
             'UNIQUE INDEX UNIQ_AC0E2067989D9B62 (slug), '.
             'PRIMARY KEY(id)'.
-            ') DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB'
+            ') ENGINE = InnoDB'
         );
         $this->addSql('ALTER TABLE participant ADD slot_id INT DEFAULT NULL AFTER meal_id');
         $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B1159E5119C FOREIGN KEY (slot_id) REFERENCES slot (id)');

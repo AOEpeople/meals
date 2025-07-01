@@ -24,7 +24,7 @@ final class Version20211215153743 extends AbstractMigration
     {
         $this->abortOnIncompatibleDB();
 
-        $this->addSql('CREATE TABLE participant_dish (participant_id INT NOT NULL, dish_id INT NOT NULL, INDEX IDX_41C99E869D1C3019 (participant_id), INDEX IDX_41C99E86148EB0CB (dish_id), PRIMARY KEY(participant_id, dish_id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE participant_dish (participant_id INT NOT NULL, dish_id INT NOT NULL, INDEX IDX_41C99E869D1C3019 (participant_id), INDEX IDX_41C99E86148EB0CB (dish_id), PRIMARY KEY(participant_id, dish_id)) ENGINE = InnoDB');
     }
 
     public function down(Schema $schema): void

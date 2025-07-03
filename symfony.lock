@@ -486,6 +486,15 @@
     "symfony/security-http": {
         "version": "v4.4.27"
     },
+    "symfony/sendgrid-mailer": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.4",
+            "ref": "224aedffb66812dc2b0965dabc14d5f800941da6"
+        }
+    },
     "symfony/stopwatch": {
         "version": "v5.3.4"
     },

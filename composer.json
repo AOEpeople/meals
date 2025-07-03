@@ -62,6 +62,7 @@
     "symfony/routing": "^6.4",
     "symfony/runtime": "^6.4",
     "symfony/security-csrf": "^6.4",
+    "symfony/sendgrid-mailer": "^6.4",
     "symfony/translation": "^6.4",
     "symfony/twig-bridge": "^6.4",
     "symfony/twig-bundle": "^6.4",

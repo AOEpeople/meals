@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "faf927a231d21f483b50b828b15cc681",
+  "content-hash": "50dabd2824b3e963f487086990bdcf6c",
   "packages": [
     {
       "name": "apimatic/core",
@@ -6841,6 +6841,76 @@
         }
       ],
       "time": "2024-11-13T13:40:27+00:00"
+    },
+    {
+      "name": "symfony/sendgrid-mailer",
+      "version": "v6.4.18",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/symfony/sendgrid-mailer.git",
+        "reference": "18dca2e8fc8e449e2dacdd40a9bbd544b3a10e90"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/symfony/sendgrid-mailer/zipball/18dca2e8fc8e449e2dacdd40a9bbd544b3a10e90",
+        "reference": "18dca2e8fc8e449e2dacdd40a9bbd544b3a10e90",
+        "shasum": ""
+      },
+      "require": {
+        "php": ">=8.1",
+        "symfony/mailer": "^5.4.21|^6.2.7|^7.0"
+      },
+      "conflict": {
+        "symfony/http-foundation": "<6.2",
+        "symfony/mime": "<6.2"
+      },
+      "require-dev": {
+        "symfony/http-client": "^5.4|^6.0|^7.0",
+        "symfony/webhook": "^6.3|^7.0"
+      },
+      "type": "symfony-mailer-bridge",
+      "autoload": {
+        "psr-4": {
+          "Symfony\\Component\\Mailer\\Bridge\\Sendgrid\\": ""
+        },
+        "exclude-from-classmap": [
+          "/Tests/"
+        ]
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Fabien Potencier",
+          "email": "fabien@symfony.com"
+        },
+        {
+          "name": "Symfony Community",
+          "homepage": "https://symfony.com/contributors"
+        }
+      ],
+      "description": "Symfony Sendgrid Mailer Bridge",
+      "homepage": "https://symfony.com",
+      "support": {
+        "source": "https://github.com/symfony/sendgrid-mailer/tree/v6.4.18"
+      },
+      "funding": [
+        {
+          "url": "https://symfony.com/sponsor",
+          "type": "custom"
+        },
+        {
+          "url": "https://github.com/fabpot",
+          "type": "github"
+        },
+        {
+          "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+          "type": "tidelift"
+        }
+      ],
+      "time": "2025-01-07T11:11:15+00:00"
     },
     {
       "name": "symfony/stopwatch",

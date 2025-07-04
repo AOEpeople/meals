@@ -291,7 +291,7 @@ services:
   App\Mealz\UserBundle\Repository\RoleRepository:
     arguments:
       $entityClass: App\Mealz\UserBundle\Entity\Role
-
+      
   # Interface implementations
   App\Mealz\UserBundle\Repository\ProfileRepositoryInterface: '@App\Mealz\UserBundle\Repository\ProfileRepository'
   App\Mealz\UserBundle\Repository\RoleRepositoryInterface: '@App\Mealz\UserBundle\Repository\RoleRepository'

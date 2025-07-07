@@ -250,9 +250,9 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     /**
      * @return Profile[]
      *
-     * @throws Exception
-     *
      * @psalm-return list<Profile>
+     *
+     * @throws Exception
      */
     protected function getRandomUsers(): array
     {

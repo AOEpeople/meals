@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
 use App\Mealz\UserBundle\Entity\Role;
-use App\Mealz\UserBundle\Service\RoleProvider;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -18,8 +17,7 @@ class LoadRoles extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $roleProvider = new RoleProvider();
-        foreach ($roleProvider->getRoles() as $role) {
+        foreach ($this->getRoles() as $role) {
             $roleObj = new Role();
             $roleObj->setTitle($role['title'])
                     ->setSid($role['sid']);
@@ -34,5 +32,19 @@ class LoadRoles extends Fixture
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function getRoles(): array
+    {
+        return [
+            ['title' => 'Kitchen Staff', 'sid' => 'ROLE_KITCHEN_STAFF'],
+            ['title' => 'User', 'sid' => 'ROLE_USER'],
+            ['title' => 'Guest', 'sid' => 'ROLE_GUEST'],
+            ['title' => 'Administrator', 'sid' => 'ROLE_ADMIN'],
+            ['title' => 'Finance Staff', 'sid' => 'ROLE_FINANCE'],
+        ];
     }
 }

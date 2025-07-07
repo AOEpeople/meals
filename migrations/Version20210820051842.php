@@ -37,6 +37,12 @@ final class Version20210820051842 extends AbstractMigration
         $this->addSql('CREATE TABLE session (sess_id VARBINARY(128) NOT NULL, sess_data BLOB NOT NULL, sess_lifetime INT UNSIGNED NOT NULL, sess_time INT UNSIGNED NOT NULL, PRIMARY KEY(sess_id), INDEX `session_sess_lifetime_idx` (`sess_lifetime`)) ENGINE = InnoDB');
         $this->addSql('CREATE TABLE transaction (id INT AUTO_INCREMENT NOT NULL, profile VARCHAR(255) NOT NULL, date DATETIME NOT NULL, amount NUMERIC(10, 4) NOT NULL, paymethod VARCHAR(2048) DEFAULT NULL, orderId VARCHAR(24) DEFAULT NULL, UNIQUE INDEX UNIQ_723705D1FA237437 (orderId), INDEX IDX_723705D18157AA0F (profile), PRIMARY KEY(id)) ENGINE = InnoDB');
         $this->addSql('CREATE TABLE week (id INT AUTO_INCREMENT NOT NULL, enabled TINYINT(1) NOT NULL, message VARCHAR(255) DEFAULT NULL, year SMALLINT NOT NULL, calendarWeek SMALLINT NOT NULL, PRIMARY KEY(id)) ENGINE = InnoDB');
+
+        $this->addSql('INSERT INTO role (title, sid) SELECT \'Kitchen Staff\', \'ROLE_KITCHEN_STAFF\' WHERE NOT EXISTS (SELECT 1 FROM role WHERE sid = \'ROLE_KITCHEN_STAFF\')');
+        $this->addSql('INSERT INTO role (title, sid) SELECT \'User\', \'ROLE_USER\' WHERE NOT EXISTS (SELECT 1 FROM role WHERE sid = \'ROLE_USER\')');
+        $this->addSql('INSERT INTO role (title, sid) SELECT \'Guest\', \'ROLE_GUEST\' WHERE NOT EXISTS (SELECT 1 FROM role WHERE sid = \'ROLE_GUEST\')');
+        $this->addSql('INSERT INTO role (title, sid) SELECT \'Administrator\', \'ROLE_ADMIN\' WHERE NOT EXISTS (SELECT 1 FROM role WHERE sid = \'ROLE_ADMIN\')');
+        $this->addSql('INSERT INTO role (title, sid) SELECT \'Finance Staff\', \'ROLE_FINANCE\' WHERE NOT EXISTS (SELECT 1 FROM role WHERE sid = \'ROLE_FINANCE\')');
     }
 
     public function down(Schema $schema): void

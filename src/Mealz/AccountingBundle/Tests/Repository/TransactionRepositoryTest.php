@@ -142,9 +142,9 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @return Transaction[] of transactions
      *
-     * @throws Exception
-     *
      * @psalm-return non-empty-list<Transaction>
+     *
+     * @throws Exception
      */
     private function createTemporaryTransactions(): array
     {

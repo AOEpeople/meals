@@ -35,9 +35,13 @@ class LoadRoles extends Fixture
     }
 
     /**
+     * Gets the test user roles to create.
+     *
      * @return string[][]
+     *
+     * @psalm-return array{0: array{title: 'Kitchen Staff', sid: 'ROLE_KITCHEN_STAFF'}, 1: array{title: 'User', sid: 'ROLE_USER'}, 2: array{title: 'Guest', sid: 'ROLE_GUEST'}, 3: array{title: 'Administrator', sid: 'ROLE_ADMIN'}, 4: array{title: 'Finance Staff', sid: 'ROLE_FINANCE'}}
      */
-    public function getRoles(): array
+    protected function getRoles(): array
     {
         return [
             ['title' => 'Kitchen Staff', 'sid' => 'ROLE_KITCHEN_STAFF'],

@@ -46,12 +46,15 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHashWrittenInDatabaseWithBalance(): void
     {
         $profile = $this->getUserProfile(self::USER_STANDARD);
+        $data = json_encode([
+            'username' => $profile->getUsername(),
+        ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
         $balance = $this->wallet->getBalance($profile);
         $this->assertGreaterThan(0.00, $balance);
 
-        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/settlement', [], [], [], $data);
         self::assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
@@ -64,12 +67,15 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
         $profile = $this->getUserProfile('john.meals');
+        $data = json_encode([
+            'username' => $profile->getUsername(),
+        ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
         $balance = $this->wallet->getBalance($profile);
         $this->assertEquals(0.00, $balance);
 
-        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/settlement', [], [], [], $data);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         $this->assertNull($profile->getSettlementHash(), 'Settlement was set');
@@ -118,10 +124,13 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $data = json_encode([
+            'username' => $profile->getUsername(),
+        ]);
         $this->assertFalse($profile->isHidden());
 
         // Trigger action
-        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/hideuser', [], [], [], $data);
         $this->assertResponseIsSuccessful();
 
         // Check after action
@@ -136,6 +145,9 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $data = json_encode([
+            'username' => $profile->getUsername(),
+        ]);
 
         $profile->setHidden(true);
         $this->persistAndFlushAll([$profile]);
@@ -144,7 +156,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($profile->isHidden());
 
         // Trigger action
-        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/hideuser', [], [], [], $data);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         // Check after action

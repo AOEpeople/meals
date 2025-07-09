@@ -6,7 +6,12 @@ import useApi from './api';
  * @param username  The username of the user to hide.
  */
 export default async function postHideUser(username: string) {
-    const { error, request, response } = useApi<IMessage | null>('POST', `api/costs/hideuser/${username}`);
+    const { error, request, response } = useApi<IMessage | null>(
+        'POST',
+        'api/costs/hideuser',
+        'application/json',
+        JSON.stringify({ username: username })
+    );
 
     await request();
 

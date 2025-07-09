@@ -265,6 +265,7 @@ In the Vite Dev mode browsers will typically send out a Warning("Source-Map-Fehl
   * 503: The settlement request failed
   * 504: The profile for this hash cannot be found
   * 505: The settlement request was already processed or the request is invalid
+  * 506: No username was provided or the requested user could not be found
 *CashController 6xx*
   * 601: The amount of cash that will be added, has to be more than zero
 *EventController 7xx*

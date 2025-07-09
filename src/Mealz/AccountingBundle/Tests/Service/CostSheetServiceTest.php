@@ -101,20 +101,6 @@ class CostSheetServiceTest extends TestCase
 
         $expectedArr = [
             'users' => [
-                'admin.meals' => [
-                    'name' => 'Meals',
-                    'firstName' => 'Admin',
-                    'hidden' => false,
-                    'costs' => [
-                        'earlier' => 3.00,
-                        '1234567890' => 5.78,
-                        '1234567891' => -4.00,
-                        '1234567892' => 3.37,
-                        '1234567894' => -6.00,
-                        '1234567895' => -5.89,
-                        'total' => 26.85,
-                    ],
-                ],
                 'test.meals' => [
                     'name' => 'Meals',
                     'firstName' => 'Test',
@@ -127,6 +113,20 @@ class CostSheetServiceTest extends TestCase
                         '1234567894' => -3.29,
                         '1234567895' => 6.72,
                         'total' => 28.43,
+                    ],
+                ],
+                'admin.meals@aoe.com' => [
+                    'name' => 'Meals',
+                    'firstName' => 'Admin',
+                    'hidden' => false,
+                    'costs' => [
+                        'earlier' => 3.00,
+                        '1234567890' => 5.78,
+                        '1234567891' => -4.00,
+                        '1234567892' => 3.37,
+                        '1234567894' => -6.00,
+                        '1234567895' => -5.89,
+                        'total' => 26.85,
                     ],
                 ],
             ],

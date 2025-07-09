@@ -6,7 +6,12 @@ import { type IMessage } from '@/interfaces/IMessage';
  * @param username  The username of the user to set the settlement for.
  */
 export default async function postSettlement(username: string) {
-    const { error, request, response } = useApi<IMessage | null>('POST', `api/costs/settlement/${username}`);
+    const { error, request, response } = useApi<IMessage | null>(
+        'POST',
+        'api/costs/settlement',
+        'application/json',
+        JSON.stringify({ username: username })
+    );
 
     await request();
 

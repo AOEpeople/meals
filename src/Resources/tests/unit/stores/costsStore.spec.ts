@@ -10,13 +10,13 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const getMockedResponses = (method: string, url: string) => {
-    if (/api\/costs\/hideuser\/[a-z]+.[a-z]+/.test(url) && method === 'POST') {
+    if (/api\/costs\/hideuser/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
         };
-    } else if (/api\/costs\/settlement\/[a-z]+.[a-z]+/.test(url) && method === 'POST') {
+    } else if (/api\/costs\/settlement/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,

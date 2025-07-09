@@ -14,9 +14,12 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -105,44 +108,56 @@ class CostSheetController extends BaseController
     }
 
     #[IsGranted('ROLE_KITCHEN_STAFF')]
-    public function hideUser(Profile $profile, EntityManagerInterface $entityManager): JsonResponse
+    public function hideUser(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        if (!$profile->isHidden()) {
-            $profile->setHidden(true);
-            $entityManager->persist($profile);
-            $entityManager->flush();
+        $parameters = json_decode($request->getContent(), true);
+        try {
+            $profile = $this->getProfileFromUsername($parameters, $entityManager);
+            if (!$profile->isHidden()) {
+                $profile->setHidden(true);
+                $entityManager->persist($profile);
+                $entityManager->flush();
 
-            return new JsonResponse(null, Response::HTTP_OK);
+                return new JsonResponse(null, Response::HTTP_OK);
+            }
+
+            return new JsonResponse(['message' => '501: Profile is already hidden'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException $exeption) {
+            return new JsonResponse(['message' => '506: ' . $exeption->getMessage()], Response::HTTP_NOT_FOUND);
         }
-
-        return new JsonResponse(['message' => '501: Profile is already hidden'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function postSettlement(
-        Profile $profile,
+        Request $request,
         Wallet $wallet,
         EntityManagerInterface $entityManager
     ): JsonResponse {
-        if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
-            $username = $profile->getUsername();
-            $secret = $this->getParameter('app.secret');
-            $hashCode = str_replace('/', '', crypt($username, $secret));
-            $urlEncodedHash = urlencode($hashCode);
+        $parameters = json_decode($request->getContent(), true);
+        try {
+            $profile = $this->getProfileFromUsername($parameters, $entityManager);
+            if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+                $username = $profile->getUsername();
+                $secret = $this->getParameter('app.secret');
+                $hashCode = str_replace('/', '', crypt($username, $secret));
+                $urlEncodedHash = urlencode($hashCode);
 
-            $profile->setSettlementHash($hashCode);
-            $entityManager->persist($profile);
-            $entityManager->flush();
+                $profile->setSettlementHash($hashCode);
+                $entityManager->persist($profile);
+                $entityManager->flush();
 
-            $this->sendSettlementRequestMail($profile, $urlEncodedHash);
+                $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
-            return new JsonResponse(null, Response::HTTP_OK);
-        } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
-            return new JsonResponse(['message' => '502: Settlement request already send'],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
-        } else {
-            return new JsonResponse(['message' => '503: Settlement request failed'],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+                return new JsonResponse(null, Response::HTTP_OK);
+            } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+                return new JsonResponse(['message' => '502: Settlement request already send'],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
+            } else {
+                return new JsonResponse(['message' => '503: Settlement request failed'],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch (EntityNotFoundException $exeption) {
+            return new JsonResponse(['message' => '506: ' . $exeption->getMessage()], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -223,5 +238,18 @@ class CostSheetController extends BaseController
         }
 
         return new JsonResponse(null, Response::HTTP_OK);
+    }
+
+    private function getProfileFromUsername(array $parameters, EntityManagerInterface $em): ?Profile
+    {
+        try {
+            $username = $parameters['username'];
+            $profileRepo = $em->getRepository(Profile::class);
+            $profile = $profileRepo->findOneBy(['username' => $username]);
+
+            return $profile;
+        } catch (Exception $exception) {
+            throw new EntityNotFoundException('User not found');
+        }
     }
 }

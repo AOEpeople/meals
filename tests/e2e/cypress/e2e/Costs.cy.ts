@@ -6,7 +6,7 @@ describe('Test Cost View', () => {
 
         // spy on the request to the backend to wait for them to resolve before testing
         cy.intercept('GET', '**/api/costs').as('getCosts');
-        cy.intercept('POST', '**/api/costs/hideuser/**').as('hideUser');
+        cy.intercept('POST', '**/api/costs/hideuser').as('hideUser');
         cy.intercept('POST', '**/api/costs/settlement/confirm/**').as('confirmSettlement');
         cy.intercept('POST', '**/api/payment/cash/**').as('postBalance');
     });

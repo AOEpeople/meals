@@ -22,12 +22,12 @@ mealz_accounting_api_costs:
     methods: [ GET ]
 
 mealz_accounting_api_costs_hide_user:
-    path: /api/costs/hideuser/{profile}
+    path: /api/costs/hideuser
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUser }
     methods: [ POST ]
 
 mealz_accounting_api_costs_settlement:
-    path: /api/costs/settlement/{profile}
+    path: /api/costs/settlement
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::postSettlement }
     methods: [ POST ]
 

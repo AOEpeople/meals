@@ -179,8 +179,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $randFirstName = $firstNames[array_rand($firstNames)];
         $randLastName = $lastNames[array_rand($lastNames)];
         $randPass = (string) rand();
-        $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . rand();
-        $email = $username . '@aoe.com';
+        $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . rand() . '' . (rand(0, 1) > 0 ? '@aoe.com' : '');
+        $email = str_replace('@aoe.com', '', $username) . '@aoe.com';
         $this->addUser(
             $username,
             $randPass,

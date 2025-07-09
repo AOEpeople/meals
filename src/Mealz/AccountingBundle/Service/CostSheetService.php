@@ -16,9 +16,11 @@ class CostSheetService
         foreach ($users as $username => &$user) {
             $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $username);
             if (!isset($mergedUsers[$trimmedUsername])) {
-                $mergedUsers[$trimmedUsername] = $user;
+                $mergedUsers[$username] = $user;
             } else {
-                $mergedUsers[$trimmedUsername]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
+                $mergedUsers[$username] = $user;
+                $mergedUsers[$username]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
+                unset($mergedUsers[$trimmedUsername]);
             }
         }
 

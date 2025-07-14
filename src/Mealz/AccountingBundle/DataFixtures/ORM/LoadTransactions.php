@@ -131,6 +131,9 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
         $transaction->setDate($date ?? new DateTime());
         $transaction->setAmount($amount);
         $transaction->setProfile($user);
+        if (rand(0, 1) > 0) {
+            $transaction->setPaymethod('0');
+        }
 
         $this->objectManager->persist($transaction);
     }

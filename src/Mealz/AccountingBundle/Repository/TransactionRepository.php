@@ -78,7 +78,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->select('p.username, p.firstName, p.name, t.paymethod, SUM(t.amount) AS amount');
+        $queryBuilder->select('p.username, p.firstName, p.name, MIN(t.paymethod) as paymethod, SUM(t.amount) AS amount');
         $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof DateTime) {

@@ -100,15 +100,12 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     private function getProfiles(): array
     {
         if (null === $this->profiles) {
-            $this->profiles = [];
-            foreach ($this->referenceRepository->getReferences() as $key => $reference) {
-                if ($reference instanceof Profile) {
-                    $this->profiles[$reference->getUsername()] = $this->getReference($key);
-                }
+            foreach ($this->referenceRepository->getReferencesByClass()[Profile::class] as $key => $reference) {
+                $this->profiles[$reference->getUsername()] = $this->getReference($key, Profile::class);
             }
         }
 
-        return $this->profiles;
+        return $this->profiles ?? [];
     }
 
     private function getUser(string $username): Profile

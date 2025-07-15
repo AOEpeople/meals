@@ -31,7 +31,7 @@ final class Version20230706090606 extends AbstractMigration
     {
         $this->abortOnIncompatibleDB();
 
-        $this->addSql('ALTER TABLE profile DROP email');
+        $this->addSql('ALTER TABLE profile DROP COLUMN email');
     }
 
     /**

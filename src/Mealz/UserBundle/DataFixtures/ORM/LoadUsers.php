@@ -137,7 +137,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         /** @var Role[] $roleObjs */
         $roleObjs = [];
         foreach ($roles as $role) {
-            $roleObjs[] = $this->getReference($role);
+            $roleObjs[] = $this->getReference($role, Role::class);
         }
 
         $profile->setRoles(new ArrayCollection($roleObjs));

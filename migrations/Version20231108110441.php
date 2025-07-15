@@ -36,8 +36,8 @@ final class Version20231108110441 extends AbstractMigration
 
         $this->addSql('DROP TABLE event');
         $this->addSql('DROP TABLE event_participation');
-        $this->addSql('ALTER TABLE day DROP event_id');
-        $this->addSql('ALTER TABLE participant DROP event');
+        $this->addSql('ALTER TABLE day DROP COLUMN event_id');
+        $this->addSql('ALTER TABLE participant DROP COLUMN event');
     }
 
     /**

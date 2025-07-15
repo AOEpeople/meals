@@ -48,7 +48,7 @@ final class Version20211020114215 extends AbstractMigration
         $this->addSql('ALTER TABLE participant DROP FOREIGN KEY FK_D79F6B1159E5119C');
         $this->addSql('DROP TABLE slot');
         $this->addSql('DROP INDEX IDX_D79F6B1159E5119C ON participant');
-        $this->addSql('ALTER TABLE participant DROP slot_id');
+        $this->addSql('ALTER TABLE participant DROP COLUMN slot_id');
     }
 
     /**

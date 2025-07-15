@@ -30,7 +30,7 @@ final class Version20240718094546 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE dish DROP diet, CHANGE one_serving_size one_serving_size TINYINT(1) DEFAULT 0 NOT NULL');
+        $this->addSql('ALTER TABLE dish DROP COLUMN diet, CHANGE one_serving_size one_serving_size TINYINT(1) DEFAULT 0 NOT NULL');
     }
 
     /**

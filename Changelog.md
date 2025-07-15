@@ -1,5 +1,72 @@
 # Changelog
 
+## Version v3.1.11 (2025-07-14)
+
+### Fixes
+
+- fix parsing error on empty transactions (49ef76b9)
+- fix missing 'group by' clause in 'only_full_group_by'-sql_mode (5df4a7b5)
+- fix migrations (0412ec62)
+- fixed all cypress tests (b75d3868)
+- fixed all backend tests (c6242ace)
+- fixed some backend tests (0c88789b)
+- fixed frontend unit tests (c1652673)
+- fixed guestButton (c2313f81)
+- fixed modal that shows participants for an event (d8eb7a9c)
+- fixed backend structure of events works but destroyed join and leave methods (6649f0ad)
+- fixed rebase error oops (f2727994)
+- fixed eventParticipation collection in Controller, changed getEvents() and added getEvent(),changed DataFixtures, updated Day.php (5cf3252d)
+
+### Refactoring
+
+- refactoring but the backend tests broke (ae1a3b15)
+
+### Chores and tidying
+
+- update cs-fixer because of differing versions locally and ci (ee73ca7c)
+- updated participation counter and checkbox to be updated via mercure at the correct time (36693449)
+- Updated id generation to avoid duplicate key problem, event link is generated correctly, event is shown, guest can sign in to an event (301e90c9)
+- updated join and delete methods (8af3ec98)
+- updated structure of event dictionary and started to debug in order to find mistake in doctrine for the getWeeks() (f7000859)
+- updated event id in data set migration (dc04eddc)
+- updated events in test (12a104c8)
+- updated api calls for events now including event id, added getEventIdBySlug Method to fetch eventId by its title (0cec3ec2)
+- updated methods in EventController.php (b1aa745a)
+- updated dashboard to show both events (not working yet) (8918f28b)
+- updated fixture and tried to adjust the files to the new EventParticipation Dictionary (c6ac58e1)
+
+### Other
+
+- change costs output to always output full username (68306eb6)
+- implement feedback (c2c80bb6)
+- remove defined charset (c4e63c8d)
+- change adding roles from event listener to migration (8797a6ca)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (77c0e79c)
+- add automatic checking for presence of user roles in db to mitigate access lockout on buggy migrations (68b47b64)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (ca191f3c)
+- final refactoring changes (e76e1b4f)
+- added seperate methods for event and meal invitation (7074abfe)
+- edited the mapping of event, url generation works now (6b39eb9f)
+- started to edit guest invitation (277c7c5a)
+- ran prettier (f96bb1fd)
+- added events to the notification of updated/new week in mattermost (d80e5126)
+- added events to dashboard (2a61dfb1)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (d4f07b8f)
+- enabled deleting of events and updated the frontend to always show two empty boxes for events (4df77d99)
+- Ändern von Events funktioniert (52223e6d)
+- deleted comments and updated formatting (8eca1904)
+- Event is shown in the frontend - updated weekStore and the fetch for events from backend (68dcaf9f)
+- deleted logger (f56087dc)
+- started to update frontend to show events (fbe68928)
+- Added possibility to input two events for one day, doesn't show in the frontend yet (e7e12266)
+- event is input into the database, just one event at a time works at the moment (0cbfd519)
+- changed MenuDay.vue, two events can now be input (70bcc2e2)
+- migrated db, added event collection to Day.php (77943ba8)
+- added email as a variable (eb09bd19)
+- made the design of the event selection responsive (df8db137)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (e1e36f65)
+- added email to user profile (81a56ba2)
+
 ## Version v3.1.10 (2025-06-26)
 
 ### Fixes

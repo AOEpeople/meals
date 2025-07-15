@@ -30,7 +30,7 @@ final class Version20211103183957 extends AbstractMigration
         $this->abortOnIncompatibleDB();
 
         // Drop the hidden flag from user profile
-        $this->addSql('ALTER TABLE profile DROP hidden');
+        $this->addSql('ALTER TABLE profile DROP COLUMN hidden');
     }
 
     /**

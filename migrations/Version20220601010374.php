@@ -32,7 +32,7 @@ final class Version20220601010374 extends AbstractMigration
     {
         $this->abortOnIncompatibleDB();
 
-        $this->addSql('ALTER TABLE dish DROP one_serving_size');
+        $this->addSql('ALTER TABLE dish DROP COLUMN one_serving_size');
     }
 
     /**

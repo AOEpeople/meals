@@ -9,5 +9,9 @@ export default async function getCosts() {
 
     await request();
 
+    if (Array.isArray(costs.value?.users)) {
+        costs.value.users = {};
+    }
+
     return { error, costs };
 }

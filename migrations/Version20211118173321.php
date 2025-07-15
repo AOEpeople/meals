@@ -31,7 +31,7 @@ final class Version20211118173321 extends AbstractMigration
     {
         $this->abortOnIncompatibleDB();
 
-        $this->addSql('ALTER TABLE slot DROP deleted');
+        $this->addSql('ALTER TABLE slot DROP COLUMN deleted');
     }
 
     /**

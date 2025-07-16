@@ -1,5 +1,20 @@
 # Changelog
 
+## Version v3.1.12 (2025-07-16)
+
+### Fixes
+
+- add missing fixtures in tests (1b1a43e8)
+- update deprecated methods with new equivalent (fa4fbfc6)
+
+### Chores and tidying
+
+- update packages (c184400b)
+
+### Other
+
+- use DROP column instead only DROP (1e810849)
+
 ## Version v3.1.11 (2025-07-14)
 
 ### Fixes

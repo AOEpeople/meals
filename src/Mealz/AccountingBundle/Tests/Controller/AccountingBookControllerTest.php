@@ -3,7 +3,12 @@
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -23,6 +28,11 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
             new LoadUsers(self::getContainer()->get('security.user_password_hasher')),

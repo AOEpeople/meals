@@ -37,17 +37,13 @@ final class Version20211020114215 extends AbstractMigration
             ') ENGINE = InnoDB'
         );
         $this->addSql('ALTER TABLE participant ADD slot_id INT DEFAULT NULL AFTER meal_id');
-        $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B1159E5119C FOREIGN KEY (slot_id) REFERENCES slot (id)');
-        $this->addSql('CREATE INDEX IDX_D79F6B1159E5119C ON participant (slot_id)');
     }
 
     public function down(Schema $schema): void
     {
         $this->abortOnIncompatibleDB();
 
-        $this->addSql('ALTER TABLE participant DROP FOREIGN KEY FK_D79F6B1159E5119C');
         $this->addSql('DROP TABLE slot');
-        $this->addSql('DROP INDEX IDX_D79F6B1159E5119C ON participant');
         $this->addSql('ALTER TABLE participant DROP COLUMN slot_id');
     }
 

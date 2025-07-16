@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
@@ -30,6 +31,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
         $this->loadFixtures([
             new LoadWeeks(),
             new LoadDays(),
+            new LoadCategories(),
             new LoadDishes(),
             new LoadDishVariations(),
             new LoadMeals(),

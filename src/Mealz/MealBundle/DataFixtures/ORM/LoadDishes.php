@@ -59,12 +59,10 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
     public function loadCategories(): void
     {
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Category) {
-                // we can't just use $reference here, because
-                // getReference() does some doctrine magic that getReferences() does not
-                $this->categories[] = $this->getReference($referenceName);
-            }
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Category::class]) as $key) {
+            // we can't just use $reference here, because
+            // getReference() does some doctrine magic that getReferences() does not
+            $this->categories[] = $this->getReference($key, Category::class);
         }
     }
 

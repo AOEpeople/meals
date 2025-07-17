@@ -1,5 +1,20 @@
 # Changelog
 
+## Version v3.1.13 (2025-07-17)
+
+### Fixes
+
+- fix linting problem with new phpmd rule (1c9ab930)
+
+### Chores and tidying
+
+- Update Version20211020114215.php (ada8158e)
+
+### Other
+
+- Bump vue-i18n from 9.14.3 to 9.14.5 in /src/Resources (fcd5e423)
+- define character set (6f2e2561)
+
 ## Version v3.1.12 (2025-07-16)
 
 ### Fixes

@@ -36,6 +36,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     {
         $this->username = $username;
     }
+
     public function setEmail(string $email): void
     {
         $this->email = $email;

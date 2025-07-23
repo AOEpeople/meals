@@ -20,10 +20,10 @@ final class Version20240823122658 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE day ADD CONSTRAINT FK_E5A0299071F7E88B FOREIGN KEY (event_id) REFERENCES event_participation (id)');
+        $this->addSql('ALTER TABLE day ADD CONSTRAINT FK_E5A0299071F7E88B FOREIGN KEY (event_id) REFERENCES event_participation (id) ON DELETE SET NULL');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_E5A0299071F7E88B ON day (event_id)');
-        $this->addSql('ALTER TABLE event_participation ADD CONSTRAINT FK_8F0C52E3E5A02990 FOREIGN KEY (day) REFERENCES day (id)');
-        $this->addSql('ALTER TABLE event_participation ADD CONSTRAINT FK_8F0C52E33BAE0AA7 FOREIGN KEY (event) REFERENCES event (id)');
+        $this->addSql('ALTER TABLE event_participation ADD CONSTRAINT FK_8F0C52E3E5A02990 FOREIGN KEY (day) REFERENCES day (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE event_participation ADD CONSTRAINT FK_8F0C52E33BAE0AA7 FOREIGN KEY (event) REFERENCES event (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE guest_invitation ADD CONSTRAINT FK_CC0531331FB8D185 FOREIGN KEY (host_id) REFERENCES profile (id) ON DELETE NO ACTION');
         $this->addSql('ALTER TABLE login CHANGE password password VARCHAR(128) NOT NULL');
         $this->addSql('ALTER TABLE login ADD CONSTRAINT FK_AA08CB10CCFA12B8 FOREIGN KEY (profile_id) REFERENCES profile (id)');

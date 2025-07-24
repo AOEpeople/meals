@@ -33,7 +33,7 @@ class Day extends AbstractMessage implements JsonSerializable
     private Collection $meals;
 
     #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
-    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private ?EventParticipation $event = null;
 
     #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]

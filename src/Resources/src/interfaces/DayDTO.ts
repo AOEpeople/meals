@@ -12,7 +12,7 @@ export interface DayDTO {
     meals: Dictionary<MealDTO[]>;
     enabled: boolean;
     id: number;
-    event: number | null;
+    events: Dictionary<EventDTO>;
     date: DateTime;
     lockDate: DateTime;
 }
@@ -21,4 +21,11 @@ export interface MealDTO {
     dishSlug: string | null;
     mealId: number | null;
     participationLimit: number;
+}
+
+export interface EventDTO {
+    eventSlug: string | null;
+    eventId: number | null;
+    eventTitle: string | null;
+    isPublic: boolean | null;
 }

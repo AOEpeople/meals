@@ -1,5 +1,13 @@
 import { Store } from '@/stores/store';
-import { type Dashboard, type Day, type Meal, type Slot, useDashboardData, type Week } from '@/api/getDashboardData';
+import {
+    type Dashboard,
+    type Day,
+    type EventParticipation,
+    type Meal,
+    type Slot,
+    useDashboardData,
+    type Week
+} from '@/api/getDashboardData';
 import { type Dictionary } from '@/types/types';
 import { mercureReceiver } from '@/tools/mercureReceiver';
 import useMealState from '@/services/useMealState';
@@ -40,16 +48,30 @@ class DashboardStore extends Store<Dashboard> {
         return undefined;
     }
 
-    public getDayByEventParticipationId(eventParticipationId: number): Day | undefined {
+    public getDayByEventParticipationId(participationId: number): Day | undefined {
         for (const week of Object.values(this.state.weeks)) {
             for (const day of Object.values(week.days)) {
-                if (
-                    day.event !== null &&
-                    day.event !== undefined &&
-                    day.event.participationId === eventParticipationId
-                ) {
-                    return day;
+                for (const iterator in Object.values(day.events)) {
+                    if (day.events[iterator].participationId === participationId) {
+                        return day;
+                    }
                 }
+            }
+        }
+    }
+
+    public getEventParticipationById(eventParticipationId: number): EventParticipation | undefined {
+        for (const week of Object.values(this.state.weeks)) {
+            for (const day of Object.values(week.days)) {
+                if (!day || !day.events) continue;
+                for (const event of Object.values(day.events))
+                    if (
+                        event.eventId !== null &&
+                        event.eventId !== undefined &&
+                        event.eventId === eventParticipationId
+                    ) {
+                        return event;
+                    }
             }
         }
     }
@@ -115,15 +137,23 @@ class DashboardStore extends Store<Dashboard> {
 
     public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
         const day = this.getDay(weekId, dayId);
-        if (day !== null && day !== undefined && day.event !== null && day.event.eventId === eventId) {
-            day.event.participations = participations;
+        if (day !== null && day !== undefined && day.events !== null) {
+            for (const iterator in Object.values(day.events)) {
+                if (day.events[iterator].eventId === eventId) {
+                    day.events[iterator].participations = participations;
+                }
+            }
         }
     }
 
     public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {
         const day = this.getDayByEventParticipationId(participationId);
-        if (day !== undefined && day.event) {
-            day.event.isParticipating = isParticipating;
+        if (day !== undefined) {
+            for (const iterator in Object.values(day.events)) {
+                if (day.events[iterator].participationId === participationId) {
+                    day.events[iterator].isParticipating = isParticipating;
+                }
+            }
         }
     }
 

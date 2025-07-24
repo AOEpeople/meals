@@ -15,10 +15,12 @@ import { useI18n } from 'vue-i18n';
 import { CheckIcon } from '@heroicons/vue/solid';
 import { onMounted, ref } from 'vue';
 import { Invitation } from '@/enums/Invitation';
+import type { EventParticipation } from '@/api/getDashboardData';
 
 const props = defineProps<{
   dayID: string;
   invitation: Invitation;
+  eventParticipation?: EventParticipation;
 }>();
 
 const { t } = useI18n();
@@ -26,7 +28,9 @@ const url = ref('');
 
 onMounted(async () => {
   const { link, error } =
-    props.invitation === Invitation.MEAL ? await useGuestLink(props.dayID) : await getEventGuestLink(props.dayID);
+    props.invitation === Invitation.MEAL
+      ? await useGuestLink(props.dayID)
+      : await getEventGuestLink(props.eventParticipation);
   if (error.value === false && link.value !== undefined) {
     copyTextToClipboard(link.value.url);
     url.value = link.value.url;

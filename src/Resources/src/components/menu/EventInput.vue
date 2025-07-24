@@ -1,6 +1,6 @@
 <template>
   <Combobox
-    v-model="value"
+    v-model="selectedEvent"
     as="span"
     class="relative w-full"
     nullable
@@ -19,7 +19,7 @@
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="() => (value ? value.title : '')"
+          :displayValue="() => (selectedEvent ? selectedEvent.title : '')"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
@@ -28,7 +28,7 @@
           aria-hidden="true"
           @click="
             setFilter('');
-            value = null;
+            selectedEvent = null;
           "
         />
       </div>
@@ -78,7 +78,7 @@ import useDetectClickOutside from '@/services/useDetectClickOutside';
 import { type Event, useEvents } from '@/stores/eventsStore';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 import { XIcon } from '@heroicons/vue/solid';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EventIcon from '../misc/EventIcon.vue';
 
@@ -99,13 +99,19 @@ const emit = defineEmits(['update:modelValue']);
 const openProp = ref(false);
 const combobox = ref<HTMLElement | null>(null);
 
-const value = computed({
+const selectedEvent = computed({
   get() {
     return props.modelValue;
   },
   set(value) {
     openProp.value = false;
     emit('update:modelValue', value);
+  }
+});
+
+onMounted(() => {
+  if (props.modelValue) {
+    selectedEvent.value = props.modelValue;
   }
 });
 

@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
@@ -30,6 +31,7 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestPartiSrv;
+    private EventParticipationService $eventService;
 
     public function __construct(
         DishService $dishSrv,
@@ -101,9 +103,8 @@ class ApiController extends BaseController
                     'slots' => [],
                     'meals' => [],
                     'isEnabled' => $day->isEnabled(),
-                    'event' => $this->apiSrv->getEventParticipationData($day, $profile),
+                    'events' => $this->apiSrv->getEventParticipationsData($day, $profile),
                 ];
-
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
                 /** @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
@@ -179,9 +180,7 @@ class ApiController extends BaseController
         foreach ($meals as $meal) {
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
-
-        $list['event'] = $this->apiSrv->getEventParticipationInfo($day);
-
+        $list['events'] = $this->eventService->getEventParticipationData($day);
         $list['day'] = $day->getDateTime();
 
         return new JsonResponse($list, Response::HTTP_OK);
@@ -318,7 +317,11 @@ class ApiController extends BaseController
         ];
     }
 
-    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals
+    private function addMealWithVariations(
+        Meal $meal,
+        float $participationCount,
+        ?Profile $profile,
+        array &$meals
     ): void {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);

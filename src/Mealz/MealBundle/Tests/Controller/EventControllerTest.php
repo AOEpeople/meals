@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\DayRepository;
-use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -141,22 +141,22 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($day);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
-
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $eventParticipationId = $eventParticipation->getId();
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') . '/' . $eventParticipationId;
         $this->client->request('POST', $url);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
 
-        $eventPartRepo = self::getContainer()->get(EventParticipationRepositoryInterface::class);
+        $eventPartRepo = self::getContainer()->get(EventPartRepoInterface::class);
         $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
         $this->assertNotNull($eventPart);
 
         $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
-        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $part = $partRepo->findOneBy(['event_participation' => $eventPart->getId()]);
         $this->assertNotNull($part);
 
         $this->assertEquals(self::USER_KITCHEN_STAFF, $part->getProfile()->getUsername());
@@ -175,25 +175,26 @@ class EventControllerTest extends AbstractControllerTestCase
         $day = $dayRepo->matching($criteria)->get(0);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
+        $eventParticipationId = $eventParticipation->getId();
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') . '/' . $eventParticipationId;
         $this->client->request('POST', $url);
 
-        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s') . '/' . $eventParticipationId;
         $this->client->request('DELETE', $url);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
 
-        $eventPartRepo = self::getContainer()->get(EventParticipationRepositoryInterface::class);
+        $eventPartRepo = self::getContainer()->get(EventPartRepoInterface::class);
         $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
         $this->assertNotNull($eventPart);
 
         $partRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
 
         /** @var Participant $part */
-        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $part = $partRepo->findOneBy(['event_participation' => $eventPart->getId()]);
         $this->assertNull($part);
     }
 
@@ -214,18 +215,20 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($day);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
+        $eventParticipationId = $eventParticipation->getId();
 
         $date = $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
 
         // Verify no participants in new event
-        $this->client->request('GET', '/api/participations/event/' . $date);
+        $url = '/api/events/participation/' . $date . '/' . $eventParticipationId;
+        $this->client->request('GET', $url);
         $participants = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, count($participants));
 
-        $this->client->request('POST', '/api/events/participation/' . $date);
+        $this->client->request('POST', '/api/events/participation/' . $date . '/' . $eventParticipationId);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/participations/event/' . $date);
+        $this->client->request('GET', '/api/events/participation/' . $date . '/' . $eventParticipationId);
         $participants = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, count($participants));

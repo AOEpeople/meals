@@ -21,22 +21,22 @@ class EventParticipation
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'event', targetEntity: Day::class)]
+    #[ORM\ManyToOne(targetEntity: Day::class, inversedBy: 'events')]
     #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Day $day;
 
-    #[ORM\ManyToOne(targetEntity: Event::class)]
+    #[ORM\ManyToOne(targetEntity: Event::class, cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    private Event $event;
+    public Event $event;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class)]
+    #[ORM\OneToMany(mappedBy: 'event_participation', targetEntity: Participant::class, cascade: ['persist', 'remove'])]
     public ?Collection $participants = null;
 
     public function __construct(Day $day, Event $event, ?Collection $participants = null)
     {
         $this->day = $day;
         $this->event = $event;
-        $this->participants = $participants;
+        $this->participants = $participants ?? new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,6 +79,11 @@ class EventParticipation
         return null;
     }
 
+    public function setParticipant(Participant $participant): void
+    {
+        $this->participants->add($participant);
+    }
+
     public function getParticipants(): ArrayCollection
     {
         if (null === $this->participants) {
@@ -86,5 +91,15 @@ class EventParticipation
         }
 
         return new ArrayCollection($this->participants->toArray());
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'event' => $this->getEvent(),
+            'day' => $this->getDay()->getId(),
+            'participants' => $this->getParticipants(),
+        ];
     }
 }

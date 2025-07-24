@@ -216,17 +216,17 @@ MealzMealBundle_api_events_delete:
   methods: [ DELETE ]
 
 MealzMealBundle_api_events_join:
-  path: /api/events/participation/{date}
+  path: /api/events/participation/{date}/{eventId}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::join }
   methods: [ POST ]
 
 MealzMealBundle_api_events_leave:
-  path: /api/events/participation/{date}
+  path: /api/events/participation/{date}/{eventId}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::leave }
   methods: [ DELETE ]
 
 MealzMealBundle_Meal_api_guest_event_invitation:
-    path:  /event/invitation/{dayId}
+    path:  /event/invitation/{dayId}/{eventId}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::newGuestEventInvitation }
     requirements:
         dayId: '[1-9][0-9]*'
@@ -357,7 +357,7 @@ MealzMealBundle_api_participations:
     methods: [ GET ]
 
 MealzMealBundle_api_event_participations:
-    path: /api/participations/event/{date}
+    path: /api/events/participation/{date}/{eventId}
     defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventParticipants }
     methods: [ GET ]
 

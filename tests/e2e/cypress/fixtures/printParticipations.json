@@ -66,10 +66,13 @@
             "participations": 0
         }
     },
-    "event": {
-        "name": "Afterwork",
-        "participants": []
-    },
+    "events": [
+        {
+            "name": "Afterwork",
+            "participants": []
+        }
+    ]
+    ,
     "day": {
         "date": "2024-01-24 12:00:00.000000",
         "timezone_type": 3,

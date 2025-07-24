@@ -19,8 +19,8 @@ class Participant
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: EventParticipation::class, inversedBy: 'participants')]
-    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', nullable: true)]
-    private ?EventParticipation $event = null;
+    #[ORM\JoinColumn(name: 'event_participation', referencedColumnName: 'id', nullable: true)]
+    private ?EventParticipation $event_participation = null;
 
     #[Assert\NotNull]
     #[ORM\ManyToOne(targetEntity: Meal::class, inversedBy: 'participants')]
@@ -67,7 +67,7 @@ class Participant
     {
         $this->profile = $profile;
         $this->meal = $meal;
-        $this->event = $eventParticipation;
+        $this->event_participation = $eventParticipation;
         $this->combinedDishes = new DishCollection();
     }
 
@@ -101,14 +101,14 @@ class Participant
         return $this->id;
     }
 
-    public function getEvent(): ?EventParticipation
+    public function getEventParticipation(): ?EventParticipation
     {
-        return $this->event;
+        return $this->event_participation;
     }
 
-    public function setEvent(EventParticipation $event): void
+    public function setEventParticipation(EventParticipation $event_participation): void
     {
-        $this->event = $event;
+        $this->event_participation = $event_participation;
     }
 
     public function setMeal(Meal $meal): void

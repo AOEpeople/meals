@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
@@ -61,7 +62,7 @@ class MealGuestController extends BaseController
     public function newGuestInvitation(
         #[MapEntity(id: 'dayId')]
         Day $mealDay,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
     ): JsonResponse {
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
@@ -76,14 +77,16 @@ class MealGuestController extends BaseController
     #[IsGranted('ROLE_USER')]
     public function newGuestEventInvitation(
         Day $dayId,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        #[MapEntity(id: 'eventId')]
+        EventParticipation $eventParticipation,
     ): JsonResponse {
         $userProfile = $this->getProfile();
         if (null === $userProfile) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
         }
 
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $dayId);
+        $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($userProfile, $dayId, $eventParticipation);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], Response::HTTP_OK);
     }
@@ -101,7 +104,7 @@ class MealGuestController extends BaseController
         $guestData = [
             'date' => $invitation->getDay()->getDateTime(),
             'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
-            'event' => $invitation->getDay()->getEvent()->getEvent()->getTitle(),
+            'event' => $invitation->getEventParticipation() ? $invitation->getEventParticipation()->getEvent()->getTitle() : null,
         ];
 
         return new JsonResponse($guestData, Response::HTTP_OK);
@@ -110,7 +113,7 @@ class MealGuestController extends BaseController
     public function joinEventAsGuest(
         string $invitationId,
         Request $request,
-        GuestInvitationRepositoryInterface $guestInvitationRepo
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
     ): JsonResponse {
         $parameters = json_decode($request->getContent(), true);
 
@@ -131,7 +134,8 @@ class MealGuestController extends BaseController
                 $parameters['firstName'],
                 $parameters['lastName'],
                 $parameters['company'],
-                $invitation->getDay()
+                $invitation->getDay(),
+                $invitation->getEventParticipation(),
             );
 
             $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));

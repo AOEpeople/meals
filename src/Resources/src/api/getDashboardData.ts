@@ -45,6 +45,14 @@ export type EventParticipation = {
     participations: number;
     isParticipating: boolean;
     isPublic: boolean;
+    day: Day;
+};
+
+export type Event = {
+    id: number;
+    title: string;
+    slug: string;
+    public: boolean;
 };
 
 export type Day = {
@@ -55,7 +63,8 @@ export type Day = {
     slots: Dictionary<Slot>;
     slotsEnabled: boolean;
     isEnabled: boolean;
-    event: EventParticipation | null;
+    events: Dictionary<EventParticipation>;
+    dayId: number;
 };
 
 export type Week = {
@@ -71,7 +80,6 @@ export type Dashboard = {
 
 export async function useDashboardData() {
     const { response: dashboardData, request } = useApi<Dashboard>('GET', 'api/dashboard');
-
     const loaded = ref(false);
 
     if (loaded.value === false) {

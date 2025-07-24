@@ -439,6 +439,9 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
     needs: [ publish, buildImages ]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [ "${{ needs.buildImages.outputs.image }}" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -453,7 +456,7 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ needs.buildImages.outputs.image }}
+          image: ${{ matrix.image }}
           args: --file=Dockerfile
       # Replace any "null" security severity values with 0. The null value is used in the case
       # of license-related findings, which do not do not indicate a security vulnerability.
@@ -464,6 +467,7 @@ jobs:
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
+          category: ${{ matrix.image }}
           sarif_file: snyk.sarif
 
   deploy:

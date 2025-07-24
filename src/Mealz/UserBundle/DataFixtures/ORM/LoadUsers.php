@@ -11,12 +11,13 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class LoadUsers extends Fixture implements OrderedFixtureInterface
+final class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -34,6 +35,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->passwordHasher = $passwordHasher;
     }
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -100,6 +102,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as first

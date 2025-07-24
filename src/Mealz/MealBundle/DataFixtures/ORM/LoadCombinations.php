@@ -10,9 +10,10 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class LoadCombinations extends Fixture implements OrderedFixtureInterface
+final class LoadCombinations extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -36,6 +37,7 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -45,6 +47,7 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
+    #[Override]
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

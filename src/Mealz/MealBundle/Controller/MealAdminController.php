@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_KITCHEN_STAFF')]
-class MealAdminController extends BaseController
+final class MealAdminController extends BaseController
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

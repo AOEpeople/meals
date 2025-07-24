@@ -2,15 +2,17 @@
 
 namespace App\Mealz\MealBundle\Validator\Constraints;
 
+use Override;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * @Annotation
  */
-class DishConstraint extends Constraint
+final class DishConstraint extends Constraint
 {
     public string $message = 'error.meal.has_participants';
 
+    #[Override]
     public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;

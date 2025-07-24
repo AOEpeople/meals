@@ -11,8 +11,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 
-class LoadDays extends Fixture implements OrderedFixtureInterface
+final class LoadDays extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -31,6 +32,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -62,6 +64,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
         $this->addReference('day-' . $this->counter++, $day);
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as third

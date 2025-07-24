@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\EventListener;
 
 use App\Mealz\MealBundle\Service\HttpHeaderUtility;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -50,6 +51,7 @@ class LocalisationListener implements EventSubscriberInterface
      *
      * @psalm-return array{'kernel.request': array{0: array{0: 'onKernelRequest', 1: 20}}}
      */
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

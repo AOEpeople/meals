@@ -18,12 +18,14 @@ use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 
-class CombinedMealServiceTest extends AbstractDatabaseTestCase
+final class CombinedMealServiceTest extends AbstractDatabaseTestCase
 {
     private CombinedMealService $cms;
     private Dish $combinedDish;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

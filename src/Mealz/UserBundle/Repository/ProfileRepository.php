@@ -6,12 +6,14 @@ namespace App\Mealz\UserBundle\Repository;
 
 use App\Mealz\MealBundle\Repository\BaseRepository;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 
 /**
  * @extends BaseRepository<int, Profile>
  */
-class ProfileRepository extends BaseRepository implements ProfileRepositoryInterface
+final class ProfileRepository extends BaseRepository implements ProfileRepositoryInterface
 {
+    #[Override]
     public function findAllExcept($usernames): array
     {
         $queryBuilder = $this->createQueryBuilder('p');

@@ -4,13 +4,14 @@ namespace App\Mealz\MealBundle\Form\DataTransformer;
 
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
  * @implements DataTransformerInterface<Profile, string>
  */
-class ProfileToStringTransformer implements DataTransformerInterface
+final class ProfileToStringTransformer implements DataTransformerInterface
 {
     private EntityManagerInterface $objectManager;
 
@@ -19,6 +20,7 @@ class ProfileToStringTransformer implements DataTransformerInterface
         $this->objectManager = $objectManager;
     }
 
+    #[Override]
     public function transform($value): string
     {
         if (!($value instanceof Profile)) {
@@ -33,6 +35,7 @@ class ProfileToStringTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException
      */
+    #[Override]
     public function reverseTransform($value): ?Profile
     {
         if (!is_string($value)) {

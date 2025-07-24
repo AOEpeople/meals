@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
-class ParticipantListFactory
+final class ParticipantListFactory
 {
     private ParticipantRepositoryInterface $participantRepo;
 

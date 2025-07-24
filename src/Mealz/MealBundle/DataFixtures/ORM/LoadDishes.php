@@ -10,8 +10,9 @@ use App\Mealz\MealBundle\Enum\Diet;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Override;
 
-class LoadDishes extends Fixture implements OrderedFixtureInterface
+final class LoadDishes extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -24,6 +25,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
@@ -66,6 +68,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         }
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as fifth

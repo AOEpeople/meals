@@ -100,8 +100,7 @@ class MealGuestController extends BaseController
         if (null === $invitation) {
             return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
         }
-        // es kommt hier nur die EventId an
-        // $this->logger->info('Event '. print_r($eventParticipation));
+
         $guestData = [
             'date' => $invitation->getDay()->getDateTime(),
             'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),

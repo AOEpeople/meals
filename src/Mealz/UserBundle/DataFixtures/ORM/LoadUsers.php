@@ -99,7 +99,14 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         ];
 
         foreach ($users as $user) {
-            $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['email'], $user['roles']);
+            $this->addUser(
+                $user['username'],
+                $user['password'],
+                $user['firstName'],
+                $user['lastName'],
+                $user['email'],
+                $user['roles']
+            );
         }
 
         for ($i = 0; $i < 15; ++$i) {

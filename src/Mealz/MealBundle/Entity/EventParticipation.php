@@ -22,11 +22,11 @@ class EventParticipation
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'event', targetEntity: Day::class)]
-    #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'day', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Day $day;
 
     #[ORM\ManyToOne(targetEntity: Event::class)]
-    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Event $event;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participant::class)]

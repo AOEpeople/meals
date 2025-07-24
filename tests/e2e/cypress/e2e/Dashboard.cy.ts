@@ -375,7 +375,7 @@ describe('Test Dashboard View', () => {
         cy.get('header > nav > div > a > svg').click();
         cy.wait(['@getDashboard', '@getEvents']);
 
-            // join afterwork
+        // join afterwork
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()

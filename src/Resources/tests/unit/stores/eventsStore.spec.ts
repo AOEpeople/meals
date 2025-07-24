@@ -19,7 +19,6 @@ const asyncFunc: () => Promise<void> = async () => {
 
 const getMockedResponses = (method: string, url: string) => {
     if (url.includes('api/events/participation/') && method === 'GET') {
-        console.log(userStrings);
         return {
             response: ref(userStrings),
             request: asyncFunc,
@@ -157,7 +156,6 @@ describe('Test EventsStore', () => {
     it('should fetch all the users that participate in an event and return a list of their names', async () => {
 
         const users = await getParticipantsForEvent('2024-01-24 12:00:00.000000','afterwork');
-       //console.log(users);
         expect(users).toHaveLength(3);
         for (const user of userStrings) {
             expect(users).toContain(user);

@@ -440,9 +440,6 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
     needs: [ publish, buildImages ]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image: [ "${{ needs.buildImages.outputs.image }}" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -457,18 +454,28 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ matrix.image }}
+          image: ${{ needs.buildImages.outputs.image }}
           args: --file=Dockerfile
       # Replace any "null" security severity values with 0. The null value is used in the case
       # of license-related findings, which do not do not indicate a security vulnerability.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Copy snyk.sarif to a writable location
+        run: cp snyk.sarif snyk-editable.sarif
+      - name: Add categories to SARIF file
+        run: node ./snyk-category-generator.js snyk-editable.sarif
+      - name: Replace original SARIF file
+        run: mv snyk-editable.sarif snyk.sarif
       - name: Post process snyk sarif file
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          category: ${{ matrix.image }}
+          category: ${{ needs.buildImages.outputs.image }}
           sarif_file: snyk.sarif
 
   deploy:

@@ -15,6 +15,7 @@ node_modules
 !.eslintrc.cjs
 !.gitlab-ci.yml
 !.gitkeep
+!.github/
 !.stylelintrc.json
 !.php-cs-fixer.dist
 !/migrations

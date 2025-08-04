@@ -81,7 +81,7 @@ const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick(event: EventParticipation) {
-  if (isLocked(props.dayId) === true || isEventPast(event) === true) {
+  if (isLocked(props.dayId) === true || canModifyParticipation(event) === true) {
     return;
   }
   addLock(props.dayId);
@@ -93,21 +93,29 @@ async function handleClick(event: EventParticipation) {
   removeLock(props.dayId);
 }
 
-function isEventPast(event: EventParticipation) {
-  if (getEventById(event?.eventId ?? -1)?.slug === 'lunch-roulette') {
-    // special lock date for lunchroulette
-    const eventDate = new Date(props.day.date.date);
-    eventDate.setDate(eventDate.getDate() - 1);
-    eventDate.setHours(16, 0, 0, 0);
+function canModifyParticipation(event: EventParticipation) {
+  const evt = getEventById(event?.eventId ?? -1);
+  const now = new Date();
+  const eventDate = new Date(props.day.date.date);
 
-    const now = new Date();
-    const isPast = eventDate.getTime() < now.getTime();
-
-    return isPast;
+  // special lock date for lunchroulette
+  if (evt?.slug === 'lunch-roulette') {
+    // joining the lunchroulette event is available until 4 pm on the day before the event
+    if (!event.isParticipating) {
+      const joinCutoff = new Date(eventDate);
+      joinCutoff.setDate(joinCutoff.getDate() - 1);
+      joinCutoff.setHours(16, 0, 0, 0);
+      return now.getTime() > joinCutoff.getTime();
+    }
+    // for those who already joined: they can cancel the event until 10 am on event day
+    const leaveCutoff = new Date(eventDate);
+    leaveCutoff.setHours(10, 0, 0, 0);
+    return now.getTime() > leaveCutoff.getTime();
   }
-  const eventLockDate = new Date(props.day.date.date).setHours(17, 0);
-  const now = Date.now();
-  const isPast = eventLockDate < now;
-  return isPast;
+
+  // all other events can be left on eventday until 5 pm
+  const lockDate = new Date(eventDate);
+  lockDate.setHours(17, 0, 0, 0);
+  return now.getTime() > lockDate.getTime();
 }
 </script>

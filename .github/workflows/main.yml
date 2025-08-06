@@ -283,7 +283,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download docker images
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docker-dev-image
           path: /tmp/docker
@@ -338,12 +338,12 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - uses: actions/checkout@v4
       - name: Download docker app-image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docker-app-image
           path: /tmp/docker
       - name: Download docker dev-image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docker-dev-image
           path: /tmp/docker
@@ -386,12 +386,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Download docker app-image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docker-app-image
           path: /tmp/docker
       - name: Download docker dev-image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docker-dev-image
           path: /tmp/docker

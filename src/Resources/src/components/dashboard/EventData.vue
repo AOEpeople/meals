@@ -81,7 +81,7 @@ const { getEventById, joinEvent, leaveEvent } = useEvents();
 const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick(event: EventParticipation) {
-  if (isLocked(props.dayId) === true || canModifyParticipation(event) === true) {
+  if (isLocked(props.dayId) === true || cannotModifyParticipation(event) === true) {
     return;
   }
   addLock(props.dayId);
@@ -93,7 +93,7 @@ async function handleClick(event: EventParticipation) {
   removeLock(props.dayId);
 }
 
-function canModifyParticipation(event: EventParticipation) {
+function cannotModifyParticipation(event: EventParticipation) {
   const evt = getEventById(event?.eventId ?? -1);
   const now = new Date();
   const eventDate = new Date(props.day.date.date);

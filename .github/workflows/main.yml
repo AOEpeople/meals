@@ -42,7 +42,7 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -61,7 +61,7 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -112,7 +112,7 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -131,7 +131,7 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -292,7 +292,7 @@ jobs:
         run: |
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
@@ -460,7 +460,7 @@ jobs:
       # of license-related findings, which do not do not indicate a security vulnerability.
       # See https://github.com/github/codeql-action/issues/2187 for more context.
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
       - name: Copy snyk.sarif to a writable location

@@ -1,5 +1,82 @@
 # Changelog
 
+## Version v3.1.14 (2025-09-04)
+
+### Fixes
+
+- create new migration (f3cbae0a)
+- fix error on purging migrations during loading of fixtures due to constraint (b410709c)
+- Fix rebase (243424f2)
+- fixed all cypress tests (d6975d3a)
+- fixed all backend tests (59337498)
+- fixed some backend tests (e96487e4)
+- fixed frontend unit tests (9abc7690)
+- fixed guestButton (1a9a2ac8)
+- fixed modal that shows participants for an event (406587f5)
+- fixed backend structure of events works but destroyed join and leave methods (e801b6bd)
+- fixed rebase error oops (f992a2cf)
+- fixed eventParticipation collection in Controller, changed getEvents() and added getEvent(),changed DataFixtures, updated Day.php (b4aa9852)
+
+### Refactoring
+
+- refactoring but the backend tests broke (e6b31599)
+
+### Chores and tidying
+
+- update synk job (261fbd6f)
+- updated participation counter and checkbox to be updated via mercure at the correct time (784b20ec)
+- Updated id generation to avoid duplicate key problem, event link is generated correctly, event is shown, guest can sign in to an event (85bfeb05)
+- updated join and delete methods (240de040)
+- updated structure of event dictionary and started to debug in order to find mistake in doctrine for the getWeeks() (38248be9)
+- updated event id in data set migration (7972178f)
+- updated events in test (873e66bf)
+- updated api calls for events now including event id, added getEventIdBySlug Method to fetch eventId by its title (4e8045d3)
+- updated methods in EventController.php (091e0728)
+- updated dashboard to show both events (not working yet) (1b2cc993)
+- updated fixture and tried to adjust the files to the new EventParticipation Dictionary (c8ba3417)
+
+### Other
+
+- Bump actions/checkout from 4 to 5 (5f055bbe)
+- Bump actions/download-artifact from 4 to 5 (b19b9bd9)
+- Bump tmp from 0.2.3 to 0.2.4 in /tests/e2e (11876d9f)
+- Bump actions/setup-node from 4 to 5 (283f18e9)
+- add script to add unique categories per run to snyk.sarif (27273766)
+- changed methodname to match its function (8cb047e4)
+- Bump form-data from 4.0.0 to 4.0.4 in /src/Resources (9c02badf)
+- 270161: Refactor participation logic and enforce lunch-roulette sign-up and opt-out times (9364ded8)
+- remove comment and add constraint in entity (0223188b)
+- implement feedback and create new migration (e67e81e5)
+- add missing constraints from migrations to entities (de8afd88)
+- create migrations (ebeb92ec)
+- use mariadb 10.11 (74ef389f)
+- added email to user profile (0afe158f)
+- change costs output to always output full username (dff6a506)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (d847188a)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (0f5adc63)
+- final refactoring changes (976ec78c)
+- added seperate methods for event and meal invitation (c6b82c3c)
+- edited the mapping of event, url generation works now (cdc83ca1)
+- started to edit guest invitation (866a6fc6)
+- ran prettier (03f37d83)
+- added events to the notification of updated/new week in mattermost (9b7ed4f3)
+- added events to dashboard (b7cfce7d)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (2d2466f1)
+- enabled deleting of events and updated the frontend to always show two empty boxes for events (bcc3e047)
+- Ändern von Events funktioniert (582992f7)
+- deleted comments and updated formatting (afe95883)
+- Event is shown in the frontend - updated weekStore and the fetch for events from backend (1bcd1af1)
+- deleted logger (c3853897)
+- started to update frontend to show events (0668fcab)
+- Added possibility to input two events for one day, doesn't show in the frontend yet (285f25ed)
+- event is input into the database, just one event at a time works at the moment (4964785b)
+- changed MenuDay.vue, two events can now be input (bb45ef38)
+- migrated db, added event collection to Day.php (e24b0c3c)
+- added email as a variable (5cc35999)
+- made the design of the event selection responsive (4178b0fb)
+- added second event to the edit week site in the frontend, second event input opens when you input a first one (01aa5a0c)
+- added email to user profile (fcdd4070)
+
 ## Version v3.1.13 (2025-07-17)
 
 ### Fixes

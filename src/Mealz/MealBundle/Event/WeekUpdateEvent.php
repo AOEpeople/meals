@@ -7,7 +7,7 @@ namespace App\Mealz\MealBundle\Event;
 use App\Mealz\MealBundle\Entity\Week;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class WeekUpdateEvent extends Event
+final class WeekUpdateEvent extends Event
 {
     private Week $week;
     private bool $notify;

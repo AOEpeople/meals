@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
-class SecurityController extends AbstractController
+final class SecurityController extends AbstractController
 {
     private TokenStorageInterface $tokenStorage;
 

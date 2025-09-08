@@ -22,17 +22,18 @@ jobs:
     continue-on-error: false
     env:
       PHP_CS_FIXER_FUTURE_MODE: 1
+      PHP_CS_FIXER_IGNORE_ENV: 1
     steps:
       - uses: actions/checkout@v5
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           tools: composer:v2
       - name: Check code formatting with PHP-CS-Fixer
         run: |
           rm composer.json composer.lock
-          composer require friendsofphp/php-cs-fixer:^3.57
+          composer require friendsofphp/php-cs-fixer:^3.69
           vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
 
   lint:
@@ -98,7 +99,7 @@ jobs:
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           tools: composer
       - name: Run composer install
         run: composer install -n --prefer-dist

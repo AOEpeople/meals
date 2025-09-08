@@ -21,12 +21,14 @@ use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CashControllerTest extends AbstractControllerTestCase
+final class CashControllerTest extends AbstractControllerTestCase
 {
     protected Wallet $wallet;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

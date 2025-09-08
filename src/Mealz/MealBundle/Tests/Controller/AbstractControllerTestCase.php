@@ -21,6 +21,7 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Order;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Crawler;
@@ -38,6 +39,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     protected KernelBrowser $client;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->client = static::createClient();
@@ -116,6 +118,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * @param string $lastName  User last name
      * @param string $company   User company
      */
+    #[Override]
     protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
         $firstName = ('' !== $firstName) ? $firstName : 'Test';

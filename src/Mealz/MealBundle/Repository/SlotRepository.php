@@ -9,6 +9,6 @@ use App\Mealz\MealBundle\Entity\Slot;
 /**
  * @extends BaseRepository<int, Slot>
  */
-class SlotRepository extends BaseRepository implements SlotRepositoryInterface
+final class SlotRepository extends BaseRepository implements SlotRepositoryInterface
 {
 }

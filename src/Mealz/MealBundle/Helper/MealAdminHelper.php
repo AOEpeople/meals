@@ -15,7 +15,7 @@ use App\Mealz\MealBundle\Repository\MealRepository;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 use Exception;
 
-class MealAdminHelper
+final class MealAdminHelper
 {
     public function __construct(
         private readonly EventParticipationService $eventService,

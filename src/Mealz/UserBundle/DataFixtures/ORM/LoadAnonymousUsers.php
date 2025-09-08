@@ -11,12 +11,13 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Override;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
+final class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
@@ -39,6 +40,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
      *
      * @throws Exception
      */
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         if (!($manager instanceof EntityManagerInterface)) {
@@ -124,6 +126,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
         }
     }
 
+    #[Override]
     public function getOrder(): int
     {
         // load as tenth

@@ -20,17 +20,19 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateInterval;
 use DateTime;
 use Exception;
+use Override;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class TransactionRepositoryTest.
  */
-class TransactionRepositoryTest extends AbstractDatabaseTestCase
+final class TransactionRepositoryTest extends AbstractDatabaseTestCase
 {
     private TransactionRepository $transactionRepo;
 
     protected string $locale;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -7,7 +7,7 @@ namespace App\Mealz\AccountingBundle\Service\PayPal;
 use DateTime;
 use DateTimeImmutable;
 
-class Order
+final class Order
 {
     /**
      * PayPal Order-ID.

@@ -7,6 +7,7 @@ namespace App\Mealz\AccountingBundle\Command;
 use App\Mealz\AccountingBundle\Service\TransactionService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'mealz:accounting:paypal:add')]
-class PayPalAddTransCommand extends Command
+final class PayPalAddTransCommand extends Command
 {
     private ProfileRepositoryInterface $profileRepo;
     private TransactionService $transService;
@@ -28,6 +29,7 @@ class PayPalAddTransCommand extends Command
         $this->transService = $transService;
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -39,6 +41,7 @@ class PayPalAddTransCommand extends Command
     /**
      * @psalm-return 0|1
      */
+    #[Override]
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $profileID = $input->getOption('user-id');

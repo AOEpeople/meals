@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Exception;
+use Override;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +19,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class EcashControllerTest extends AbstractControllerTestCase
+final class EcashControllerTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

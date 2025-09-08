@@ -8,7 +8,7 @@ use DateTime;
 /**
  * logic to determine the next workday.
  */
-class Workday
+final class Workday
 {
     /**
      * array of weekdays that are considered workdays.

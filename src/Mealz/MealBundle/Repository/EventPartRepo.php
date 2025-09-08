@@ -7,12 +7,14 @@ namespace App\Mealz\MealBundle\Repository;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
+use Override;
 
 /**
  * @extends BaseRepository<int, EventParticipation>
  */
-class EventPartRepo extends BaseRepository implements EventPartRepoInterface
+final class EventPartRepo extends BaseRepository implements EventPartRepoInterface
 {
+    #[Override]
     public function add($eventParticipation): void
     {
         $entityManager = $this->getEntityManager();
@@ -20,6 +22,7 @@ class EventPartRepo extends BaseRepository implements EventPartRepoInterface
         $entityManager->flush();
     }
 
+    #[Override]
     public function findByEventAndDay(Day $day, Event $event): ?EventParticipation
     {
         $queryBuilder = $this->createQueryBuilder('m');

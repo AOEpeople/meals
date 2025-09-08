@@ -12,7 +12,7 @@
     }
   },
   "require": {
-    "php": ">=8.3",
+    "php": ">=8.4",
     "ext-bcmath": "*",
     "ext-calendar": "*",
     "ext-json": "*",
@@ -75,10 +75,10 @@
     "doctrine/doctrine-fixtures-bundle": "^3.6",
     "friendsofphp/php-cs-fixer": "3.80.0",
     "phploc/phploc": "^7.0",
-    "phpmd/phpmd": "~2.2",
+    "phpmd/phpmd": "^2.15",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9.5",
-    "psalm/plugin-symfony": "^5.1",
+    "psalm/plugin-symfony": "^5.2.7",
     "squizlabs/php_codesniffer": "2.8.1",
     "symfony/apache-pack": "^1.0",
     "symfony/browser-kit": "^6.4",
@@ -87,8 +87,8 @@
     "symfony/stopwatch": "^6.4",
     "symfony/var-dumper": "^6.4",
     "symfony/web-profiler-bundle": "^6.4",
-    "vimeo/psalm": "^5.24",
-    "weirdan/doctrine-psalm-plugin": "^2.9"
+    "vimeo/psalm": "^6.8.4",
+    "weirdan/doctrine-psalm-plugin": "^2.10"
   },
   "conflict": {
     "symfony/symfony": "*"

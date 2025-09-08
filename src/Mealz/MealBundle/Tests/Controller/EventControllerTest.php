@@ -16,10 +16,12 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
-class EventControllerTest extends AbstractControllerTestCase
+final class EventControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

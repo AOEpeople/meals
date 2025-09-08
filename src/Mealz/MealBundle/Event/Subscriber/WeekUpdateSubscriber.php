@@ -8,10 +8,11 @@ use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class WeekUpdateSubscriber implements EventSubscriberInterface
+final class WeekUpdateSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly CombinedMealService $combinedMealService,
@@ -26,6 +27,7 @@ class WeekUpdateSubscriber implements EventSubscriberInterface
      *
      * @psalm-return array{WeekUpdateEvent::class: 'onWeekUpdate'}
      */
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

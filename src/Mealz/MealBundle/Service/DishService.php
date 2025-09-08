@@ -15,7 +15,7 @@ use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use Exception;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DishService
+final class DishService
 {
     /**
      * Number of times a dish must be taken before it is considered old.

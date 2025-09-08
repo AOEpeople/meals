@@ -8,9 +8,10 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ParticipationUpdateSubscriber implements EventSubscriberInterface
+final class ParticipationUpdateSubscriber implements EventSubscriberInterface
 {
     private const string PUBLISH_TOPIC = 'participation-updates';
     private const string PUBLISH_MSG_TYPE = 'participationUpdate';
@@ -26,6 +27,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
      *
      * @psalm-return array{ParticipationUpdateEvent::class: 'onUpdate'}
      */
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

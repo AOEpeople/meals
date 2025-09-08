@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
-class OfferService
+final class OfferService
 {
     private ParticipantRepositoryInterface $participantRepo;
 

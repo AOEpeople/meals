@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Override;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -124,6 +125,7 @@ class Profile implements UserInterface, JsonSerializable
     /**
      * @return string[]
      */
+    #[Override]
     public function getRoles(): array
     {
         $roles = [];
@@ -186,6 +188,7 @@ class Profile implements UserInterface, JsonSerializable
         return null;
     }
 
+    #[Override]
     public function eraseCredentials(): void
     {
     }
@@ -200,6 +203,7 @@ class Profile implements UserInterface, JsonSerializable
      *
      * @psalm-return array{user: string, fullName: string, roles: array<string>}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [
@@ -209,6 +213,7 @@ class Profile implements UserInterface, JsonSerializable
         ];
     }
 
+    #[Override]
     public function getUserIdentifier(): string
     {
         return $this->username;

@@ -4,6 +4,7 @@ namespace App\Mealz\UserBundle\Entity;
 
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
@@ -47,6 +48,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         return $this->email;
     }
 
+    #[Override]
     public function getPassword(): string
     {
         return $this->password;
@@ -57,11 +59,13 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->password = $password;
     }
 
+    #[Override]
     public function getProfile(): ?Profile
     {
         return $this->profile;
     }
 
+    #[Override]
     public function setProfile(?Profile $profile = null): void
     {
         $this->profile = $profile;
@@ -97,6 +101,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     /**
      * @return string[]
      */
+    #[Override]
     public function getRoles(): array
     {
         return $this->profile ? $this->profile->getRoles() : [];
@@ -108,11 +113,13 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
+    #[Override]
     public function eraseCredentials(): void
     {
         // nothing to do here
     }
 
+    #[Override]
     public function getUserIdentifier(): string
     {
         return $this->username;

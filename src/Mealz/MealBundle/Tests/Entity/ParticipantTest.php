@@ -10,11 +10,13 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 
-class ParticipantTest extends AbstractDatabaseTestCase
+final class ParticipantTest extends AbstractDatabaseTestCase
 {
     private Participant $participant;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

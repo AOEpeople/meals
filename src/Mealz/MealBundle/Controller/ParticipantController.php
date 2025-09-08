@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-class ParticipantController extends BaseController
+final class ParticipantController extends BaseController
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,

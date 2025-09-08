@@ -11,12 +11,13 @@ use App\Mealz\UserBundle\Provider\OAuthUserProvider;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use Override;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class OAuthProviderTest extends AbstractControllerTestCase
+final class OAuthProviderTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
 
@@ -24,6 +25,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
     private OAuthUserProvider $sut;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -130,6 +132,8 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
     /**
      * Returns the mocked response from identity provider.
+     *
+     * @psalm-suppress UndefinedMagicMethod
      */
     private function getMockedUserResponse(
         string $username, string $firstName, string $lastName, ?string $email, array $roles

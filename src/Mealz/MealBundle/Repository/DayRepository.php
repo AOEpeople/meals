@@ -7,17 +7,20 @@ namespace App\Mealz\MealBundle\Repository;
 use App\Mealz\MealBundle\Entity\Day;
 use DateTime;
 use Doctrine\ORM\Query\Expr\Join;
+use Override;
 
 /**
  * @extends BaseRepository<int, Day>
  */
-class DayRepository extends BaseRepository implements DayRepositoryInterface
+final class DayRepository extends BaseRepository implements DayRepositoryInterface
 {
+    #[Override]
     public function getCurrentDay(): ?Day
     {
         return $this->getDay(date('Y-m-d'));
     }
 
+    #[Override]
     public function getDayByDate(DateTime $dateTime): ?Day
     {
         return $this->getDay($dateTime->format('Y-m-d'));
@@ -37,6 +40,7 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
         return null;
     }
 
+    #[Override]
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
     {
         $queryBuilder = $this->createQueryBuilder('d');
@@ -55,6 +59,7 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
     /**
      * @psalm-return Day::class
      */
+    #[Override]
     public function getClassName(): string
     {
         return Day::class;

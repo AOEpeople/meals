@@ -12,13 +12,15 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class WeeklyMenuMessageTest extends WebTestCase
+final class WeeklyMenuMessageTest extends WebTestCase
 {
     private TranslatorInterface $translator;
 
+    #[Override]
     protected function setUp(): void
     {
         self::bootKernel();

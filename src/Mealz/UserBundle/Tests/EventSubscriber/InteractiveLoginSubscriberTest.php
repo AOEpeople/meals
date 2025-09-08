@@ -10,6 +10,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
+use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -19,10 +20,11 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
+final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
     private InteractiveLoginSubscriber $iaLoginSubscriber;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

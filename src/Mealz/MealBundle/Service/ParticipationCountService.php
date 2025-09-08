@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
 
-class ParticipationCountService
+final class ParticipationCountService
 {
     public const PARTICIPATION_COUNT_KEY = 'countByMealIds';
     public const PARTICIPATION_TOTAL_COUNT_KEY = 'totalCountByDishSlugs';

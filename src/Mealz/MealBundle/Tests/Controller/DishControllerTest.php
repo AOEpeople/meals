@@ -12,10 +12,12 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManager;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
-class DishControllerTest extends AbstractControllerTestCase
+final class DishControllerTest extends AbstractControllerTestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

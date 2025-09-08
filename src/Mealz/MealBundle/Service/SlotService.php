@@ -16,7 +16,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
-class SlotService
+final class SlotService
 {
     private EntityManagerInterface $em;
     private ParticipantRepositoryInterface $participantRepo;

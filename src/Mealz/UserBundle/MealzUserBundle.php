@@ -6,6 +6,6 @@ namespace App\Mealz\UserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class MealzUserBundle extends Bundle
+final class MealzUserBundle extends Bundle
 {
 }

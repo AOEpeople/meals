@@ -7,12 +7,14 @@ namespace App\Mealz\MealBundle\Tests\Entity;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use Override;
 use PHPUnit\Framework\TestCase;
 
-class DayTest extends TestCase
+final class DayTest extends TestCase
 {
     private Day $day;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

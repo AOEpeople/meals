@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Mailer;
 
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-class Mailer implements MailerInterface
+final class Mailer implements MailerInterface
 {
     private string $senderEmail;
 
@@ -27,6 +28,7 @@ class Mailer implements MailerInterface
         $this->senderEmail = $senderEmail;
     }
 
+    #[Override]
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void
     {
         $email = (new Email())

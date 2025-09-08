@@ -6,6 +6,6 @@ namespace App\Mealz\AccountingBundle\Service\Exception;
 
 use Exception;
 
-class ResourceNotFoundException extends Exception
+final class ResourceNotFoundException extends Exception
 {
 }

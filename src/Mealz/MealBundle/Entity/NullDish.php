@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Entity;
 
+use Override;
+
 class NullDish extends Dish
 {
     public function __construct()
@@ -13,6 +15,7 @@ class NullDish extends Dish
     /**
      * @return null
      */
+    #[Override]
     public function getParent(): ?Dish
     {
         return null;
@@ -21,6 +24,7 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getSlug(): string
     {
         return '';
@@ -29,11 +33,13 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getDescription(): ?string
     {
         return '';
     }
 
+    #[Override]
     public function getPrice(): float
     {
         return 0.0;
@@ -42,6 +48,7 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getTitle(): string
     {
         return '';
@@ -50,6 +57,7 @@ class NullDish extends Dish
     /**
      * @return true
      */
+    #[Override]
     public function isEnabled(): bool
     {
         return true;
@@ -58,6 +66,7 @@ class NullDish extends Dish
     /**
      * @return false
      */
+    #[Override]
     public function hasOneServingSize(): bool
     {
         return false;
@@ -66,6 +75,7 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getCurrentLocale(): string
     {
         return '';
@@ -74,6 +84,7 @@ class NullDish extends Dish
     /**
      * @return null
      */
+    #[Override]
     public function getDescriptionDe(): ?string
     {
         return null;
@@ -82,6 +93,7 @@ class NullDish extends Dish
     /**
      * @return null
      */
+    #[Override]
     public function getDescriptionEn(): ?string
     {
         return null;
@@ -90,6 +102,7 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getTitleDe(): string
     {
         return '';
@@ -98,6 +111,7 @@ class NullDish extends Dish
     /**
      * @psalm-return ''
      */
+    #[Override]
     public function getTitleEn(): string
     {
         return '';
@@ -106,11 +120,13 @@ class NullDish extends Dish
     /**
      * @return null
      */
+    #[Override]
     public function getCategory(): ?Category
     {
         return null;
     }
 
+    #[Override]
     public function getVariations(): DishCollection
     {
         return new DishCollection();
@@ -119,6 +135,7 @@ class NullDish extends Dish
     /**
      * @return false
      */
+    #[Override]
     public function hasVariations(): bool
     {
         return false;
@@ -127,6 +144,7 @@ class NullDish extends Dish
     /**
      * @return false
      */
+    #[Override]
     public function isCombinedDish(): bool
     {
         return false;

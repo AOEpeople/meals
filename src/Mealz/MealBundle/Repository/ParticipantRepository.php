@@ -16,11 +16,12 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Override;
 
 /**
  * @extends BaseRepository<int, Participant>
  */
-class ParticipantRepository extends BaseRepository implements ParticipantRepositoryInterface
+final class ParticipantRepository extends BaseRepository implements ParticipantRepositoryInterface
 {
     /**
      * default options for database queries.
@@ -44,6 +45,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @return Participant[]
      */
+    #[Override]
     public function getParticipantsOnDays(
         DateTime $startDate,
         DateTime $endDate,
@@ -72,6 +74,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         return $queryBuilder->getQuery()->execute();
     }
 
+    #[Override]
     public function getTotalCost(string $username): float
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -100,6 +103,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @return Participant[]
      */
+    #[Override]
     public function getLastAccountableParticipations(Profile $profile, ?int $limit = null): array
     {
         $queryBuilder = $this->getQueryBuilderWithOptions(
@@ -129,6 +133,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
      *
      * @psalm-return array<array{name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
      */
+    #[Override]
     public function findCostsGroupedByUserGroupedByMonth(): array
     {
         $costs = $this->findCostsPerMonthPerUser();
@@ -162,6 +167,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
      *
      * @return array<string, list<Participant>>
      */
+    #[Override]
     public function groupParticipantsByName(array $participants): array
     {
         $result = [];
@@ -183,6 +189,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
+    #[Override]
     public function findAllGroupedBySlotAndProfileID(DateTime $date, bool $getProfile = false): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -210,6 +217,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @return Participant[]
      */
+    #[Override]
     public function getParticipantsByDay(DateTime $date, array $options = []): array
     {
         $options = array_merge(
@@ -234,6 +242,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @return Participant[]
      */
+    #[Override]
     public function getParticipantsOnCurrentDay(array $options = []): array
     {
         $options = array_merge(
@@ -328,6 +337,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * Returns count of booked meals available to be taken by others on a given $date.
      */
+    #[Override]
     public function getOfferCount(DateTime $date): int
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -348,6 +358,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * Returns count of booked meals available to be taken over by others.
      */
+    #[Override]
     public function getOfferCountByMeal(Meal $meal): int
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -365,6 +376,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * Returns true if the specified user is offering the specified meal.
      */
+    #[Override]
     public function isOfferingMeal(Profile $profile, Meal $meal): bool
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -391,6 +403,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
      *
      * @psalm-return list<array{date: DateTime, slot: int, count: int}>
      */
+    #[Override]
     public function getCountBySlots(DateTime $startDate, DateTime $endDate): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -432,6 +445,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
      *
      * @psalm-return 0|positive-int
      */
+    #[Override]
     public function getCountBySlot(Slot $slot, DateTime $date): int
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -455,6 +469,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
      *
      * @psalm-return 0|positive-int
      */
+    #[Override]
     public function getCountByMeal(Meal $meal): int
     {
         $queryBuilder = $this->createQueryBuilder('p');
@@ -465,6 +480,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         return count($queryBuilder->getQuery()->getArrayResult());
     }
 
+    #[Override]
     public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
     {
         // get all participant IDs with profile $profile that enrolled for a meal on $date
@@ -496,6 +512,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * Removes all future ordered meals for a given profile.
      */
+    #[Override]
     public function removeFutureMealsByProfile(Profile $profile): void
     {
         // Get tomorrow's date
@@ -522,6 +539,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         }
     }
 
+    #[Override]
     public function getParticipationsOfSlot(Slot $slot): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
@@ -536,6 +554,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         return $participations;
     }
 
+    #[Override]
     public function getParticipationCountByProfile(Profile $profile, DateTime $date): int
     {
         $queryBuilder = $this->createQueryBuilder('p')

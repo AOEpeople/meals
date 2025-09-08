@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -197,6 +198,7 @@ class Meal implements JsonSerializable
      *
      * @psalm-return array{id: int|null, dish: null|string, participationLimit: int, day: int|null, dateTime: DateTime, lockTime: DateTime}
      */
+    #[Override]
     public function jsonSerialize(): array
     {
         return [

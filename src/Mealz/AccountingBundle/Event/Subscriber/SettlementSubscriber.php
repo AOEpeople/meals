@@ -6,9 +6,10 @@ namespace App\Mealz\AccountingBundle\Event\Subscriber;
 
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use Override;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class SettlementSubscriber implements EventSubscriberInterface
+final class SettlementSubscriber implements EventSubscriberInterface
 {
     private ParticipantRepositoryInterface $participantRepo;
 
@@ -22,6 +23,7 @@ class SettlementSubscriber implements EventSubscriberInterface
      *
      * @psalm-return array{ProfileSettlementEvent::class: 'onProfileSettlement'}
      */
+    #[Override]
     public static function getSubscribedEvents(): array
     {
         return [

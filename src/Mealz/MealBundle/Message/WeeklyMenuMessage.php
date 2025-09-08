@@ -9,9 +9,10 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\Notification\MessageInterface;
+use Override;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class WeeklyMenuMessage implements MessageInterface
+final class WeeklyMenuMessage implements MessageInterface
 {
     private Week $week;
     private TranslatorInterface $translator;
@@ -22,6 +23,7 @@ class WeeklyMenuMessage implements MessageInterface
         $this->translator = $translator;
     }
 
+    #[Override]
     public function getContent(): string
     {
         $header = $this->translator->trans(

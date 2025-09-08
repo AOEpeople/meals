@@ -12,7 +12,7 @@ use Override;
 /**
  * @extends BaseRepository<int, EventParticipation>
  */
-final class EventParticipationRepository extends BaseRepository implements EventParticipationRepositoryInterface
+final class EventPartRepo extends BaseRepository implements EventPartRepoInterface
 {
     #[Override]
     public function add($eventParticipation): void

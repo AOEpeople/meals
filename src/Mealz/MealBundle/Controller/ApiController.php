@@ -24,15 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ApiController extends BaseController
 {
-    private DishService $dishSrv;
-    private SlotService $slotSrv;
-    private WeekService $weekSrv;
-    private ParticipationService $participationSrv;
-    private ApiService $apiSrv;
-    private OfferService $offerSrv;
-    private GuestParticipationService $guestPartiSrv;
-    private EventParticipationService $eventService;
-
     public function __construct(
         private readonly DishService $dishSrv,
         private readonly SlotService $slotSrv,

@@ -7,7 +7,7 @@
     "test": "https://meals.test"
   },
   "scripts": {
-    "run:test": "cross-env-shell cypress run --headless --browser chrome --project tests/e2e --env baseUrl=$npm_package_config_test"
+    "run:test": "cross-env-shell cypress run --headless --browser electron --project tests/e2e --env baseUrl=$npm_package_config_test"
   },
   "devDependencies": {
     "@types/node": "^20.1.2",

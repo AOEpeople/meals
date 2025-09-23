@@ -24,7 +24,7 @@ export default defineConfig({
     "mailhog_url": "https://meals.ddev.site:8026",
     "ddev_test": true
   },
-  defaultCommandTimeout: 30000,
+  defaultCommandTimeout: 5000,
   viewportWidth: 1360,
   viewportHeight: 800,
   screenshotOnRunFailure: true,

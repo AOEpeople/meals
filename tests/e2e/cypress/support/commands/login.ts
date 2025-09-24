@@ -22,7 +22,7 @@ const oauthLogin = (username: string, password: string) => {
     username: username,
     password: password,
     client_id: Cypress.env('oauth_client_id'),
-    redirect_uri: Cypress.env('baseUrl') + Cypress.env('oauth_redirect_uri'),
+    redirect_uri: Cypress.env('oauth_redirect_uri'),
   });
 }
 
@@ -34,13 +34,13 @@ const oauthLogout = () => {
 };
 
 const simpleLogin = (username: string, password: string) => {
-  cy.visit(Cypress.env('baseUrl') + 'login');
+  cy.visit('/login');
   cy.get("#username").type(username);
   cy.get("#password").type(password);
   cy.get("#password").closest("form").submit()
 }
 
 const simpleLogout = () => {
-  cy.visit(Cypress.env('baseUrl') + 'logout');
+  cy.visit('/logout');
 };
 

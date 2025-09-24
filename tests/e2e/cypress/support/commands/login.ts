@@ -22,7 +22,7 @@ const oauthLogin = (username: string, password: string) => {
     username: username,
     password: password,
     client_id: Cypress.env('oauth_client_id'),
-    redirect_uri: Cypress.env('oauth_redirect_uri'),
+    redirect_uri: Cypress.config("baseUrl") + Cypress.env("oauth_redirect_uri")
   });
 }
 

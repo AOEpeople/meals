@@ -26,7 +26,7 @@
         </span>
         <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
           <GuestButton
-            v-if="!day.isLocked && event.isPublic"
+            v-if="!day.isLocked && event.isPublic && getEventById(event?.eventId ?? -1)?.slug !== 'lunch-roulette'"
             :dayID="dayId"
             :index="0"
             :invitation="Invitation.EVENT"

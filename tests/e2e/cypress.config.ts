@@ -20,7 +20,7 @@ export default defineConfig({
     "oauth_base_url": "https://aoe.login.bare.id",
     "oauth_realm": "aoe-staging",
     "oauth_client_id": "aoe-meals-staging",
-    "oauth_redirect_uri": "login/check-meals",
+    "oauth_redirect_url": "https://meals.test/login/check-meals",
     "mailhog_url": "https://meals.ddev.site:8026",
     "ddev_test": true
   },

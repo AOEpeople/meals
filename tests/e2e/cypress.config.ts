@@ -23,7 +23,8 @@ export default defineConfig({
     "oauth_client_id": "aoe-meals-staging",
     "oauth_redirect_url": "https://meals.test/login/check-meals",
     "mailhog_url": "https://meals.ddev.site:8026",
-    "ddev_test": true
+    "ddev_test": true,
+    NODE_TLS_REJECT_UNAUTHORIZED: "0"
   },
   defaultCommandTimeout: 5000,
   viewportWidth: 1360,

@@ -311,6 +311,12 @@ jobs:
           IDP_CLIENT_ID=\"${{ secrets.IDP_CLIENT_ID }}\"
           IDP_CLIENT_SECRET=\"${{ secrets.IDP_CLIENT_SECRET }}\"
           EOL"
+      - name: Generate self-signed cert
+        run: |
+          mkdir -p certs
+          openssl req -x509 -newkey rsa:4096 -nodes \
+            -out certs/cert.pem -keyout certs/key.pem \
+            -days 1 -subj "/CN=localhost"
       - name: Run Docker compose
         run: |
           docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
@@ -320,7 +326,7 @@ jobs:
               printf '.'
               sleep 5
           done &&
-          DEBUG=cypress:* yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,oauth_redirect_url=http://localhost/login/check-meals,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
+          NODE_TLS_REJECT_UNAUTHORIZED: 0 yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=https://localhost/,oauth_redirect_url=https://localhost/login/check-meals,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

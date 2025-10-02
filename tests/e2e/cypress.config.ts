@@ -12,6 +12,7 @@ export default defineConfig({
       return require('./cypress/plugins/index.js')(on, config)
     },
     supportFile: "cypress/support/index.ts",
+    chromeWebSecurity: false,
   },
   env: {
     "baseUrl": 'https://meals.test/',

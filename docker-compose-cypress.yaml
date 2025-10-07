@@ -21,7 +21,7 @@ services:
       - MAIL_ENCRYPTION=tls
       - SETTLEMENT_REQ_EMAIL_RECEIVER=jon.doe@localhost
       - APP_NAME=Meals
-      - APP_BASE_URL=http://localhost
+      - APP_BASE_URL=https://localhost
       - MERCURE_URL=http://mercure:8080/.well-known/mercure
       - MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
       - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure
@@ -48,12 +48,15 @@ services:
       - MYSQL_PASSWORD=db
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - shared:/var/www/meals/public
+      - ./certs:/etc/nginx/certs:ro
       - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app

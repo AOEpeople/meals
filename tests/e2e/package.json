@@ -7,14 +7,13 @@
     "test": "https://meals.test"
   },
   "scripts": {
-    "run:test": "cross-env-shell cypress run --headless --browser chrome --project tests/e2e --env baseUrl=$npm_package_config_test"
+    "run:test": "cross-env-shell cypress run --headless --browser electron --project tests/e2e --env baseUrl=$npm_package_config_test"
   },
   "devDependencies": {
     "@types/node": "^20.1.2",
     "cross-env": "^7.0.3",
-    "cypress": "^12.12.0",
+    "cypress": "^15.3.0",
     "cypress-keycloak": "^2.0.0",
-    "cypress-plugin-snapshots": "^1.4.4",
     "cypress-split": "^1.24.0",
     "typescript": "^5.0.4"
   },

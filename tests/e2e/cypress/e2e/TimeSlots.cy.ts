@@ -59,7 +59,6 @@ describe('Test TimeSlots View', () => {
     cy.contains('input', 'Speichern').click();
 
     // Verify that the slot was created
-    cy.get('button').contains('+ Slot erstellen').click();
     cy.get('span').contains('TestSlot1234');
     cy.get('span').contains('14');
 

@@ -24,7 +24,7 @@
                 v-if="item.access"
                 :to="item.to"
                 :class="[
-                  item.to === $route.path
+                  item.to === route.path
                     ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                   'group flex items-center rounded-md p-2 text-sm font-medium'
@@ -34,7 +34,7 @@
                 <component
                   :is="item.icon"
                   :class="[
-                    item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
+                    item.to === route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
                     'mr-3 size-6 shrink-0'
                   ]"
                   aria-hidden="true"
@@ -63,7 +63,7 @@
               <router-link
                 to="/balance"
                 :class="[
-                  '/balance' === $route.path
+                  '/balance' === route.path
                     ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                   'group flex items-center rounded-md p-2 text-sm font-medium'
@@ -72,7 +72,7 @@
               >
                 <CurrencyEuroIcon
                   :class="[
-                    '/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
+                    '/balance' === route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
                     'mr-3 size-6 shrink-0'
                   ]"
                   aria-hidden="true"
@@ -111,9 +111,11 @@
 import { MenuItems, MenuItem } from '@headlessui/vue';
 import { CurrencyEuroIcon } from '@heroicons/vue/outline';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import Icons from '../misc/Icons.vue';
 import { type INavigation } from '@/interfaces/INavigation';
 
+const route = useRoute();
 const { t, locale } = useI18n();
 
 const changeLocale = () => {

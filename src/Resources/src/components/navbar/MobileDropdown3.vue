@@ -111,11 +111,11 @@
 import { MenuItems, MenuItem } from '@headlessui/vue';
 import { CurrencyEuroIcon } from '@heroicons/vue/outline';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
 import Icons from '../misc/Icons.vue';
 import { type INavigation } from '@/interfaces/INavigation';
 
-const route = useRoute()
+const route = useRoute();
 const { t, locale } = useI18n();
 
 const changeLocale = () => {

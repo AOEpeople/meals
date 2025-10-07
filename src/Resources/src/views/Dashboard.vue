@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
+import { useWindowSize } from '@vueuse/core';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { dashboardStore } from '@/stores/dashboardStore';
 import DashboardWeekTabs from '@/components/dashboard/DashboardWeekTabs.vue';
@@ -28,7 +28,7 @@ import { useEvents } from '@/stores/eventsStore';
 import useEventsBus from '@/tools/eventBus';
 import type { EventParticipationResponse } from '@/api/postJoinEvent';
 
-const { width } = useWindowSize()
+const { width } = useWindowSize();
 
 const weeks = ref<Dictionary<Week>>({});
 const { fetchEvents } = useEvents();

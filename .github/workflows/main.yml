@@ -326,7 +326,7 @@ jobs:
               printf '.'
               sleep 5
           done &&
-          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=https://localhost/,oauth_redirect_url=https://localhost/login/check-meals,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
+          DEBUG=cypress:* yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=https://localhost/,oauth_redirect_url=https://localhost/login/check-meals,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025","split=${{ strategy.job-total }}","splitIndex=${{ strategy.job-index }}"
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

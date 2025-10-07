@@ -69,7 +69,7 @@ describe('Test TimeSlots View', () => {
       .parent()
       .parent()
       .contains('p', 'Editieren')
-      .click();
+      .click({force: true});
     cy.get('#Titel').clear().type('TestSlot5678');
     cy.get('#Limit').clear().type('17');
     cy.contains('input', 'Speichern').click();
@@ -80,7 +80,7 @@ describe('Test TimeSlots View', () => {
       .parent()
       .parent()
       .contains('p', 'Editieren')
-      .click();
+      .click({force: true});
     cy.get('span').contains('17');
 
     // Disable Slot

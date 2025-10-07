@@ -24,31 +24,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ApiController extends BaseController
 {
-    private DishService $dishSrv;
-    private SlotService $slotSrv;
-    private WeekService $weekSrv;
-    private ParticipationService $participationSrv;
-    private ApiService $apiSrv;
-    private OfferService $offerSrv;
-    private GuestParticipationService $guestPartiSrv;
-    private EventParticipationService $eventService;
-
     public function __construct(
-        DishService $dishSrv,
-        SlotService $slotSrv,
-        WeekService $weekSrv,
-        ParticipationService $participationSrv,
-        ApiService $apiSrv,
-        OfferService $offerSrv,
-        GuestParticipationService $guestPartiSrv
+        private readonly DishService $dishSrv,
+        private readonly SlotService $slotSrv,
+        private readonly WeekService $weekSrv,
+        private readonly ParticipationService $participationSrv,
+        private readonly ApiService $apiSrv,
+        private readonly OfferService $offerSrv,
+        private readonly GuestParticipationService $guestPartiSrv,
+        private readonly EventParticipationService $eventService
     ) {
-        $this->dishSrv = $dishSrv;
-        $this->slotSrv = $slotSrv;
-        $this->weekSrv = $weekSrv;
-        $this->participationSrv = $participationSrv;
-        $this->apiSrv = $apiSrv;
-        $this->offerSrv = $offerSrv;
-        $this->guestPartiSrv = $guestPartiSrv;
     }
 
     public function getEnvironmentVars(): JsonResponse

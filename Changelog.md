@@ -1,5 +1,17 @@
 # Changelog
 
+## Version v3.1.15 (2025-09-16)
+
+### Fixes
+
+- Fix ApiController errors after rebase (c8a04d09)
+
+### Other
+
+- Bump vite from 6.3.4 to 6.3.6 in /src/Resources (a4c2ce34)
+- Bump axios from 1.8.2 to 1.12.0 in /src/Resources (cd9b741e)
+- remove old declarations (5d087f1d)
+
 ## Version v3.1.14 (2025-09-09)
 
 ### Fixes

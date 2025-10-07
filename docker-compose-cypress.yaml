@@ -21,7 +21,7 @@ services:
       - MAIL_ENCRYPTION=tls
       - SETTLEMENT_REQ_EMAIL_RECEIVER=jon.doe@localhost
       - APP_NAME=Meals
-      - APP_BASE_URL=http://localhost
+      - APP_BASE_URL=https://localhost
       - MERCURE_URL=http://mercure:8080/.well-known/mercure
       - MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
       - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure

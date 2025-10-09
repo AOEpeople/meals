@@ -1,5 +1,49 @@
 # Changelog
 
+## Version v3.1.16 (2025-10-08)
+
+### Fixes
+
+- Fix categorie check (e2d3dad8)
+- fix format (fdabcb31)
+- fix type checker messages (bb3d06df)
+- fix timeslot test, update packages (9c9e37be)
+- fix nginx ssl configuration (4cb72243)
+- fix usage of NODE_TLS_REJECT_UNAUTHORIZED (22280aa5)
+- fix exec command (f42342ce)
+
+### Ops and CI/CD
+
+- build correct redirect uri (9f6ffa01)
+
+### Chores and tidying
+
+- update fe packages (cf02cb7e)
+- update cypress, remove cypress-plugin-snapshots (a2c1401e)
+
+### Other
+
+- Bump github/codeql-action from 3 to 4 (1279e8af)
+- remove re-open edit overlay (05e7c227)
+- disable debugging, change health check (78de9a0a)
+- set base url zo https (f9001fb1)
+- enable debug (a4053c3c)
+- add missing prefix (bbc8ca35)
+- proxy 443 &gt; 80 (2822dabc)
+- use ssl for tests (7b74e4d8)
+- enable debug mode (45bb21e5)
+- use full url for oauth redirect (ebb02dca)
+- use cypress 15.3.0 (8bc615bb)
+- remove cypress debug (714b4bbb)
+- remove building urls with baseUrl by hand (719c9532)
+- switch back to localhost, enable debug (e05736bd)
+- use 127.0.0.1 instead of localhost (6076dedd)
+- use electron again (1b394c6b)
+- set timeout back to 5s and use again code instead of exitCode (2776a0d6)
+- switch to cypress v14 because of https://github.com/cypress-io/cypress/issues/32290 (8c3b1bf6)
+- use chrome (97f66146)
+- remove cypress-plugin-snapshots (b013a014)
+
 ## Version v3.1.15 (2025-09-16)
 
 ### Fixes

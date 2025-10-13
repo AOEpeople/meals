@@ -30,7 +30,7 @@
         :key="index"
       >
         <td
-          class="grid min-h-[60px] grid-flow-col content-center justify-center gap-2 p-2"
+          class="grid min-h-[60px] grid-flow-col place-content-center gap-2 p-2"
           :class="//@ts-ignore
           [meal.variations.length - 1 > index ? 'border-b border-solid' : 'border-none']"
         >

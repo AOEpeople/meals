@@ -1,4 +1,4 @@
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, getCurrentInstance } from 'vue';
 import { useWeeks } from '@/stores/weeksStore';
 import { useDishes } from '@/stores/dishesStore';
 
@@ -12,26 +12,34 @@ export function useMealIdToDishId(weekId: number) {
 
     const mealIdToDishIdDict = reactive<Map<number, number>>(new Map());
 
-    onMounted(async () => {
-        if (WeeksState.weeks.length === 0) {
-            await fetchWeeks();
-        }
-        if (DishesState.dishes.length === 0) {
-            await fetchDishes();
-        }
+    async function init() {
+        if (WeeksState.weeks.length === 0) await fetchWeeks();
+        if (DishesState.dishes.length === 0) await fetchDishes();
 
         const week = getWeekById(weekId);
+        if (!week) return;
 
-        for (const day of Object.values(week?.days ?? {})) {
+        for (const day of Object.values(week.days ?? {})) {
             for (const meals of Object.values(day.meals)) {
                 meals.forEach((meal) => {
                     const dish = getDishBySlug(meal.dish);
-                    const dishId = dish !== null ? dish.id : -1;
+                    const dishId = dish ? dish.id : -1;
                     mealIdToDishIdDict.set(meal.id, dishId);
                 });
             }
         }
-    });
+    }
 
-    return { mealIdToDishIdDict };
+    // Check if we're in a component context
+    const instance = getCurrentInstance();
+    if (instance) {
+        onMounted(() => {
+            init();
+        });
+    } else {
+        // Fallback for tests or non-component usage
+        init();
+    }
+
+    return { mealIdToDishIdDict, init };
 }

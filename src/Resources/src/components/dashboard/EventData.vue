@@ -24,7 +24,7 @@
         >
           {{ getEventById(event?.eventId ?? -1)?.title }}
         </span>
-        <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
+        <div class="flex w-fit flex-row items-center gap-1 place-self-end max-[380px]:basis-3/12">
           <GuestButton
             v-if="!day.isLocked && event.isPublic"
             :dayID="dayId"

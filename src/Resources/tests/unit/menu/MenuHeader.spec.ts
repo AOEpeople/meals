@@ -16,7 +16,8 @@ describe('Test MenuHeader', () => {
             props: {
                 week: testWeek,
                 dateRange: [new Date('2023-07-03T12:00:00.000+02:00'), new Date('2023-07-07T12:00:00.000+02:00')],
-                calendarWeek: 27
+                calendarWeek: 27,
+                create: false
             }
         });
 

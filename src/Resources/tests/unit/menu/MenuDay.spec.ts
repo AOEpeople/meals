@@ -85,7 +85,8 @@ describe('Test MenuDay', () => {
     it('should render MenuDay', () => {
         const wrapper = mount(MenuDay, {
             props: {
-                modelValue: testDay.value
+                modelValue: testDay.value,
+                lockDates: null
             }
         });
         expect(wrapper.text()).toMatch(/Mon/);

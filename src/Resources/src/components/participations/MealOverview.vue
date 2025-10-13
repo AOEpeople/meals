@@ -4,42 +4,44 @@
     ref="mealsOverview"
     class="size-full table-fixed"
   >
-    <tr>
-      <td class="size-full pb-6 pr-4 align-top">
-        <Transition
-          name="summary"
-          appear
-          @afterEnter="onAfterEnter"
-        >
-          <MealsSummary
-            v-if="nextThreeDaysState.days.length > 0"
-            :day="nextThreeDaysState.days[0] as IDay"
-          />
-        </Transition>
-      </td>
-      <td class="size-full pb-6 pr-4 align-top">
-        <Transition
-          name="summary"
-          appear
-        >
-          <MealsSummary
-            v-if="nextThreeDaysState.days.length > 1"
-            :day="nextThreeDaysState.days[1] as IDay"
-          />
-        </Transition>
-      </td>
-      <td class="size-full pb-6 align-top">
-        <Transition
-          name="summary"
-          appear
-        >
-          <MealsSummary
-            v-if="nextThreeDaysState.days.length > 2"
-            :day="nextThreeDaysState.days[2] as IDay"
-          />
-        </Transition>
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td class="size-full pb-6 pr-4 align-top">
+          <Transition
+            name="summary"
+            appear
+            @afterEnter="onAfterEnter"
+          >
+            <MealsSummary
+              v-if="nextThreeDaysState.days.length > 0"
+              :day="nextThreeDaysState.days[0] as IDay"
+            />
+          </Transition>
+        </td>
+        <td class="size-full pb-6 pr-4 align-top">
+          <Transition
+            name="summary"
+            appear
+          >
+            <MealsSummary
+              v-if="nextThreeDaysState.days.length > 1"
+              :day="nextThreeDaysState.days[1] as IDay"
+            />
+          </Transition>
+        </td>
+        <td class="size-full pb-6 align-top">
+          <Transition
+            name="summary"
+            appear
+          >
+            <MealsSummary
+              v-if="nextThreeDaysState.days.length > 2"
+              :day="nextThreeDaysState.days[2] as IDay"
+            />
+          </Transition>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 

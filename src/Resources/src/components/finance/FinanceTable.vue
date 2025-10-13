@@ -10,7 +10,7 @@
     :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4 last:truncate'"
     :overflow-table="true"
   >
-    <div
+    <template
       v-for="([date, dateTransactions], index) in Object.entries(transactions)"
       :key="date"
       class="contents"
@@ -60,7 +60,7 @@
           }}
         </td>
       </tr>
-    </div>
+    </template>
   </Table>
 </template>
 

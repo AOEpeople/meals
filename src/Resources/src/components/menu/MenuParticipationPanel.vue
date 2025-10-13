@@ -1,7 +1,7 @@
 <template>
   <div class="grid w-[300px] grid-rows-1 gap-2 overflow-hidden pb-2">
     <div class="flex max-w-[300px] flex-row rounded-t-lg bg-primary-2 px-1 py-2">
-      <span class="grow self-center justify-self-center font-bold uppercase leading-4 tracking-[3px] text-white">
+      <span class="grow place-self-center font-bold uppercase leading-4 tracking-[3px] text-white">
         Limit
       </span>
       <XCircleIcon

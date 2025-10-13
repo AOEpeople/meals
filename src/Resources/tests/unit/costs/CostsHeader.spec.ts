@@ -1,7 +1,7 @@
+import { mount } from '@vue/test-utils';
 import CostsHeader from '@/components/costs/CostsHeader.vue';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import CashRegisterLink from '@/components/costs/CashRegisterLink.vue';
-import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('epic-spinners', () => ({
@@ -19,7 +19,13 @@ describe('Test CostsHeader', () => {
         props: {
             showHidden: false,
             modelValue: 'initialText',
+            printActive: false,
             'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e })
+        },
+        global: {
+            stubs: {
+                'router-link': { template: '<a><slot /></a>' }
+            }
         }
     });
 

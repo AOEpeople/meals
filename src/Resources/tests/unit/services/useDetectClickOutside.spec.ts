@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
-import { ref, defineComponent, h } from 'vue';
+import { ref, defineComponent } from 'vue';
 import { describe, it, expect, vi } from 'vitest';
 
 describe('useDetectClickOutside', () => {
@@ -10,12 +10,12 @@ describe('useDetectClickOutside', () => {
     document.body.appendChild(outside);
 
     const wrapper = mount(defineComponent({
-      template: '<div ref="target"><p>Inside</p></div>',
       setup() {
         const target = ref<HTMLElement | null>(null);
         useDetectClickOutside(target, spy);
         return { target };
-      }
+      },
+      template: '<div ref="target"><p>Inside</p></div>',
     }), { attachTo: document.body });
 
     // Klick außerhalb

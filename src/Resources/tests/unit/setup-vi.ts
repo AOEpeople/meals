@@ -27,7 +27,7 @@ global.XMLHttpRequest = vi.fn(() => ({
   open: vi.fn(),
   send: vi.fn(),
   setRequestHeader: vi.fn(),
-})) as any;
+})) as unknown as { new(): Partial<XMLHttpRequest> };
 
 vi.mock('vue-i18n', () => ({
     useI18n: () => ({

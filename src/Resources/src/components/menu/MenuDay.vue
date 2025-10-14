@@ -167,7 +167,8 @@ watch(selectedDishTwo, () => {
 
 watch(selectedEventOne, () => {
   try {
-    const firstKey = Object.keys(props.modelValue.events)[0] ?? selectedEventOne.value?.id;
+    const events = props.modelValue.events ?? {};
+    const firstKey = Object.keys(events)[0] ?? selectedEventOne.value?.id;
 
     if (selectedEventOne.value) {
       selectedDishes.value.events[firstKey] = {
@@ -186,7 +187,8 @@ watch(selectedEventOne, () => {
 
 watch(selectedEventTwo, () => {
   try {
-    const secondKey = Object.keys(props.modelValue.events)[1] ?? selectedEventTwo.value?.id;
+    const events = props.modelValue.events ?? {};
+    const secondKey = Object.keys(events)[1] ?? selectedEventTwo.value?.id;
 
     if (selectedEventTwo.value) {
       selectedDishes.value.events[secondKey] = {
@@ -217,23 +219,26 @@ onMounted(() => {
   );
 
   try {
-    const firstKey = Object.keys(props.modelValue.events)[0];
-    const secondKey = Object.keys(props.modelValue.events)[1];
+    const events = props.modelValue.events ?? {};
+    const keys = Object.keys(events);
+    const firstKey = keys[0];
+    const secondKey = keys[1];
 
-    if (props.modelValue.events[firstKey]) {
+    if (events[firstKey]) {
       selectedEventOne.value = {
-        id: props.modelValue.events[firstKey].eventId as number,
-        slug: props.modelValue.events[firstKey].eventSlug as string,
-        title: props.modelValue.events[firstKey].eventTitle as string,
-        public: props.modelValue.events[firstKey].isPublic as boolean
+        id: events[firstKey].eventId as number,
+        slug: events[firstKey].eventSlug as string,
+        title: events[firstKey].eventTitle as string,
+        public: events[firstKey].isPublic as boolean
       };
     }
-    if (props.modelValue.events[secondKey]) {
+
+    if (events[secondKey]) {
       selectedEventTwo.value = {
-        id: props.modelValue.events[secondKey].eventId as number,
-        slug: props.modelValue.events[secondKey].eventSlug as string,
-        title: props.modelValue.events[secondKey].eventTitle as string,
-        public: props.modelValue.events[secondKey].isPublic as boolean
+        id: events[secondKey].eventId as number,
+        slug: events[secondKey].eventSlug as string,
+        title: events[secondKey].eventTitle as string,
+        public: events[secondKey].isPublic as boolean
       };
     }
   } catch (error) {

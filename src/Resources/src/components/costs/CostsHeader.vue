@@ -34,7 +34,7 @@
         <Switch
           :sr="t('costs.showHidden')"
           :initial="showHidden"
-          class="self-end justify-self-end"
+          class="place-self-end"
           @toggle="(value) => emit('change:showHidden', value)"
         />
       </div>

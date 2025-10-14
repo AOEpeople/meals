@@ -6,7 +6,12 @@ import { describe, it, expect } from 'vitest';
 
 describe('Test EventsHeader', () => {
     it('should render the correct components and contain the correct i18n texts', () => {
-        const wrapper = mount(EventsHeader);
+        const wrapper = mount(EventsHeader, {
+            props: {
+                modelValue: 'initialText',
+                'onUpdate:modelValue': (e) => wrapper.setProps({ modelValue: e })
+            }
+        });
 
         expect(wrapper.get('h2').text()).toMatch(/event.header/);
         expect(wrapper.get('button').text()).toMatch(/event.create/);

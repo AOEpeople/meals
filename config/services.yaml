@@ -198,7 +198,7 @@ services:
 
   App\Mealz\MealBundle\Service\Mailer\Mailer:
     arguments:
-      $senderEmail: '%app.email.sender%'
+      $senderEmail: '%env(string:MAILER_EMAIL)%'
 
   App\Mealz\MealBundle\Service\Workday:
     calls:
@@ -227,6 +227,17 @@ services:
   App\Mealz\MealBundle\Service\CombinedMealService:
     arguments:
       $combinedPrice: '%mealz.meal.combined.price%'
+
+  App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
+    arguments:
+      $envHost: '%env(string:MAILER_HOST)%'
+      $envPort: '%env(int:MAILER_PORT)%'
+      $envAuthType: '%env(string:MAILER_AUTH_TYPE)%'
+      $envEmail: '%env(string:MAILER_EMAIL)%'
+      $envClientId: '%env(string:MAILER_CLIENT_ID)%'
+      $envClientSecret: '%env(string:MAILER_CLIENT_SECRET)%'
+      $envTenantId: '%env(string:MAILER_TENANT_ID)%'
+      $envRefreshToken: '%env(string:MAILER_REFRESH_TOKEN)%'
 
   ##################################################################
   # Accounting BUNDLE

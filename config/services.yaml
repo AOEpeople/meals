@@ -198,7 +198,8 @@ services:
 
   App\Mealz\MealBundle\Service\Mailer\Mailer:
     arguments:
-      $senderEmail: '%env(string:MAILER_EMAIL)%'
+      $senderEmail: '%app.email.sender%'
+      $mailerType: '%env(string:MAILER_TYPE)%'
 
   App\Mealz\MealBundle\Service\Workday:
     calls:

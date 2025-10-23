@@ -240,6 +240,10 @@ services:
       $envTenantId: '%env(string:MAILER_TENANT_ID)%'
       $envRefreshToken: '%env(string:MAILER_REFRESH_TOKEN)%'
 
+  App\Mealz\MealBundle\Service\Mailer\MonologMailer:
+    arguments:
+      $toEmail: '%app.email.admin%'
+
   ##################################################################
   # Accounting BUNDLE
   ##################################################################

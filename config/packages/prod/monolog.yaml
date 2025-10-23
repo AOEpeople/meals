@@ -23,12 +23,11 @@ monolog:
             type: whatfailuregroup
             members: [symfony_mailer, slackwebhook]
         symfony_mailer:
-            type: symfony_mailer
-            from_email: '%app.email.sender%'
+            type: service
+            id: App\Mealz\MealBundle\Service\Mailer\MonologMailer
             to_email: '%app.email.admin%'
             subject: 'Meals Error'
             level: debug
-            formatter: monolog.formatter.html
             content_type: text/html
         slackwebhook:
             type: slackwebhook
@@ -47,4 +46,3 @@ monolog:
             path: "%kernel.logs_dir%/%kernel.environment%.admin-balance-change.log"
             level: info
             channels: ["balance"]
-

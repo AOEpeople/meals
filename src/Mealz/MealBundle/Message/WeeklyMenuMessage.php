@@ -47,7 +47,7 @@ final class WeeklyMenuMessage implements MessageInterface
                 ],
                 'messages'
             );
-            $tableHeader = "\n|Day|Meals|Events|\n|:-----|:-----|\n";
+            $tableHeader = "\n|Day|Meals|Events|\n|:-----|:-----|:-----|\n";
             $body = $this->getDishesByWeek($this->week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }

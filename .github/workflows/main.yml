@@ -197,7 +197,7 @@ jobs:
           outputs: type=docker,dest=/tmp/docker/dev.tar
       # Upload artifacts
       - name: Upload docker images
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-dev-image
           path: /tmp/docker/*.tar
@@ -258,7 +258,7 @@ jobs:
           outputs: type=docker,dest=/tmp/docker/app.tar
       # Upload artifacts
       - name: Upload docker images
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-app-image
           path: /tmp/docker/*.tar
@@ -365,7 +365,7 @@ jobs:
           docker compose -f docker-compose-test.yaml up --abort-on-container-exit
           docker compose -f docker-compose-test.yaml down --remove-orphans
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: reports

@@ -1,5 +1,11 @@
 # Changelog
 
+## Version v3.1.17 (2025-10-30)
+
+### Fixes
+
+- Fix week year combination (6da4ee95)
+
 ## Version v3.1.16 (2025-10-27)
 
 ### Fixes

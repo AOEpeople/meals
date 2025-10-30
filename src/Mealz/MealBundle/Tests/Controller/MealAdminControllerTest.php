@@ -76,7 +76,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
     public function testNew(): void
     {
         $date = new DateTime('+2 month');
-        $year = $date->format('Y');
+        $year = $date->format('o');
         $week = $date->format('W');
         $this->createFutureEmptyWeek($date);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode(), 'Year: ' . $year . ', week: ' . $week . ', Status: ' . $this->client->getResponse()->getContent());

@@ -1,5 +1,60 @@
 # Changelog
 
+## Version v3.1.16 (2025-10-27)
+
+### Fixes
+
+- fixes weekly menu message in mattermost (342a61cd)
+- Fix participation list test (8594d1b9)
+- fix linter messages (ab6e2d5d)
+- fix warning and messages during test execution (4e9f4832)
+- Fix categorie check (e2d3dad8)
+- fix format (fdabcb31)
+- fix type checker messages (bb3d06df)
+- fix timeslot test, update packages (9c9e37be)
+- fix nginx ssl configuration (4cb72243)
+- fix usage of NODE_TLS_REJECT_UNAUTHORIZED (22280aa5)
+- fix exec command (f42342ce)
+
+### Ops and CI/CD
+
+- build correct redirect uri (9f6ffa01)
+
+### Chores and tidying
+
+- update fe packages (cf02cb7e)
+- update cypress, remove cypress-plugin-snapshots (a2c1401e)
+
+### Other
+
+- Bump actions/upload-artifact from 4 to 5 (8f1e5095)
+- Bump actions/download-artifact from 5 to 6 (1f45c202)
+- Adds Mailing for Logfiles via new microsoft oauth mailer (e202bc97)
+- makes mailing way configurable &amp; adds default config in env (5b2f8ced)
+- Bump vite from 6.3.6 to 6.4.1 in /src/Resources (8af0a6d8)
+- Migration to MS OAuth SMTP (34ae404d)
+- Bump actions/setup-node from 5 to 6 (e9cc7e34)
+- Bump github/codeql-action from 3 to 4 (1279e8af)
+- remove re-open edit overlay (05e7c227)
+- disable debugging, change health check (78de9a0a)
+- set base url zo https (f9001fb1)
+- enable debug (a4053c3c)
+- add missing prefix (bbc8ca35)
+- proxy 443 &gt; 80 (2822dabc)
+- use ssl for tests (7b74e4d8)
+- enable debug mode (45bb21e5)
+- use full url for oauth redirect (ebb02dca)
+- use cypress 15.3.0 (8bc615bb)
+- remove cypress debug (714b4bbb)
+- remove building urls with baseUrl by hand (719c9532)
+- switch back to localhost, enable debug (e05736bd)
+- use 127.0.0.1 instead of localhost (6076dedd)
+- use electron again (1b394c6b)
+- set timeout back to 5s and use again code instead of exitCode (2776a0d6)
+- switch to cypress v14 because of https://github.com/cypress-io/cypress/issues/32290 (8c3b1bf6)
+- use chrome (97f66146)
+- remove cypress-plugin-snapshots (b013a014)
+
 ## Version v3.1.15 (2025-09-16)
 
 ### Fixes

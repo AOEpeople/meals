@@ -5,6 +5,7 @@ import { readonly, ref } from 'vue';
 export interface FlashMessage {
     type: FlashMessageType;
     message: string;
+    hasLifetime: boolean
 }
 
 const FLASHMESSAGE_LIFETIME = 7000;
@@ -27,7 +28,9 @@ receive<FlashMessage>('flashmessage', (data) => {
     } else {
         flashMessages.value.push(data);
     }
-    shiftFlashMessages();
+    if (data.hasLifetime) {
+        shiftFlashMessages();
+    }
 });
 
 /**

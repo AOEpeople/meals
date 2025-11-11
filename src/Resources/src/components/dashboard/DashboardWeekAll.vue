@@ -35,4 +35,15 @@ const weekIdsSortedByDate = computed(() =>
     }
   })
 );
+
+const transactionData = await useTransactionData();
+const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
+if ((balanceDifference <= import.meta.env.VITE_ACCOUNT_ORDER_BLOCKED_BALANCE) ) {
+  useFlashMessage().clearMessages();
+  useFlashMessage().sendFlashMessage({
+    type: FlashMessageType.ERROR,
+    message: '602',
+    hasLifetime: false
+  });
+}
 </script>

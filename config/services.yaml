@@ -209,6 +209,9 @@ services:
     arguments:
       $apiSrv: '@App\Mealz\MealBundle\Service\ApiService'
       $debtLimit: '%app.payment_notification_debt%'
+      $clock: '@App\Mealz\MealBundle\Account\Model\Clock'
+
+  App\Mealz\MealBundle\Account\Model\Clock: ~
 
   # Service Aliases
   mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'

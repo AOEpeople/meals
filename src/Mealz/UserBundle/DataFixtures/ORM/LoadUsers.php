@@ -145,7 +145,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         bool $isRandUser = false,
     ): void {
         $login = new Login();
-        //$login->setId($id);
+        $login->setId($id);
         $login->setUsername($username);
 
         $environment = getenv('APP_ENV');

@@ -118,7 +118,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     {
         $user = $this->loadUserByIdOrCreate($response);
         if (null === $user) {
-            throw new UserNotFoundException($response->getNickname().': not found', 1618307277);
+            throw new UserNotFoundException($response->getNickname() . ': not found', 1618307277);
         }
 
         return $user;

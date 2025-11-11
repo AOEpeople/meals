@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Account;
 
+use App\Mealz\MealBundle\Account\Model\Clock;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\UserBundle\Entity\Profile;
 
@@ -11,13 +12,15 @@ final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountO
 {
     public function __construct(
         private ApiService $apiSrv,
-        private int $debtLimit
+        private int $debtLimit,
+        private Clock $clock
     ) {}
 
     public function check(Profile $profile): bool
     {
         $dateFrom = new \DateTime()->setTimestamp(0);
-        $dateTo = new \DateTime();
+        $now = $this->clock->now();
+        $dateTo = \DateTime::createFromImmutable($now);
         $currentBalance = $this->apiSrv->getFullTransactionHistory($dateFrom, $dateTo, $profile)[0] ?? 0.0;
         if ($currentBalance >= $this->debtLimit) {
             return false;

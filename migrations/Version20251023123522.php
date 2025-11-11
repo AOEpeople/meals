@@ -43,7 +43,7 @@ final class Version20251023123522 extends AbstractMigration
         $this->addSql('ALTER TABLE profile DROP username');
         $this->addSql('ALTER TABLE participant DROP FOREIGN KEY FK_D79F6B11CCFA12B8');
         $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B11CCFA12B8 FOREIGN KEY (profile_id) REFERENCES profile (id)');
-        $this->addSql('ALTER TABLE participant DROP FOREIGN KEY FK_E1A105FECCFA12B8');
+        $this->addSql('ALTER TABLE profile_role DROP FOREIGN KEY FK_E1A105FECCFA12B8');
         $this->addSql('ALTER TABLE profile_role ADD CONSTRAINT FK_E1A105FECCFA12B8 FOREIGN KEY (profile_id) REFERENCES profile (id) ON DELETE CASCADE');
     }
 }

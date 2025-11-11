@@ -12,6 +12,7 @@ use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Override;
+use Psr\Log\LoggerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
@@ -36,7 +37,10 @@ final class OAuthProviderTest extends AbstractControllerTestCase
         /** @var EntityManagerInterface $em */
         $em = $this->getDoctrine()->getManager();
 
+        $logger = $this->createMock(LoggerInterface::class);
+
         $this->sut = new OAuthUserProvider(
+            $logger,
             $em,
             self::getContainer()->get(RoleRepositoryInterface::class),
             self::AUTH_CLIENT_ID

@@ -49,11 +49,11 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     }
 
     #[Override]
-    public function loadUserByIdentifier(string $identifer): UserInterface
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->entityManager->find(Profile::class, $identifer);
+        $user = $this->entityManager->find(Profile::class, $identifier);
         if (!($user instanceof UserInterface)) {
-            throw new UserNotFoundException(sprintf('user not found: %s', $identifer));
+            throw new UserNotFoundException(sprintf('user not found: %s', $identifier));
         }
 
         return $user;

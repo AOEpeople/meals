@@ -214,7 +214,7 @@ class Profile implements UserInterface, JsonSerializable
     /**
      * @return (string|string|string[])[]
      *
-     * @psalm-return array{user: string, fullName: string, roles: array<string>}
+     * @psalm-return array{id: string, user: string, fullName: string, roles: array<string>}
      */
     #[Override]
     public function jsonSerialize(): array

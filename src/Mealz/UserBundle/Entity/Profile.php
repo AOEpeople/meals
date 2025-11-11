@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Profile implements UserInterface, JsonSerializable
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
+    private string $id = '';
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
     #[Assert\NotBlank]
@@ -46,6 +49,16 @@ class Profile implements UserInterface, JsonSerializable
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $settlementHash = null;
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
     public function setUsername(string $username): void
     {
@@ -207,6 +220,7 @@ class Profile implements UserInterface, JsonSerializable
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->id,
             'user' => $this->username,
             'fullName' => $this->getFullName(),
             'roles' => $this->getRoles(),
@@ -216,6 +230,6 @@ class Profile implements UserInterface, JsonSerializable
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->id;
     }
 }

@@ -41,6 +41,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $users = [
             [
+                'id' => '01cb80ec-9191-4d6d-af74-1ffd8c592dc4',
                 'username' => 'alice.meals',
                 'password' => 'Chee7ieRahqu',
                 'firstName' => 'Alice',
@@ -49,6 +50,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'alice.meals@aoe.com',
             ],
             [
+                'id' => '546e8b7c-633a-44e6-bda3-512b05610ef3',
                 'username' => 'bob.meals',
                 'password' => 'ON2za5OoJohn',
                 'firstName' => 'Bob',
@@ -57,6 +59,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'bob.meals@aoe.com',
             ],
             [
+                'id' => '0b0016cf-0a23-493f-ae1f-bdaeaa90f14b',
                 'username' => 'finance.meals',
                 'password' => 'IUn4d9NKMt',
                 'firstName' => 'Finance',
@@ -65,6 +68,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'finance.meals@aoe.com',
             ],
             [
+                'id' => '49d8e291-c709-4f77-ab79-2c2542e2533e',
                 'username' => 'jane.meals',
                 'password' => 'heabahW6ooki',
                 'firstName' => 'Jane',
@@ -73,6 +77,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'jane.meals@aoe.com',
             ],
             [
+                'id' => '230b294f-b05e-4a97-b6a8-4c16610c7d8c',
                 'username' => 'john.meals',
                 'password' => 'aef9xoo2hieY',
                 'firstName' => 'John',
@@ -81,6 +86,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'john.meals@aoe.com',
             ],
             [
+                'id' => '5f8aece6-732c-4adb-8c74-8d3eb62c598a',
                 'username' => 'kochomi.meals',
                 'password' => 'f8400YzaOd',
                 'firstName' => 'Kochomi',
@@ -89,6 +95,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
                 'email' => 'kochomi.meals@aoe.com',
             ],
             [
+                'id' => uniqid(),
                 'username' => 'admin.meals',
                 'password' => 'x3pAsFoq8d',
                 'firstName' => 'Admin',
@@ -100,6 +107,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
 
         foreach ($users as $user) {
             $this->addUser(
+                $user['id'],
                 $user['username'],
                 $user['password'],
                 $user['firstName'],
@@ -127,6 +135,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
      * @param string[] $roles List of role identifiers
      */
     protected function addUser(
+        string $id,
         string $username,
         string $password,
         string $firstName,
@@ -136,6 +145,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         bool $isRandUser = false,
     ): void {
         $login = new Login();
+        //$login->setId($id);
         $login->setUsername($username);
 
         $environment = getenv('APP_ENV');
@@ -147,6 +157,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         }
 
         $profile = new Profile();
+        $profile->setId($id);
         $profile->setUsername($username);
         $profile->setName($lastName);
         $profile->setFirstName($firstName);
@@ -200,6 +211,7 @@ final class LoadUsers extends Fixture implements OrderedFixtureInterface
         $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . rand() . '' . (rand(0, 1) > 0 ? '@aoe.com' : '');
         $email = str_replace('@aoe.com', '', $username) . '@aoe.com';
         $this->addUser(
+            uniqid(),
             $username,
             $randPass,
             $randFirstName,

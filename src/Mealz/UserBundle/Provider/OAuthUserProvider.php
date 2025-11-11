@@ -11,6 +11,7 @@ use Exception;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Override;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +41,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     ];
 
     public function __construct(
+        private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly RoleRepositoryInterface $roleRepo,
         private readonly string $authClientID
@@ -47,16 +49,65 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     }
 
     #[Override]
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifer): UserInterface
     {
-        $user = $this->entityManager->find(Profile::class, $identifier);
-        if ($user instanceof UserInterface) {
-            return $user;
+        $user = $this->entityManager->find(Profile::class, $identifer);
+        if (!($user instanceof UserInterface)) {
+            throw new UserNotFoundException(sprintf('user not found: %s', $identifer));
         }
 
-        $exception = new UserNotFoundException($identifier . ': user not found', 1629778235);
-        $exception->setUserIdentifier($identifier);
-        throw $exception;
+        return $user;
+    }
+
+    /**
+     * Loads an user by identifier or create it.
+     */
+    public function loadUserByIdOrCreate(UserResponseInterface $response): ?UserInterface
+    {
+        $data = $response->getData();
+
+        $idpUserId = $data['sub'];
+        $username = $response->getNickname();
+        $firstName = $response->getFirstName() ?? '';
+        $lastName = $response->getLastName() ?? '';
+        $email = $response->getEmail();
+
+        $globalUserRoles = $data['roles'] ?? [];
+        $appUserRoles = $data['resource_access'][$this->authClientID]['roles'] ?? [];
+        $role = $this->toMealsRole(array_merge($globalUserRoles, $appUserRoles));
+        $roles = (null === $role) ? [] : [$role];
+
+        try {
+            $user = $this->loadUserByIdentifier($idpUserId);
+        } catch (UserNotFoundException $e) {
+            // Find user by username; set IdpUser ID
+            $user = $this->entityManager->find(Profile::class, $username);
+            if ($user instanceof UserInterface) {
+                $user->setId($idpUserId);
+
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+
+                $user = $this->entityManager->find(Profile::class, $idpUserId);
+            }
+
+            // Create user
+            if (false === ($user instanceof UserInterface)) {
+                try {
+                    return $this->createProfile($idpUserId, $username, $firstName, $lastName, $email, $roles);
+                } catch (Exception $e) {
+                    $this->logger->error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+                    return null;
+                }
+            }
+        }
+
+        if (!($user instanceof Profile)) {
+            throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
+        }
+
+        return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
     }
 
     /**
@@ -65,28 +116,12 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     #[Override]
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
-        $username = $response->getNickname();
-        $firstName = $response->getFirstName() ?? '';
-        $lastName = $response->getLastName() ?? '';
-        $email = $response->getEmail();
-
-        $data = $response->getData();
-        $globalUserRoles = $data['roles'] ?? [];
-        $appUserRoles = $data['resource_access'][$this->authClientID]['roles'] ?? [];
-        $role = $this->toMealsRole(array_merge($globalUserRoles, $appUserRoles));
-        $roles = (null === $role) ? [] : [$role];
-
-        try {
-            $user = $this->loadUserByIdentifier($username);
-        } catch (UserNotFoundException $exception) {
-            return $this->createProfile($username, $firstName, $lastName, $email, $roles);
+        $user = $this->loadUserByIdOrCreate($response);
+        if (null === $user) {
+            throw new UserNotFoundException($response->getNickname().': not found', 1618307277);
         }
 
-        if (!($user instanceof Profile)) {
-            throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
-        }
-
-        return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
+        return $user;
     }
 
     #[Override]
@@ -109,6 +144,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
      * @param Role[] $roles
      */
     private function createProfile(
+        string $idpUserId,
         string $username,
         string $firstName,
         string $lastName,
@@ -117,6 +153,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     ): Profile {
         $profile = new Profile();
         $profile->setUsername($username);
+        $profile->setId($idpUserId);
 
         return $this->updateProfile($profile, $firstName, $lastName, $email, $roles);
     }

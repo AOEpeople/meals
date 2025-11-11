@@ -60,7 +60,7 @@ const router = useRouter();
 const { t, locale } = useI18n();
 
 const isOpen = ref(false);
-const BALANCE_LIMIT = -50;
+const BALANCE_LIMIT = -30;
 
 const balance = computed(() => userDataStore.getState().balance);
 

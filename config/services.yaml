@@ -205,6 +205,11 @@ services:
     calls:
       - [ setDayBlacklist, [ [ '01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31' ] ] ]
 
+  App\Mealz\MealBundle\Account\DefaultAccountOrderLockedBalanceChecker:
+    arguments:
+      $apiSrv: '@App\Mealz\MealBundle\Service\ApiService'
+      $debtLimit: '%app.payment_notification_debt%'
+
   # Service Aliases
   mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'
   mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
@@ -243,6 +248,32 @@ services:
   App\Mealz\MealBundle\Service\Mailer\MonologMailer:
     arguments:
       $toEmail: '%app.email.admin%'
+
+  App\Mealz\MealBundle\Service\ApiService:
+    arguments:
+      $participantRepo: '@App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface'
+      $transactionRepo: '@App\Mealz\AccountingBundle\Repository\TransactionRepository'
+      $mealRepo: '@App\Mealz\MealBundle\Repository\MealRepositoryInterface'
+      $dayRepo: '@App\Mealz\MealBundle\Repository\DayRepositoryInterface'
+      $eventPartSrv: '@App\Mealz\MealBundle\Service\EventParticipationService'
+
+  App\Mealz\MealBundle\Service\EventParticipationService:
+    arguments:
+      $doorman: '@mealz_meal.doorman'
+      $em: '@doctrine.orm.entity_manager'
+      $eventPartRepo: '@App\Mealz\MealBundle\Repository\EventPartRepoInterface'
+      $eventRepo: '@App\Mealz\MealBundle\Repository\EventRepositoryInterface'
+      $guestPartSrv: '@App\Mealz\MealBundle\Service\GuestParticipationService'
+
+  App\Mealz\MealBundle\Service\GuestParticipationService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $participantRepo: '@App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface'
+      $profileRepo: '@App\Mealz\UserBundle\Repository\ProfileRepository'
+      $roleRepo: '@App\Mealz\UserBundle\Repository\RoleRepository'
+      $slotRepo: '@App\Mealz\MealBundle\Repository\SlotRepository'
+      $guestInvitationRepo: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
+      $mealRepo: '@App\Mealz\MealBundle\Repository\MealRepositoryInterface'
 
   ##################################################################
   # Accounting BUNDLE

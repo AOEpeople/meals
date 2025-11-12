@@ -20,6 +20,7 @@ import { type Week } from '@/api/getDashboardData';
 import { computed } from 'vue';
 import {useTransactionData} from '@/api/getTransactionData';
 import useFlashMessage from '@/services/useFlashMessage';
+import {FlashMessageType} from '@/enums/FlashMessage';
 
 const props = defineProps<{
   weeks: Dictionary<Week>;

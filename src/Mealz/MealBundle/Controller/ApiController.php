@@ -34,7 +34,7 @@ final class ApiController extends BaseController
         private readonly OfferService $offerSrv,
         private readonly GuestParticipationService $guestPartiSrv,
         private readonly EventParticipationService $eventService,
-        private readonly AccountOrderLockedBalanceChecker $accountOrderLockedBalanceChecker
+        private readonly AccountOrderLockedBalanceChecker $balanceChecker
     ) {
     }
 
@@ -283,7 +283,7 @@ final class ApiController extends BaseController
         }
 
         $isLocked = $meal->isLocked();
-        if ($this->accountOrderLockedBalanceChecker->check($profile)) {
+        if ($this->balanceChecker->check($profile)) {
             $isLocked = true;
         }
 

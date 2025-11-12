@@ -83,6 +83,9 @@ run-tests-be:
 run-tests-fe:
 	ddev exec npm run --prefix src/Resources test:unit
 
+run-tests-fe-coverage:
+	ddev exec npm run --prefix src/Resources test:unit:coverage
+
 run-cypress:
 	yarn --cwd=./tests/e2e cypress open
 

@@ -35,7 +35,7 @@ import BlockPopup from '../misc/BlockPopup.vue';
 import checkActiveSession from '@/tools/checkActiveSession';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 import useFlashMessage from '@/services/useFlashMessage';
-import {useTransactionData} from '@/api/getTransactionData';
+import { useTransactionData } from '@/api/getTransactionData';
 
 const KEEP_ALIVE_INTERVAL_MILLIS = 40000;
 

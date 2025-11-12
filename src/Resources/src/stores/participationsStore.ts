@@ -77,7 +77,8 @@ watch(
         if (menuParticipationsState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: menuParticipationsState.error
+                message: menuParticipationsState.error,
+                hasLifetime: true
             });
         }
     }
@@ -127,7 +128,8 @@ export function useParticipations(weekId: number) {
         handleParticipationUpdate(response, error, dayId, profileFullname);
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'participations.added'
+            message: 'participations.added',
+            hasLifetime: true
         });
     }
 
@@ -148,7 +150,8 @@ export function useParticipations(weekId: number) {
         handleParticipationUpdate(response, error, dayId, profileFullname);
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'participations.removed'
+            message: 'participations.removed',
+            hasLifetime: true
         });
     }
 

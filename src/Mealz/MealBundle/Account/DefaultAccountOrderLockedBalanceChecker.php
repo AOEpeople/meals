@@ -14,8 +14,8 @@ final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountO
 {
     public function __construct(
         private ApiService $apiSrv,
-        private int        $debtLimit,
-        private Clock      $clock
+        private int $debtLimit,
+        private Clock $clock
     ) {
     }
 

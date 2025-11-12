@@ -90,7 +90,8 @@ async function addGuest() {
     if (error.value) {
       sendFlashMessage({
         type: FlashMessageType.ERROR,
-        message: (response.value as IMessage).message ?? 'Unknown error'
+        message: (response.value as IMessage).message ?? 'Unknown error',
+        hasLifetime: true
       });
       return false;
     } else {

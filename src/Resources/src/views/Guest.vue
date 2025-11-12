@@ -89,7 +89,8 @@ receive('guestChosenMeals', (mealId: string) => {
   } else if (reachedLimit.value === true) {
     sendFlashMessage({
       type: FlashMessageType.INFO,
-      message: 'meal.maxReached'
+      message: 'meal.maxReached',
+      hasLifetime: true
     });
   } else {
     form.chosenMeals.push(mealId);

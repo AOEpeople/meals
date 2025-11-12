@@ -34,7 +34,8 @@ export default function useHtml2Pdf() {
             console.error('An error occured during pdf generation!', error);
             useFlashMessage().sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: t('flashmessage.print.error')
+                message: t('flashmessage.print.error'),
+                hasLifetime: true
             });
         }
     }

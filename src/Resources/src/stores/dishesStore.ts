@@ -71,7 +71,8 @@ watch(
         if (DishesState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: DishesState.error
+                message: DishesState.error,
+                hasLifetime: true
             });
         }
     }
@@ -149,7 +150,8 @@ export function useDishes() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'dishes.created'
+            message: 'dishes.created',
+            hasLifetime: true
         });
         await fetchDishes();
     }
@@ -168,7 +170,8 @@ export function useDishes() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'dishes.deleted'
+            message: 'dishes.deleted',
+            hasLifetime: true
         });
         await fetchDishes();
     }
@@ -188,7 +191,8 @@ export function useDishes() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'dishes.created'
+            message: 'dishes.created',
+            hasLifetime: true
         });
         await fetchDishes();
     }
@@ -207,7 +211,8 @@ export function useDishes() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'dishes.deleted'
+            message: 'dishes.deleted',
+            hasLifetime: true
         });
         await fetchDishes();
     }
@@ -228,7 +233,8 @@ export function useDishes() {
             updateDishVariationInState((response.value as Dish).parentId, response.value as Dish);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'dishes.updated'
+                message: 'dishes.updated',
+                hasLifetime: true
             });
         } else {
             DishesState.error = isMessage(response.value) ? response.value.message : 'Error on updating dishVariation';
@@ -256,7 +262,8 @@ export function useDishes() {
             updateDishesState(response.value as Dish);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'dishes.updated'
+                message: 'dishes.updated',
+                hasLifetime: true
             });
         } else {
             DishesState.error = isMessage(response.value) ? response.value.message : 'Error on updating a dish';

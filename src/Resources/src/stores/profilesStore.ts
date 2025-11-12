@@ -50,7 +50,8 @@ export function useProfiles(weekId: number) {
             if (ProfilesState.error !== '') {
                 sendFlashMessage({
                     type: FlashMessageType.ERROR,
-                    message: ProfilesState.error
+                    message: ProfilesState.error,
+                    hasLifetime: true
                 });
             }
         }

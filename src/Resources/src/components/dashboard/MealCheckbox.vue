@@ -225,7 +225,8 @@ async function joinMeal(dishSlugs: string[]) {
     } else if (isMessage(response.value) === true) {
       sendFlashMessage({
         type: FlashMessageType.ERROR,
-        message: (response.value as IMessage).message
+        message: (response.value as IMessage).message,
+        hasLifetime: true
       });
     }
   }

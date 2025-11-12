@@ -46,7 +46,8 @@ watch(
         if (CostsState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: CostsState.error
+                message: CostsState.error,
+                hasLifetime: true
             });
         }
     }
@@ -116,7 +117,8 @@ export function useCosts() {
             CostsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'costs.hidden'
+                message: 'costs.hidden',
+                hasLifetime: true
             });
         }
     }
@@ -137,7 +139,8 @@ export function useCosts() {
             CostsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'costs.settlementSent'
+                message: 'costs.settlementSent',
+                hasLifetime: true
             });
         }
     }
@@ -160,7 +163,8 @@ export function useCosts() {
             CostsState.users[userid].costs['total'] += response.value;
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'costs.cashPayment'
+                message: 'costs.cashPayment',
+                hasLifetime: true
             });
         }
     }
@@ -182,7 +186,8 @@ export function useCosts() {
             CostsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'costs.settlementConfirmed'
+                message: 'costs.settlementConfirmed',
+                hasLifetime: true
             });
             return true;
         }

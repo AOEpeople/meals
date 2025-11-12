@@ -54,7 +54,8 @@ watch(
         if (EventsState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: EventsState.error
+                message: EventsState.error,
+                hasLifetime: true
             });
         }
     }
@@ -127,7 +128,8 @@ export function useEvents() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'events.created'
+            message: 'events.created',
+            hasLifetime: true
         });
         await fetchEvents();
     }
@@ -155,7 +157,8 @@ export function useEvents() {
             EventsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'events.edited'
+                message: 'events.edited',
+                hasLifetime: true
             });
         } else {
             EventsState.error = 'An unknown error occured while updating an event!';
@@ -179,7 +182,8 @@ export function useEvents() {
             EventsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'events.deleted'
+                message: 'events.deleted',
+                hasLifetime: true
             });
         }
     }

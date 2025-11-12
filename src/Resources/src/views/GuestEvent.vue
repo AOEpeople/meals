@@ -103,18 +103,21 @@ async function handleSubmit() {
   if (error.value === true && isMessage(response.value) && response.value.message.includes('already joined')) {
     sendFlashMessage({
       type: FlashMessageType.ERROR,
-      message: response.value.message
+      message: response.value.message,
+      hasLifetime: true
     });
   } else if (error.value === true) {
     sendFlashMessage({
       type: FlashMessageType.ERROR,
-      message: 'Error occured'
+      message: 'Error occured',
+      hasLifetime: true
     });
   } else {
     hasJoined.value = true;
     sendFlashMessage({
       type: FlashMessageType.INFO,
-      message: 'guest.joined'
+      message: 'guest.joined',
+      hasLifetime: true
     });
   }
 }

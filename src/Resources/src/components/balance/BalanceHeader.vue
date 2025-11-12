@@ -54,7 +54,8 @@ async function checkForFailedOrder() {
     } else {
       useFlashMessage().sendFlashMessage({
         type: FlashMessageType.ERROR,
-        message: t('balance.paypal_error')
+        message: t('balance.paypal_error'),
+        hasLifetime: true
       });
     }
   }

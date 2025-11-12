@@ -61,3 +61,7 @@ phpstan.neon
 /node_modules/
 /public/build/
 ###< pentatrion/vite-bundle ###
+
+###> vitest/coverage-v8 ###
+coverage
+###> vitest/coverage-v8 ###

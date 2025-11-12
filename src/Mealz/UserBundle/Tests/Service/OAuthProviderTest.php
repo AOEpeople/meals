@@ -68,7 +68,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
         $this->assertInstanceOf(Profile::class, $user);
 
         // check if new valid Profile is written in Database
-        $newCreatedProfile = $this->getDoctrine()->getManager()->find(Profile::class, $username);
+        $newCreatedProfile = $this->getDoctrine()->getManager()->find(Profile::class, $idpId);
         $this->assertNotNull($newCreatedProfile);
         $this->assertEquals($username, $newCreatedProfile->getUsername());
 

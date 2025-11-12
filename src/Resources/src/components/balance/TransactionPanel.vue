@@ -34,6 +34,8 @@ import MoneyInput from '../misc/MoneyInput.vue';
 import BlockPopup from '../misc/BlockPopup.vue';
 import checkActiveSession from '@/tools/checkActiveSession';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
+import useFlashMessage from '@/services/useFlashMessage';
+import {useTransactionData} from '@/api/getTransactionData';
 
 const KEEP_ALIVE_INTERVAL_MILLIS = 40000;
 
@@ -109,13 +111,20 @@ onMounted(async () => {
               );
 
               const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
-
-              if (response.ok) {
-                userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
-                transactionStore.fillStore();
-                // disable gray out and show spinner
-                emit('closePanel');
+              if (!response.ok) {
+                return;
               }
+
+              userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
+              transactionStore.fillStore();
+              const transactionData = await useTransactionData();
+              const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
+              if ((balanceDifference > import.meta.env.VITE_ACCOUNT_ORDER_BLOCKED_BALANCE)) {
+                useFlashMessage().removeMessagesByMessageCode('602');
+              }
+
+              // disable gray out and show spinner
+              emit('closePanel');
               isLoading.value = false;
             } catch (error) {
               isLoading.value = false;

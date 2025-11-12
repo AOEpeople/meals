@@ -16,7 +16,8 @@ final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountO
         private ApiService $apiSrv,
         private int        $debtLimit,
         private Clock      $clock
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function check(Profile $profile): bool

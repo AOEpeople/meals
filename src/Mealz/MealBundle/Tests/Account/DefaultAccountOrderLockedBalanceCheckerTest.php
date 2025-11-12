@@ -34,7 +34,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
         );
     }
 
-    public function testCheck_with_account_order_not_locked(): void
+    public function testCheckWithAccountOrderNotLocked(): void
     {
         $profile = new Profile();
         $dateFrom = new DateTime()->setTimestamp(0);
@@ -51,7 +51,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
         self::assertFalse($isAccountOrderBlocked);
     }
 
-    public function testCheck_with_account_order_locked(): void
+    public function testCheckWithAccountOrderLocked(): void
     {
         $profile = new Profile();
         $dateFrom = new DateTime()->setTimestamp(0);
@@ -68,7 +68,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
         self::assertTrue($isAccountOrderBlocked);
     }
 
-    public function testCheck_with_invalid_full_transaction_history(): void
+    public function testCheckWithInvalidFullTransactionHistory(): void
     {
         $profile = new Profile();
         $dateFrom = new DateTime()->setTimestamp(0);

@@ -23,7 +23,8 @@ receive<FlashMessage>('flashmessage', (data) => {
     if (data.type === FlashMessageType.ERROR) {
         flashMessages.value.push({
             type: data.type,
-            message: data.message.split(':')[0]
+            message: data.message.split(':')[0],
+            hasLifetime: data.hasLifetime
         });
     } else {
         flashMessages.value.push(data);

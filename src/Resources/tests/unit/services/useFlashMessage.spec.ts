@@ -40,7 +40,8 @@ describe('Test useFlashMessage', () => {
 
         expect(flashMessages.value[0]).toEqual({
             type: FlashMessageType.ERROR,
-            message: '111'
+            message: '111',
+            hasLifetime: true
         });
     });
 
@@ -57,7 +58,8 @@ describe('Test useFlashMessage', () => {
 
         expect(flashMessages.value[0]).toEqual({
             type: FlashMessageType.ERROR,
-            message: '111'
+            message: '111',
+            hasLifetime: false
         });
     });
 

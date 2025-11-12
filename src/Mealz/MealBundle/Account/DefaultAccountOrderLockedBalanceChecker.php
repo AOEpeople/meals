@@ -22,7 +22,7 @@ final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountO
     #[Override]
     public function check(Profile $profile): bool
     {
-        $dateFrom = new DateTime()->setTimestamp(0);
+        $dateFrom = DateTime::createFromTimestamp(0);
         $now = $this->clock->now();
         $dateTo = DateTime::createFromImmutable($now);
         $currentBalance = $this->apiSrv->getFullTransactionHistory($dateFrom, $dateTo, $profile)[0] ?? 0.0;

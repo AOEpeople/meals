@@ -37,7 +37,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheckWithAccountOrderNotLocked(): void
     {
         $profile = new Profile();
-        $dateFrom = new DateTime()->setTimestamp(0);
+        $dateFrom = DateTime::createFromTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [
             2.54
@@ -54,7 +54,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheckWithAccountOrderLocked(): void
     {
         $profile = new Profile();
-        $dateFrom = new DateTime()->setTimestamp(0);
+        $dateFrom = DateTime::createFromTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [
             -60
@@ -71,7 +71,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheckWithInvalidFullTransactionHistory(): void
     {
         $profile = new Profile();
-        $dateFrom = new DateTime()->setTimestamp(0);
+        $dateFrom = DateTime::createFromTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [];
         $this->apiServiceMock->expects(self::once())

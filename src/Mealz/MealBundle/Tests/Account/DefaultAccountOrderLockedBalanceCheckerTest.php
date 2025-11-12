@@ -8,6 +8,8 @@ use App\Mealz\MealBundle\Account\DefaultAccountOrderLockedBalanceChecker;
 use App\Mealz\MealBundle\Account\Model\Clock;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\UserBundle\Entity\Profile;
+use DateTime;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +22,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     private Clock $clock;
     private DefaultAccountOrderLockedBalanceChecker $defaultAccountOrderLockedBalanceChecker;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->apiServiceMock = $this->getMockBuilder(ApiService::class)->disableOriginalConstructor()->getMock();
@@ -35,7 +37,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheck_with_account_order_not_locked(): void
     {
         $profile = new Profile();
-        $dateFrom = new \DateTime()->setTimestamp(0);
+        $dateFrom = new DateTime()->setTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [
             2.54
@@ -52,7 +54,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheck_with_account_order_locked(): void
     {
         $profile = new Profile();
-        $dateFrom = new \DateTime()->setTimestamp(0);
+        $dateFrom = new DateTime()->setTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [
             -60
@@ -69,7 +71,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     public function testCheck_with_invalid_full_transaction_history(): void
     {
         $profile = new Profile();
-        $dateFrom = new \DateTime()->setTimestamp(0);
+        $dateFrom = new DateTime()->setTimestamp(0);
         $dateTo = $this->clock->now();
         $fullTransactionHistory = [];
         $this->apiServiceMock->expects(self::once())

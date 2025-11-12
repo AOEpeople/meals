@@ -5,7 +5,7 @@ import { readonly, ref } from 'vue';
 export interface FlashMessage {
     type: FlashMessageType;
     message: string;
-    hasLifetime: boolean
+    hasLifetime: boolean;
 }
 
 const FLASHMESSAGE_LIFETIME = 7000;

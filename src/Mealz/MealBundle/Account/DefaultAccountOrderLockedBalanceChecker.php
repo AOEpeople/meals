@@ -16,6 +16,7 @@ final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountO
         private Clock $clock
     ) {}
 
+    #[\Override]
     public function check(Profile $profile): bool
     {
         $dateFrom = new \DateTime()->setTimestamp(0);

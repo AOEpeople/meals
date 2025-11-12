@@ -20,6 +20,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     private Clock $clock;
     private DefaultAccountOrderLockedBalanceChecker $defaultAccountOrderLockedBalanceChecker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->apiServiceMock = $this->getMockBuilder(ApiService::class)->disableOriginalConstructor()->getMock();

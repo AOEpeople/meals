@@ -18,6 +18,7 @@ final readonly class Clock implements ClockInterface
         $this->dateTime = new \DateTimeImmutable();
     }
 
+    #[\Override]
     public function now(): \DateTimeImmutable
     {
         return $this->dateTime;

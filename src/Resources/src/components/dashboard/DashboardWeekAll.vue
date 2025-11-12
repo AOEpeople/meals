@@ -18,6 +18,8 @@ import { type Dictionary } from '@/types/types';
 import WeekComp from './Week.vue';
 import { type Week } from '@/api/getDashboardData';
 import { computed } from 'vue';
+import {useTransactionData} from '@/api/getTransactionData';
+import useFlashMessage from '@/services/useFlashMessage';
 
 const props = defineProps<{
   weeks: Dictionary<Week>;
@@ -38,7 +40,7 @@ const weekIdsSortedByDate = computed(() =>
 
 const transactionData = await useTransactionData();
 const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
-if ((balanceDifference <= import.meta.env.VITE_ACCOUNT_ORDER_BLOCKED_BALANCE) ) {
+if ((balanceDifference <= import.meta.env.VITE_ACCOUNT_ORDER_BLOCKED_BALANCE)) {
   useFlashMessage().clearMessages();
   useFlashMessage().sendFlashMessage({
     type: FlashMessageType.ERROR,

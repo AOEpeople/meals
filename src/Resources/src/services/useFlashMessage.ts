@@ -66,9 +66,16 @@ export default function useFlashMessage() {
         flashMessages.value = [];
     }
 
+    function removeMessagesByMessageCode(messageCode: string) {
+        flashMessages.value = flashMessages.value.filter((flashMessage: FlashMessage) => {
+            return flashMessage.message !== messageCode;
+        });
+    }
+
     return {
         flashMessages: readonly(flashMessages),
         sendFlashMessage,
-        clearMessages
+        clearMessages,
+        removeMessagesByMessageCode
     };
 }

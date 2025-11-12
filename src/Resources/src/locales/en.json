@@ -170,7 +170,6 @@
       "504": "The profile for the settlement request could not be found.",
       "505": "The settlement request has either already been processed or the request is invalid.",
       "601": "The amount to add to the account must be more than 0.",
-      "602": "The account is not supposed to be overdrawn by more than €50.",
       "701": "Event creation parameters are missing",
       "801": "No permission to enter or leave the event",
       "802": "Couldn't join the event",
@@ -178,7 +177,8 @@
       "804": "Can't join the event anymore",
       "903": "You are already registered. If you have any questions please message your contact person.",
       "1001": "At least one of the Parameters firstname or lastname are missing.",
-      "1002": "The profile exists but is hidden."
+      "1002": "The profile exists but is hidden.",
+      "balanceBelowBalanceLimit": "The account is not supposed to be overdrawn by more than €50."
     },
     "success": {
       "menu": {

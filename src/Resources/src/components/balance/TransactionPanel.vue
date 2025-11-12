@@ -120,7 +120,7 @@ onMounted(async () => {
               const transactionData = await useTransactionData();
               const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
               if ((balanceDifference > import.meta.env.VITE_ACCOUNT_ORDER_LOCKED_BALANCE)) {
-                useFlashMessage().removeMessagesByMessageCode('602');
+                useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
               }
 
               // disable gray out and show spinner

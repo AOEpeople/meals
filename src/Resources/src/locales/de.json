@@ -170,7 +170,6 @@
       "504": "Das Profil für den Ausgleich konnte nicht gefunden werden.",
       "505": "Diese Anfrage zum Ausgleich wurde entweder bereits bearbeitet, oder ist ungültig.",
       "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein.",
-      "602": "Das Konto darf nicht mehr als 50 € überzogen werden.",
       "701": "Es wurden noch nicht alle Details zu dem Event eingefügt",
       "801": "Keine Berechtigung zum beitreten oder verlassen",
       "802": "Dem Event konnte nicht beigetreten werden",
@@ -178,7 +177,8 @@
       "804": "Dem Event kann nicht mehr beigetreten werden",
       "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner.",
       "1001": "Mindestens eines Felder Vorname oder Nachname fehlt.",
-      "1002": "Das Profil existiert, aber ist versteckt."
+      "1002": "Das Profil existiert, aber ist versteckt.",
+      "balanceBelowBalanceLimit": "Das Konto darf nicht mehr als 50 € überzogen werden."
     },
     "success": {
       "menu": {

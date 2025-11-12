@@ -45,7 +45,7 @@ if ((balanceDifference <= import.meta.env.VITE_ACCOUNT_ORDER_LOCKED_BALANCE)) {
   useFlashMessage().clearMessages();
   useFlashMessage().sendFlashMessage({
     type: FlashMessageType.ERROR,
-    message: '602',
+    message: 'balanceBelowBalanceLimit',
     hasLifetime: false
   });
 }

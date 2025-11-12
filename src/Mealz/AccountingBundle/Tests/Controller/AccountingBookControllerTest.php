@@ -47,12 +47,12 @@ final class AccountingBookControllerTest extends AbstractControllerTestCase
         // Create profile for user1
         $user1FirstName = 'Max';
         $user1LastName = 'Mustermann' . $time;
-        $user1 = $this->createProfile($user1FirstName . '.' .$user1LastName, $user1FirstName, $user1LastName);
+        $user1 = $this->createProfile($user1FirstName . '.' . $user1LastName, $user1FirstName, $user1LastName);
 
         // Create profile for user2
         $user2FirstName = 'John';
         $user2LastName = 'Doe' . $time;
-        $user2 = $this->createProfile($user2FirstName . '.' .$user2LastName, $user2FirstName, $user2LastName);
+        $user2 = $this->createProfile($user2FirstName . '.' . $user2LastName, $user2FirstName, $user2LastName);
 
         $this->persistAndFlushAll([$user1, $user2]);
 

@@ -51,13 +51,13 @@ final class PrintControllerTest extends AbstractControllerTestCase
         $guestLastName = 'Doe:' . $time;
         $guestCompany = 'Test Company:' . $time;
 
-        $guest = $this->createProfile(unique(), $guestFirstName, $guestLastName, $guestCompany);
+        $guest = $this->createProfile(uniqid(), $guestFirstName, $guestLastName, $guestCompany);
         $guest->addRole($this->getRole(Role::ROLE_GUEST));
 
         // Create profile for normal user
         $userFirstName = 'Max:' . $time;
         $userLastName = 'Mustermann:' . $time;
-        $user = $this->createProfile(unique(), $userFirstName, $userLastName);
+        $user = $this->createProfile(uniqid(), $userFirstName, $userLastName);
 
         $this->persistAndFlushAll([$guest, $user]);
 

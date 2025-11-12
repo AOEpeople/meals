@@ -237,7 +237,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         string $userLastName,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile(unique(), $userFirstName, $userLastName);
+        $user = $this->createProfile(uniqid(), $userFirstName, $userLastName);
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);
 
@@ -255,7 +255,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         string $guestCompany,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile(unique(), $guestFirstName, $guestLastName, $guestCompany);
+        $user = $this->createProfile(uniqid(), $guestFirstName, $guestLastName, $guestCompany);
         $user->addRole($this->getRole(Role::ROLE_GUEST));
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);

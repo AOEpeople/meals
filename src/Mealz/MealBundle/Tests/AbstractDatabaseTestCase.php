@@ -120,7 +120,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     {
         $rand = mt_rand();
         $profile = new Profile();
-        $profile->setId($rand);
+        $profile->setId((string) $rand);
         $profile->setUsername('TestUsername' . $rand);
         $profile->setName('TestName' . $rand);
         $profile->setFirstName('TestFirstName' . $rand);

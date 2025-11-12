@@ -162,7 +162,6 @@ final class OAuthProviderTest extends AbstractControllerTestCase
         ];
         $responseProphet = $this->prophesize(UserResponseInterface::class);
         $responseProphet->getData()->shouldBeCalledOnce()->willReturn($userData);
-        $responseProphet->getId()->shouldBeCalledOnce()->willReturn($idpId);
         $responseProphet->getFirstName()->shouldBeCalledOnce()->willReturn($firstName);
         $responseProphet->getLastName()->shouldBeCalledOnce()->willReturn($lastName);
         $responseProphet->getNickname()->shouldBeCalledOnce()->willReturn($username);

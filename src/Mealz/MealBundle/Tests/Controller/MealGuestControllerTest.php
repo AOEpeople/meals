@@ -66,7 +66,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('1', 'Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($profile, $eventParticipation->getDay(), $eventParticipation);
 
@@ -94,7 +94,7 @@ final class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('1', 'Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateEventInvitation($profile, $eventParticipation->getDay(), $eventParticipation);
 

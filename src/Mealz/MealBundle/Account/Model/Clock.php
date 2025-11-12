@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Account\Model;
 
+use DateTimeImmutable;
+use Override;
 use Psr\Clock\ClockInterface;
 
 /**
@@ -11,15 +13,15 @@ use Psr\Clock\ClockInterface;
  */
 final readonly class Clock implements ClockInterface
 {
-    private \DateTimeImmutable $dateTime;
+    private DateTimeImmutable $dateTime;
 
     public function __construct()
     {
-        $this->dateTime = new \DateTimeImmutable();
+        $this->dateTime = new DateTimeImmutable();
     }
 
-    #[\Override]
-    public function now(): \DateTimeImmutable
+    #[Override]
+    public function now(): DateTimeImmutable
     {
         return $this->dateTime;
     }

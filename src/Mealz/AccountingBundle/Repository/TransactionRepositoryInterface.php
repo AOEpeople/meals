@@ -17,7 +17,7 @@ interface TransactionRepositoryInterface extends ObjectRepository
     /**
      * Get total amount of transactions. Prevent unnecessary ORM mapping.
      */
-    public function getTotalAmount(string $username): float;
+    public function getTotalAmount(string $userId): float;
 
     /**
      * Get all successful transactions for period and profile.

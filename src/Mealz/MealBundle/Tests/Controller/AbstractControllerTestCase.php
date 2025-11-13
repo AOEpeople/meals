@@ -45,13 +45,13 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->client = static::createClient();
     }
 
-    protected function loginAs(string $username): void
+    protected function loginAs(string $id): void
     {
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
-        $user = $repo->findOneBy(['username' => $username]);
+        $user = $repo->find($id);
 
         if (!($user instanceof Profile)) {
-            throw new RuntimeException($username . ': user not found');
+            throw new RuntimeException($id . ': userId not found');
         }
 
         $this->client->loginUser($user);

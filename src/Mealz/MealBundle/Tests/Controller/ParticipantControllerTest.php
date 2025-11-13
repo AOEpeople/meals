@@ -151,7 +151,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $participantToRemove = self::createParticipant($profile, $meal);
         $this->assertNotNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
 
-        $routeStr = '/api/participation/' . $profile->getUsername() . '/' . $meal->getId();
+        $routeStr = '/api/participation/' . $profile->getId() . '/' . $meal->getId();
         $this->client->request('DELETE', $routeStr);
 
         $response = $this->client->getResponse();

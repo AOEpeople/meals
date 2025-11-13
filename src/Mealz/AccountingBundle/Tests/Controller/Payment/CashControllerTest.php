@@ -59,9 +59,7 @@ final class CashControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
-        $janeProfile = $profileRepo->findOneBy([
-            'username' => self::USER_STANDARD,
-        ]);
+        $janeProfile = $profileRepo->find(self::USER_STANDARD);
 
         $amount = 10;
         $balanceBefore = $this->wallet->getBalance($janeProfile);

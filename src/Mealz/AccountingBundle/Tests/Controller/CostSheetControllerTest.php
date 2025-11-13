@@ -49,7 +49,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
     {
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $data = json_encode([
-            'username' => $profile->getUsername(),
+            'id' => $profile->getId(),
         ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -68,9 +68,9 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
-        $profile = $this->getUserProfile('john.meals');
+        $profile = $this->getUserProfile('230b294f-b05e-4a97-b6a8-4c16610c7d8c'); // john.meals
         $data = json_encode([
-            'username' => $profile->getUsername(),
+            'id' => $profile->getId(),
         ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -103,7 +103,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         $entityManager->flush();
 
         $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
-        $balanceBefore = $transactionRepo->getTotalAmount($profile->getUsername());
+        $balanceBefore = $transactionRepo->getTotalAmount($profile->getId());
 
         // Pre-action tests
         $this->assertGreaterThan(0, $balanceBefore);
@@ -114,7 +114,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertResponseIsSuccessful();
 
         // Check new balance
-        $balanceAfter = $transactionRepo->getTotalAmount($profile->getUsername());
+        $balanceAfter = $transactionRepo->getTotalAmount($profile->getId());
         $this->assertEquals(0, $balanceAfter);
         $this->assertNull($profile->getSettlementHash());
     }

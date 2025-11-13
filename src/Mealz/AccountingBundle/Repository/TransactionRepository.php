@@ -25,12 +25,12 @@ final class TransactionRepository extends BaseRepository implements TransactionR
      * @throws NonUniqueResultException
      */
     #[Override]
-    public function getTotalAmount(string $username): float
+    public function getTotalAmount(string $userId): float
     {
         $queryBuilder = $this->createQueryBuilder('t');
         $queryBuilder->select('SUM(t.amount) AS amount');
         $queryBuilder->andWhere('t.profile = :user');
-        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('user', $userId, Types::STRING);
 
         return (float) $queryBuilder->getQuery()->getSingleScalarResult();
     }

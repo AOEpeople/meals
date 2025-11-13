@@ -88,13 +88,13 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$user]);
 
         // Check that created profiles are persisted
-        if (($this->getUserProfile($participant->getProfile()->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($participant->getProfile()->getId()) instanceof Profile) === false) {
             $this->fail('Test participant not found.');
         }
-        if (($this->getUserProfile($guestParticipant->getProfile()->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($guestParticipant->getProfile()->getId()) instanceof Profile) === false) {
             $this->fail('Test guest not found.');
         }
-        if (($this->getUserProfile($user->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($user->getId()) instanceof Profile) === false) {
             $this->fail('Test user not found.');
         }
     }
@@ -128,7 +128,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $mealToAdd = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($mealToAdd);
 
-        $routeStr = '/api/participation/' . $profileToAdd->getUsername() . '/' . $mealToAdd->getId();
+        $routeStr = '/api/participation/' . $profileToAdd->getId() . '/' . $mealToAdd->getId();
         $this->client->request('PUT', $routeStr);
 
         $response = $this->client->getResponse();

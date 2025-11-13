@@ -33,9 +33,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Role based test users.
      */
-    protected const string USER_STANDARD = 'alice.meals';
-    protected const string USER_FINANCE = 'finance.meals';
-    protected const string USER_KITCHEN_STAFF = 'kochomi.meals';
+    protected const string USER_STANDARD = '01cb80ec-9191-4d6d-af74-1ffd8c592dc4'; // alice.meals
+    protected const string USER_FINANCE = '0b0016cf-0a23-493f-ae1f-bdaeaa90f14b'; // finance.meals
+    protected const string USER_KITCHEN_STAFF = '5f8aece6-732c-4adb-8c74-8d3eb62c598a'; // kochomi.meals
 
     protected KernelBrowser $client;
 
@@ -71,14 +71,14 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         return $token;
     }
 
-    protected function getUserProfile(string $username): Profile
+    protected function getUserProfile(string $id): Profile
     {
         /** @var ProfileRepositoryInterface $profileRepository */
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
-        $userProfile = $profileRepository->findOneBy(['username' => $username]);
+        $userProfile = $profileRepository->find($id);
 
         if (!($userProfile instanceof Profile)) {
-            $this->fail('user profile not found: ' . $username);
+            $this->fail('user profile with id not found: ' . $id);
         }
 
         return $userProfile;

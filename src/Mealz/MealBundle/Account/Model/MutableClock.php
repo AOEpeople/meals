@@ -11,18 +11,16 @@ use Psr\Clock\ClockInterface;
 /**
  * @codeCoverageIgnore
  */
-final readonly class Clock implements ClockInterface
+final readonly class MutableClock implements ClockInterface
 {
-    private DateTimeImmutable $dateTime;
-
-    public function __construct()
-    {
-        $this->dateTime = new DateTimeImmutable();
+    public function __construct(
+        private string $dateTime
+    ) {
     }
 
     #[Override]
     public function now(): DateTimeImmutable
     {
-        return $this->dateTime;
+        return new DateTimeImmutable($this->dateTime);
     }
 }

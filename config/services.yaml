@@ -210,9 +210,11 @@ services:
     arguments:
       $apiSrv: '@App\Mealz\MealBundle\Service\ApiService'
       $debtLimit: '%app.account_order_locked_balance_limit%'
-      $clock: '@App\Mealz\MealBundle\Account\Model\Clock'
+      $clock: '@App\Mealz\MealBundle\Account\Model\MutableClock'
 
-  App\Mealz\MealBundle\Account\Model\Clock: ~
+  App\Mealz\MealBundle\Account\Model\MutableClock:
+    arguments:
+      $dateTime: 'now'
 
   # Service Aliases
   mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'

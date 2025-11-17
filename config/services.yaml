@@ -32,7 +32,7 @@ parameters:
   # Total unpaid amount for the consumed meals that will trigger
   # an acknowledgment popup on every page load. It must be negative.
   app.payment_notification_debt: '%env(PAYMENT_NOTIFICATION_DEBT)%'
-  app.account_order_locked_balance_limit: '%env(ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT)%'
+  app.account_order_locked_balance_limit: '%env(int:ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT)%'
 
   app.idp.endpoint.access_token: '%app.idp.server%/protocol/openid-connect/token'
   app.idp.endpoint.auth_token: '%app.idp.server%/protocol/openid-connect/auth'

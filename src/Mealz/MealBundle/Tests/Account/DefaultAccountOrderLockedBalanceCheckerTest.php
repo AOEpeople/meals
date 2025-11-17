@@ -40,7 +40,8 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
         $dateFrom = DateTime::createFromTimestamp(0);
         $dateTo = DateTime::createFromImmutable($this->clock->now());
         $fullTransactionHistory = [
-            2.54
+            2.54,
+            []
         ];
         $this->apiServiceMock->expects(self::once())
             ->method('getFullTransactionHistory')
@@ -57,7 +58,8 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
         $dateFrom = DateTime::createFromTimestamp(0);
         $dateTo = DateTime::createFromImmutable($this->clock->now());
         $fullTransactionHistory = [
-            -60
+            -60,
+            []
         ];
         $this->apiServiceMock->expects(self::once())
             ->method('getFullTransactionHistory')

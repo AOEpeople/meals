@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Account;
 
-use App\Mealz\MealBundle\Account\Model\Clock;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Override;
+use Psr\Clock\ClockInterface;
 
 final readonly class DefaultAccountOrderLockedBalanceChecker implements AccountOrderLockedBalanceChecker
 {
     public function __construct(
         private ApiService $apiSrv,
         private int $debtLimit,
-        private Clock $clock
+        private ClockInterface $clock
     ) {
     }
 

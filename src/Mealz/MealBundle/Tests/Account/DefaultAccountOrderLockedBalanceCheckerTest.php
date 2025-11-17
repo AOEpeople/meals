@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Account;
 
 use App\Mealz\MealBundle\Account\DefaultAccountOrderLockedBalanceChecker;
-use App\Mealz\MealBundle\Account\Model\Clock;
+use App\Mealz\MealBundle\Account\Model\MutableClock;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -19,14 +19,14 @@ use PHPUnit\Framework\TestCase;
 final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
 {
     private MockObject $apiServiceMock;
-    private Clock $clock;
+    private MutableClock $clock;
     private DefaultAccountOrderLockedBalanceChecker $defaultAccountOrderLockedBalanceChecker;
 
     #[Override]
     protected function setUp(): void
     {
         $this->apiServiceMock = $this->getMockBuilder(ApiService::class)->disableOriginalConstructor()->getMock();
-        $this->clock = new Clock();
+        $this->clock = new MutableClock('2025-11-17');
         $this->defaultAccountOrderLockedBalanceChecker = new DefaultAccountOrderLockedBalanceChecker(
             $this->apiServiceMock,
             -50,

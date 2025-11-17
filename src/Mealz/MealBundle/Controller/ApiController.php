@@ -268,23 +268,22 @@ final class ApiController extends BaseController
             $parentId = $meal->getDish()->getParent()->getId();
         }
 
+        $isLocked = $meal->isLocked();
         if (null !== $profile) {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             if (null !== $participation) {
                 $participationId = $participation->getId();
             }
             $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
+            if ($this->balanceChecker->check($profile)) {
+                $isLocked = true;
+            }
         }
 
         $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
 
         if ($meal->isCombinedMeal()) {
             $reachedLimit = $this->apiSrv->hasCombiReachedLimit($meal->getDay());
-        }
-
-        $isLocked = $meal->isLocked();
-        if ($this->balanceChecker->check($profile)) {
-            $isLocked = true;
         }
 
         return [

@@ -51,7 +51,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     #[Override]
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $user = $this->entityManager->find(Profile::class, $identifier);
+        $user = $this->entityManager->getRepository(Profile::class)->findOneBy(['ssoId' => $identifier]);
         if (!($user instanceof UserInterface)) {
             throw new UserNotFoundException(sprintf('user not found: %s', $identifier));
         }
@@ -82,24 +82,25 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
         } catch (UserNotFoundException $e) {
             // Find user by username; set IdpUser ID
             $user = $this->entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
+
             if ($user instanceof UserInterface) {
-                $user->setId($idpUserId);
+                $user->setSsoId($idpUserId);
 
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
-                $user = $this->entityManager->find(Profile::class, $idpUserId);
+                $user = $this->loadUserByIdentifier($idpUserId);
             }
+        }
 
-            // Create user
-            if (false === ($user instanceof UserInterface)) {
-                try {
-                    return $this->createProfile($idpUserId, $username, $firstName, $lastName, $email, $roles);
-                } catch (Exception $e) {
-                    $this->logger->error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+        // Create user
+        if (false === ($user instanceof UserInterface)) {
+            try {
+                return $this->createProfile($idpUserId, $username, $firstName, $lastName, $email, $roles);
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
 
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -107,7 +108,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
             throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
         }
 
-        return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
+        return $this->updateProfile($user, $username, $firstName, $lastName, $email, $roles);
     }
 
     /**
@@ -152,10 +153,9 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
         array $roles
     ): Profile {
         $profile = new Profile();
-        $profile->setUsername($username);
-        $profile->setId($idpUserId);
+        $profile->setSsoId($idpUserId);
 
-        return $this->updateProfile($profile, $firstName, $lastName, $email, $roles);
+        return $this->updateProfile($profile, $username, $firstName, $lastName, $email, $roles);
     }
 
     /**
@@ -163,11 +163,13 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
      */
     private function updateProfile(
         Profile $profile,
+        string $username,
         string $firstName,
         string $lastName,
         ?string $email,
         array $roles
     ): Profile {
+        $profile->setUsername($username);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
         $profile->setEmail($email);

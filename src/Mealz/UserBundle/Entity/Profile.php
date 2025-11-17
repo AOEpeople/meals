@@ -19,8 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'profile')]
 class Profile implements UserInterface, JsonSerializable
 {
-    #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
-    private string $id = '';
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $username = '';
@@ -40,6 +42,9 @@ class Profile implements UserInterface, JsonSerializable
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $company = '';
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private string $ssoId = '';
 
     /**
      * @var Collection<int, Role>|null
@@ -201,6 +206,16 @@ class Profile implements UserInterface, JsonSerializable
         return null;
     }
 
+    public function setSsoId(string $ssoId): void
+    {
+        $this->ssoId = $ssoId;
+    }
+
+    public function getSsoId(): string
+    {
+        return $this->ssoId;
+    }
+
     #[Override]
     public function eraseCredentials(): void
     {
@@ -230,6 +245,6 @@ class Profile implements UserInterface, JsonSerializable
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->id;
+        return $this->ssoId;
     }
 }

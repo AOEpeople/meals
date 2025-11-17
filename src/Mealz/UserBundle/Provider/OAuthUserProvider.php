@@ -82,7 +82,6 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
         } catch (UserNotFoundException $e) {
             // Find user by username; set IdpUser ID
             $user = $this->entityManager->getRepository(Profile::class)->findOneBy(['username' => $username]);
-
             if ($user instanceof UserInterface) {
                 $user->setSsoId($idpUserId);
 
@@ -91,7 +90,6 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
 
                 $user = $this->loadUserByIdentifier($idpUserId);
             }
-        }
 
         // Create user
         if (false === ($user instanceof UserInterface)) {

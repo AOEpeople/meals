@@ -38,7 +38,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     {
         $profile = new Profile();
         $dateFrom = DateTime::createFromTimestamp(0);
-        $dateTo = $this->clock->now();
+        $dateTo = DateTime::createFromImmutable($this->clock->now());
         $fullTransactionHistory = [
             2.54
         ];
@@ -55,7 +55,7 @@ final class DefaultAccountOrderLockedBalanceCheckerTest extends TestCase
     {
         $profile = new Profile();
         $dateFrom = DateTime::createFromTimestamp(0);
-        $dateTo = $this->clock->now();
+        $dateTo = DateTime::createFromImmutable($this->clock->now());
         $fullTransactionHistory = [
             -60
         ];

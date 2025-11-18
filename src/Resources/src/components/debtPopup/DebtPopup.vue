@@ -60,7 +60,6 @@ const router = useRouter();
 const { t, locale } = useI18n();
 
 const isOpen = ref(false);
-const BALANCE_LIMIT = -30;
 
 const balance = computed(() => userDataStore.getState().balance);
 
@@ -79,6 +78,6 @@ function handlePayNow() {
 }
 
 function setOpenOrClosed() {
-  balance.value < BALANCE_LIMIT && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
+  balance.value < window.appData.payment_notification_debt && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
 }
 </script>

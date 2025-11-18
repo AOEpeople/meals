@@ -41,7 +41,7 @@ const weekIdsSortedByDate = computed(() =>
 
 const transactionData = await useTransactionData();
 const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
-if (balanceDifference < parseInt(import.meta.env.VITE_ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT)) {
+if (balanceDifference < window.appData.account_order_locked_balance_limit) {
   useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
   useFlashMessage().sendFlashMessage({
     type: FlashMessageType.ERROR,

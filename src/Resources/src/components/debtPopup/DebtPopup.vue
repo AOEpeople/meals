@@ -78,6 +78,6 @@ function handlePayNow() {
 }
 
 function setOpenOrClosed() {
-  balance.value < window.appData.payment_notification_debt && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
+  balance.value < window.appData.payment_notification_debt_limit && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
 }
 </script>

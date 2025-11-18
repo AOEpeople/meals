@@ -20,8 +20,8 @@
         {{ vite_entry_script_tags('app') }}
         <script>
             window.appData = {
-                payment_notification_debt: {{ payment_notification_debt }},
-                account_order_locked_balance_limit: {{ account_order_locked_balance_limit }}
+                payment_notification_debt_limit: {{ payment_notification_debt_limit }},
+                meals_locked_debt_limit: {{ meals_locked_debt_limit }}
             };
         </script>
     {% endblock %}

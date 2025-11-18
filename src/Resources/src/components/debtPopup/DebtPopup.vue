@@ -78,7 +78,8 @@ function handlePayNow() {
 }
 
 function setOpenOrClosed() {
-  balance.value < window.appData.payment_notification_debt_limit && route.path !== '/balance'
+  const debtLimit = window.appData?.payment_notification_debt_limit as number;
+  balance.value < debtLimit && route.path !== '/balance'
     ? (isOpen.value = true)
     : (isOpen.value = false);
 }

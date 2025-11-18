@@ -79,8 +79,6 @@ function handlePayNow() {
 
 function setOpenOrClosed() {
   const debtLimit = window.appData?.payment_notification_debt_limit as number;
-  balance.value < debtLimit && route.path !== '/balance'
-    ? (isOpen.value = true)
-    : (isOpen.value = false);
+  balance.value < debtLimit && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
 }
 </script>

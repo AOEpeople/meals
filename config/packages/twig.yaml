@@ -10,6 +10,7 @@ twig:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: '%mealz.lock_toggle_participation_at%'
         payment_notification_debt: '%app.payment_notification_debt%'
+        account_order_locked_balance_limit: '%app.account_order_locked_balance_limit%'
         wallet: '@mealz_accounting.wallet'
         paypal_client_id: '%app.paypal.client_id%'
         pubsub_publish_url: '%app.pubsub.publish_url%'

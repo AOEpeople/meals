@@ -31,8 +31,8 @@ parameters:
 
   # Total unpaid amount for the consumed meals that will trigger
   # an acknowledgment popup on every page load. It must be negative.
-  app.payment_notification_debt: '%env(int:PAYMENT_NOTIFICATION_DEBT)%'
-  app.account_order_locked_balance_limit: '%env(int:ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT)%'
+  app.payment_notification_debt_limit: '%env(int:PAYMENT_NOTIFICATION_DEBT_LIMIT)%'
+  app.meals_locked_debt_limit: '%env(int:MEALS_LOCKED_DEBT_LIMIT)%'
 
   app.idp.endpoint.access_token: '%app.idp.server%/protocol/openid-connect/token'
   app.idp.endpoint.auth_token: '%app.idp.server%/protocol/openid-connect/auth'
@@ -209,7 +209,7 @@ services:
   App\Mealz\MealBundle\Account\DefaultAccountOrderLockedBalanceChecker:
     arguments:
       $apiSrv: '@App\Mealz\MealBundle\Service\ApiService'
-      $debtLimit: '%app.account_order_locked_balance_limit%'
+      $debtLimit: '%app.meals_locked_debt_limit%'
       $clock: '@App\Mealz\MealBundle\Account\Model\MutableClock'
 
   App\Mealz\MealBundle\Account\Model\MutableClock:

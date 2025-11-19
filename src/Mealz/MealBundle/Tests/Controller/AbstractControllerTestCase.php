@@ -33,9 +33,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Role based test users.
      */
-    protected const string USER_STANDARD = '01cb80ec-9191-4d6d-af74-1ffd8c592dc4'; // alice.meals
-    protected const string USER_FINANCE = '0b0016cf-0a23-493f-ae1f-bdaeaa90f14b'; // finance.meals
-    protected const string USER_KITCHEN_STAFF = '5f8aece6-732c-4adb-8c74-8d3eb62c598a'; // kochomi.meals
+    protected const string USER_STANDARD = 'alice.meals';
+    protected const string USER_FINANCE = 'finance.meals';
+    protected const string USER_KITCHEN_STAFF = 'kochomi.meals';
 
     protected KernelBrowser $client;
 
@@ -71,14 +71,31 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         return $token;
     }
 
-    protected function getUserProfile(string $id): Profile
+    protected function getUserProfile(?int $id): Profile
     {
+        if (null === $id) {
+            $this->fail('userId is null');
+        }
+
         /** @var ProfileRepositoryInterface $profileRepository */
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->find($id);
 
         if (!($userProfile instanceof Profile)) {
             $this->fail('user profile with id not found: ' . $id);
+        }
+
+        return $userProfile;
+    }
+
+    protected function getUserProfileByUsername(string $username): Profile
+    {
+        /** @var ProfileRepositoryInterface $profileRepository */
+        $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
+        $userProfile = $profileRepository->findBy(['username' => $username]);
+
+        if (!($userProfile instanceof Profile)) {
+            $this->fail('user profile with username not found: ' . $username);
         }
 
         return $userProfile;
@@ -125,7 +142,6 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();
 
         $profile = new Profile();
-        $profile->setId($id);
         $profile->setUsername($firstName . '.' . $lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);

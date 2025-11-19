@@ -21,7 +21,7 @@ class Profile implements UserInterface, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
@@ -55,12 +55,12 @@ class Profile implements UserInterface, JsonSerializable
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $settlementHash = null;
 
-    public function setId(string $id): void
+    public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function getId(): string
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -227,9 +227,9 @@ class Profile implements UserInterface, JsonSerializable
     }
 
     /**
-     * @return (string|string|string[])[]
+     * @return (int|string|string|string[])[]
      *
-     * @psalm-return array{id: string, user: string, fullName: string, roles: array<string>}
+     * @psalm-return array{id: int, user: string, fullName: string, roles: array<string>}
      */
     #[Override]
     public function jsonSerialize(): array

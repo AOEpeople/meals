@@ -47,7 +47,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashWrittenInDatabaseWithBalance(): void
     {
-        $profile = $this->getUserProfile(self::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(self::USER_STANDARD);
         $data = json_encode([
             'id' => $profile->getId(),
         ]);
@@ -68,7 +68,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
-        $profile = $this->getUserProfile('230b294f-b05e-4a97-b6a8-4c16610c7d8c'); // john.meals
+        $profile = $this->getUserProfileByUsername('john.meals');
         $data = json_encode([
             'id' => $profile->getId(),
         ]);
@@ -88,7 +88,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashRemoveFromDatabase(): void
     {
-        $profile = $this->getUserProfile(self::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(self::USER_STANDARD);
         $hash = '12345';
         $profile->setSettlementHash($hash);
 
@@ -125,7 +125,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHideUserRequestWithNonHiddenUser(): void
     {
         // Pre-action tests
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $data = json_encode([
             'username' => $profile->getUsername(),
         ]);
@@ -136,7 +136,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertResponseIsSuccessful();
 
         // Check after action
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
     }
 
@@ -146,15 +146,15 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHideUserRequestWithHiddenUser(): void
     {
         // Pre-action tests
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $data = json_encode([
-            'username' => $profile->getUsername(),
+            'id' => $profile->getId(),
         ]);
 
         $profile->setHidden(true);
         $this->persistAndFlushAll([$profile]);
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
         // Trigger action
@@ -162,7 +162,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         // Check after action
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
     }
 }

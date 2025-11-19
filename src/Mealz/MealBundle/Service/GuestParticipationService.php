@@ -93,7 +93,6 @@ final class GuestParticipationService
         }
 
         $profile = new Profile();
-        $profile->setId($guestProfileID);
         $profile->setUsername($guestProfileID);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);

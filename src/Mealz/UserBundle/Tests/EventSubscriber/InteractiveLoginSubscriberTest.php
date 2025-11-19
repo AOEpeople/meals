@@ -49,28 +49,28 @@ final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 
     public function testOnSecurityInteractiveLoginWithNonHiddenUser(): void
     {
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
         $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
     }
 
     public function testOnSecurityInteractiveLoginWithHiddenUser(): void
     {
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $profile->setHidden(true);
 
         $this->persistAndFlushAll([$profile]);
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
         $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
     }
 

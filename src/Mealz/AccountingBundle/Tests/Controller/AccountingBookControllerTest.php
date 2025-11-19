@@ -57,11 +57,11 @@ final class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$user1, $user2]);
 
         // Create transactions for users if they're persisted
-        if (($this->getUserProfile($user1FirstName . '.' . $user1LastName) instanceof Profile) === true) {
+        if (($this->getUserProfileByUsername($user1FirstName . '.' . $user1LastName) instanceof Profile) === true) {
             $this->createTransactions($user1, 10.50, new DateTime('first day of previous month'));
         }
 
-        if (($this->getUserProfile($user2FirstName . '.' . $user2LastName) instanceof Profile) === true) {
+        if (($this->getUserProfileByUsername($user2FirstName . '.' . $user2LastName) instanceof Profile) === true) {
             $this->createTransactions($user2, 11.50, new DateTime('first day of previous month'));
         }
     }

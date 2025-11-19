@@ -124,11 +124,11 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
 
-        $profileToAdd = $this->getUserProfile(self::USER_STANDARD);
+        $profileToAdd = $this->getUserProfileByUsername(self::USER_STANDARD);
         $mealToAdd = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($mealToAdd);
 
-        $routeStr = '/api/participation/' . $profileToAdd->getId() . '/' . $mealToAdd->getId();
+        $routeStr = '/api/participation/' . (string) $profileToAdd->getId() . '/' . $mealToAdd->getId();
         $this->client->request('PUT', $routeStr);
 
         $response = $this->client->getResponse();
@@ -146,12 +146,12 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
         $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $meal = $mealRepo->getFutureMeals()[0];
-        $profile = $this->getUserProfile(self::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(self::USER_STANDARD);
 
         $participantToRemove = self::createParticipant($profile, $meal);
         $this->assertNotNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
 
-        $routeStr = '/api/participation/' . $profile->getId() . '/' . $meal->getId();
+        $routeStr = '/api/participation/' . (string) $profile->getId() . '/' . $meal->getId();
         $this->client->request('DELETE', $routeStr);
 
         $response = $this->client->getResponse();

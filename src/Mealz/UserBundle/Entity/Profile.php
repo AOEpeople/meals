@@ -245,6 +245,6 @@ class Profile implements UserInterface, JsonSerializable
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->id;
     }
 }

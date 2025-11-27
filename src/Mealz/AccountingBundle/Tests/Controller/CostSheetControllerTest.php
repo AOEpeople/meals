@@ -127,7 +127,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         // Pre-action tests
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $data = json_encode([
-            'username' => $profile->getUsername(),
+            'id' => $profile->getId(),
         ]);
         $this->assertFalse($profile->isHidden());
 

@@ -161,7 +161,7 @@ final class EventControllerTest extends AbstractControllerTestCase
         $part = $partRepo->findOneBy(['event_participation' => $eventPart->getId()]);
         $this->assertNotNull($part);
 
-        $this->assertEquals(self::USER_KITCHEN_STAFF, $part->getProfile()->getId());
+        $this->assertEquals(self::USER_KITCHEN_STAFF, $part->getProfile()->getUsername());
     }
 
     public function testLeave(): void

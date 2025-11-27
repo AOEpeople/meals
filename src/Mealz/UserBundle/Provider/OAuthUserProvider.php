@@ -132,7 +132,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)), 1716299773);
         }
 
-        return $this->loadUserByIdentifier($user->getUserIdentifier());
+        return $this->loadUserByIdentifier($user->getSsoId());
     }
 
     #[Override]

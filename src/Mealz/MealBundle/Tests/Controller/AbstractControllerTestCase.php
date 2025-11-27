@@ -48,7 +48,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function loginAs(string $username): void
     {
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
-        $user = $repo->findBy(['username' => $username]);
+        $user = $repo->findOneBy(['username' => $username]);
 
         if (!($user instanceof Profile)) {
             throw new RuntimeException($username . ': user not found');
@@ -92,7 +92,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     {
         /** @var ProfileRepositoryInterface $profileRepository */
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
-        $userProfile = $profileRepository->findBy(['username' => $username]);
+        $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
             $this->fail('user profile with username not found: ' . $username);

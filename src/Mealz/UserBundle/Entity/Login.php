@@ -72,6 +72,7 @@ class Login implements Stringable, SymfonyUserInterface, MealzUserInterface, Pas
         $this->profile = $profile;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getUsername();

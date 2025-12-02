@@ -83,6 +83,7 @@ class Category implements Stringable, JsonSerializable
         return $this->getTitleEn();
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getTitle();

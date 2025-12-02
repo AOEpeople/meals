@@ -160,6 +160,7 @@ class Day extends AbstractMessage implements Stringable, JsonSerializable
         $this->lockParticipationOn = $lockDateTime;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->dateTime->format('l');

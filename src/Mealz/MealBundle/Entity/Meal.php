@@ -189,6 +189,7 @@ class Meal implements Stringable, JsonSerializable
         return 0 !== $limit && $participations >= $limit;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();

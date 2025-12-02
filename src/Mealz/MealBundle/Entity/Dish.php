@@ -204,6 +204,7 @@ class Dish implements Stringable, JsonSerializable
         return $this->title_en;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getTitle();

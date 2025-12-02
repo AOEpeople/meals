@@ -222,6 +222,7 @@ class Profile implements Stringable, UserInterface, JsonSerializable
     {
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getUsername();

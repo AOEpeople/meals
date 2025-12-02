@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
+use Stringable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'profile')]
-class Profile implements UserInterface, JsonSerializable
+class Profile implements Stringable, UserInterface, JsonSerializable
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';

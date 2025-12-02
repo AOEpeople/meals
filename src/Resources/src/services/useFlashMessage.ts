@@ -69,7 +69,7 @@ export default function useFlashMessage() {
 
     function removeMessagesByMessageCode(messageCode: string) {
         flashMessages.value = flashMessages.value.filter((flashMessage: FlashMessage) => {
-            return flashMessage.message !== messageCode && flashMessage.hasLifetime;
+            return flashMessage.message !== messageCode || flashMessage.hasLifetime;
         });
     }
 

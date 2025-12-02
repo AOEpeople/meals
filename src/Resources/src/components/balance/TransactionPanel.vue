@@ -111,6 +111,7 @@ onMounted(async () => {
               );
 
               const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
+              isLoading.value = false
               if (!response.ok) {
                 return;
               }
@@ -126,7 +127,6 @@ onMounted(async () => {
 
               // disable gray out and show spinner
               emit('closePanel');
-              isLoading.value = false;
             } catch (error) {
               isLoading.value = false;
             }

@@ -111,7 +111,7 @@ onMounted(async () => {
               );
 
               const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
-              isLoading.value = false
+              isLoading.value = false;
               if (!response.ok) {
                 return;
               }

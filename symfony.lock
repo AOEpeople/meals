@@ -5,6 +5,9 @@
     "amphp/byte-stream": {
         "version": "v1.8.1"
     },
+    "behat/transliterator": {
+        "version": "v1.3.0"
+    },
     "composer/pcre": {
         "version": "1.0.0"
     },

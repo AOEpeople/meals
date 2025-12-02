@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
 use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'Category')]
-class Category implements JsonSerializable
+class Category implements Stringable, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]

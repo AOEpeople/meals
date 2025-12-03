@@ -273,6 +273,7 @@
       "slots": "Zeitslot",
       "costs": "Kosten",
       "finance": "Finanzen",
+      "prices": "Preise",
       "events": "Events"
     },
     "logged_in_text": "Eingeloggt als",

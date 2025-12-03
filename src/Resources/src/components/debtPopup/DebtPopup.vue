@@ -80,6 +80,8 @@ function handlePayNow() {
 function setOpenOrClosed() {
   const debtLimit = window.appData?.payment_notification_debt_limit as number;
   const mealsLockedDebtLimit = window.appData?.meals_locked_debt_limit as number;
-  balance.value < debtLimit && balance.value > mealsLockedDebtLimit && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
+  balance.value < debtLimit && balance.value > mealsLockedDebtLimit && route.path !== '/balance'
+    ? (isOpen.value = true)
+    : (isOpen.value = false);
 }
 </script>

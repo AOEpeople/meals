@@ -113,6 +113,14 @@ const router = createRouter({
             }
         },
         {
+            path: '/prices',
+            name: 'Prices',
+            component: Prices,
+            meta: {
+                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+            }
+        },
+        {
             path: '/balance',
             name: 'Balance',
             component: Balance,

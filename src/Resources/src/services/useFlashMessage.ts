@@ -39,21 +39,16 @@ receive<FlashMessage>('flashmessage', (data) => {
  * Ends when flashMessages are empty.
  */
 function shiftFlashMessages() {
-    if (shiftingActive) {
-        return;
+    if (shiftingActive === false && flashMessages.value.length > 0) {
+        shiftingActive = true;
+        setTimeout(() => {
+            flashMessages.value.shift();
+            shiftingActive = false;
+            if (flashMessages.value.length > 0) {
+                shiftFlashMessages();
+            }
+        }, FLASHMESSAGE_LIFETIME);
     }
-
-    const nextIndex = flashMessages.value.findIndex((msg) => msg.hasLifetime);
-    if (nextIndex === -1) {
-        return;
-    }
-
-    shiftingActive = true;
-    setTimeout(() => {
-        flashMessages.value.splice(nextIndex, 1);
-        shiftingActive = false;
-        shiftFlashMessages();
-    }, FLASHMESSAGE_LIFETIME);
 }
 
 export default function useFlashMessage() {
@@ -74,7 +69,7 @@ export default function useFlashMessage() {
 
     function removeMessagesByMessageCode(messageCode: string) {
         flashMessages.value = flashMessages.value.filter((flashMessage: FlashMessage) => {
-            return flashMessage.message !== messageCode;
+            return flashMessage.message !== messageCode || flashMessage.hasLifetime;
         });
     }
 

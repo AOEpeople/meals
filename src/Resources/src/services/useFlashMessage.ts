@@ -43,13 +43,13 @@ function shiftFlashMessages() {
         return;
     }
 
+    const nextIndex = flashMessages.value.findIndex((msg) => msg.hasLifetime);
+    if (nextIndex === -1) {
+        return;
+    }
+
     shiftingActive = true;
     setTimeout(() => {
-        const nextIndex = flashMessages.value.findIndex((msg) => msg.hasLifetime);
-        if (nextIndex === -1) {
-            return;
-        }
-
         flashMessages.value.splice(nextIndex, 1);
         shiftingActive = false;
         shiftFlashMessages();

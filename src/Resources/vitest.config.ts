@@ -9,7 +9,13 @@ export default mergeConfig(
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
-      setupFiles: './tests/unit/setup-vi.ts'
+      setupFiles: './tests/unit/setup-vi.ts',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html'],
+        reportsDirectory: './coverage',
+        exclude: ['node_modules/', 'tests/'],
+      },
     },
     resolve: {
       alias: {

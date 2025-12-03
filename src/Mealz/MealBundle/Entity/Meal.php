@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'meal')]
-class Meal implements JsonSerializable
+class Meal implements Stringable, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -188,6 +189,7 @@ class Meal implements JsonSerializable
         return 0 !== $limit && $participations >= $limit;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();

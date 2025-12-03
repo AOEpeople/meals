@@ -6,11 +6,13 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'transaction')]
-class Transaction
+class Transaction implements Stringable
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -98,6 +100,7 @@ class Transaction
         return $this->profile;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->profile . ' ' . $this->amount;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Account\AccountOrderLockedBalanceChecker;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -32,7 +33,8 @@ final class ApiController extends BaseController
         private readonly ApiService $apiSrv,
         private readonly OfferService $offerSrv,
         private readonly GuestParticipationService $guestPartiSrv,
-        private readonly EventParticipationService $eventService
+        private readonly EventParticipationService $eventService,
+        private readonly AccountOrderLockedBalanceChecker $balanceChecker
     ) {
     }
 
@@ -266,12 +268,16 @@ final class ApiController extends BaseController
             $parentId = $meal->getDish()->getParent()->getId();
         }
 
+        $isLocked = $meal->isLocked();
         if (null !== $profile) {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             if (null !== $participation) {
                 $participationId = $participation->getId();
             }
             $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
+            if ($this->balanceChecker->check($profile)) {
+                $isLocked = true;
+            }
         }
 
         $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
@@ -291,7 +297,7 @@ final class ApiController extends BaseController
             'limit' => $meal->getParticipationLimit(),
             'reachedLimit' => $reachedLimit,
             'isOpen' => $meal->isOpen(),
-            'isLocked' => $meal->isLocked(),
+            'isLocked' => $isLocked,
             'isNew' => $this->dishSrv->isNew($meal->getDish()),
             'parentId' => $parentId,
             'participations' => $participationCount,

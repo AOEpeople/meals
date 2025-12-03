@@ -97,7 +97,8 @@ watch(
         if (WeeksState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: WeeksState.error
+                message: WeeksState.error,
+                hasLifetime: true
             });
         }
     }
@@ -181,7 +182,8 @@ export function useWeeks() {
         await getWeeks();
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'menu.created'
+            message: 'menu.created',
+            hasLifetime: true
         });
         return response.value;
     }
@@ -200,7 +202,8 @@ export function useWeeks() {
         await getWeeks();
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'menu.updated'
+            message: 'menu.updated',
+            hasLifetime: true
         });
     }
 

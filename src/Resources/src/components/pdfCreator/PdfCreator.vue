@@ -36,7 +36,8 @@ async function downloadPdf() {
   } else {
     useFlashMessage().sendFlashMessage({
       type: FlashMessageType.ERROR,
-      message: t('flashmessage.print.error')
+      message: t('flashmessage.print.error'),
+      hasLifetime: true
     });
   }
 }

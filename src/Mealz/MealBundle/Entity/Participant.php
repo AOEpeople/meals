@@ -7,11 +7,13 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'participant')]
-class Participant
+class Participant implements Stringable
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -204,6 +206,7 @@ class Participant
         }
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getMeal() . ' ' . $this->getProfile();

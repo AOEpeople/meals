@@ -49,7 +49,8 @@ watch(
         if (CategoriesState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: CategoriesState.error
+                message: CategoriesState.error,
+                hasLifetime: true
             });
         }
     }
@@ -96,7 +97,8 @@ export function useCategories() {
         await getCategories();
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'category.deleted'
+            message: 'category.deleted',
+            hasLifetime: true
         });
     }
 
@@ -115,7 +117,8 @@ export function useCategories() {
         await getCategories();
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'category.created'
+            message: 'category.created',
+            hasLifetime: true
         });
     }
 
@@ -135,14 +138,16 @@ export function useCategories() {
             updateCategoryState(index, response.value as Category);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'category.updated'
+                message: 'category.updated',
+                hasLifetime: true
             });
         } else if (isMessage(response.value)) {
             CategoriesState.error = response.value.message;
         } else {
             sendFlashMessage({
                 type: FlashMessageType.UNKNOWN,
-                message: 'Unknown Error!'
+                message: 'Unknown Error!',
+                hasLifetime: true
             });
         }
     }

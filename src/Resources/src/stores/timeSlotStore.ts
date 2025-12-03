@@ -52,7 +52,8 @@ watch(
         if (TimeSlotState.error !== '') {
             sendFlashMessage({
                 type: FlashMessageType.ERROR,
-                message: TimeSlotState.error
+                message: TimeSlotState.error,
+                hasLifetime: true
             });
         }
     }
@@ -123,7 +124,8 @@ export function useTimeSlots() {
             updateTimeSlotState(response.value as TimeSlot, id);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'timeslot.updated'
+                message: 'timeslot.updated',
+                hasLifetime: true
             });
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
@@ -161,7 +163,8 @@ export function useTimeSlots() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'timeslot.created'
+            message: 'timeslot.created',
+            hasLifetime: true
         });
         await getTimeSlots();
     }
@@ -180,7 +183,8 @@ export function useTimeSlots() {
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
-            message: 'timeslot.deleted'
+            message: 'timeslot.deleted',
+            hasLifetime: true
         });
         await getTimeSlots();
     }

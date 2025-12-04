@@ -23,10 +23,8 @@ final class Version20251202102427 extends AbstractMigration
 
         $this->addSql('CREATE TABLE price (year INT NOT NULL, price NUMERIC(10, 4) NOT NULL, price_combined NUMERIC(10, 4) NOT NULL, INDEX year (year), PRIMARY KEY(year)) ENGINE = InnoDB;');
 
-        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2014, 3.40, 0.00);');
-        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2015, 3.40, 0.00);');
-        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2016, 3.40, 0.00);');
-        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2017, 3.40, 0.00);');
+        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2016, 3.20, 0.00);');
+        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2017, 3.20, 0.00);');
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2018, 3.40, 0.00);');
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2019, 3.40, 0.00);');
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2020, 3.40, 0.00);');

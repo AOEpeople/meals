@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ final class CostSheetController extends BaseController
     ) {
     }
 
-    #[IsGranted('ROLE_KITCHEN_STAFF')]
+    #[IsGranted(new Expression('is_granted("ROLE_KITCHEN_STAFF") or is_granted("ROLE_FINANCE")'))]
     public function list(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo

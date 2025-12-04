@@ -5,6 +5,7 @@ namespace App\Mealz\UserBundle\Entity;
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
+use Stringable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'login')]
-class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthenticatedUserInterface
+class Login implements Stringable, SymfonyUserInterface, MealzUserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
@@ -71,6 +72,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->profile = $profile;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getUsername();

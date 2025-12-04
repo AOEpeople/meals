@@ -177,7 +177,8 @@
       "804": "Dem Event kann nicht mehr beigetreten werden",
       "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner.",
       "1001": "Mindestens eines Felder Vorname oder Nachname fehlt.",
-      "1002": "Das Profil existiert, aber ist versteckt."
+      "1002": "Das Profil existiert, aber ist versteckt.",
+      "balanceBelowBalanceLimit": "Das Konto darf nicht mehr als 50 € überzogen werden."
     },
     "success": {
       "menu": {

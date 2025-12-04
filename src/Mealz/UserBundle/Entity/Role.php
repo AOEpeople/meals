@@ -7,11 +7,13 @@ namespace App\Mealz\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'role')]
-class Role
+class Role implements Stringable
 {
     /**
      * Constants for default roles.
@@ -97,6 +99,7 @@ class Role
         return $this;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->getTitle();

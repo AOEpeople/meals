@@ -10,10 +10,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
+use Stringable;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'day')]
-class Day extends AbstractMessage implements JsonSerializable
+class Day extends AbstractMessage implements Stringable, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -159,6 +160,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $this->lockParticipationOn = $lockDateTime;
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->dateTime->format('l');

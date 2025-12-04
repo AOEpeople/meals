@@ -78,7 +78,8 @@ export function useAccounting() {
             if (TransactionState.error !== '') {
                 sendFlashMessage({
                     type: FlashMessageType.ERROR,
-                    message: TransactionState.error
+                    message: TransactionState.error,
+                    hasLifetime: true
                 });
             }
         }

@@ -18,6 +18,12 @@
     {% else %} #}
     {% block javascripts %}
         {{ vite_entry_script_tags('app') }}
+        <script>
+            window.appData = {
+                payment_notification_debt_limit: {{ payment_notification_debt_limit }},
+                meals_locked_debt_limit: {{ meals_locked_debt_limit }}
+            };
+        </script>
     {% endblock %}
     {# {% endif %} #}
 </head>

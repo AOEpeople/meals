@@ -8,10 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Override;
+use Stringable;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'week')]
-class Week extends AbstractMessage implements JsonSerializable
+class Week extends AbstractMessage implements Stringable, JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
@@ -120,6 +121,7 @@ class Week extends AbstractMessage implements JsonSerializable
         ];
     }
 
+    #[Override]
     public function __toString()
     {
         return (string) $this->getCalendarWeek();

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
 use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(['dish' => 'Dish', 'dish_variation' => 'DishVariation'])]
-class Dish implements JsonSerializable
+class Dish implements Stringable, JsonSerializable
 {
     public const string COMBINED_DISH_SLUG = 'combined-dish';
 
@@ -203,6 +204,7 @@ class Dish implements JsonSerializable
         return $this->title_en;
     }
 
+    #[Override]
     public function __toString()
     {
         return $this->getTitle();

@@ -69,7 +69,8 @@ export function useFinances() {
             if (FinancesState.error !== '') {
                 sendFlashMessage({
                     type: FlashMessageType.ERROR,
-                    message: FinancesState.error
+                    message: FinancesState.error,
+                    hasLifetime: true
                 });
             }
         }
@@ -96,7 +97,8 @@ export function useFinances() {
             FinancesState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
-                message: 'finance.empty'
+                message: 'finance.empty',
+                hasLifetime: true
             });
         } else {
             FinancesState.finances = [];

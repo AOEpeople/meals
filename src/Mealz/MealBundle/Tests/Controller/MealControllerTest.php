@@ -55,7 +55,7 @@ final class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('1', 'Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
 
         // get first locked meal and make it an available offer
@@ -83,10 +83,10 @@ final class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('1', 'Max', 'Mustermann' . time());
 
         // create second test profile
-        $secondProfile = $this->createProfile('Meike', 'Musterfrau' . time());
+        $secondProfile = $this->createProfile('2', 'Meike', 'Musterfrau' . time());
         $this->persistAndFlushAll([$profile, $secondProfile]);
 
         // get first locked meal and make it an available offer
@@ -127,7 +127,7 @@ final class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('1', 'Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
 
         // variables for third case

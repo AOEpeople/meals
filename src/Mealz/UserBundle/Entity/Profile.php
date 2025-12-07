@@ -20,7 +20,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'profile')]
 class Profile implements Stringable, UserInterface, JsonSerializable
 {
-    #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
     #[Assert\NotBlank]
@@ -39,6 +44,9 @@ class Profile implements Stringable, UserInterface, JsonSerializable
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $company = '';
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private string $ssoId = '';
+
     /**
      * @var Collection<int, Role>|null
      */
@@ -47,6 +55,16 @@ class Profile implements Stringable, UserInterface, JsonSerializable
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $settlementHash = null;
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function setUsername(string $username): void
     {
@@ -189,6 +207,16 @@ class Profile implements Stringable, UserInterface, JsonSerializable
         return null;
     }
 
+    public function setSsoId(string $ssoId): void
+    {
+        $this->ssoId = $ssoId;
+    }
+
+    public function getSsoId(): string
+    {
+        return $this->ssoId;
+    }
+
     #[Override]
     public function eraseCredentials(): void
     {
@@ -201,14 +229,15 @@ class Profile implements Stringable, UserInterface, JsonSerializable
     }
 
     /**
-     * @return (string|string|string[])[]
+     * @return (int|string|string|string[])[]
      *
-     * @psalm-return array{user: string, fullName: string, roles: array<string>}
+     * @psalm-return array{id: int, user: string, fullName: string, roles: array<string>}
      */
     #[Override]
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->id,
             'user' => $this->username,
             'fullName' => $this->getFullName(),
             'roles' => $this->getRoles(),
@@ -218,6 +247,6 @@ class Profile implements Stringable, UserInterface, JsonSerializable
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return strval($this->ssoId);
     }
 }

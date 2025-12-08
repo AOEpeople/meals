@@ -240,6 +240,35 @@
       "export": "exportieren"
     }
   },
+  "prices": {
+    "header": "Liste der Preise",
+    "create": "Neuer Preis",
+    "table": {
+      "year": "Jahr",
+      "price": "Preis je Gericht",
+      "priceCombined": "Preis je Kombi-Gericht",
+      "actions": "Aktionen"
+    },
+    "edit": "bearbeiten",
+    "delete": "löschen",
+    "popover": {
+      "create": "Neuen Preis anlegen",
+      "year": "Jahr",
+      "price": "Preis je Gericht",
+      "priceCombined": "Preis je Kombi-Gericht"
+    },
+    "errors": {
+      "priceRequired": "Preis ist erforderlich",
+      "priceMinimum": "Preis muss mindestens {min} € betragen",
+      "priceNegative": "Preis darf nicht negativ sein",
+      "priceCombinedRequired": "Kombinierter Preis ist erforderlich",
+      "priceCombinedMinimum": "Kombinierter Preis muss mindestens {min} € betragen",
+      "priceCombinedNegative": "Kombinierter Preis darf nicht negativ sein",
+      "createFailed": "Fehler beim Erstellen des Preises"
+    },
+    "submitting": "wurde abgesendet",
+    "confirmDelete": "Möchtest du den Preis für das Jahr {year} wirklich löschen?"
+  },
   "guest": {
     "form": {
       "add": "Gast der Liste hinzufügen",

@@ -33,6 +33,7 @@ final class Version20251202102427 extends AbstractMigration
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2023, 3.60, 5.60);');
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2024, 4.13, 6.13);');
         $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2025, 4.40, 6.40);');
+        $this->addSql('INSERT INTO price (year, price, price_combined) VALUES (2026, 4.60, 6.60);');
     }
 
     public function down(Schema $schema): void

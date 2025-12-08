@@ -240,6 +240,35 @@
       "export": "export"
     }
   },
+  "prices": {
+    "header": "Price list",
+    "create": "Create new price",
+    "table": {
+      "year": "Year",
+      "price": "Price per dish",
+      "priceCombined": "Price per combined dish",
+      "actions": "Actions"
+    },
+    "edit": "edit",
+    "delete": "delete",
+    "popover": {
+      "create": "New prices",
+      "year": "Year",
+      "price": "Price per dish",
+      "priceCombined": "Price per combined dish"
+    },
+    "errors": {
+      "priceRequired": "Preis ist erforderlich",
+      "priceMinimum": "Preis muss mindestens {min} € betragen",
+      "priceNegative": "Preis darf nicht negativ sein",
+      "priceCombinedRequired": "Kombinierter Preis ist erforderlich",
+      "priceCombinedMinimum": "Kombinierter Preis muss mindestens {min} € betragen",
+      "priceCombinedNegative": "Kombinierter Preis darf nicht negativ sein",
+      "createFailed": "Fehler beim Erstellen des Preises"
+    },
+    "submitting": "is submitting",
+    "confirmDelete": "Do you really want to delete the price for the year {year}?"
+  },
   "guest": {
     "form": {
       "add": "Add a guest to the list",

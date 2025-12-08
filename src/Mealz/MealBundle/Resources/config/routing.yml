@@ -85,6 +85,10 @@ MealzMealBundle_finance:
   path: /finance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_prices:
+  path: /prices
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
 MealzMealBundle_Meal_guest:
   path: /guest/{hash}
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

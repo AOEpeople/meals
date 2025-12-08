@@ -8,6 +8,7 @@ const Categories = () => import('@/views/Categories.vue');
 const TimeSlots = () => import('@/views/TimeSlots.vue');
 const Costs = () => import('@/views/Costs.vue');
 const Finance = () => import('@/views/Finance.vue');
+const Prices = () => import('@/views/Prices.vue');
 const Balance = () => import('@/views/Balance.vue');
 const Guest = () => import('@/views/Guest.vue');
 const NotAllowed = () => import('@/views/NotAllowed.vue');

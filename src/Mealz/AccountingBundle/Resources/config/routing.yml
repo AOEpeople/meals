@@ -40,3 +40,23 @@ mealz_accounting_api_costs_confirm_settlement:
     path: /api/costs/settlement/confirm/{hash}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::confirmSettlement }
     methods: [ POST ]
+
+mealz_accounting_api_prices:
+    path: /api/prices
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::list }
+    methods: [ GET ]
+
+mealz_accounting_api_prices_add:
+    path: /api/prices/add
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::add }
+    methods: [ POST ]
+
+mealz_accounting_api_prices_edit:
+    path: /api/prices/edit
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::edit }
+    methods: [ POST ]
+
+mealz_accounting_api_prices_delete:
+    path: /api/prices/delete
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::delete }
+    methods: [ POST ]

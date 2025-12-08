@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <phpmd-baseline>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ApiController.php"/>
+  <violation rule="PHPMD\Rule\Design\NumberOfChildren" file="src/Mealz/MealBundle/Controller/BaseController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealAdminController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealGuestController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ParticipantController.php"/>

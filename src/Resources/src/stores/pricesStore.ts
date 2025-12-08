@@ -24,7 +24,7 @@ interface IPricesState extends IPrices {
 }
 
 const PricesState = reactive<IPricesState>({
-    prices: [],
+    prices: {},
     error: '',
     isLoading: false
 });
@@ -93,7 +93,7 @@ export function usePrices() {
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = error.value?.message || 'Error on creating Price';
+            PricesState.error = response.value?.message || 'Error on creating Price';
             PricesState.isLoading = false;
             return false;
         }
@@ -109,7 +109,7 @@ export function usePrices() {
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = error.value?.message || 'Error on updating Price';
+            PricesState.error = response.value?.message || 'Error on updating Price';
             PricesState.isLoading = false;
             return false;
         }
@@ -125,7 +125,7 @@ export function usePrices() {
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = error.value?.message || 'Error on deleting Price';
+            PricesState.error = response.value?.message || 'Error on deleting Price';
             PricesState.isLoading = false;
             return false;
         }

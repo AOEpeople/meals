@@ -120,7 +120,8 @@ onMounted(async () => {
               transactionStore.fillStore();
               const { userData } = await useUserData();
               const debtLimit = window.appData?.meals_locked_debt_limit as number;
-              if (userData.value.balance >= debtLimit) {
+              const currentBalance = userData?.value?.balance as number;
+              if (currentBalance >= debtLimit) {
                 useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
               }
 

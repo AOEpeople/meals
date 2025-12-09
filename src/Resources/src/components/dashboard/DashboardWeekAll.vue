@@ -18,7 +18,7 @@ import { type Dictionary } from '@/types/types';
 import WeekComp from './Week.vue';
 import { type Week } from '@/api/getDashboardData';
 import { computed } from 'vue';
-import { useTransactionData } from '@/api/getTransactionData';
+import { useUserData } from '@/api/getUserData';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
@@ -39,11 +39,11 @@ const weekIdsSortedByDate = computed(() =>
   })
 );
 
-const transactionData = await useTransactionData();
-const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
+const { userData } = await useUserData();
 const debtLimit = window.appData?.meals_locked_debt_limit as number;
 useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
-if (balanceDifference < debtLimit) {
+const currentBalance = userData?.value?.balance as number;
+if (currentBalance < debtLimit) {
   useFlashMessage().sendFlashMessage({
     type: FlashMessageType.ERROR,
     message: 'balanceBelowBalanceLimit',

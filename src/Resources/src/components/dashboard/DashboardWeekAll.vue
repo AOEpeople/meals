@@ -18,7 +18,7 @@ import { type Dictionary } from '@/types/types';
 import WeekComp from './Week.vue';
 import { type Week } from '@/api/getDashboardData';
 import { computed } from 'vue';
-import {useUserData} from '@/api/getUserData';
+import { useUserData } from '@/api/getUserData';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 

@@ -42,7 +42,8 @@ const weekIdsSortedByDate = computed(() =>
 const { userData } = await useUserData();
 const debtLimit = window.appData?.meals_locked_debt_limit as number;
 useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
-if (userData.value.balance < debtLimit) {
+const currentBalance = userData?.value?.balance as number;
+if (currentBalance < debtLimit) {
   useFlashMessage().sendFlashMessage({
     type: FlashMessageType.ERROR,
     message: 'balanceBelowBalanceLimit',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Entity;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -37,9 +38,13 @@ final class DayTest extends TestCase
      */
     public function addMeal(): void
     {
+        $dateTime = new \DateTimeImmutable('now');
         for ($i = 0; $i < 10; ++$i) {
-            $meal = new Meal(new Dish(), $this->day);
-            $meal->setPrice($i + 1);
+            $price = new Price();
+            $price->setYear((int)$dateTime->format('Y') - $i);
+            $price->setPriceValue($i + 1);
+            $price->setPriceCombinedValue($i + 2);
+            $meal = new Meal(new Dish(), $price, $this->day);
             $this->day->addMeal($meal);
             $this->assertCount($i + 1, $this->day->getMeals());
             /** @var Meal $mealFromDay */
@@ -57,9 +62,13 @@ final class DayTest extends TestCase
     {
         $meals = null;
         $numberOfMeals = 10;
+        $dateTime = new \DateTimeImmutable('now');
         for ($i = 0; $i < $numberOfMeals; ++$i) {
-            $meal = new Meal(new Dish(), $this->day);
-            $meal->setPrice($i + 1.99);
+            $price = new Price();
+            $price->setYear((int)$dateTime->format('Y') - $i);
+            $price->setPriceValue($i + 1.99);
+            $price->setPriceCombinedValue($i + 2.99);
+            $meal = new Meal(new Dish(), $price, $this->day);
             $meals[] = $meal;
             $this->day->addMeal($meal);
         }
@@ -79,7 +88,7 @@ final class DayTest extends TestCase
         $idx = 0;
         foreach ($randomOrderMeals as $meal) {
             $this->day->removeMeal($meal);
-            $this->assertEqualsWithDelta($meal->getPrice(), $meals[$mealKeys[$idx]]->getPrice(), 0.1);
+            $this->assertEqualsWithDelta($meal->getPrice()->getPriceValue(), $meals[$mealKeys[$idx]]->getPrice()->getPrice(), 0.1);
             --$numberOfMeals;
             ++$idx;
             $this->assertCount($numberOfMeals, $this->day->getMeals());

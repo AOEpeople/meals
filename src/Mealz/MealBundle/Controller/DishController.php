@@ -23,7 +23,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class DishController extends BaseListController
 {
     public function __construct(
-        private readonly float $price,
         private readonly ApiService $apiService,
         private readonly CategoryRepositoryInterface $categoryRepository,
         private readonly DishRepositoryInterface $dishRepository,
@@ -78,7 +77,6 @@ final class DishController extends BaseListController
             $dish->setTitleDe($parameters['titleDe']);
             $dish->setTitleEn($parameters['titleEn']);
             $dish->setOneServingSize($parameters['oneServingSize']);
-            $dish->setPrice($this->price);
 
             if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);

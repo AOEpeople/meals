@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
@@ -76,7 +77,6 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
 
         $dishVariation->setTitleEn('Test EN ' . mt_rand());
         $dishVariation->setTitleDe('Test DE ' . mt_rand());
-        $dishVariation->setPrice(3.20);
         if ($category) {
             $dishVariation->setCategory($category);
         }
@@ -89,7 +89,6 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         $dish = new Dish();
         $dish->setTitleEn('Test EN ' . mt_rand());
         $dish->setTitleDe('Test DE ' . mt_rand());
-        $dish->setPrice(3.20);
         if ($category) {
             $dish->setCategory($category);
         }
@@ -97,13 +96,21 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dish;
     }
 
-    protected function createMeal(?Dish $dish = null, ?Day $day = null): Meal
+    protected function createPrice(): Price
+    {
+        $price = new Price();
+        $price->setYear(2025);
+        $price->setPriceValue(1);
+        $price->setPriceCombinedValue(2);
+
+        return $price;
+    }
+    protected function createMeal(?Dish $dish = null, ?Price $price = null, ?Day $day = null): Meal
     {
         $dish = $dish ?: $this->createDish();
+        $price = $price ?: $this->createPrice();
         $day = $day ?: new Day();
-
-        $meal = new Meal($dish, $day);
-        $meal->setPrice(1.23);
+        $meal = new Meal($dish, $price, $day);
 
         return $meal;
     }

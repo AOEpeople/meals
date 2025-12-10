@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\AccountingBundle\Entity\Price;
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -15,20 +17,19 @@ final class CombinedMealService
 {
     private const string COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 
-    private float $defaultPrice;
-
     private EntityManagerInterface $entityManager;
 
     private Dish $combinedDish;
+    private PriceRepository $priceRepository;
 
     public function __construct(
-        float $combinedPrice,
         EntityManagerInterface $entityManager,
-        DishRepository $dishRepo
+        DishRepository $dishRepo,
+        PriceRepository $priceRepo
     ) {
-        $this->defaultPrice = $combinedPrice;
         $this->entityManager = $entityManager;
         $this->combinedDish = $this->createCombinedDish($dishRepo);
+        $this->priceRepository = $priceRepo;
     }
 
     public function update(Week $week): void
@@ -58,8 +59,13 @@ final class CombinedMealService
                 }
             }
 
+            $dateTime = new \DateTimeImmutable('now');
+            $price = $this->priceRepository->findByYear((int)$dateTime->format('Y'));
+            if (!($price instanceof Price)) {
+                throw new Exception('Price is not found.');
+            }
             if (null === $combinedMeal && 1 < count($baseMeals) && false === $dayHasOneSizeMeal) {
-                $this->createCombinedMeal($day);
+                $this->createCombinedMeal($day, $price);
                 $update = true;
             } elseif (null !== $combinedMeal && (1 >= count($baseMeals) || true === $dayHasOneSizeMeal)) {
                 $this->removeCombinedMeal($day, $combinedMeal);
@@ -82,7 +88,6 @@ final class CombinedMealService
 
         $combinedDish = new Dish();
         $combinedDish->setEnabled(false);
-        $combinedDish->setPrice($this->defaultPrice);
         $combinedDish->setTitleEn(self::COMBINED_DISH_TITLE_EN);
         $combinedDish->setTitleDe('Kombi-Gericht');
         $combinedDish->setDescriptionEn('');
@@ -94,10 +99,9 @@ final class CombinedMealService
         return $combinedDish;
     }
 
-    private function createCombinedMeal(Day $day): void
+    private function createCombinedMeal(Day $day, Price $price): void
     {
-        $combinedMeal = new Meal($this->combinedDish, $day);
-        $combinedMeal->setPrice($this->defaultPrice);
+        $combinedMeal = new Meal($this->combinedDish, $price, $day);
 
         $day->addMeal($combinedMeal);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
@@ -57,6 +58,11 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->loadDays();
         $lastDishWithVar = null;
         $lastDishWithoutVar = null;
+        $price = new Price();
+        $price->setPriceValue(4.4);
+        $price->setYear(2025);
+        $price->setPriceCombinedValue(6.4);
+        $manager->persist($price);
 
         foreach ($this->days as $key => $day) {
             $normDayIndex = ($key + 10) % 10;
@@ -64,12 +70,12 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
             // every alt. Mon. and Wed. get one meal with simple dish and two meals with dish variations
             if (self::IDX_ALT_MONDAY === $normDayIndex || self::IDX_ALT_WEDNESDAY === $normDayIndex) {
                 $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
-                $this->loadNewMeal($day, $dish);
+                $this->loadNewMeal($day, $dish, $price);
                 $lastDishWithoutVar = $dish;
 
                 $dish = $this->getRandomDishWithVariations($lastDishWithVar);
                 foreach ($dish->getVariations()->slice(0, 2) as $dishVariation) {
-                    $this->loadNewMeal($day, $dishVariation);
+                    $this->loadNewMeal($day, $dishVariation, $price);
                 }
                 $lastDishWithVar = $dish;
 
@@ -79,7 +85,7 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
             // add 2 meals with simple dishes (no variations)
             for ($i = 0; $i < 2; ++$i) {
                 $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
-                $this->loadNewMeal($day, $dish);
+                $this->loadNewMeal($day, $dish, $price);
                 $lastDishWithoutVar = $dish;
             }
         }
@@ -90,11 +96,10 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
     /**
      * @throws Exception
      */
-    public function loadNewMeal(Day $day, Dish $dish): void
+    public function loadNewMeal(Day $day, Dish $dish, Price $price): void
     {
-        $meal = new Meal($dish, $day);
+        $meal = new Meal($dish, $price, $day);
 
-        $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);
         $this->addReference('meal-' . $this->counter++, $meal);
     }

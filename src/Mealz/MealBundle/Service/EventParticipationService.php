@@ -5,31 +5,23 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
-use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-final class EventParticipationService
+final class EventParticipationService implements EventParticipationServiceInterface
 {
     private Doorman $doorman;
     private EntityManagerInterface $em;
-    private EventPartRepoInterface $eventPartRepo;
-    private EventRepositoryInterface $eventRepo;
     private GuestParticipationService $guestPartSrv;
 
     public function __construct(
         Doorman $doorman,
         EntityManagerInterface $em,
-        EventRepositoryInterface $eventRepo,
-        EventPartRepoInterface $eventPartRepo,
         GuestParticipationService $guestPartSrv
     ) {
         $this->doorman = $doorman;
         $this->em = $em;
-        $this->eventPartRepo = $eventPartRepo;
-        $this->eventRepo = $eventRepo;
         $this->guestPartSrv = $guestPartSrv;
     }
 

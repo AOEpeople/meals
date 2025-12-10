@@ -84,7 +84,11 @@ final class ParticipantList
         $price = 0;
         $participations = $this->getAccountableParticipations($profile);
         foreach ($participations as $participation) {
-            $price += $participation->getMeal()->getPrice()->getPriceValue();
+            $mealPrice = $participation->getMeal()->getPrice()->getPriceValue();
+            if ($participation->getMeal()->isCombinedMeal()) {
+                $mealPrice = $participation->getMeal()->getPrice()->getPriceCombinedValue();
+            }
+            $price += $mealPrice;
         }
 
         return $price;

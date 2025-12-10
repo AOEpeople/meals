@@ -298,8 +298,6 @@ services:
     arguments:
       $doorman: '@mealz_meal.doorman'
       $em: '@doctrine.orm.entity_manager'
-      $eventPartRepo: '@App\Mealz\MealBundle\Repository\EventPartRepoInterface'
-      $eventRepo: '@App\Mealz\MealBundle\Repository\EventRepositoryInterface'
       $guestPartSrv: '@App\Mealz\MealBundle\Service\GuestParticipationService'
 
   App\Mealz\MealBundle\Service\GuestParticipationService:

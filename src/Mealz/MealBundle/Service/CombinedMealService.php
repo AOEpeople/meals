@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -67,8 +68,8 @@ final class CombinedMealService implements CombinedMealServiceInterface
                 }
             }
 
-            $dateTime = new \DateTimeImmutable('now');
-            $dateTimeYearAsInt = (int)$dateTime->format('Y');
+            $dateTime = new DateTimeImmutable('now');
+            $dateTimeYearAsInt = (int) $dateTime->format('Y');
             $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
             if (!($price instanceof Price)) {
                 $this->logger->error('Combined dish price by year does not exist.', [

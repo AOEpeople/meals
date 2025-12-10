@@ -8,7 +8,6 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\Subscriber\WeekUpdateSubscriber;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
-use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
 use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\CombinedMealServiceMock;
 use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\NotifierMock;
@@ -41,7 +40,7 @@ final class WeekUpdateSubscriberTest extends TestCase
         );
     }
 
-    public function testOnWeekUpdate_IsValid(): void
+    public function testOnWeekUpdateIsValid(): void
     {
         $week = new Week();
         $weekUpdateEvent = new WeekUpdateEvent($week, true);
@@ -57,7 +56,7 @@ final class WeekUpdateSubscriberTest extends TestCase
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
-    public function testOnWeekUpdate_WithPriceNotFoundException(): void
+    public function testOnWeekUpdateWithPriceNotFoundException(): void
     {
         $week = new Week();
         $weekUpdateEvent = new WeekUpdateEvent($week, true);

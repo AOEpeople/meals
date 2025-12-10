@@ -7,7 +7,6 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
-use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class DayService

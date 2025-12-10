@@ -50,6 +50,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
     public function findAllOn(DateTime $date): array
     {
         $this->findAllOnInputs[] = $date;
+
         return $this->outputFindAllOn;
     }
 
@@ -57,7 +58,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
     {
         $this->findAllBetweenInputs[] = [
             'start' => $startDate,
-            'end'   => $endDate,
+            'end' => $endDate,
         ];
 
         return $this->outputFindAllBetween;
@@ -86,12 +87,14 @@ final class MealRepositoryMock implements MealRepositoryInterface
     public function getFutureMealsForDish(Dish $dish): array
     {
         $this->futureMealsForDishInputs[] = $dish;
+
         return $this->outputFutureMealsForDish;
     }
 
     public function find($id)
     {
         $this->findInputs[] = $id;
+
         return $this->outputFind;
     }
 
@@ -104,9 +107,9 @@ final class MealRepositoryMock implements MealRepositoryInterface
     {
         $this->findByCalls[] = [
             'criteria' => $criteria,
-            'orderBy'  => $orderBy,
-            'limit'    => $limit,
-            'offset'   => $offset,
+            'orderBy' => $orderBy,
+            'limit' => $limit,
+            'offset' => $offset,
         ];
 
         return $this->outputFindBy;
@@ -115,6 +118,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
     public function findOneBy(array $criteria)
     {
         $this->findOneByCriteria[] = $criteria;
+
         return $this->outputFindOneBy;
     }
 
@@ -126,6 +130,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
     public function matching(Criteria $criteria)
     {
         $this->matchingInputs[] = $criteria;
+
         return $this->outputMatching;
     }
 }

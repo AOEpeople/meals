@@ -19,10 +19,10 @@ final class TranslatorMock implements TranslatorInterface
         ?string $locale = null
     ): string {
         $this->transCalls[] = [
-            'id'        => $id,
-            'parameters'=> $parameters,
-            'domain'    => $domain,
-            'locale'    => $locale,
+            'id' => $id,
+            'parameters' => $parameters,
+            'domain' => $domain,
+            'locale' => $locale,
         ];
 
         return $this->outputTransValue;

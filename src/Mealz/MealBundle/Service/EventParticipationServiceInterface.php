@@ -11,8 +11,11 @@ use App\Mealz\UserBundle\Entity\Profile;
 interface EventParticipationServiceInterface
 {
     public function handleEventParticipation(Day $day, EventParticipation $event): void;
+
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array;
+
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation;
+
     public function joinAsGuest(
         string $firstName,
         string $lastName,
@@ -20,6 +23,8 @@ interface EventParticipationServiceInterface
         Day $eventDay,
         EventParticipation $eventParticipation,
     ): EventParticipation;
+
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation;
+
     public function getParticipants(Day $day, int $eventId): array;
 }

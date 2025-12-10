@@ -15,6 +15,7 @@ use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
 
@@ -22,11 +23,11 @@ final class MealAdminHelper
 {
     public function __construct(
         private readonly EventRepositoryInterface $eventRepository,
-        private readonly EventPartRepoInterface   $eventPartRepo,
-        private readonly DishRepositoryInterface  $dishRepository,
-        private readonly MealRepositoryInterface  $mealRepository,
+        private readonly EventPartRepoInterface $eventPartRepo,
+        private readonly DishRepositoryInterface $dishRepository,
+        private readonly MealRepositoryInterface $mealRepository,
         private readonly PriceRepositoryInterface $priceRepository,
-        private readonly LoggerInterface          $logger
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -58,6 +59,7 @@ final class MealAdminHelper
     }
 
     /**
+     * @throws Exception
      * @throws PriceNotFoundException
      */
     public function handleMealArray(array $mealArr, Day $dayEntity): void
@@ -70,8 +72,8 @@ final class MealAdminHelper
             if (null === $dishEntity) {
                 throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
-            $dateTime = new \DateTimeImmutable('now');
-            $dateTimeYearAsInt = (int)$dateTime->format('Y');
+            $dateTime = new DateTimeImmutable('now');
+            $dateTimeYearAsInt = (int) $dateTime->format('Y');
             $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
             if (!($price instanceof Price)) {
                 $this->logger->error('Prices could not be loaded by price repository in handleMealArray.', [

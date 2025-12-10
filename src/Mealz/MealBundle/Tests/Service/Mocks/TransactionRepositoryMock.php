@@ -38,6 +38,7 @@ final class TransactionRepositoryMock implements TransactionRepositoryInterface
     public function find($id)
     {
         $this->inputFind = $id;
+
         return $this->outputFind;
     }
 
@@ -59,6 +60,7 @@ final class TransactionRepositoryMock implements TransactionRepositoryInterface
     public function findOneBy(array $criteria)
     {
         $this->inputFindOneByCriteria = $criteria;
+
         return $this->outputFindOneBy;
     }
 
@@ -70,6 +72,7 @@ final class TransactionRepositoryMock implements TransactionRepositoryInterface
     public function getTotalAmount(string $username): float
     {
         $this->inputGetTotalAmountUsername = $username;
+
         return $this->outputGetTotalAmount;
     }
 

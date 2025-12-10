@@ -8,6 +8,7 @@ use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use DateTimeImmutable;
 use Override;
 use PHPUnit\Framework\TestCase;
 
@@ -38,10 +39,10 @@ final class DayTest extends TestCase
      */
     public function addMeal(): void
     {
-        $dateTime = new \DateTimeImmutable('now');
+        $dateTime = new DateTimeImmutable('now');
         for ($i = 0; $i < 10; ++$i) {
             $price = new Price();
-            $price->setYear((int)$dateTime->format('Y') - $i);
+            $price->setYear((int) $dateTime->format('Y') - $i);
             $price->setPriceValue($i + 1);
             $price->setPriceCombinedValue($i + 2);
             $meal = new Meal(new Dish(), $price, $this->day);
@@ -62,10 +63,10 @@ final class DayTest extends TestCase
     {
         $meals = null;
         $numberOfMeals = 10;
-        $dateTime = new \DateTimeImmutable('now');
+        $dateTime = new DateTimeImmutable('now');
         for ($i = 0; $i < $numberOfMeals; ++$i) {
             $price = new Price();
-            $price->setYear((int)$dateTime->format('Y') - $i);
+            $price->setYear((int) $dateTime->format('Y') - $i);
             $price->setPriceValue($i + 1.99);
             $price->setPriceCombinedValue($i + 2.99);
             $meal = new Meal(new Dish(), $price, $this->day);

@@ -33,13 +33,13 @@ final class MealAdminController extends BaseController
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly WeekRepositoryInterface  $weekRepository,
-        private readonly DayRepositoryInterface   $dayRepository,
-        private readonly DayService               $dayService,
-        private readonly DishService              $dishService,
-        private readonly EntityManagerInterface   $em,
-        private readonly MealAdminHelper          $mealAdminHelper,
-        private readonly LoggerInterface          $logger
+        private readonly WeekRepositoryInterface $weekRepository,
+        private readonly DayRepositoryInterface $dayRepository,
+        private readonly DayService $dayService,
+        private readonly DishService $dishService,
+        private readonly EntityManagerInterface $em,
+        private readonly MealAdminHelper $mealAdminHelper,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -200,7 +200,7 @@ final class MealAdminController extends BaseController
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            $response[(string)$day->getId()] = $day->getDateTime()->modify((string)$dateTimeModifier);
+            $response[(string) $day->getId()] = $day->getDateTime()->modify((string) $dateTimeModifier);
         }
 
         return new JsonResponse($response, Response::HTTP_OK);
@@ -254,7 +254,7 @@ final class MealAdminController extends BaseController
     private function getExistingEventIds(Day $day): array
     {
         return array_filter(array_map(
-            fn($e) => $e instanceof EventParticipation ? $e->getEvent()->getId() : null,
+            fn ($e) => $e instanceof EventParticipation ? $e->getEvent()->getId() : null,
             $day->getEvents()->toArray()
         ));
     }
@@ -292,7 +292,6 @@ final class MealAdminController extends BaseController
      * @throws PriceNotFoundException
      * @throws Exception
      */
-
     private function updateMeals(Day $day, array $mealCollection, int $count): void
     {
         if ($count < count($mealCollection)) {

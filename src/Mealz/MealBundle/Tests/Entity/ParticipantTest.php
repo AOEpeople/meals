@@ -22,7 +22,7 @@ final class ParticipantTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $meal = new Meal(new Dish(), New Price(), new Day());
+        $meal = new Meal(new Dish(), new Price(), new Day());
         $profile = new Profile();
 
         $this->participant = new Participant($profile, $meal);

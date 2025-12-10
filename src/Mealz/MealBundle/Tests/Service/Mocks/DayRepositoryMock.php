@@ -36,6 +36,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
     public function getDayByDate(DateTime $dateTime): ?Day
     {
         $this->inputGetDayByDate = $dateTime;
+
         return $this->outputGetDayByDate;
     }
 
@@ -43,12 +44,14 @@ final class DayRepositoryMock implements DayRepositoryInterface
     {
         $this->inputFindAllActiveStartDate = $startDate;
         $this->inputFindAllActiveEndDate = $endDate;
+
         return $this->outputFindAllActive;
     }
 
     public function find($id)
     {
         $this->inputFind = $id;
+
         return $this->outputFind;
     }
 
@@ -70,6 +73,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
     public function findOneBy(array $criteria)
     {
         $this->inputFindOneByCriteria = $criteria;
+
         return $this->outputFindOneBy;
     }
 

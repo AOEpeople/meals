@@ -57,7 +57,7 @@ final class CombinedMealServiceTest extends AbstractDatabaseTestCase
         }
     }
 
-    public function testUpdateWeek_IsValid(): void
+    public function testUpdateWeekIsValid(): void
     {
         /** @var WeekRepositoryInterface $weekRepository */
         $weekRepository = self::getContainer()->get(WeekRepositoryInterface::class);
@@ -111,7 +111,7 @@ final class CombinedMealServiceTest extends AbstractDatabaseTestCase
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
-    public function testUpdateWeek_WithPriceNotFoundException(): void
+    public function testUpdateWeekWithPriceNotFoundException(): void
     {
         $this->loadFixtures([
             new LoadWeeks(),

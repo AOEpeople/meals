@@ -63,6 +63,7 @@ class Meal implements Stringable, JsonSerializable
         $this->day = $day;
         $this->dateTime = clone $day->getDateTime();
     }
+
     public function setId(?int $id): void
     {
         $this->id = $id;

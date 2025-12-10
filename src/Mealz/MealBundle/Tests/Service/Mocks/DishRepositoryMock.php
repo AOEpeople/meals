@@ -37,12 +37,14 @@ final class DishRepositoryMock implements DishRepositoryInterface
     public function hasDishAssociatedMeals(Dish $dish): bool
     {
         $this->hasDishAssociatedMealsInputs[] = $dish;
+
         return $this->outputHasDishAssociatedMeals;
     }
 
     public function hasDishAssociatedCombiMealsInFuture(Dish $dish): bool
     {
         $this->hasDishAssociatedCombiFutureInputs[] = $dish;
+
         return $this->outputHasDishAssociatedCombiFuture;
     }
 
@@ -59,6 +61,7 @@ final class DishRepositoryMock implements DishRepositoryInterface
     public function find($id)
     {
         $this->findInputs[] = $id;
+
         return $this->outputFind;
     }
 
@@ -82,6 +85,7 @@ final class DishRepositoryMock implements DishRepositoryInterface
     public function findOneBy(array $criteria)
     {
         $this->findOneByCriteria[] = $criteria;
+
         return $this->outputFindOneBy;
     }
 

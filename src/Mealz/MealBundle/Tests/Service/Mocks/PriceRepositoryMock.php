@@ -13,6 +13,7 @@ final class PriceRepositoryMock implements PriceRepositoryInterface
     public Collection $outputFindAll;
     public array $inputFindByYearInputs = [];
     public ?Price $outputFindByYear;
+
     public function findAll(): Collection
     {
         return $this->outputFindAll;
@@ -21,7 +22,7 @@ final class PriceRepositoryMock implements PriceRepositoryInterface
     public function findByYear(int $year): ?Price
     {
         $this->inputFindByYearInputs[] = $year;
+
         return $this->outputFindByYear;
     }
-
 }

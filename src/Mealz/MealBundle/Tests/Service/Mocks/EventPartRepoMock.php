@@ -24,12 +24,10 @@ final class EventPartRepoMock implements EventPartRepoInterface
     public ?Event $findByEventAndDayEventInput;
     public string $className = EventParticipation::class;
 
-
     public function add($eventParticipation): void
     {
         $this->added[] = $eventParticipation;
     }
-
 
     public function findByEventAndDay(Day $day, Event $event): ?EventParticipation
     {
@@ -39,39 +37,36 @@ final class EventPartRepoMock implements EventPartRepoInterface
         return $this->outputFindByEventAndDay;
     }
 
-
     public function find($id)
     {
         $this->findInputs[] = $id;
+
         return $this->outputFind;
     }
-
 
     public function findAll()
     {
         return $this->outputFindAll;
     }
 
-
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->findByCalls[] = [
             'criteria' => $criteria,
-            'orderBy'  => $orderBy,
-            'limit'    => $limit,
-            'offset'   => $offset,
+            'orderBy' => $orderBy,
+            'limit' => $limit,
+            'offset' => $offset,
         ];
 
         return $this->outputFindBy;
     }
 
-
     public function findOneBy(array $criteria)
     {
         $this->findOneByCriteria[] = $criteria;
+
         return $this->outputFindOneBy;
     }
-
 
     public function getClassName()
     {

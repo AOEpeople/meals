@@ -99,7 +99,7 @@ final class WeeklyMenuMessageTest extends WebTestCase
         $dishVariationA->setParent($dishParent);
         $dishVariationB->setParent($dishParent);
 
-        $price = New Price();
+        $price = new Price();
         $price->setPriceValue(1);
         $price->setPriceCombinedValue(2);
         $price->setYear(2025);
@@ -133,7 +133,7 @@ final class WeeklyMenuMessageTest extends WebTestCase
     {
         $day = new Day();
         $day->setDateTime($date);
-        $price = New Price();
+        $price = new Price();
         $price->setPriceValue(1);
         $price->setPriceCombinedValue(2);
         $price->setYear(2025);

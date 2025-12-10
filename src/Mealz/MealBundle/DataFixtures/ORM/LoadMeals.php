@@ -53,7 +53,6 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->containsOldPrices = $containsOldPrices;
     }
 
-
     /**
      * @throws Exception
      */

@@ -11,6 +11,7 @@ final class NotifierMock implements NotifierInterface
 {
     public MessageInterface $inputMessage;
     public bool $outputIsNotified;
+
     public function send(MessageInterface $message): bool
     {
         $this->inputMessage = $message;

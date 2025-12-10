@@ -15,6 +15,7 @@ use App\Mealz\MealBundle\Tests\Service\Mocks\EventPartRepoMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\EventRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\MealRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\PriceRepositoryMock;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -48,7 +49,7 @@ final class MealAdminHelperTest extends TestCase
         );
     }
 
-    public function testHandleMealArray_IsValid(): void
+    public function testHandleMealArrayIsValid(): void
     {
         $mealArr = [
             [
@@ -69,15 +70,15 @@ final class MealAdminHelperTest extends TestCase
                 'slug' => 'pasta'
             ]
         ], $this->dishRepositoryMock->findOneByCriteria);
-        $currentDateTime = new \DateTimeImmutable('now');
-        $currentYearAsInt = (int)$currentDateTime->format('Y');
+        $currentDateTime = new DateTimeImmutable('now');
+        $currentYearAsInt = (int) $currentDateTime->format('Y');
         $this->assertEquals([
             $currentYearAsInt
         ], $this->priceRepositoryMock->inputFindByYearInputs);
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
-    public function testHandleMealArray_WithPriceNotFoundException(): void
+    public function testHandleMealArrayWithPriceNotFoundException(): void
     {
         $mealArr = [
             [
@@ -102,8 +103,8 @@ final class MealAdminHelperTest extends TestCase
                 'slug' => 'pasta'
             ]
         ], $this->dishRepositoryMock->findOneByCriteria);
-        $currentDateTime = new \DateTimeImmutable('now');
-        $currentYearAsInt = (int)$currentDateTime->format('Y');
+        $currentDateTime = new DateTimeImmutable('now');
+        $currentYearAsInt = (int) $currentDateTime->format('Y');
         $this->assertEquals([
             $currentYearAsInt
         ], $this->priceRepositoryMock->inputFindByYearInputs);

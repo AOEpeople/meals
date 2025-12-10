@@ -27,7 +27,9 @@ final class WeekUpdateSubscriber implements EventSubscriberInterface
 
     /**
      * @return string[]
+     *
      * @codeCoverageIgnore
+     *
      * @psalm-return array{WeekUpdateEvent::class: 'onWeekUpdate'}
      */
     #[Override]

@@ -17,6 +17,7 @@ use App\Mealz\MealBundle\Tests\Service\Mocks\MealRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\ParticipantRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\TransactionRepositoryMock;
 use App\Mealz\UserBundle\Entity\Profile;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,8 +50,8 @@ final class ApiServiceTest extends TestCase
 
     public function testGetFullTransactionHistoryIsValid(): void
     {
-        $dateTimeBefore = new \DateTime('02.12.2025');
-        $dateTimeAfter = new \DateTime('09.12.2025');
+        $dateTimeBefore = new DateTime('02.12.2025');
+        $dateTimeAfter = new DateTime('09.12.2025');
         $profile = new Profile();
 
         $dish = new Dish();

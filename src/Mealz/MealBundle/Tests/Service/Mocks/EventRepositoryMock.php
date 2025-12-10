@@ -21,6 +21,7 @@ final class EventRepositoryMock implements EventRepositoryInterface
     public function find($id)
     {
         $this->inputId = $id;
+
         return $this->outputFind;
     }
 
@@ -33,9 +34,9 @@ final class EventRepositoryMock implements EventRepositoryInterface
     {
         $this->inputFindByCriteria[] = [
             'criteria' => $criteria,
-            'orderBy'  => $orderBy,
-            'limit'    => $limit,
-            'offset'   => $offset,
+            'orderBy' => $orderBy,
+            'limit' => $limit,
+            'offset' => $offset,
         ];
 
         return $this->outputFindBy;
@@ -44,6 +45,7 @@ final class EventRepositoryMock implements EventRepositoryInterface
     public function findOneBy(array $criteria)
     {
         $this->inputFindOneByCriteria[] = $criteria;
+
         return $this->outputFindOneBy;
     }
 

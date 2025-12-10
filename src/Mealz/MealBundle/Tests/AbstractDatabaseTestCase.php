@@ -105,6 +105,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
 
         return $price;
     }
+
     protected function createMeal(?Dish $dish = null, ?Price $price = null, ?Day $day = null): Meal
     {
         $dish = $dish ?: $this->createDish();

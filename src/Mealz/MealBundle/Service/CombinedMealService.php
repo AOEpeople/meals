@@ -11,9 +11,11 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
-final class CombinedMealService
+final class CombinedMealService implements CombinedMealServiceInterface
 {
     private const string COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 
@@ -21,17 +23,23 @@ final class CombinedMealService
 
     private Dish $combinedDish;
     private PriceRepository $priceRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         DishRepository $dishRepo,
-        PriceRepository $priceRepo
+        PriceRepository $priceRepo,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->combinedDish = $this->createCombinedDish($dishRepo);
         $this->priceRepository = $priceRepo;
+        $this->logger = $logger;
     }
 
+    /**
+     * @throws PriceNotFoundException
+     */
     public function update(Week $week): void
     {
         $update = false;
@@ -60,9 +68,14 @@ final class CombinedMealService
             }
 
             $dateTime = new \DateTimeImmutable('now');
-            $price = $this->priceRepository->findByYear((int)$dateTime->format('Y'));
+            $dateTimeYearAsInt = (int)$dateTime->format('Y');
+            $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
             if (!($price instanceof Price)) {
-                throw new Exception('Price is not found.');
+                $this->logger->error('Combined dish price by year does not exist.', [
+                    'year' => $dateTimeYearAsInt,
+                ]);
+
+                throw PriceNotFoundException::isNotFound($dateTimeYearAsInt);
             }
             if (null === $combinedMeal && 1 < count($baseMeals) && false === $dayHasOneSizeMeal) {
                 $this->createCombinedMeal($day, $price);

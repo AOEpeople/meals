@@ -46,6 +46,13 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
     private array $days = [];
 
     private int $counter = 0;
+    private bool $containsOldPrices;
+
+    public function __construct($containsOldPrices = false)
+    {
+        $this->containsOldPrices = $containsOldPrices;
+    }
+
 
     /**
      * @throws Exception
@@ -59,8 +66,12 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         $lastDishWithVar = null;
         $lastDishWithoutVar = null;
         $price = new Price();
+        $year = 2025;
+        if ($this->containsOldPrices) {
+            $year = 2024;
+        }
         $price->setPriceValue(4.4);
-        $price->setYear(2025);
+        $price->setYear($year);
         $price->setPriceCombinedValue(6.4);
         $manager->persist($price);
 

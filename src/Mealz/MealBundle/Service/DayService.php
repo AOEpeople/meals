@@ -13,16 +13,13 @@ use Doctrine\ORM\EntityManagerInterface;
 final class DayService
 {
     private MealRepositoryInterface $mealRepository;
-    private ParticipantRepositoryInterface $participantRepo;
     private EntityManagerInterface $em;
 
     public function __construct(
         MealRepositoryInterface $mealRepository,
-        ParticipantRepositoryInterface $participantRepo,
         EntityManagerInterface $entityManager
     ) {
         $this->mealRepository = $mealRepository;
-        $this->participantRepo = $participantRepo;
         $this->em = $entityManager;
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
@@ -46,12 +47,9 @@ final class ParticipationServiceTestCase extends AbstractParticipationServiceTes
             )
         );
 
-        /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
-        $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
-        $price = is_float($price) ? $price : 0;
-
         $dishRepo = static::getContainer()->get(DishRepository::class);
-        $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
+        $priceRepo = static::getContainer()->get(PriceRepository::class);
+        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo);
     }
 
     /**

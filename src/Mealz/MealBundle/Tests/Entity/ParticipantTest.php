@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Entity;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -21,7 +22,7 @@ final class ParticipantTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $meal = new Meal(new Dish(), new Day());
+        $meal = new Meal(new Dish(), New Price(), new Day());
         $profile = new Profile();
 
         $this->participant = new Participant($profile, $meal);

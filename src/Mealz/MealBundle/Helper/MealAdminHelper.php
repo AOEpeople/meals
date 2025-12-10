@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Helper;
 
+use App\Mealz\AccountingBundle\Entity\Price;
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Event;
@@ -12,17 +14,16 @@ use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Repository\EventPartRepo;
 use App\Mealz\MealBundle\Repository\EventRepository;
 use App\Mealz\MealBundle\Repository\MealRepository;
-use App\Mealz\MealBundle\Service\EventParticipationService;
 use Exception;
 
 final class MealAdminHelper
 {
     public function __construct(
-        private readonly EventParticipationService $eventService,
         private readonly EventRepository $eventRepository,
         private readonly EventPartRepo $eventPartRepo,
         private readonly DishRepository $dishRepository,
-        private readonly MealRepository $mealRepository
+        private readonly MealRepository $mealRepository,
+        private readonly PriceRepository $priceRepository,
     ) {
     }
 
@@ -63,19 +64,23 @@ final class MealAdminHelper
             if (null === $dishEntity) {
                 throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
+            $dateTime = new \DateTimeImmutable('now');
+            $price = $this->priceRepository->findByYear((int)$dateTime->format('Y'));
+            if (!($price instanceof Price)) {
+                throw new Exception('Price is not found.');
+            }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {
-                $this->createMeal($dishEntity, $dayEntity, $meal);
+                $this->createMeal($dishEntity, $dayEntity, $meal, $price);
             } else {
-                $this->modifyMeal($meal, $dishEntity, $dayEntity);
+                $this->modifyMeal($meal, $dishEntity, $dayEntity, $price);
             }
         }
     }
 
-    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal): void
+    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal, Price $price): void
     {
-        $mealEntity = new Meal($dishEntity, $dayEntity);
-        $mealEntity->setPrice($dishEntity->getPrice());
+        $mealEntity = new Meal($dishEntity, $price, $dayEntity);
         $this->setParticipationLimit($mealEntity, $meal);
         $dayEntity->addMeal($mealEntity);
     }
@@ -83,14 +88,13 @@ final class MealAdminHelper
     /**
      * @throws Exception
      */
-    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity): void
+    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity, $price): void
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
         if (null === $mealEntity) {
             // this happens because meals without participations are deleted, even though they
             // could be modified later on (this shouldn't happen but might)
-            $mealEntity = new Meal($dishEntity, $dayEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
+            $mealEntity = new Meal($dishEntity, $price, $dayEntity);
             $dayEntity->addMeal($mealEntity);
 
             return;
@@ -105,7 +109,6 @@ final class MealAdminHelper
         // check if meal already exists and can be modified (aka has no participations)
         if (!$mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
 
             return;
         }

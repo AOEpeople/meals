@@ -48,10 +48,8 @@ parameters:
   app.secret: '%env(APP_SECRET)%'
 
   mealz.lock_toggle_participation_at: '-1 day 16:00'
-  mealz.meal.price: 4.40
   mealz.meal.search_timestamp: '2000-01-01'
   mealz.meal.new_flag_counter: 2
-  mealz.meal.combined.price: 6.40
   mealz.event.lock_participation_at: '17:00'
   # PDO Session Handler options
   # Define table and column names to store session data
@@ -97,11 +95,17 @@ services:
 
   App\Mealz\MealBundle\Controller\DishController:
     arguments:
-      $price: '%mealz.meal.price%'
-
+      $apiService: '@App\Mealz\MealBundle\Service\ApiService'
+      $categoryRepository: '@App\Mealz\MealBundle\Repository\CategoryRepositoryInterface'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepositoryInterface'
+      $dishService: '@App\Mealz\MealBundle\Service\DishService'
+      $em: '@doctrine.orm.entity_manager'
+      $logger: '@logger'
   App\Mealz\MealBundle\Controller\DishVariationController:
     arguments:
-      $price: '%mealz.meal.price%'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepositoryInterface'
+      $em: '@doctrine.orm.entity_manager'
+      $logger: '@logger'
 
   # Interface Implementations
   App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
@@ -238,7 +242,9 @@ services:
 
   App\Mealz\MealBundle\Service\CombinedMealService:
     arguments:
-      $combinedPrice: '%mealz.meal.combined.price%'
+      $entityManager: '@doctrine.orm.entity_manager'
+      $dishRepo: '@App\Mealz\MealBundle\Repository\DishRepository'
+      $priceRepo: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
 
   App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
     arguments:
@@ -310,6 +316,7 @@ services:
     arguments:
       $entityClass: App\Mealz\AccountingBundle\Entity\Transaction
 
+  App\Mealz\AccountingBundle\Repository\PriceRepository: ~
   ##################################################################
   # User BUNDLE
   ##################################################################

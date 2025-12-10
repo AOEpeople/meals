@@ -69,14 +69,14 @@ class ApiService
         }
 
         foreach ($participations as $participation) {
-            $costDifference -= $participation->getMeal()->getPrice();
+            $costDifference -= $participation->getMeal()->getPrice()->getPriceValue();
             $timestamp = $participation->getMeal()->getDateTime()->getTimestamp();
             $mealId = $participation->getMeal()->getId();
 
             $date = $participation->getMeal()->getDateTime();
             $description_en = $participation->getMeal()->getDish()->getTitleEn();
             $description_de = $participation->getMeal()->getDish()->getTitleDe();
-            $amount = $participation->getMeal()->getPrice();
+            $amount = $participation->getMeal()->getPrice()->getPriceValue();
 
             $debit = [
                 'type' => 'debit',

@@ -79,11 +79,12 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
-            ->select('SUM(m.price) as total_cost')
+            ->select('SUM(pr.price) as total_cost')
             ->leftJoin('p.meal', 'm')
             ->leftJoin('p.profile', 'up')
             ->leftJoin('m.day', 'd')
             ->leftJoin('d.week', 'w')
+            ->leftJoin('m.price', 'pr')
             ->where('p.profile = :user')
             ->andWhere('m.dateTime <= :now')
             ->andWhere('p.costAbsorbed = 0')
@@ -306,8 +307,9 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     private function findCostsPerMonthPerUser(): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(pr.price) AS costs');
         $queryBuilder->leftJoin('p.meal', 'm');
+        $queryBuilder->leftJoin('m.price', 'pr');
         $queryBuilder->leftJoin('p.profile', 'u');
         $queryBuilder->leftJoin('u.roles', 'r');
         $queryBuilder->leftJoin('m.day', 'd');

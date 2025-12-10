@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -42,11 +43,10 @@ final class CombinedMealServiceTest extends AbstractDatabaseTestCase
         /* @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
-        $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
-        $price = is_float($price) ? $price : 0;
 
         $dishRepo = static::getContainer()->get(DishRepository::class);
-        $this->cms = new CombinedMealService($price, $entityManager, $dishRepo);
+        $priceRepo = static::getContainer()->get(PriceRepository::class);
+        $this->cms = new CombinedMealService($entityManager, $dishRepo, $priceRepo);
 
         $combinedDishes = $dishRepo->findBy(['slug' => Dish::COMBINED_DISH_SLUG]);
         if (1 === count($combinedDishes)) {

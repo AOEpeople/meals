@@ -106,6 +106,16 @@ services:
       $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepositoryInterface'
       $em: '@doctrine.orm.entity_manager'
       $logger: '@logger'
+  App\Mealz\MealBundle\Controller\MealAdminController:
+    arguments:
+      $eventDispatcher: '@event_dispatcher'
+      $weekRepository: '@App\Mealz\MealBundle\Repository\WeekRepositoryInterface'
+      $dayRepository: '@App\Mealz\MealBundle\Repository\DayRepositoryInterface'
+      $dayService: '@App\Mealz\MealBundle\Service\DayService'
+      $dishService: '@App\Mealz\MealBundle\Service\DishService'
+      $em: '@doctrine.orm.entity_manager'
+      $mealAdminHelper: '@App\Mealz\MealBundle\Helper\MealAdminHelper'
+      $logger: '@logger'
 
   # Interface Implementations
   App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
@@ -120,6 +130,7 @@ services:
   App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
   App\Mealz\MealBundle\Repository\MealRepositoryInterface: '@App\Mealz\MealBundle\Repository\MealRepository'
   App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface: '@App\Mealz\MealBundle\Repository\ParticipantRepository'
+  App\Mealz\MealBundle\Repository\WeekRepositoryInterface: '@App\Mealz\MealBundle\Repository\WeekRepository'
 
   # Event Listeners
   App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -220,6 +231,19 @@ services:
     arguments:
       $dateTime: 'now'
 
+  App\Mealz\MealBundle\Service\DayService:
+    arguments:
+      $mealRepository: '@App\Mealz\MealBundle\Repository\MealRepositoryInterface'
+      $entityManager: '@doctrine.orm.entity_manager'
+
+  App\Mealz\MealBundle\Helper\MealAdminHelper:
+    arguments:
+      $eventRepository: '@App\Mealz\MealBundle\Repository\EventRepository'
+      $eventPartRepo: '@App\Mealz\MealBundle\Repository\EventPartRepo'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepository'
+      $mealRepository: '@App\Mealz\MealBundle\Repository\MealRepository'
+      $priceRepository: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
+      $logger: '@logger'
   # Service Aliases
   mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'
   mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
@@ -245,6 +269,7 @@ services:
       $entityManager: '@doctrine.orm.entity_manager'
       $dishRepo: '@App\Mealz\MealBundle\Repository\DishRepository'
       $priceRepo: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
+      $logger: '@logger'
 
   App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
     arguments:

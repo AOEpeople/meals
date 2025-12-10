@@ -5,25 +5,28 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Helper;
 
 use App\Mealz\AccountingBundle\Entity\Price;
-use App\Mealz\AccountingBundle\Repository\PriceRepository;
+use App\Mealz\AccountingBundle\Repository\PriceRepositoryInterface;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Repository\DishRepository;
-use App\Mealz\MealBundle\Repository\EventPartRepo;
-use App\Mealz\MealBundle\Repository\EventRepository;
-use App\Mealz\MealBundle\Repository\MealRepository;
+use App\Mealz\MealBundle\Helper\Exceptions\PriceNotFoundException;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
+use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 final class MealAdminHelper
 {
     public function __construct(
-        private readonly EventRepository $eventRepository,
-        private readonly EventPartRepo $eventPartRepo,
-        private readonly DishRepository $dishRepository,
-        private readonly MealRepository $mealRepository,
-        private readonly PriceRepository $priceRepository,
+        private readonly EventRepositoryInterface $eventRepository,
+        private readonly EventPartRepoInterface   $eventPartRepo,
+        private readonly DishRepositoryInterface  $dishRepository,
+        private readonly MealRepositoryInterface  $mealRepository,
+        private readonly PriceRepositoryInterface $priceRepository,
+        private readonly LoggerInterface          $logger
     ) {
     }
 
@@ -54,6 +57,9 @@ final class MealAdminHelper
         return false;
     }
 
+    /**
+     * @throws PriceNotFoundException
+     */
     public function handleMealArray(array $mealArr, Day $dayEntity): void
     {
         foreach ($mealArr as $meal) {
@@ -65,9 +71,13 @@ final class MealAdminHelper
                 throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
             $dateTime = new \DateTimeImmutable('now');
-            $price = $this->priceRepository->findByYear((int)$dateTime->format('Y'));
+            $dateTimeYearAsInt = (int)$dateTime->format('Y');
+            $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
             if (!($price instanceof Price)) {
-                throw new Exception('Price is not found.');
+                $this->logger->error('Prices could not be loaded by price repository in handleMealArray.', [
+                    'year' => $dateTimeYearAsInt,
+                ]);
+                throw PriceNotFoundException::isNotFound($dateTimeYearAsInt);
             }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {

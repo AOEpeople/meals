@@ -88,7 +88,7 @@ final class DayTest extends TestCase
         $idx = 0;
         foreach ($randomOrderMeals as $meal) {
             $this->day->removeMeal($meal);
-            $this->assertEqualsWithDelta($meal->getPrice()->getPriceValue(), $meals[$mealKeys[$idx]]->getPrice()->getPrice(), 0.1);
+            $this->assertEqualsWithDelta($meal->getPrice()->getPriceValue(), $meals[$mealKeys[$idx]]->getPrice()->getPriceValue(), 0.1);
             --$numberOfMeals;
             ++$idx;
             $this->assertCount($numberOfMeals, $this->day->getMeals());

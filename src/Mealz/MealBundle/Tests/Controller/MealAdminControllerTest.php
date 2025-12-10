@@ -192,7 +192,7 @@ final class MealAdminControllerTest extends AbstractControllerTestCase
         }';
 
         $this->client->request('PUT', '/api/menu/' . $createdWeek->getId(), [], [], [], $testPutStr);
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $this->client->getResponse()->getStatusCode());
 
         $createdWeek = $weekRepository->findOneBy([
             'year' => $year,

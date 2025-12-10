@@ -26,8 +26,8 @@ class Price implements JsonSerializable
     {
         $newPrice = new self();
         $newPrice->setYear($year);
-        $newPrice->setPrice($price);
-        $newPrice->setPriceCombined($priceCombined);
+        $newPrice->setPriceValue($price);
+        $newPrice->setPriceCombinedValue($priceCombined);
 
         return $newPrice;
     }
@@ -42,22 +42,22 @@ class Price implements JsonSerializable
         return $this->year;
     }
 
-    public function setPrice(float $price): void
+    public function setPriceValue(float $price): void
     {
         $this->price = $price;
     }
 
-    public function getPrice(): float
+    public function getPriceValue(): float
     {
         return $this->price;
     }
 
-    public function setPriceCombined(float $priceCombined): void
+    public function setPriceCombinedValue(float $priceCombined): void
     {
         $this->priceCombined = $priceCombined;
     }
 
-    public function getPriceCombined(): float
+    public function getPriceCombinedValue(): float
     {
         return $this->priceCombined;
     }
@@ -67,8 +67,8 @@ class Price implements JsonSerializable
     {
         return [
             'year' => $this->getYear(),
-            'price' => $this->getPrice(),
-            'price_combined' => $this->getPriceCombined(),
+            'price' => $this->getPriceValue(),
+            'price_combined' => $this->getPriceCombinedValue(),
         ];
     }
 }

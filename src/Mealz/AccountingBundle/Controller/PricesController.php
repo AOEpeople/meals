@@ -96,8 +96,8 @@ final class PricesController extends BaseController
         }
 
         // update and persist price
-        $existingPrice->setPrice($price);
-        $existingPrice->setPriceCombined($priceCombined);
+        $existingPrice->setPriceValue($price);
+        $existingPrice->setPriceCombinedValue($priceCombined);
 
         $entityManager->persist($existingPrice);
         $entityManager->flush();
@@ -147,10 +147,10 @@ final class PricesController extends BaseController
         // validation: prices have to be higher or equal to last year
         $previousPrice = $priceRepository->findByYear($year - 1);
         if (null !== $previousPrice) {
-            if ($price < $previousPrice->getPrice()) {
+            if ($price < $previousPrice->getPriceValue()) {
                 return new JsonResponse(['error' => '1004: Price cannot be lower than previous year.'], Response::HTTP_BAD_REQUEST);
             }
-            if ($priceCombined < $previousPrice->getPriceCombined()) {
+            if ($priceCombined < $previousPrice->getPriceCombinedValue()) {
                 return new JsonResponse(['error' => '1005: Combined price cannot be lower than previous year.'], Response::HTTP_BAD_REQUEST);
             }
         }

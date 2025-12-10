@@ -97,6 +97,11 @@ class Dish implements Stringable, JsonSerializable
         return $this->id;
     }
 
+    public function setSlug(?string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
     public function getSlug(): ?string
     {
         return $this->slug;

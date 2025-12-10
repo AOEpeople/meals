@@ -17,4 +17,6 @@ interface EventPartRepoInterface extends ObjectRepository
     public function add($eventParticipation): void;
 
     public function findByEventAndDay(Day $day, Event $event): ?EventParticipation;
+
+    public function findByEventIdAndDay(Day $day, int $eventId): ?EventParticipation;
 }

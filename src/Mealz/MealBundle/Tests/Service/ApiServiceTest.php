@@ -18,6 +18,7 @@ use App\Mealz\MealBundle\Tests\Service\Mocks\ParticipantRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\TransactionRepositoryMock;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,6 +33,7 @@ final class ApiServiceTest extends TestCase
     private EventParticipationServiceMock $eventParticipationServiceMock;
     private ApiService $apiService;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->participantRepositoryMock = new ParticipantRepositoryMock();

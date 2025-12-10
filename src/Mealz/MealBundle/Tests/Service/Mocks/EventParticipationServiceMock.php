@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Service\EventParticipationServiceInterface;
 use App\Mealz\UserBundle\Entity\Profile;
+use Override;
 
 final class EventParticipationServiceMock implements EventParticipationServiceInterface
 {
@@ -35,12 +36,14 @@ final class EventParticipationServiceMock implements EventParticipationServiceIn
     public Day $inputGetParticipantsDay;
     public int $inputGetParticipantsEventId;
 
+    #[Override]
     public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
         $this->inputHandleDay = $day;
         $this->inputHandleEvent = $event;
     }
 
+    #[Override]
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {
         $this->inputGetEventDataDay = $day;
@@ -50,6 +53,7 @@ final class EventParticipationServiceMock implements EventParticipationServiceIn
         return $this->outputGetEventParticipationData;
     }
 
+    #[Override]
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $this->inputJoinProfile = $profile;
@@ -59,6 +63,7 @@ final class EventParticipationServiceMock implements EventParticipationServiceIn
         return $this->outputJoin;
     }
 
+    #[Override]
     public function joinAsGuest(
         string $firstName,
         string $lastName,
@@ -75,6 +80,7 @@ final class EventParticipationServiceMock implements EventParticipationServiceIn
         return $this->outputJoinAsGuest;
     }
 
+    #[Override]
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $this->inputLeaveProfile = $profile;
@@ -84,6 +90,7 @@ final class EventParticipationServiceMock implements EventParticipationServiceIn
         return $this->outputLeave;
     }
 
+    #[Override]
     public function getParticipants(Day $day, int $eventId): array
     {
         $this->inputGetParticipantsDay = $day;

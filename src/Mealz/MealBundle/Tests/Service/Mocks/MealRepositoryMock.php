@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Override;
 
 final class MealRepositoryMock implements MealRepositoryInterface
 {
@@ -36,6 +37,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
     public array $matchingInputs = [];
     public ArrayCollection $outputMatching;
 
+    #[Override]
     public function findOneByDateAndDish(DateTime $date, string $dish, array $userSelections = []): ?Meal
     {
         $this->findOneByDateAndDishInputs[] = [
@@ -47,6 +49,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFindOneByDateAndDish;
     }
 
+    #[Override]
     public function findAllOn(DateTime $date): array
     {
         $this->findAllOnInputs[] = $date;
@@ -54,6 +57,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFindAllOn;
     }
 
+    #[Override]
     public function findAllBetween(DateTime $startDate, DateTime $endDate): array
     {
         $this->findAllBetweenInputs[] = [
@@ -64,26 +68,31 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFindAllBetween;
     }
 
+    #[Override]
     public function getMealsOnADayWithVariationOptions(): array
     {
         return $this->outputMealsOnDayWithOptions;
     }
 
+    #[Override]
     public function getFutureMeals(): array
     {
         return $this->outputFutureMeals;
     }
 
+    #[Override]
     public function getOutdatedMeals(): array
     {
         return $this->outputOutdatedMeals;
     }
 
+    #[Override]
     public function getLockedMeals(): array
     {
         return $this->outputLockedMeals;
     }
 
+    #[Override]
     public function getFutureMealsForDish(Dish $dish): array
     {
         $this->futureMealsForDishInputs[] = $dish;
@@ -91,6 +100,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFutureMealsForDish;
     }
 
+    #[Override]
     public function find($id)
     {
         $this->findInputs[] = $id;
@@ -98,11 +108,13 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFind;
     }
 
+    #[Override]
     public function findAll()
     {
         return $this->outputFindAll;
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->findByCalls[] = [
@@ -115,6 +127,7 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFindBy;
     }
 
+    #[Override]
     public function findOneBy(array $criteria)
     {
         $this->findOneByCriteria[] = $criteria;
@@ -122,11 +135,13 @@ final class MealRepositoryMock implements MealRepositoryInterface
         return $this->outputFindOneBy;
     }
 
+    #[Override]
     public function getClassName()
     {
         return $this->className;
     }
 
+    #[Override]
     public function matching(Criteria $criteria)
     {
         $this->matchingInputs[] = $criteria;

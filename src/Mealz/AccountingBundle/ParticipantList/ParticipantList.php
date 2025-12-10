@@ -81,7 +81,7 @@ final class ParticipantList
      */
     public function countAccountableParticipations(Profile $profile): int|float
     {
-        $price = 0;
+        $price = 0.0;
         $participations = $this->getAccountableParticipations($profile);
         foreach ($participations as $participation) {
             $mealPrice = $participation->getMeal()->getPrice()->getPriceValue();

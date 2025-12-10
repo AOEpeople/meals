@@ -46,7 +46,7 @@ class ApiService
 
         $transactions = $this->transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
-        $costDifference = 0;
+        $costDifference = 0.0;
         $transactionHistory = [];
         foreach ($transactions as $transaction) {
             $costDifference += $transaction->getAmount();

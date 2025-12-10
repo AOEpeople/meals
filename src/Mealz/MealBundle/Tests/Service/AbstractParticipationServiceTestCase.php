@@ -174,7 +174,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $day->setLockParticipationDateTime($mealLockDate);
         $day->setDateTime($mealDate);
 
-        $meal = $this->createMeal($dish, $day);
+        $meal = $this->createMeal($dish, null, $day);
         $meal->getDay()->addMeal($meal);
 
         $entities = [$meal];

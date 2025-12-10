@@ -16,6 +16,7 @@ use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
@@ -59,7 +60,8 @@ final class GuestParticipationServiceTestCase extends AbstractParticipationServi
 
         $dishRepo = static::getContainer()->get(DishRepository::class);
         $priceRepo = static::getContainer()->get(PriceRepository::class);
-        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo);
+        $loggerMock = new LoggerMock();
+        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo, $loggerMock);
 
         /** @var Role $role */
         $role = $roleRepo->findOneBy(['sid' => Role::ROLE_GUEST]);

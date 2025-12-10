@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
+use Override;
 
 final class EventPartRepoMock implements EventPartRepoInterface
 {
@@ -22,13 +23,18 @@ final class EventPartRepoMock implements EventPartRepoInterface
     public ?EventParticipation $outputFindByEventAndDay;
     public ?Day $findByEventAndDayDayInput;
     public ?Event $findByEventAndDayEventInput;
+    public ?Day $findByEventIdAndDayDayInput;
+    public int $findByEventIdAndDayEventIdInput;
+    public EventParticipation $outputFindByEventIdAndDay;
     public string $className = EventParticipation::class;
 
+    #[Override]
     public function add($eventParticipation): void
     {
         $this->added[] = $eventParticipation;
     }
 
+    #[Override]
     public function findByEventAndDay(Day $day, Event $event): ?EventParticipation
     {
         $this->findByEventAndDayDayInput = $day;
@@ -37,6 +43,7 @@ final class EventPartRepoMock implements EventPartRepoInterface
         return $this->outputFindByEventAndDay;
     }
 
+    #[Override]
     public function find($id)
     {
         $this->findInputs[] = $id;
@@ -44,11 +51,13 @@ final class EventPartRepoMock implements EventPartRepoInterface
         return $this->outputFind;
     }
 
+    #[Override]
     public function findAll()
     {
         return $this->outputFindAll;
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->findByCalls[] = [
@@ -61,6 +70,7 @@ final class EventPartRepoMock implements EventPartRepoInterface
         return $this->outputFindBy;
     }
 
+    #[Override]
     public function findOneBy(array $criteria)
     {
         $this->findOneByCriteria[] = $criteria;
@@ -68,6 +78,16 @@ final class EventPartRepoMock implements EventPartRepoInterface
         return $this->outputFindOneBy;
     }
 
+    #[Override]
+    public function findByEventIdAndDay(Day $day, int $eventId): ?EventParticipation
+    {
+        $this->findByEventIdAndDayDayInput = $day;
+        $this->findByEventIdAndDayEventIdInput = $eventId;
+
+        return $this->outputFindByEventIdAndDay;
+    }
+
+    #[Override]
     public function getClassName()
     {
         return $this->className;

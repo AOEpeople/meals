@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks;
 
+use Override;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TranslatorMock implements TranslatorInterface
 {
     public array $transCalls = [];
-    public ?string $outputTransValue;
+    public string $outputTransValue;
     public string $locale = 'en';
 
+    #[Override]
     public function trans(
         string $id,
         array $parameters = [],
@@ -28,6 +30,7 @@ final class TranslatorMock implements TranslatorInterface
         return $this->outputTransValue;
     }
 
+    #[Override]
     public function getLocale(): string
     {
         return $this->locale;

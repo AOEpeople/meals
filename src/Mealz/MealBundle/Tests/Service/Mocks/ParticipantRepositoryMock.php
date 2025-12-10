@@ -9,6 +9,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Override;
 
 final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
 {
@@ -55,6 +56,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
     public array $getParticipationCountByProfileInputs = [];
     public int $outputGetParticipationCountByProfile = 0;
 
+    #[Override]
     public function find($id)
     {
         $this->findInputs[] = $id;
@@ -62,6 +64,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputFind;
     }
 
+    #[Override]
     public function findAll()
     {
         $this->findAllCalls[] = true;
@@ -69,6 +72,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputFindAll;
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->findByInputs[] = [$criteria, $orderBy, $limit, $offset];
@@ -76,6 +80,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputFindBy;
     }
 
+    #[Override]
     public function findOneBy(array $criteria)
     {
         $this->findOneByInputs[] = $criteria;
@@ -83,11 +88,13 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputFindOneBy;
     }
 
+    #[Override]
     public function getClassName()
     {
         return $this->outputGetClassName;
     }
 
+    #[Override]
     public function getParticipantsOnDays(DateTime $startDate, DateTime $endDate, ?Profile $profile = null): array
     {
         $this->getParticipantsOnDaysInputs[] = [$startDate, $endDate, $profile];
@@ -95,6 +102,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetParticipantsOnDays;
     }
 
+    #[Override]
     public function getTotalCost(string $username): float
     {
         $this->getTotalCostInputs[] = $username;
@@ -102,6 +110,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetTotalCost;
     }
 
+    #[Override]
     public function getLastAccountableParticipations(Profile $profile, ?int $limit = null): array
     {
         $this->getLastAccountableParticipationsInputs[] = [$profile, $limit];
@@ -109,11 +118,13 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetLastAccountableParticipations;
     }
 
+    #[Override]
     public function findCostsGroupedByUserGroupedByMonth(): array
     {
         return $this->outputFindCostsGroupedByUserGroupedByMonth;
     }
 
+    #[Override]
     public function groupParticipantsByName(array $participants): array
     {
         $this->groupParticipantsByNameInputs[] = $participants;
@@ -121,6 +132,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGroupParticipantsByName;
     }
 
+    #[Override]
     public function findAllGroupedBySlotAndProfileID(DateTime $date, bool $getProfile = false): array
     {
         $this->findAllGroupedBySlotAndProfileIDInputs[] = [$date, $getProfile];
@@ -128,6 +140,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputFindAllGroupedBySlotAndProfileID;
     }
 
+    #[Override]
     public function getParticipantsByDay(DateTime $date, array $options = []): array
     {
         $this->getParticipantsByDayInputs[] = [$date, $options];
@@ -135,6 +148,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetParticipantsByDay;
     }
 
+    #[Override]
     public function getParticipantsOnCurrentDay(array $options = []): array
     {
         $this->getParticipantsOnCurrentDayInputs[] = $options;
@@ -142,6 +156,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetParticipantsOnCurrentDay;
     }
 
+    #[Override]
     public function getOfferCount(DateTime $date): int
     {
         $this->getOfferCountInputs[] = $date;
@@ -149,6 +164,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetOfferCount;
     }
 
+    #[Override]
     public function getOfferCountByMeal(Meal $meal): int
     {
         $this->getOfferCountByMealInputs[] = $meal;
@@ -156,6 +172,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetOfferCountByMeal;
     }
 
+    #[Override]
     public function isOfferingMeal(Profile $profile, Meal $meal): bool
     {
         $this->isOfferingMealInputs[] = [$profile, $meal];
@@ -163,6 +180,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputIsOfferingMeal;
     }
 
+    #[Override]
     public function getCountBySlots(DateTime $startDate, DateTime $endDate): array
     {
         $this->getCountBySlotsInputs[] = [$startDate, $endDate];
@@ -170,6 +188,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetCountBySlots;
     }
 
+    #[Override]
     public function getCountBySlot(Slot $slot, DateTime $date): int
     {
         $this->getCountBySlotInputs[] = [$slot, $date];
@@ -177,6 +196,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetCountBySlot;
     }
 
+    #[Override]
     public function getCountByMeal(Meal $meal): int
     {
         $this->getCountByMealInputs[] = $meal;
@@ -184,16 +204,19 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetCountByMeal;
     }
 
+    #[Override]
     public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
     {
         $this->updateSlotInputs[] = [$profile, $date, $slot];
     }
 
+    #[Override]
     public function removeFutureMealsByProfile(Profile $profile): void
     {
         $this->removeFutureMealsByProfileInputs[] = $profile;
     }
 
+    #[Override]
     public function getParticipationsOfSlot(Slot $slot): array
     {
         $this->getParticipationsOfSlotInputs[] = $slot;
@@ -201,6 +224,7 @@ final class ParticipantRepositoryMock implements ParticipantRepositoryInterface
         return $this->outputGetParticipationsOfSlot;
     }
 
+    #[Override]
     public function getParticipationCountByProfile(Profile $profile, DateTime $date): int
     {
         $this->getParticipationCountByProfileInputs[] = [$profile, $date];

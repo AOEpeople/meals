@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Mocks;
 
+use Override;
 use Psr\Log\LoggerInterface;
 use Stringable;
 
@@ -11,6 +12,7 @@ final class LoggerMock implements LoggerInterface
 {
     public array $logs = [];
 
+    #[Override]
     public function emergency(Stringable|string $message, array $context = []): void
     {
         $this->logs['emergence'][] = [
@@ -19,6 +21,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function alert(Stringable|string $message, array $context = []): void
     {
         $this->logs['alert'][] = [
@@ -27,6 +30,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function critical(Stringable|string $message, array $context = []): void
     {
         $this->logs['critical'][] = [
@@ -35,6 +39,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function error(Stringable|string $message, array $context = []): void
     {
         $this->logs['error'][] = [
@@ -43,6 +48,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function warning(Stringable|string $message, array $context = []): void
     {
         $this->logs['warning'][] = [
@@ -51,6 +57,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function notice(Stringable|string $message, array $context = []): void
     {
         $this->logs['notice'][] = [
@@ -59,6 +66,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function info(Stringable|string $message, array $context = []): void
     {
         $this->logs['info'][] = [
@@ -67,6 +75,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function debug(Stringable|string $message, array $context = []): void
     {
         $this->logs['debug'][] = [
@@ -75,6 +84,7 @@ final class LoggerMock implements LoggerInterface
         ];
     }
 
+    #[Override]
     public function log($level, Stringable|string $message, array $context = []): void
     {
         $this->logs[$level][] = [

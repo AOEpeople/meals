@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\CombinedMealServiceMock;
 use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\NotifierMock;
 use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\TranslatorMock;
 use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,6 +27,7 @@ final class WeekUpdateSubscriberTest extends TestCase
     private LoggerMock $loggerMock;
     private WeekUpdateSubscriber $weekUpdateSubscriber;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->combinedMealServiceMock = new CombinedMealServiceMock();

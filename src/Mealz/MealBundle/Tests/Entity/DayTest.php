@@ -67,8 +67,8 @@ final class DayTest extends TestCase
         for ($i = 0; $i < $numberOfMeals; ++$i) {
             $price = new Price();
             $price->setYear((int) $dateTime->format('Y') - $i);
-            $price->setPriceValue($i + 1.99);
-            $price->setPriceCombinedValue($i + 2.99);
+            $price->setPriceValue($i + 1);
+            $price->setPriceCombinedValue($i + 2);
             $meal = new Meal(new Dish(), $price, $this->day);
             $meals[] = $meal;
             $this->day->addMeal($meal);

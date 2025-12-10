@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Tests\Service\Mocks;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use DateTime;
+use Override;
 
 final class DayRepositoryMock implements DayRepositoryInterface
 {
@@ -28,11 +29,13 @@ final class DayRepositoryMock implements DayRepositoryInterface
     public array $inputFindOneByCriteria = [];
     public string $outputGetClassName = self::class;
 
+    #[Override]
     public function getCurrentDay(): ?Day
     {
         return $this->outputGetCurrentDay;
     }
 
+    #[Override]
     public function getDayByDate(DateTime $dateTime): ?Day
     {
         $this->inputGetDayByDate = $dateTime;
@@ -40,6 +43,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
         return $this->outputGetDayByDate;
     }
 
+    #[Override]
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
     {
         $this->inputFindAllActiveStartDate = $startDate;
@@ -48,6 +52,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
         return $this->outputFindAllActive;
     }
 
+    #[Override]
     public function find($id)
     {
         $this->inputFind = $id;
@@ -55,11 +60,13 @@ final class DayRepositoryMock implements DayRepositoryInterface
         return $this->outputFind;
     }
 
+    #[Override]
     public function findAll()
     {
         return $this->outputFindAll;
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->inputFindByCriteria = $criteria;
@@ -70,6 +77,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
         return $this->outputFindBy;
     }
 
+    #[Override]
     public function findOneBy(array $criteria)
     {
         $this->inputFindOneByCriteria = $criteria;
@@ -77,6 +85,7 @@ final class DayRepositoryMock implements DayRepositoryInterface
         return $this->outputFindOneBy;
     }
 
+    #[Override]
     public function getClassName()
     {
         return $this->outputGetClassName;

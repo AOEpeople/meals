@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Override;
 
 final class EventParticipationService implements EventParticipationServiceInterface
 {
@@ -30,6 +31,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
+    #[Override]
     public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
         if (null === $event->getId()) {
@@ -44,6 +46,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
      *
      * @psalm-return array{day: Day, eventId: int, isParticipating?: bool, isPublic: bool, participationId: int|null, participations: int<0, max>} | array{EventParticipation}
      */
+    #[Override]
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {
         if (null === $eventId) {
@@ -69,6 +72,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
         }
     }
 
+    #[Override]
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $eventParticipation = $day->getEvent($eventId);
@@ -86,6 +90,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
     /**
      * @throws Exception
      */
+    #[Override]
     public function joinAsGuest(
         string $firstName,
         string $lastName,
@@ -118,6 +123,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
         }
     }
 
+    #[Override]
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $eventParticipation = $day->getEvent($eventId);
@@ -138,6 +144,7 @@ final class EventParticipationService implements EventParticipationServiceInterf
      *
      * @psalm-return array<string>
      */
+    #[Override]
     public function getParticipants(Day $day, int $eventId): array
     {
         $eventParticipation = $day->getEvent($eventId);

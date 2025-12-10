@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\CombinedMealServiceInterface;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
+use Override;
 
 final class CombinedMealServiceMock implements CombinedMealServiceInterface
 {
@@ -16,6 +17,7 @@ final class CombinedMealServiceMock implements CombinedMealServiceInterface
     /**
      * @throws PriceNotFoundException
      */
+    #[Override]
     public function update(Week $week): void
     {
         $this->inputWeek = $week;

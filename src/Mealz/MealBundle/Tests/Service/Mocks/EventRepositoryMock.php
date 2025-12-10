@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Service\Mocks;
 
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use Override;
 
 final class EventRepositoryMock implements EventRepositoryInterface
 {
@@ -18,6 +19,7 @@ final class EventRepositoryMock implements EventRepositoryInterface
     public mixed $outputFindOneBy;
     public string $className = Event::class;
 
+    #[Override]
     public function find($id)
     {
         $this->inputId = $id;
@@ -25,11 +27,13 @@ final class EventRepositoryMock implements EventRepositoryInterface
         return $this->outputFind;
     }
 
+    #[Override]
     public function findAll()
     {
         return $this->outputFindAll;
     }
 
+    #[Override]
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null)
     {
         $this->inputFindByCriteria[] = [
@@ -42,6 +46,7 @@ final class EventRepositoryMock implements EventRepositoryInterface
         return $this->outputFindBy;
     }
 
+    #[Override]
     public function findOneBy(array $criteria)
     {
         $this->inputFindOneByCriteria[] = $criteria;
@@ -49,6 +54,7 @@ final class EventRepositoryMock implements EventRepositoryInterface
         return $this->outputFindOneBy;
     }
 
+    #[Override]
     public function getClassName()
     {
         return $this->className;

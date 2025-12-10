@@ -16,6 +16,7 @@ use App\Mealz\MealBundle\Tests\Service\Mocks\EventRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\MealRepositoryMock;
 use App\Mealz\MealBundle\Tests\Service\Mocks\PriceRepositoryMock;
 use DateTimeImmutable;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,6 +32,7 @@ final class MealAdminHelperTest extends TestCase
     private LoggerMock $loggerMock;
     private MealAdminHelper $mealAdminHelper;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->eventRepositoryMock = new EventRepositoryMock();

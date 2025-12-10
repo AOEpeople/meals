@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
 use Psr\Log\LoggerInterface;
 
 final class CombinedMealService implements CombinedMealServiceInterface
@@ -41,6 +42,7 @@ final class CombinedMealService implements CombinedMealServiceInterface
     /**
      * @throws PriceNotFoundException
      */
+    #[Override]
     public function update(Week $week): void
     {
         $update = false;

@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\OfferService;
+use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -34,7 +35,8 @@ final class OfferServiceTestCase extends AbstractParticipationServiceTestCase
 
         $dishRepo = static::getContainer()->get(DishRepository::class);
         $priceRepo = static::getContainer()->get(PriceRepository::class);
-        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo);
+        $loggerMock = new LoggerMock();
+        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo, $loggerMock);
         $this->offerService = new OfferService($this->participantRepo);
     }
 

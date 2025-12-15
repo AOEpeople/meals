@@ -23,7 +23,7 @@ final class Version20251209102354 extends AbstractMigration
 
         $this->addSql('ALTER TABLE meal ADD COLUMN price_id INT NOT NULL;');
         $this->addSql('UPDATE meal SET price_id = YEAR(dateTime);');
-        $this->addSql('ALTER TABLE meal ADD CONSTRAINT fk_meal_price FOREIGN KEY (price_id) REFERENCES price(year);');
+        $this->addSql('ALTER TABLE meal ADD CONSTRAINT fk_meal_price FOREIGN KEY (price_id) REFERENCES price(year) ON DELETE CASCADE;');
     }
 
     public function down(Schema $schema): void

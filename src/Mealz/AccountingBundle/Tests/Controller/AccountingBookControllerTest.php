@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;

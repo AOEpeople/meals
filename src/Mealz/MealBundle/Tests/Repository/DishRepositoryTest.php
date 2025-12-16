@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Repository;
 
 use App\Mealz\MealBundle\Entity\Day;

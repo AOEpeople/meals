@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Price;
@@ -56,16 +58,14 @@ final class PricesController extends BaseController
         );
     }
 
-    public function delete(Request $request, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function delete(int $year, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        $yearValidation = $this->validateYear($data);
+        $yearValidation = $this->validateYear(['year' => $year]);
         if (null !== $yearValidation) {
             return $yearValidation;
         }
 
-        $price = $priceRepository->findByYear($data['year']);
+        $price = $priceRepository->findByYear($year);
         if (null === $price) {
             return new JsonResponse(['error' => '1012: Price not found.'], Response::HTTP_NOT_FOUND);
         }
@@ -76,16 +76,15 @@ final class PricesController extends BaseController
         return new JsonResponse(['message' => 'Price deleted.'], Response::HTTP_OK);
     }
 
-    public function edit(Request $request, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function edit(int $year, Request $request, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        $priceValidation = $this->validateYearAndPrices($data, $priceRepository);
+        $priceValidation = $this->validateYearAndPrices(array_merge($data, ['year' => $year]), $priceRepository);
         if (null !== $priceValidation) {
             return $priceValidation;
         }
 
-        $year = (int) $data['year'];
         $price = (float) $data['price'];
         $priceCombined = (float) $data['price_combined'];
 
@@ -104,7 +103,7 @@ final class PricesController extends BaseController
 
         return new JsonResponse(
             ['message' => 'Price created successfully', 'price' => $existingPrice->jsonSerialize()],
-            Response::HTTP_CREATED
+            Response::HTTP_OK
         );
     }
 

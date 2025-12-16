@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;

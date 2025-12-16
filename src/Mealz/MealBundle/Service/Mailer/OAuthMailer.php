@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Service\Mailer;
 
 use Greew\OAuth2\Client\Provider\Azure;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Repository;
 
 use App\Mealz\AccountingBundle\Entity\Price;

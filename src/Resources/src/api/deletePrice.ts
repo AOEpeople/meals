@@ -6,10 +6,7 @@ interface PriceDeleteData {
 }
 
 export async function deletePrice(data: PriceDeleteData) {
-    const { error, request, response } = useApi<IMessage | null>(
-        'DELETE',
-        `api/price/${data.year}`,
-    );
+    const { error, request, response } = useApi<IMessage | null>('DELETE', `api/price/${data.year}`);
 
     await request();
 

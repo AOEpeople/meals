@@ -17,7 +17,7 @@ export default async function putUpdatePrice(price: PriceUpdateData) {
         'PUT',
         `api/price/${price.year}`,
         'application/json',
-        JSON.stringify({price: price.price, price_combined: price.price_combined} as PriceUpdateRequestBody)
+        JSON.stringify({ price: price.price, price_combined: price.price_combined } as PriceUpdateRequestBody)
     );
 
     await request();

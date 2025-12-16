@@ -62,8 +62,8 @@ final class MealAdminController extends BaseController
 
             if (null === $week) {
                 $week = new Week();
-                $week->setYear((int)$modifiedDateTime->format('o'));
-                $week->setCalendarWeek((int)$modifiedDateTime->format('W'));
+                $week->setYear((int) $modifiedDateTime->format('o'));
+                $week->setCalendarWeek((int) $modifiedDateTime->format('W'));
             }
 
             $weeks[] = $week;

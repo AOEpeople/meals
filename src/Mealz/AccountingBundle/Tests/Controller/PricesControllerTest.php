@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Override;
 use Symfony\Component\HttpFoundation\Response;
 
 final class PricesControllerTest extends AbstractControllerTestCase

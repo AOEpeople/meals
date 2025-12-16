@@ -41,7 +41,7 @@ final class WeekCreateControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
-    public function testNew(): void
+    public function testCreateNewWeekIsValid(): void
     {
         $date = new DateTime('+2 month');
         $year = $date->format('o');

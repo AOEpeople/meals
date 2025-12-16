@@ -111,11 +111,37 @@ services:
       $eventDispatcher: '@event_dispatcher'
       $weekRepository: '@App\Mealz\MealBundle\Repository\WeekRepositoryInterface'
       $dayRepository: '@App\Mealz\MealBundle\Repository\DayRepositoryInterface'
-      $dayService: '@App\Mealz\MealBundle\Service\DayService'
       $dishService: '@App\Mealz\MealBundle\Service\DishService'
       $em: '@doctrine.orm.entity_manager'
-      $mealAdminHelper: '@App\Mealz\MealBundle\Helper\MealAdminHelper'
+      $dayUpdateHandler: '@App\Mealz\MealBundle\Day\DayUpdateHandler'
       $logger: '@logger'
+
+  App\Mealz\MealBundle\Controller\WeekCreateController:
+    arguments:
+      $weekCreateHandler: '@App\Mealz\MealBundle\Week\WeekCreateHandler'
+      $logger: '@logger'
+
+  App\Mealz\MealBundle\Week\WeekCreateHandler:
+    arguments:
+      $weekExistsValidator: '@App\Mealz\MealBundle\Week\WeekExistingValidator'
+      $dayUpdateHandler: '@App\Mealz\MealBundle\Day\DayUpdateHandler'
+      $weekPersister: '@App\Mealz\MealBundle\Week\WeekPersister'
+      $lockParticipationAt: '%mealz.lock_toggle_participation_at%'
+
+  App\Mealz\MealBundle\Week\WeekExistingValidator:
+    arguments:
+      $weekRepository: '@App\Mealz\MealBundle\Repository\WeekRepositoryInterface'
+
+  App\Mealz\MealBundle\Week\WeekPersister:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $eventDispatcher: '@event_dispatcher'
+
+  App\Mealz\MealBundle\Day\DayUpdateHandler:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $dayService: '@App\Mealz\MealBundle\Service\DayService'
+      $mealAdminHelper: '@App\Mealz\MealBundle\Helper\MealAdminHelper'
 
   # Interface Implementations
   App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'

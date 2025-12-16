@@ -110,7 +110,7 @@ MealzMealBundle_api_weeks:
 
 MealzMealBundle_api_weeks_new:
     path: /api/weeks/{date}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
+    controller: App\Mealz\MealBundle\Controller\WeekCreateController
     methods: [POST]
     requirements:
         # format "2014W12" 12th week in 2014

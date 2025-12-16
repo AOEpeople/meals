@@ -20,7 +20,7 @@ final readonly class WeekExistingValidator implements WeekExistingValidatorInter
      * @throws WeekAlreadyExistsException
      */
     #[Override]
-    public function check(DateTime $date): void
+    public function validate(DateTime $date): void
     {
         $week = $this->weekRepository->findOneBy([
             'year' => $date->format('o'),

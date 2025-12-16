@@ -49,12 +49,12 @@ final readonly class WeekCreateHandler implements WeekCreateHandlerInterface
         $weekDays = $week->getDays();
         $dayIndex = 0;
         foreach ($days as $dayData) {
-            $weekDay = $weekDays[$dayIndex];
-            if (0 < $dayData['id'] && $dayData['date'] === $weekDay->getDateTime()) {
+            $index = $dayIndex++;
+            if (0 < $dayData['id'] && $dayData['date'] === $weekDays[$index]->getDateTime()) {
                 throw new Exception('no new day');
             }
 
-            $this->dayUpdateHandler->handle($dayData, $weekDay, 2);
+            $this->dayUpdateHandler->handle($dayData, $weekDays[$index], 2);
         }
 
         return $this->weekPersister->persist($week, new WeekNotification($data['notify'] ?? false));

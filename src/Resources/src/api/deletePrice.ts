@@ -5,10 +5,10 @@ interface PriceDeleteData {
     year: number;
 }
 
-export default async function postDeletePrice(data: PriceDeleteData) {
+export async function deletePrice(data: PriceDeleteData) {
     const { error, request, response } = useApi<IMessage | null>(
-        'POST',
-        'api/prices/delete',
+        'DELETE',
+        `api/price/${data.year}`,
         'application/json',
         JSON.stringify(data)
     );

@@ -1,7 +1,7 @@
 import getPrices from '@/api/getPrices';
 import postCreatePrice from '@/api/postCreatePrice';
 import putUpdatePrice from '@/api/putUpdatePrice';
-import postDeletePrice from '@/api/postDeletePrice';
+import { deletePrice as requestDeletePrice } from '@/api/deletePrice';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';
 import type { Dictionary } from '@/types/types';
 import { reactive, readonly, watch } from 'vue';
@@ -117,7 +117,7 @@ export function usePrices() {
 
     async function deletePrice(year: number) {
         PricesState.isLoading = true;
-        const { error, response } = await postDeletePrice({ year });
+        const { error, response } = await requestDeletePrice({ year });
 
         if (isResponseObjectOkay(error, response) === true) {
             await fetchPrices();

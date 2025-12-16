@@ -9,8 +9,8 @@ interface PriceUpdateData {
 
 export default async function putUpdatePrice(price: PriceUpdateData) {
     const { error, request, response } = useApi<IMessage | null>(
-        'POST',
-        'api/prices/edit',
+        'PUT',
+        `api/price/${price.year}`,
         'application/json',
         JSON.stringify(price)
     );

@@ -10,7 +10,7 @@ interface PriceCreateData {
 export default async function postCreatePrice(price: PriceCreateData) {
     const { error, request, response } = useApi<IMessage | null>(
         'POST',
-        `api/price/${price.year}`,
+        `api/price`,
         'application/json',
         JSON.stringify(price)
     );

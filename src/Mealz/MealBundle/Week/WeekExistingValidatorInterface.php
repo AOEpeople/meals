@@ -12,5 +12,5 @@ interface WeekExistingValidatorInterface
     /**
      * @throws WeekAlreadyExistsException
      */
-    public function check(DateTime $date): void;
+    public function validate(DateTime $date): void;
 }

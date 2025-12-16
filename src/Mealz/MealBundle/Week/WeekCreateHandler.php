@@ -37,7 +37,7 @@ final readonly class WeekCreateHandler implements WeekCreateHandlerInterface
     #[Override]
     public function handleAndGet(DateTime $date, Request $request): WeekId
     {
-        $this->weekExistsValidator->check($date);
+        $this->weekExistsValidator->validate($date);
         $week = WeekService::generateEmptyWeek($date, $this->lockParticipationAt);
         $data = json_decode($request->getContent(), true);
         if (false === isset($data) || false === isset($data['days']) || false === isset($data['enabled'])) {
@@ -57,8 +57,6 @@ final readonly class WeekCreateHandler implements WeekCreateHandlerInterface
             $this->dayUpdateHandler->handle($dayData, $weekDay, 2);
         }
 
-        $this->weekPersister->persist($week, new WeekNotification($data['notify'] ?? false));
-
-        return new WeekId($week->getId());
+        return $this->weekPersister->persist($week, new WeekNotification($data['notify'] ?? false));
     }
 }

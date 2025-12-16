@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -255,5 +256,124 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         // Mock session.storage for flash-bag
         $session = new Session(new MockFileSessionStorage());
         $this->client->getContainer()->set('session', $session);
+    }
+
+    protected function createFutureEmptyWeek(DateTime $date): void
+    {
+        $year = $date->format('o');
+        $week = $date->format('W');
+        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $testEvent = $eventRepo->findOneBy(['deleted' => false]);
+        $localDate = clone $date;
+        $lockDate = clone $date;
+        $routeStr = '/api/weeks/' . $year . 'W' . $week;
+        $weekJson = '{
+            "id": 49,
+            "days": [
+                {
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -1,
+                    "events": {},
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,"timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "' . $lockDate->modify('-1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -2,
+                    "events": {},
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -3,
+                    "events": {},
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -4,
+                    "events": {},
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -5,
+                    "events": {
+                        "3": {
+                            "eventId": ' . $testEvent->getId() . ',
+                            "eventSlug": "' . $testEvent->getSlug() . '",
+                            "eventTitle": "' . $testEvent->getTitle() . '",
+                            "isPublic": ' . ($testEvent->isPublic() ? 'true' : 'false') . '
+                        }
+                    },
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                }
+            ],
+            "notify": false,
+            "enabled": true
+        }';
+
+        // Request
+        $this->client->request('POST', $routeStr, [], [], [], $weekJson);
     }
 }

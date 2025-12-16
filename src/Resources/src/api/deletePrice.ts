@@ -9,8 +9,6 @@ export async function deletePrice(data: PriceDeleteData) {
     const { error, request, response } = useApi<IMessage | null>(
         'DELETE',
         `api/price/${data.year}`,
-        'application/json',
-        JSON.stringify(data)
     );
 
     await request();

@@ -47,16 +47,16 @@ mealz_accounting_api_prices:
     methods: [ GET ]
 
 mealz_accounting_api_prices_add:
-    path: /api/prices/add
+    path: /api/price
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::add }
     methods: [ POST ]
 
 mealz_accounting_api_prices_edit:
-    path: /api/prices/edit
+    path: /api/price/{year}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::edit }
-    methods: [ POST ]
+    methods: [ PUT ]
 
 mealz_accounting_api_prices_delete:
-    path: /api/prices/delete
+    path: /api/price/{year}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\PricesController::delete }
-    methods: [ POST ]
+    methods: [ DELETE ]

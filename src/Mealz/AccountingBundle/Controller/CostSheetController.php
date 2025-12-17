@@ -113,7 +113,7 @@ final class CostSheetController extends BaseController
     {
         $parameters = json_decode($request->getContent(), true);
         try {
-            $profile = $this->getProfileFromUsername($parameters, $entityManager);
+            $profile = $this->getProfileById($parameters, $entityManager);
             if (!$profile->isHidden()) {
                 $profile->setHidden(true);
                 $entityManager->persist($profile);
@@ -136,7 +136,7 @@ final class CostSheetController extends BaseController
     ): JsonResponse {
         $parameters = json_decode($request->getContent(), true);
         try {
-            $profile = $this->getProfileFromUsername($parameters, $entityManager);
+            $profile = $this->getProfileById($parameters, $entityManager);
             if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
                 $username = $profile->getUsername();
                 $secret = $this->getParameter('app.secret');
@@ -241,12 +241,11 @@ final class CostSheetController extends BaseController
         return new JsonResponse(null, Response::HTTP_OK);
     }
 
-    private function getProfileFromUsername(array $parameters, EntityManagerInterface $em): ?Profile
+    private function getProfileById(array $parameters, EntityManagerInterface $em): ?Profile
     {
         try {
-            $username = $parameters['username'];
-            $profileRepo = $em->getRepository(Profile::class);
-            $profile = $profileRepo->findOneBy(['username' => $username]);
+            $userId = $parameters['id'];
+            $profile = $em->getRepository(Profile::class)->find($userId);
 
             return $profile;
         } catch (Exception $exception) {

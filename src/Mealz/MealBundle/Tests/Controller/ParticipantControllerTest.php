@@ -84,17 +84,17 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
         self::$userLastName = 'Schmidt' . $time;
-        $user = $this->createProfile(self::$userFirstName, self::$userLastName);
+        $user = $this->createProfile('1', self::$userFirstName, self::$userLastName);
         $this->persistAndFlushAll([$user]);
 
         // Check that created profiles are persisted
-        if (($this->getUserProfile($participant->getProfile()->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($participant->getProfile()->getId()) instanceof Profile) === false) {
             $this->fail('Test participant not found.');
         }
-        if (($this->getUserProfile($guestParticipant->getProfile()->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($guestParticipant->getProfile()->getId()) instanceof Profile) === false) {
             $this->fail('Test guest not found.');
         }
-        if (($this->getUserProfile($user->getUsername()) instanceof Profile) === false) {
+        if (($this->getUserProfile($user->getId()) instanceof Profile) === false) {
             $this->fail('Test user not found.');
         }
     }
@@ -124,11 +124,11 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
 
-        $profileToAdd = $this->getUserProfile(self::USER_STANDARD);
+        $profileToAdd = $this->getUserProfileByUsername(self::USER_STANDARD);
         $mealToAdd = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($mealToAdd);
 
-        $routeStr = '/api/participation/' . $profileToAdd->getUsername() . '/' . $mealToAdd->getId();
+        $routeStr = '/api/participation/' . (string) $profileToAdd->getId() . '/' . $mealToAdd->getId();
         $this->client->request('PUT', $routeStr);
 
         $response = $this->client->getResponse();
@@ -146,12 +146,12 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
         $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $meal = $mealRepo->getFutureMeals()[0];
-        $profile = $this->getUserProfile(self::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(self::USER_STANDARD);
 
         $participantToRemove = self::createParticipant($profile, $meal);
         $this->assertNotNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
 
-        $routeStr = '/api/participation/' . $profile->getUsername() . '/' . $meal->getId();
+        $routeStr = '/api/participation/' . (string) $profile->getId() . '/' . $meal->getId();
         $this->client->request('DELETE', $routeStr);
 
         $response = $this->client->getResponse();
@@ -237,7 +237,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         string $userLastName,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile($userFirstName, $userLastName);
+        $user = $this->createProfile(uniqid(), $userFirstName, $userLastName);
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);
 
@@ -255,7 +255,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         string $guestCompany,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
+        $user = $this->createProfile(uniqid(), $guestFirstName, $guestLastName, $guestCompany);
         $user->addRole($this->getRole(Role::ROLE_GUEST));
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);

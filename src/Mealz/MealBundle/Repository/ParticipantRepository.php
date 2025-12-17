@@ -75,7 +75,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     }
 
     #[Override]
-    public function getTotalCost(string $username): float
+    public function getTotalCost(int $userId): float
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
@@ -89,7 +89,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
             ->andWhere('p.costAbsorbed = 0')
             ->andWhere('d.enabled = 1')
             ->andWhere('w.enabled = 1');
-        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('user', $userId, Types::STRING);
         $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();

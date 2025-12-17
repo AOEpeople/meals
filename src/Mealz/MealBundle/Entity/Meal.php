@@ -34,7 +34,7 @@ class Meal implements Stringable, JsonSerializable
 
     #[Assert\NotBlank]
     #[ORM\ManyToOne(targetEntity: Price::class, cascade: ['refresh'], fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'year')]
+    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'year', onDelete: 'CASCADE')]
     private Price $price;
 
     #[Assert\NotBlank]

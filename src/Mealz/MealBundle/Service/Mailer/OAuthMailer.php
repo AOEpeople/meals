@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Service\Mailer;
 
 use Greew\OAuth2\Client\Provider\Azure;
@@ -10,25 +12,25 @@ use PHPMailer\PHPMailer\SMTP;
 class OAuthMailer extends PHPMailer
 {
     public function __construct(
-        private string $envHost,
-        private int $envPort,
-        private string $envAuthType,
-        private string $envEmail,
-        private string $envClientId,
-        private string $envClientSecret,
-        private string $envTenantId,
-        private string $envRefreshToken,
+        string $envHost,
+        int $envPort,
+        string $envAuthType,
+        string $envEmail,
+        string $envClientId,
+        string $envClientSecret,
+        string $envTenantId,
+        string $envRefreshToken
     ) {
         date_default_timezone_set('Europe/Berlin');
 
         parent::__construct();
 
         $this->isSMTP();
-        $this->Host = $this->envHost;
-        $this->Port = $this->envPort;
+        $this->Host = $envHost;
+        $this->Port = $envPort;
         $this->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $this->SMTPAuth = true;
-        $this->AuthType = $this->envAuthType;
+        $this->AuthType = $envAuthType;
         $this->SMTPDebug = SMTP::DEBUG_OFF;
 
         $this->setOAuth(
@@ -36,15 +38,15 @@ class OAuthMailer extends PHPMailer
                 [
                     'provider' => new Azure(
                         [
-                            'clientId' => $this->envClientId,
-                            'clientSecret' => $this->envClientSecret,
-                            'tenantId' => $this->envTenantId,
+                            'clientId' => $envClientId,
+                            'clientSecret' => $envClientSecret,
+                            'tenantId' => $envTenantId,
                         ]
                     ),
-                    'clientId' => $this->envClientId,
-                    'clientSecret' => $this->envClientSecret,
-                    'refreshToken' => $this->envRefreshToken,
-                    'userName' => $this->envEmail,
+                    'clientId' => $envClientId,
+                    'clientSecret' => $envClientSecret,
+                    'refreshToken' => $envRefreshToken,
+                    'userName' => $envEmail,
                 ]
             )
         );

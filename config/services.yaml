@@ -48,10 +48,8 @@ parameters:
   app.secret: '%env(APP_SECRET)%'
 
   mealz.lock_toggle_participation_at: '-1 day 16:00'
-  mealz.meal.price: 4.60
   mealz.meal.search_timestamp: '2000-01-01'
   mealz.meal.new_flag_counter: 2
-  mealz.meal.combined.price: 6.60
   mealz.event.lock_participation_at: '17:00'
   # PDO Session Handler options
   # Define table and column names to store session data
@@ -97,11 +95,53 @@ services:
 
   App\Mealz\MealBundle\Controller\DishController:
     arguments:
-      $price: '%mealz.meal.price%'
-
+      $apiService: '@App\Mealz\MealBundle\Service\ApiService'
+      $categoryRepository: '@App\Mealz\MealBundle\Repository\CategoryRepositoryInterface'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepositoryInterface'
+      $dishService: '@App\Mealz\MealBundle\Service\DishService'
+      $em: '@doctrine.orm.entity_manager'
+      $logger: '@logger'
   App\Mealz\MealBundle\Controller\DishVariationController:
     arguments:
-      $price: '%mealz.meal.price%'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepositoryInterface'
+      $em: '@doctrine.orm.entity_manager'
+      $logger: '@logger'
+  App\Mealz\MealBundle\Controller\MealAdminController:
+    arguments:
+      $eventDispatcher: '@event_dispatcher'
+      $weekRepository: '@App\Mealz\MealBundle\Repository\WeekRepositoryInterface'
+      $dayRepository: '@App\Mealz\MealBundle\Repository\DayRepositoryInterface'
+      $dishService: '@App\Mealz\MealBundle\Service\DishService'
+      $em: '@doctrine.orm.entity_manager'
+      $dayUpdateHandler: '@App\Mealz\MealBundle\Day\DayUpdateHandler'
+      $logger: '@logger'
+
+  App\Mealz\MealBundle\Controller\WeekCreateController:
+    arguments:
+      $weekCreateHandler: '@App\Mealz\MealBundle\Week\WeekCreateHandler'
+      $logger: '@logger'
+
+  App\Mealz\MealBundle\Week\WeekCreateHandler:
+    arguments:
+      $weekExistsValidator: '@App\Mealz\MealBundle\Week\WeekExistingValidator'
+      $dayUpdateHandler: '@App\Mealz\MealBundle\Day\DayUpdateHandler'
+      $weekPersister: '@App\Mealz\MealBundle\Week\WeekPersister'
+      $lockParticipationAt: '%mealz.lock_toggle_participation_at%'
+
+  App\Mealz\MealBundle\Week\WeekExistingValidator:
+    arguments:
+      $weekRepository: '@App\Mealz\MealBundle\Repository\WeekRepositoryInterface'
+
+  App\Mealz\MealBundle\Week\WeekPersister:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $eventDispatcher: '@event_dispatcher'
+
+  App\Mealz\MealBundle\Day\DayUpdateHandler:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $dayService: '@App\Mealz\MealBundle\Service\DayService'
+      $mealAdminHelper: '@App\Mealz\MealBundle\Helper\MealAdminHelper'
 
   # Interface Implementations
   App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
@@ -116,6 +156,7 @@ services:
   App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
   App\Mealz\MealBundle\Repository\MealRepositoryInterface: '@App\Mealz\MealBundle\Repository\MealRepository'
   App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface: '@App\Mealz\MealBundle\Repository\ParticipantRepository'
+  App\Mealz\MealBundle\Repository\WeekRepositoryInterface: '@App\Mealz\MealBundle\Repository\WeekRepository'
 
   # Event Listeners
   App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -216,6 +257,19 @@ services:
     arguments:
       $dateTime: 'now'
 
+  App\Mealz\MealBundle\Service\DayService:
+    arguments:
+      $mealRepository: '@App\Mealz\MealBundle\Repository\MealRepositoryInterface'
+      $entityManager: '@doctrine.orm.entity_manager'
+
+  App\Mealz\MealBundle\Helper\MealAdminHelper:
+    arguments:
+      $eventRepository: '@App\Mealz\MealBundle\Repository\EventRepository'
+      $eventPartRepo: '@App\Mealz\MealBundle\Repository\EventPartRepo'
+      $dishRepository: '@App\Mealz\MealBundle\Repository\DishRepository'
+      $mealRepository: '@App\Mealz\MealBundle\Repository\MealRepository'
+      $priceRepository: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
+      $logger: '@logger'
   # Service Aliases
   mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'
   mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
@@ -238,7 +292,10 @@ services:
 
   App\Mealz\MealBundle\Service\CombinedMealService:
     arguments:
-      $combinedPrice: '%mealz.meal.combined.price%'
+      $entityManager: '@doctrine.orm.entity_manager'
+      $dishRepo: '@App\Mealz\MealBundle\Repository\DishRepository'
+      $priceRepo: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
+      $logger: '@logger'
 
   App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
     arguments:
@@ -267,8 +324,6 @@ services:
     arguments:
       $doorman: '@mealz_meal.doorman'
       $em: '@doctrine.orm.entity_manager'
-      $eventPartRepo: '@App\Mealz\MealBundle\Repository\EventPartRepoInterface'
-      $eventRepo: '@App\Mealz\MealBundle\Repository\EventRepositoryInterface'
       $guestPartSrv: '@App\Mealz\MealBundle\Service\GuestParticipationService'
 
   App\Mealz\MealBundle\Service\GuestParticipationService:
@@ -310,6 +365,7 @@ services:
     arguments:
       $entityClass: App\Mealz\AccountingBundle\Entity\Transaction
 
+  App\Mealz\AccountingBundle\Repository\PriceRepository: ~
   ##################################################################
   # User BUNDLE
   ##################################################################

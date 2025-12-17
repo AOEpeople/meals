@@ -79,7 +79,6 @@ final class LoadDishes extends Fixture implements OrderedFixtureInterface
         string $titleEN, string $titleDE, ?string $descEN = null, ?string $descDE = null, bool $oneSize = false, Diet $diet = Diet::MEAT
     ): void {
         $dish = new Dish();
-        $dish->setPrice(4.13);
         $dish->setTitleEn($titleEN);
         $dish->setTitleDe($titleDE);
         $dish->setDescriptionEn('Description - ' . $titleEN);

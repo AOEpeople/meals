@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\ParticipantList;
 
 use App\Mealz\MealBundle\Entity\Participant;
@@ -81,10 +83,14 @@ final class ParticipantList
      */
     public function countAccountableParticipations(Profile $profile): int|float
     {
-        $price = 0;
+        $price = 0.0;
         $participations = $this->getAccountableParticipations($profile);
         foreach ($participations as $participation) {
-            $price += $participation->getMeal()->getPrice();
+            $mealPrice = $participation->getMeal()->getPrice()->getPriceValue();
+            if ($participation->getMeal()->isCombinedMeal()) {
+                $mealPrice = $participation->getMeal()->getPrice()->getPriceCombinedValue();
+            }
+            $price += $mealPrice;
         }
 
         return $price;

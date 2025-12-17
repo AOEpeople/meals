@@ -27,8 +27,9 @@ final class MealRepositoryTest extends AbstractDatabaseTestCase
     public function testFindOneByDateAndDish(): void
     {
         $dish = $this->createDish();
-        $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$meal]);
+        $price = $this->createPrice();
+        $meal = $this->createMeal($dish, $price);
+        $this->persistAndFlushAll([$price, $meal]);
 
         $result = $this->mealRepository->findOneByDateAndDish(new DateTime(), $dish->getSlug());
 

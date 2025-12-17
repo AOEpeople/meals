@@ -135,7 +135,8 @@ import {
   CalculatorIcon,
   CashIcon,
   BookmarkIcon,
-  ClockIcon
+  ClockIcon,
+  CurrencyEuroIcon
 } from '@heroicons/vue/outline';
 import Icons from '@/components/misc/Icons.vue';
 import { useI18n } from 'vue-i18n';
@@ -209,6 +210,12 @@ const navigation = computed(() => {
       to: '/events',
       icon: EventIcon,
       access: userDataStore.roleAllowsRoute('Events')
+    },
+    {
+      name: 'header.navigation.prices',
+      to: '/prices',
+      icon: CurrencyEuroIcon,
+      access: userDataStore.roleAllowsRoute('Prices')
     },
     { name: 'header.navigation.costs', to: '/costs', icon: CashIcon, access: userDataStore.roleAllowsRoute('Costs') },
     {

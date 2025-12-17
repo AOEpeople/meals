@@ -85,6 +85,10 @@ MealzMealBundle_finance:
   path: /finance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_prices:
+  path: /prices
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
 MealzMealBundle_Meal_guest:
   path: /guest/{hash}
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
@@ -106,7 +110,7 @@ MealzMealBundle_api_weeks:
 
 MealzMealBundle_api_weeks_new:
     path: /api/weeks/{date}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
+    controller: App\Mealz\MealBundle\Controller\WeekCreateController
     methods: [POST]
     requirements:
         # format "2014W12" 12th week in 2014

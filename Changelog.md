@@ -1,5 +1,90 @@
 # Changelog
 
+## Version v3.2.0 (2025-12-17)
+
+### Features
+
+- add useUserData for displaying flash message (585e8e90)
+
+### Refactoring
+
+- add currentBalance variable (3f927778)
+
+### Chores and tidying
+
+- #272129 fixes ROLE_FINANCE access to Accounting &amp; Costs View - fixes test (b7e8b6a8)
+- #272129 fixes ROLE_FINANCE access to Accounting &amp; Costs View (b79875c0)
+
+### Other
+
+- change prices for 2026 (7c2b219f)
+- Bump actions/upload-artifact from 5 to 6 (289cb8de)
+- Bump actions/download-artifact from 6 to 7 (f618ba6d)
+- Bump actions/cache from 4 to 5 (f79c3ddc)
+- Change debt popup expected message to changed balance (8c9d6330)
+- style: change code styling for useUserData (9c1409dd)
+- Move removing balanceBelowBalanceLimit flashMessage before check (7663fd29)
+- Change balance of kochomi for cypress test (9ef42d8a)
+- Bump mikepenz/action-junit-report from 4 to 6 (85d90aa2)
+- Change code styling for mealsLockedDebtLimit check in DebtPopup (e2c5d23f)
+- Bump glob from 10.4.5 to 10.5.0 in /src/Resources (85e99d8c)
+- Add check for mealsLockedDebtLimit to DebtPopup (c08f617b)
+- Bump actions/checkout from 5 to 6 (ccfb674c)
+- Bump js-yaml from 4.1.0 to 4.1.1 in /src/Resources (8e661ffb)
+- Change condition for filtering flash messages with hasLifetime (6d1934d8)
+- Add missing semicolon to isLoading.value (0f0f26ba)
+- Add condition for just removing flash messages with lifetime (4db26919)
+- Set isLoading to false after request is sent (30551a25)
+- Add missing Override annotation to __toString (5b23669d)
+- Add necessary Stringable to entities (1c07fa75)
+- Add same php-cs-fixer package version as from pipeline (6353f401)
+- Change code format for DebtPopup (d84c010a)
+- Add appData to global Window declaration (2687d134)
+- Format code for opening or closing debt popup (3442c9b2)
+- Change env variable names for debt limit (579f82d3)
+- Change value of PAYMENT_NOTIFICATION_DEBT to -30 (00550906)
+- Add symfony envs to vue code (ef3f4f1b)
+- Add ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT to twig globals (fd320d89)
+- Change condition for showing balance flash message (195afa44)
+- Use removeMessagesByMessageCode for removing balance notification (c1477da8)
+- Add empty array as result to fullTransactionHistory mock (30f6e8f2)
+- Add parseInt to env variable VITE_ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT (dd180563)
+- Add int casting for ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT (10be2df2)
+- Add parseInt to env variable VITE_ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT (2e305fe1)
+- Add checking profile equals null before inserting to balanceChecker (15f31198)
+- Add expected DateTime object instead of ImmutableDateTime (71acb656)
+- Add dateTime variable to MutableClock (5f5a2b22)
+- Change variable name to balanceChecker (35b1af82)
+- Use createFromTimestamp for getting oldest date (b22bda6c)
+- Add necessary hasLifetime parameter to flashMessages (5c13120c)
+- Remove unnecessary brackets (d38866af)
+- Change formatting for import statements (838d28d2)
+- Add missing semicolon to end of parameter type (cc78ddd0)
+- Change formatting for DefaultAccountOrderLockedBalanceChecker (f00c3b3f)
+- Change test function names (b4702822)
+- Add necessary imports for DateTime and Override (9770dfc9)
+- Add ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT in .env (06bfeb89)
+- Rename VITE_ACCOUNT_ORDER_LOCKED_BALANCE_LIMIT in .env (076c37e3)
+- Change translation key name (0ef092f2)
+- Add command run-tests-fe-coverage to Makefile (81688296)
+- Add no lifetime tests for useFlashMessage (1255d3bf)
+- Add command test:unit:coverage in package.json (55652567)
+- Add config for @vitest/coverage-v8 (9d2ee8f9)
+- Add @vitest/coverage-v8 to package.json (758613b7)
+- Add @vitest/coverage-v8 to package.json (632fb56c)
+- Add coverage folder to .gitignore (c78748eb)
+- Add hasLifetime parameter to sendFlashMessage (1773cf63)
+- Change name of VITE_ACCOUNT_ORDER_LOCKED_BALANCE (b9e3a580)
+- Remove flashMessage after balance exceeds limit (b97187ad)
+- Add missing import statements for FlashMessageType (531e4992)
+- Add missing import statements for displaying flash message (997a14b0)
+- Add Override annotation for balance checker (f6ac76ce)
+- Add tests for DefaultAccountOrderLockedBalanceChecker (fe9ebe3d)
+- Display permanent flash message if balance is invalid (5970fe24)
+- Add text for order blocked flash message (5798a0f6)
+- Add balance checker for locking meals (1f1d0f9f)
+- Change BALANCE_LIMIT to -30 (6bd59a81)
+
 ## Version v3.1.17 (2025-10-30)
 
 ### Fixes

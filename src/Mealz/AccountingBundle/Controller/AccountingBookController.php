@@ -8,11 +8,12 @@ use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\Controller\BaseController;
 use DateTime;
 use Exception;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_KITCHEN_STAFF')]
+#[IsGranted(new Expression('is_granted("ROLE_KITCHEN_STAFF") or is_granted("ROLE_FINANCE")'))]
 final class AccountingBookController extends BaseController
 {
     public function list(TransactionRepositoryInterface $transactionRepo): JsonResponse

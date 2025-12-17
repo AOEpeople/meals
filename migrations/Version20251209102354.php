@@ -31,7 +31,7 @@ final class Version20251209102354 extends AbstractMigration
         $this->abortOnIncompatibleDB();
 
         $this->addSql('ALTER TABLE meal DROP FOREIGN KEY fk_meal_price;');
-        $this->addSql('ALTER TABLE meal DROP COLUMN price;');
+        $this->addSql('ALTER TABLE meal DROP COLUMN price_id;');
     }
 
     /**

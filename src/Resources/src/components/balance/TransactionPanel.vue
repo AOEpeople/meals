@@ -35,7 +35,7 @@ import BlockPopup from '../misc/BlockPopup.vue';
 import checkActiveSession from '@/tools/checkActiveSession';
 import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 import useFlashMessage from '@/services/useFlashMessage';
-import { useTransactionData } from '@/api/getTransactionData';
+import { useUserData } from '@/api/getUserData';
 
 const KEEP_ALIVE_INTERVAL_MILLIS = 40000;
 
@@ -118,10 +118,10 @@ onMounted(async () => {
 
               userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
               transactionStore.fillStore();
-              const transactionData = await useTransactionData();
-              const balanceDifference = transactionData.transactions.value?.difference ?? 0.0;
+              const { userData } = await useUserData();
               const debtLimit = window.appData?.meals_locked_debt_limit as number;
-              if (balanceDifference >= debtLimit) {
+              const currentBalance = userData?.value?.balance as number;
+              if (currentBalance >= debtLimit) {
                 useFlashMessage().removeMessagesByMessageCode('balanceBelowBalanceLimit');
               }
 

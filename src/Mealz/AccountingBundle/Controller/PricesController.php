@@ -91,7 +91,7 @@ final class PricesController extends BaseController
         // validation: year already exists
         $existingPrice = $priceRepository->findByYear($year);
         if (null === $existingPrice) {
-            return new JsonResponse(['error' => '1023: No price for this year found.'], Response::HTTP_CONFLICT);
+            return new JsonResponse(['error' => '1023: No price for this year found.'], Response::HTTP_NOT_FOUND);
         }
 
         // update and persist price

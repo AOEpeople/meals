@@ -193,7 +193,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
         );
 
         $response = $this->client->getResponse();
-        $this->assertSame(Response::HTTP_CONFLICT, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertSame('{"error":"1023: No price for this year found."}', $response->getContent());
     }
 }

@@ -43,6 +43,9 @@ final class WeekUpdateSubscriberTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testOnWeekUpdateIsValid(): void
     {
         $week = new Week();
@@ -61,6 +64,9 @@ final class WeekUpdateSubscriberTest extends TestCase
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testOnWeekUpdateWithPriceNotFoundException(): void
     {
         $week = new Week();

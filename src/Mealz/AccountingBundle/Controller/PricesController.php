@@ -31,7 +31,7 @@ final class PricesController extends BaseController
 
     public function add(Request $request, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true) ?? [];
 
         $priceValidation = $this->validateYearAndPrices($data, $priceRepository);
         if (null !== $priceValidation) {
@@ -78,7 +78,7 @@ final class PricesController extends BaseController
 
     public function edit(int $year, Request $request, PriceRepository $priceRepository, EntityManagerInterface $entityManager): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true) ?? [];
 
         $priceValidation = $this->validateYearAndPrices(array_merge($data, ['year' => $year]), $priceRepository);
         if (null !== $priceValidation) {

@@ -6,19 +6,20 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Service\ApiService;
-use App\Mealz\MealBundle\Tests\Service\Mocks\DayRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\EventParticipationServiceMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\MealRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\ParticipantRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\TransactionRepositoryMock;
+use App\Mealz\MealBundle\Service\EventParticipationServiceInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Override;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,21 +27,21 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApiServiceTest extends TestCase
 {
-    private ParticipantRepositoryMock $participantRepositoryMock;
-    private TransactionRepositoryMock $transactionRepositoryMock;
-    private MealRepositoryMock $mealRepositoryMock;
-    private DayRepositoryMock $dayRepositoryMock;
-    private EventParticipationServiceMock $eventParticipationServiceMock;
+    private MockObject $participantRepositoryMock;
+    private MockObject $transactionRepositoryMock;
+    private MockObject $mealRepositoryMock;
+    private MockObject $dayRepositoryMock;
+    private MockObject $eventParticipationServiceMock;
     private ApiService $apiService;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->participantRepositoryMock = new ParticipantRepositoryMock();
-        $this->transactionRepositoryMock = new TransactionRepositoryMock();
-        $this->mealRepositoryMock = new MealRepositoryMock();
-        $this->dayRepositoryMock = new DayRepositoryMock();
-        $this->eventParticipationServiceMock = new EventParticipationServiceMock();
+        $this->participantRepositoryMock = $this->getMockBuilder(ParticipantRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->transactionRepositoryMock = $this->getMockBuilder(TransactionRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->mealRepositoryMock = $this->getMockBuilder(MealRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->dayRepositoryMock = $this->getMockBuilder(DayRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->eventParticipationServiceMock = $this->getMockBuilder(EventParticipationServiceInterface::class)->disableOriginalConstructor()->getMock();
         $this->apiService = new ApiService(
             $this->participantRepositoryMock,
             $this->transactionRepositoryMock,
@@ -81,13 +82,19 @@ final class ApiServiceTest extends TestCase
         $meal2->setDateTime($dateTimeBefore);
         $participant2 = new Participant($profile, $meal2);
         $participants = [$participant, $participant2];
-        $this->participantRepositoryMock->outputGetParticipantsOnDays = $participants;
+        $this->participantRepositoryMock->expects(self::once())
+            ->method('getParticipantsOnDays')
+            ->with($dateTimeBefore, $dateTimeAfter, $profile)
+            ->willReturn($participants);
         $transaction = new Transaction();
         $transaction->setAmount(1);
         $transaction->setDate($dateTimeBefore);
         $transaction->setPaymethod('test');
         $transactions = [$transaction];
-        $this->transactionRepositoryMock->outputGetSuccessfulTransactionsOnDays = $transactions;
+        $this->transactionRepositoryMock->expects(self::once())
+            ->method('getSuccessfulTransactionsOnDays')
+            ->with($dateTimeBefore, $dateTimeAfter, $profile)
+            ->willReturn($transactions);
 
         $fullTransactionHistory = $this->apiService->getFullTransactionHistory($dateTimeBefore, $dateTimeAfter, $profile);
 
@@ -120,15 +127,5 @@ final class ApiServiceTest extends TestCase
                 ],
             ]
         ], $fullTransactionHistory);
-        $this->assertEquals([
-            [
-                $dateTimeBefore,
-                $dateTimeAfter,
-                $profile,
-            ]
-        ], $this->participantRepositoryMock->getParticipantsOnDaysInputs);
-        $this->assertEquals($dateTimeBefore, $this->transactionRepositoryMock->inputGetSuccessfulMinDate);
-        $this->assertEquals($dateTimeAfter, $this->transactionRepositoryMock->inputGetSuccessfulMaxDate);
-        $this->assertEquals($profile, $this->transactionRepositoryMock->inputGetSuccessfulProfile);
     }
 }

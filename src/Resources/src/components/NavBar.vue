@@ -3,7 +3,7 @@
     <Menu v-slot="{ open }">
       <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav
-          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:grid-cols-10"
+          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:grid-cols-[repeat(10,minmax(140px,1fr))]"
           :class="[isShowParticipations ? 'max-w-screen' : 'xl:max-w-screen-aoe']"
           aria-label="Top"
         >

@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\AccountingBundle\Entity\Price;
+use App\Mealz\AccountingBundle\Repository\PriceRepositoryInterface;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Helper\Exceptions\PriceNotFoundException;
 use App\Mealz\MealBundle\Helper\MealAdminHelper;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
+use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\DishRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\EventPartRepoMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\EventRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\MealRepositoryMock;
-use App\Mealz\MealBundle\Tests\Service\Mocks\PriceRepositoryMock;
 use DateTimeImmutable;
 use Override;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,22 +25,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class MealAdminHelperTest extends TestCase
 {
-    private EventRepositoryMock $eventRepositoryMock;
-    private EventPartRepoMock $eventPartRepoMock;
-    private DishRepositoryMock $dishRepositoryMock;
-    private MealRepositoryMock $mealRepositoryMock;
-    private PriceRepositoryMock $priceRepositoryMock;
+    private MockObject $eventRepositoryMock;
+    private MockObject $eventPartRepoMock;
+    private MockObject $dishRepositoryMock;
+    private MockObject $mealRepositoryMock;
+    private MockObject $priceRepositoryMock;
     private LoggerMock $loggerMock;
     private MealAdminHelper $mealAdminHelper;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->eventRepositoryMock = new EventRepositoryMock();
-        $this->eventPartRepoMock = new EventPartRepoMock();
-        $this->dishRepositoryMock = new DishRepositoryMock();
-        $this->mealRepositoryMock = new MealRepositoryMock();
-        $this->priceRepositoryMock = new PriceRepositoryMock();
+        $this->eventRepositoryMock = $this->getMockBuilder(EventRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->eventPartRepoMock = $this->getMockBuilder(EventPartRepoInterface::class)->disableOriginalConstructor()->getMock();
+        $this->dishRepositoryMock = $this->getMockBuilder(DishRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->mealRepositoryMock = $this->getMockBuilder(MealRepositoryInterface::class)->disableOriginalConstructor()->getMock();
+        $this->priceRepositoryMock = $this->getMockBuilder(PriceRepositoryInterface::class)->disableOriginalConstructor()->getMock();
         $this->loggerMock = new LoggerMock();
         $this->mealAdminHelper = new MealAdminHelper(
             $this->eventRepositoryMock,
@@ -62,21 +63,18 @@ final class MealAdminHelperTest extends TestCase
         $dayEntity = new Day();
 
         $dish = new Dish();
-        $this->dishRepositoryMock->outputFindOneBy = $dish;
+        $this->dishRepositoryMock->expects(self::once())
+            ->method('findOneBy')
+            ->with(['slug' => 'pasta'])
+            ->willReturn($dish);
         $price = new Price();
-        $this->priceRepositoryMock->outputFindByYear = $price;
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsInt = (int) $dateTime->format('Y');
+        $this->priceRepositoryMock->expects(self::once())
+            ->method('findByYear')
+            ->with($dateTimeYearAsInt)
+            ->willReturn($price);
         $this->mealAdminHelper->handleMealArray($mealArr, $dayEntity);
-
-        $this->assertEquals([
-            [
-                'slug' => 'pasta'
-            ]
-        ], $this->dishRepositoryMock->findOneByCriteria);
-        $currentDateTime = new DateTimeImmutable('now');
-        $currentYearAsInt = (int) $currentDateTime->format('Y');
-        $this->assertEquals([
-            $currentYearAsInt
-        ], $this->priceRepositoryMock->inputFindByYearInputs);
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
@@ -91,8 +89,16 @@ final class MealAdminHelperTest extends TestCase
         $dayEntity = new Day();
 
         $dish = new Dish();
-        $this->dishRepositoryMock->outputFindOneBy = $dish;
-        $this->priceRepositoryMock->outputFindByYear = null;
+        $this->dishRepositoryMock->expects(self::once())
+            ->method('findOneBy')
+            ->with(['slug' => 'pasta'])
+            ->willReturn($dish);
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsInt = (int) $dateTime->format('Y');
+        $this->priceRepositoryMock->expects(self::once())
+            ->method('findByYear')
+            ->with($dateTimeYearAsInt)
+            ->willReturn(null);
         try {
             $this->mealAdminHelper->handleMealArray($mealArr, $dayEntity);
             $this->fail('PriceNotFoundException was expected to be thrown.');
@@ -100,16 +106,6 @@ final class MealAdminHelperTest extends TestCase
             $this->assertSame('Price not found for year "2025".', $exception->getMessage());
         }
 
-        $this->assertEquals([
-            [
-                'slug' => 'pasta'
-            ]
-        ], $this->dishRepositoryMock->findOneByCriteria);
-        $currentDateTime = new DateTimeImmutable('now');
-        $currentYearAsInt = (int) $currentDateTime->format('Y');
-        $this->assertEquals([
-            $currentYearAsInt
-        ], $this->priceRepositoryMock->inputFindByYearInputs);
         $this->assertEquals([
             'error' => [
                 [

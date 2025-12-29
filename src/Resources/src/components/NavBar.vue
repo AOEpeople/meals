@@ -3,7 +3,7 @@
     <Menu v-slot="{ open }">
       <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav
-          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:grid-cols-[repeat(10,minmax(140px,1fr))]"
+          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:grid-cols-10"
           :class="[isShowParticipations ? 'max-w-screen' : 'xl:max-w-screen-aoe']"
           aria-label="Top"
         >
@@ -57,7 +57,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 hidden space-x-3 xl:inline-block"
+            class="col-span-4 hidden space-x-3 xl:flex whitespace-nowrap"
           >
             <span
               v-for="link in navigation"
@@ -74,7 +74,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 inline-block space-x-4 justify-self-end"
+            class="col-span-4 flex space-x-4 justify-self-end"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
               <Icons

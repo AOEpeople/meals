@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Week;
 
 use App\Mealz\MealBundle\Controller\Exceptions\InvalidMealNewWeekDataException;
-use App\Mealz\MealBundle\Tests\Week\Mocks\DayUpdateHandlerMock;
-use App\Mealz\MealBundle\Tests\Week\Mocks\WeekExistingValidatorMock;
-use App\Mealz\MealBundle\Tests\Week\Mocks\WeekPersisterMock;
+use App\Mealz\MealBundle\Day\DayUpdateHandlerInterface;
+use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Week\Model\WeekId;
 use App\Mealz\MealBundle\Week\Model\WeekNotification;
 use App\Mealz\MealBundle\Week\WeekCreateHandler;
+use App\Mealz\MealBundle\Week\WeekExistingValidatorInterface;
+use App\Mealz\MealBundle\Week\WeekPersisterInterface;
 use DateTime;
 use Override;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,18 +23,18 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class WeekCreateHandlerTest extends TestCase
 {
-    private WeekExistingValidatorMock $weekExistsValidatorMock;
-    private DayUpdateHandlerMock $dayUpdateHandlerMock;
-    private WeekPersisterMock $weekPersisterMock;
+    private MockObject $weekExistsValidatorMock;
+    private MockObject $dayUpdateHandlerMock;
+    private MockObject $weekPersisterMock;
     private string $lockParticipationAt;
     private WeekCreateHandler $weekCreateHandler;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->weekExistsValidatorMock = new WeekExistingValidatorMock();
-        $this->dayUpdateHandlerMock = new DayUpdateHandlerMock();
-        $this->weekPersisterMock = new WeekPersisterMock();
+        $this->weekExistsValidatorMock = $this->getMockBuilder(WeekExistingValidatorInterface::class)->disableOriginalConstructor()->getMock();
+        $this->dayUpdateHandlerMock = $this->getMockBuilder(DayUpdateHandlerInterface::class)->disableOriginalConstructor()->getMock();
+        $this->weekPersisterMock = $this->getMockBuilder(WeekPersisterInterface::class)->disableOriginalConstructor()->getMock();
         $this->lockParticipationAt = '-1 day 16:00';
         $this->weekCreateHandler = new WeekCreateHandler(
             $this->weekExistsValidatorMock,
@@ -69,78 +71,29 @@ final class WeekCreateHandlerTest extends TestCase
         );
 
         $persisterWeekId = new WeekId(1);
-        $this->weekPersisterMock->outputWeekId = $persisterWeekId;
-
-        $weekId = $this->weekCreateHandler->handleAndGet($date, $request);
-
-        $this->assertSame($persisterWeekId->value, $weekId->value);
-        $this->assertSame($date->format('Y-m-d'), $this->weekExistsValidatorMock->inputDate->format('Y-m-d'));
-        $this->assertEquals([
-            [
+        $week = WeekService::generateEmptyWeek($date, $this->lockParticipationAt);
+        $week->setEnabled(true);
+        $weekNotification = new WeekNotification(false);
+        $this->weekPersisterMock->expects(self::once())
+            ->method('persist')
+            ->with($week, $weekNotification)
+            ->willReturn($persisterWeekId);
+        $this->weekExistsValidatorMock->expects(self::once())
+            ->method('validate')
+            ->with($date);
+        $this->dayUpdateHandlerMock->expects(self::once())
+            ->method('handle')
+            ->with([
                 'id' => 0,
                 'date' => '2025-01-01',
                 'events' => [],
                 'meals' => [],
-                'lockDate' => null,
-            ]
-        ], $this->dayUpdateHandlerMock->inputDayData);
-        $this->assertEquals([
-            'id' => null,
-            'year' => 2025,
-            'calendarWeek' => 1,
-            'days' => [
-                -1 => [
-                    'lockParticipationDateTime' => new DateTime('2024-12-30')->modify($this->lockParticipationAt),
-                    'week' => null,
-                    'meals' => [],
-                    'events' => [],
-                    'enabled' => true,
-                    'dayId' => null,
-                    'dateTime' => new DateTime('2024-12-30T12:00:00.000000+0100'),
-                ],
-                -2 => [
-                    'lockParticipationDateTime' => new DateTime('2024-12-31')->modify($this->lockParticipationAt),
-                    'week' => null,
-                    'meals' => [],
-                    'events' => [],
-                    'enabled' => true,
-                    'dayId' => null,
-                    'dateTime' => new DateTime('2024-12-31T12:00:00.000000+0100'),
-                ],
-                -3 => [
-                    'lockParticipationDateTime' => new DateTime('2025-01-01')->modify($this->lockParticipationAt),
-                    'week' => null,
-                    'meals' => [],
-                    'events' => [],
-                    'enabled' => true,
-                    'dayId' => null,
-                    'dateTime' => new DateTime('2025-01-01T12:00:00.000000+0100'),
-                ],
-                -4 => [
-                    'lockParticipationDateTime' => new DateTime('2025-01-02')->modify($this->lockParticipationAt),
-                    'week' => null,
-                    'meals' => [],
-                    'events' => [],
-                    'enabled' => true,
-                    'dayId' => null,
-                    'dateTime' => new DateTime('2025-01-02T12:00:00.000000+0100'),
-                ],
-                -5 => [
-                    'lockParticipationDateTime' => new DateTime('2025-01-03')->modify($this->lockParticipationAt),
-                    'week' => null,
-                    'meals' => [],
-                    'events' => [],
-                    'enabled' => true,
-                    'dayId' => null,
-                    'dateTime' => new DateTime('2025-01-03T12:00:00.000000+0100'),
-                ],
-            ],
-            'enabled' => true,
-        ], $this->dayUpdateHandlerMock->inputDay[0]->getWeek()->jsonSerialize());
-        $this->assertEquals([2], $this->dayUpdateHandlerMock->inputCount);
-        $this->assertTrue($this->weekPersisterMock->inputWeek->isEnabled());
-        $expectedWeekNotification = new WeekNotification(false);
-        $this->assertSame($expectedWeekNotification->shouldNotify, $this->weekPersisterMock->inputWeekNotification->shouldNotify);
+                'lockDate' => null
+            ], $week->getDays()[0], 2);
+
+        $weekId = $this->weekCreateHandler->handleAndGet($date, $request);
+
+        $this->assertSame($persisterWeekId->value, $weekId->value);
     }
 
     public function testHandleAndGetWithInvalidMealNewWeekDataException(): void
@@ -169,7 +122,25 @@ final class WeekCreateHandlerTest extends TestCase
         );
 
         $persisterWeekId = new WeekId(1);
-        $this->weekPersisterMock->outputWeekId = $persisterWeekId;
+        $week = WeekService::generateEmptyWeek($date, $this->lockParticipationAt);
+        $week->setEnabled(true);
+        $weekNotification = new WeekNotification(false);
+        $this->weekPersisterMock->expects(self::never())
+            ->method('persist')
+            ->with($week, $weekNotification)
+            ->willReturn($persisterWeekId);
+        $this->weekExistsValidatorMock->expects(self::once())
+            ->method('validate')
+            ->with($date);
+        $this->dayUpdateHandlerMock->expects(self::never())
+            ->method('handle')
+            ->with([
+                'id' => 0,
+                'date' => '2025-01-01',
+                'events' => [],
+                'meals' => [],
+                'lockDate' => null,
+            ], $week->getDays()[0], 2);
 
         try {
             $this->weekCreateHandler->handleAndGet($date, $request);
@@ -177,7 +148,5 @@ final class WeekCreateHandlerTest extends TestCase
         } catch (InvalidMealNewWeekDataException $exception) {
             $this->assertSame('Request body contains invalid data.', $exception->getMessage());
         }
-
-        $this->assertSame($date->format('Y-m-d'), $this->weekExistsValidatorMock->inputDate->format('Y-m-d'));
     }
 }

@@ -8,31 +8,32 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\Subscriber\WeekUpdateSubscriber;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
+use App\Mealz\MealBundle\Service\CombinedMealServiceInterface;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
-use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\CombinedMealServiceMock;
-use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\NotifierMock;
-use App\Mealz\MealBundle\Tests\Event\Subscriber\Mocks\TranslatorMock;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
 use Override;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @covers \App\Mealz\MealBundle\Event\Subscriber\WeekUpdateSubscriber
  */
 final class WeekUpdateSubscriberTest extends TestCase
 {
-    private CombinedMealServiceMock $combinedMealServiceMock;
-    private NotifierMock $notifierMock;
-    private TranslatorMock $translatorMock;
+    private MockObject $combinedMealServiceMock;
+    private MockObject $notifierMock;
+    private MockObject $translatorMock;
     private LoggerMock $loggerMock;
     private WeekUpdateSubscriber $weekUpdateSubscriber;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->combinedMealServiceMock = new CombinedMealServiceMock();
-        $this->notifierMock = new NotifierMock();
-        $this->translatorMock = new TranslatorMock();
+        $this->combinedMealServiceMock = $this->getMockBuilder(CombinedMealServiceInterface::class)->disableOriginalConstructor()->getMock();
+        $this->notifierMock = $this->getMockBuilder(NotifierInterface::class)->disableOriginalConstructor()->getMock();
+        $this->translatorMock = $this->getMockBuilder(TranslatorInterface::class)->disableOriginalConstructor()->getMock();
         $this->loggerMock = new LoggerMock();
         $this->weekUpdateSubscriber = new WeekUpdateSubscriber(
             $this->combinedMealServiceMock,
@@ -47,14 +48,16 @@ final class WeekUpdateSubscriberTest extends TestCase
         $week = new Week();
         $weekUpdateEvent = new WeekUpdateEvent($week, true);
 
-        $this->notifierMock->outputIsNotified = true;
-        $this->translatorMock->outputTransValue = 'week.notification.header.no_week';
+        $this->combinedMealServiceMock->expects(self::once())
+            ->method('update')
+            ->with($week);
+        $expectedWeeklyMenuMessage = new WeeklyMenuMessage($week, $this->translatorMock);
+        $this->notifierMock->expects(self::once())
+            ->method('send')
+            ->with($expectedWeeklyMenuMessage);
 
         $this->weekUpdateSubscriber->onWeekUpdate($weekUpdateEvent);
 
-        $this->assertEquals($week, $this->combinedMealServiceMock->inputWeek);
-        $expectedWeeklyMenuMessage = new WeeklyMenuMessage($week, $this->translatorMock);
-        $this->assertEquals($expectedWeeklyMenuMessage, $this->notifierMock->inputMessage);
         $this->assertEquals([], $this->loggerMock->logs);
     }
 
@@ -63,13 +66,17 @@ final class WeekUpdateSubscriberTest extends TestCase
         $week = new Week();
         $weekUpdateEvent = new WeekUpdateEvent($week, true);
 
-        $this->notifierMock->outputIsNotified = true;
-        $this->translatorMock->outputTransValue = 'week.notification.header.no_week';
-        $this->combinedMealServiceMock->throwPriceNotFoundException = new PriceNotFoundException('test');
+        $this->combinedMealServiceMock->expects(self::once())
+            ->method('update')
+            ->with($week)
+            ->willThrowException(new PriceNotFoundException('test'));
+        $expectedWeeklyMenuMessage = new WeeklyMenuMessage($week, $this->translatorMock);
+        $this->notifierMock->expects(self::never())
+            ->method('send')
+            ->with($expectedWeeklyMenuMessage);
 
         $this->weekUpdateSubscriber->onWeekUpdate($weekUpdateEvent);
 
-        $this->assertEquals($week, $this->combinedMealServiceMock->inputWeek);
         $this->assertEquals([
             'error' => [
                 [

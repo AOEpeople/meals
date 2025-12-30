@@ -21,9 +21,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:modelValue']);
 const isFocused = ref(false);
 const rawValue = ref(props.modelValue.toString());
-const displayValue = computed(() =>
-    isFocused.value ? rawValue.value : formatMoney(props.modelValue)
-);
+const displayValue = computed(() => (isFocused.value ? rawValue.value : formatMoney(props.modelValue)));
 
 function onInput(event: Event) {
   const value = (event.target as HTMLInputElement).value;

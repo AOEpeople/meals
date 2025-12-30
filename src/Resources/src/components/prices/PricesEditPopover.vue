@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed} from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputLabel from '../misc/InputLabelNumber.vue';
 import SubmitButton from '../misc/SubmitButton.vue';
@@ -97,8 +97,8 @@ watch(
 
 const lastYearPrices = computed(() => {
   const years = Object.keys(PricesState.prices)
-      .map(Number)
-      .sort((a, b) => b - a);
+    .map(Number)
+    .sort((a, b) => b - a);
   if (years.length > 0) {
     return PricesState.prices[years[0]];
   }

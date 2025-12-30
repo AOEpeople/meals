@@ -57,7 +57,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 hidden space-x-3 xl:flex whitespace-nowrap"
+            class="col-span-4 hidden space-x-3 whitespace-nowrap xl:flex"
           >
             <span
               v-for="link in navigation"
@@ -74,7 +74,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 flex space-x-4 justify-self-end -mr-2"
+            class="col-span-4 -mr-2 flex space-x-4 justify-self-end"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
               <Icons

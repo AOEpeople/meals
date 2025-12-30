@@ -74,7 +74,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 flex space-x-4 justify-self-end"
+            class="col-span-4 flex space-x-4 justify-self-end -mr-2"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
               <Icons

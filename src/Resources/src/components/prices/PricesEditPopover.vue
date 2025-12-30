@@ -6,6 +6,7 @@
       <InputLabel
         v-model="priceInput"
         :label-text="t('prices.popover.price')"
+        :min="minPrice"
         type="number"
         step=".01"
         :error="errors.price"
@@ -15,6 +16,7 @@
       <InputLabel
         v-model="priceCombinedInput"
         :label-text="t('prices.popover.priceCombined')"
+        :min="minPriceCombined"
         type="number"
         step=".01"
         :error="errors.priceCombined"
@@ -43,14 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed} from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputLabel from '../misc/InputLabelNumber.vue';
 import SubmitButton from '../misc/SubmitButton.vue';
 import { usePrices } from '@/stores/pricesStore';
 
 const { t } = useI18n();
-const { getPriceByYear } = usePrices();
+const { PricesState, getPriceByYear } = usePrices();
 const isSubmitting = ref(false);
 
 const props = defineProps<{
@@ -92,6 +94,18 @@ watch(
     }
   }
 );
+
+const lastYearPrices = computed(() => {
+  const years = Object.keys(PricesState.prices)
+      .map(Number)
+      .sort((a, b) => b - a);
+  if (years.length > 0) {
+    return PricesState.prices[years[0]];
+  }
+  return { price: 0, price_combined: 0 };
+});
+const minPrice = computed(() => lastYearPrices.value.price);
+const minPriceCombined = computed(() => lastYearPrices.value.price_combined);
 
 function parsePrice(value: string | number): number {
   const numValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;

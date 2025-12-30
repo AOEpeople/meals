@@ -66,11 +66,11 @@ export function usePrices() {
         PricesState.isLoading = true;
         const { error, prices } = await getPrices();
 
-        if (isResponseObjectOkay(error, prices, isPrices) === true) {
+        if (isResponseObjectOkay(error, prices, isPrices)) {
             PricesState.prices = (prices.value as IPrices).prices;
             PricesState.error = '';
         } else {
-            PricesState.error = 'Error on fetching Prices';
+            PricesState.error = 'loadPricesFailed';
         }
         PricesState.isLoading = false;
     }
@@ -87,13 +87,13 @@ export function usePrices() {
         PricesState.isLoading = true;
         const { error, response } = await postCreatePrice(data);
 
-        if (isResponseObjectOkay(error, response) === true) {
+        if (isResponseObjectOkay(error, response)) {
             await fetchPrices();
             PricesState.error = '';
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = response.value?.message || 'Error on creating Price';
+            PricesState.error = 'createPriceFailed';
             PricesState.isLoading = false;
             return false;
         }
@@ -103,13 +103,13 @@ export function usePrices() {
         PricesState.isLoading = true;
         const { error, response } = await putUpdatePrice(data);
 
-        if (isResponseObjectOkay(error, response) === true) {
+        if (isResponseObjectOkay(error, response)) {
             await fetchPrices();
             PricesState.error = '';
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = response.value?.message || 'Error on updating Price';
+            PricesState.error = 'updatePriceFailed';
             PricesState.isLoading = false;
             return false;
         }
@@ -125,7 +125,7 @@ export function usePrices() {
             PricesState.isLoading = false;
             return true;
         } else {
-            PricesState.error = response.value?.message || 'Error on deleting Price';
+            PricesState.error = 'deletePriceFailed';
             PricesState.isLoading = false;
             return false;
         }

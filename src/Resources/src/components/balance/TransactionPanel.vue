@@ -83,9 +83,12 @@ onMounted(async () => {
             );
           },
           createOrder: function (_data, actions) {
-            activeSessionIntervalId = setInterval(() => {
-              checkActiveSession();
-            }, 10 * 60 * 1000);
+            activeSessionIntervalId = setInterval(
+              () => {
+                checkActiveSession();
+              },
+              10 * 60 * 1000
+            );
             return actions.order.create({
               purchase_units: [
                 {

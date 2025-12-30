@@ -178,7 +178,11 @@
       "903": "You are already registered. If you have any questions please message your contact person.",
       "1001": "At least one of the Parameters firstname or lastname are missing.",
       "1002": "The profile exists but is hidden.",
-      "balanceBelowBalanceLimit": "The account is not supposed to be overdrawn by more than €50."
+      "balanceBelowBalanceLimit": "The account is not supposed to be overdrawn by more than €50.",
+      "loadPricesFailed": "Failed to load prices",
+      "createPriceFailed": "Failed to create price",
+      "updatePriceFailed": "Failed to update price",
+      "deletePriceFailed": "Failed to delete price"
     },
     "success": {
       "menu": {

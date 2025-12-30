@@ -27,6 +27,9 @@ function onInput(event: Event) {
   const value = (event.target as HTMLInputElement).value;
   rawValue.value = value;
   const parsed = parseFloat(value.replace(',', '.'));
+  if (isNaN(parsed)) {
+    return;
+  }
   emit('update:modelValue', round(parsed));
 }
 

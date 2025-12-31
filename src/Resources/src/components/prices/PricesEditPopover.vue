@@ -7,6 +7,7 @@
         v-model="priceInput"
         :label-text="t('prices.popover.price')"
         :min="minPrice"
+        :max="maxPrice"
         type="number"
         step=".01"
         :error="errors.price"
@@ -17,6 +18,7 @@
         v-model="priceCombinedInput"
         :label-text="t('prices.popover.priceCombined')"
         :min="minPriceCombined"
+        :max="maxPriceCombined"
         type="number"
         step=".01"
         :error="errors.priceCombined"
@@ -107,6 +109,19 @@ const lastYearPrices = computed(() => {
 });
 const minPrice = computed(() => lastYearPrices.value.price);
 const minPriceCombined = computed(() => lastYearPrices.value.price_combined);
+
+const nextYearPrices = computed(() => {
+  const years = Object.keys(PricesState.prices)
+      .map(Number)
+      .filter(year => year > props.year)
+      .sort((a, b) => b - a);
+  if (years.length > 0) {
+    return PricesState.prices[years[0]];
+  }
+  return { price: undefined, price_combined: undefined };
+});
+const maxPrice = computed(() => nextYearPrices.value.price);
+const maxPriceCombined = computed(() => nextYearPrices.value.price_combined);
 
 function parsePrice(value: string | number): number {
   const numValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;

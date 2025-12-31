@@ -125,6 +125,44 @@ final class PricesControllerTest extends AbstractControllerTestCase
         $this->assertSame('{"error":"1005: Combined price cannot be lower than previous year."}', $response->getContent());
     }
 
+    public function testAddPriceWithPriceCanNotBeHigherThanNextYear(): void
+    {
+        $this->client->request(
+            'PUT',
+            '/api/price/2024',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'price' => 10,
+                'price_combined' => 6.4,
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertSame('{"error":"1006: Price cannot be higher than next year."}', $response->getContent());
+    }
+
+    public function testAddPriceWithCombinedPriceCanNotBeHigherThanNextYear(): void
+    {
+        $this->client->request(
+            'PUT',
+            '/api/price/2024',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'price' => 4.4,
+                'price_combined' => 10,
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertSame('{"error":"1007: Combined price cannot be higher than next year."}', $response->getContent());
+    }
+
     public function testAddPriceWithPriceAlreadyExistsForYear(): void
     {
         $this->client->request(

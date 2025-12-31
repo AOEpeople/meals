@@ -154,6 +154,16 @@ final class PricesController extends BaseController
             }
         }
 
+        $nextPrice = $priceRepository->findByYear($year + 1);
+        if (null !== $nextPrice) {
+            if ($price > $nextPrice->getPriceValue()) {
+                return new JsonResponse(['error' => '1006: Price cannot be higher than next year.'], Response::HTTP_BAD_REQUEST);
+            }
+            if ($priceCombined > $nextPrice->getPriceCombinedValue()) {
+                return new JsonResponse(['error' => '1007: Combined price cannot be higher than next year.'], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
         return null;
     }
 }

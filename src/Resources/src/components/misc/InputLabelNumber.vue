@@ -21,6 +21,7 @@
         :name="labelText"
         :placeholder="labelText"
         :min="min"
+        :max="max"
         :step="step"
         :required="required"
         :class="
@@ -49,6 +50,7 @@ const props = withDefaults(
     modelValue: string | number;
     type?: string;
     min?: number;
+    max?: number|undefined;
     step?: string | number;
     labelVisible?: boolean;
     required?: boolean;

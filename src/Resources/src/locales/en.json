@@ -264,7 +264,6 @@
     "errors": {
       "priceRequired": "Price is required",
       "priceMinimum": "Price must be at least {min} €",
-      "priceNegative": "Price must not be negative",
       "priceCombinedRequired": "Combined price is required",
       "priceCombinedMinimum": "Combined price must be at least {min} €",
       "priceCombinedNegative": "Combined price must not be negative",

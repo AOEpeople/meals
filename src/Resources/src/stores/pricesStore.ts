@@ -119,7 +119,7 @@ export function usePrices() {
         PricesState.isLoading = true;
         const { error, response } = await requestDeletePrice({ year });
 
-        if (isResponseObjectOkay(error, response) === true) {
+        if (isResponseObjectOkay(error, response)) {
             await fetchPrices();
             PricesState.error = '';
             PricesState.isLoading = false;

@@ -99,9 +99,9 @@ watch(
 
 const lastYearPrices = computed(() => {
   const years = Object.keys(PricesState.prices)
-      .map(Number)
-      .filter(year => year < props.year)
-      .sort((a, b) => b - a);
+    .map(Number)
+    .filter((year) => year < props.year)
+    .sort((a, b) => b - a);
   if (years.length > 0) {
     return PricesState.prices[years[0]];
   }
@@ -112,9 +112,9 @@ const minPriceCombined = computed(() => lastYearPrices.value.price_combined);
 
 const nextYearPrices = computed(() => {
   const years = Object.keys(PricesState.prices)
-      .map(Number)
-      .filter(year => year > props.year)
-      .sort((a, b) => b - a);
+    .map(Number)
+    .filter((year) => year > props.year)
+    .sort((a, b) => b - a);
   if (years.length > 0) {
     return PricesState.prices[years[0]];
   }

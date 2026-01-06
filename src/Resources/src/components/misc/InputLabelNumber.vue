@@ -50,7 +50,7 @@ const props = withDefaults(
     modelValue: string | number;
     type?: string;
     min?: number;
-    max?: number|undefined;
+    max?: number | undefined;
     step?: string | number;
     labelVisible?: boolean;
     required?: boolean;

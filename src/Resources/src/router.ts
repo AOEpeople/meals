@@ -118,7 +118,7 @@ const router = createRouter({
             name: 'Prices',
             component: Prices,
             meta: {
-                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_FINANCE']
             }
         },
         {

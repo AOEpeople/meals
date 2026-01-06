@@ -60,6 +60,7 @@ const props = withDefaults(
     overwriteContainerStyles?: string;
   }>(),
   {
+    id: '',
     labelText: '',
     type: 'text',
     min: 0,

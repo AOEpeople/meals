@@ -9,6 +9,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -65,9 +66,9 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         $lastDishWithVar = null;
         $lastDishWithoutVar = null;
         $price = new Price();
-        $year = 2025;
+        $year = (int) (new DateTimeImmutable())->format('Y');
         if ($this->containsOldPrices) {
-            $year = 2024;
+            $year--;
         }
         $price->setPriceValue(4.4);
         $price->setYear($year);

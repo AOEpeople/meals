@@ -129,6 +129,16 @@ final class PricesController extends BaseController
 
     private function validateYearAndPrices($data, PriceRepository $priceRepository): ?JsonResponse
     {
+        $response = $this->validateYear($data);
+        if (!is_null($response)) {
+            return $response;
+        }
+
+        return $this->validatePricesForYear($data, $priceRepository);
+    }
+
+    private function validatePrice($data): ?JsonResponse
+    {
         $yearValidation = $this->validateYear($data);
         if (null !== $yearValidation) {
             return $yearValidation;
@@ -139,6 +149,11 @@ final class PricesController extends BaseController
             return new JsonResponse(['error' => '1001: Missing required fields: year, price, price_combined.'], Response::HTTP_BAD_REQUEST);
         }
 
+        return null;
+    }
+
+    private function validatePricesForYear($data, PriceRepository $priceRepository)
+    {
         $year = (int) $data['year'];
         $price = (float) $data['price'];
         $priceCombined = (float) $data['price_combined'];

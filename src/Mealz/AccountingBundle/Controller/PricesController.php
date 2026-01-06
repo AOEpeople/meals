@@ -102,7 +102,7 @@ final class PricesController extends BaseController
         $entityManager->flush();
 
         return new JsonResponse(
-            ['message' => 'Price created successfully', 'price' => $existingPrice->jsonSerialize()],
+            ['message' => 'Price updated successfully', 'price' => $existingPrice->jsonSerialize()],
             Response::HTTP_OK
         );
     }

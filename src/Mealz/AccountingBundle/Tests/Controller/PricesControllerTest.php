@@ -215,7 +215,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('{"message":"Price created successfully","price":{"year":2025,"price":4.2,"price_combined":6.4}}', $response->getContent());
+        $this->assertSame('{"message":"Price updated successfully","price":{"year":2025,"price":4.2,"price_combined":6.4}}', $response->getContent());
     }
 
     public function testEditPriceWithNoPricesFound(): void

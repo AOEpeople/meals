@@ -131,10 +131,8 @@ function parsePrice(value: string | number): number {
 function validateForm(): boolean {
   let valid = true;
   errors.value = { price: '', priceCombined: '', general: '' };
-
   const price = parsePrice(priceInput.value);
   const priceCombined = parsePrice(priceCombinedInput.value);
-
   if (isNaN(price) || price <= 0) {
     errors.value.price = t('prices.errors.invalidPrice');
     valid = false;
@@ -152,13 +150,12 @@ async function onSubmit() {
   if (!validateForm() || isSubmitting.value) return;
 
   isSubmitting.value = true;
-
   try {
     emit('update', {
       year: props.year,
       price: parsePrice(priceInput.value),
       price_combined: parsePrice(priceCombinedInput.value)
-    });
+    } as any);
   } catch (error) {
     errors.value.general = t('prices.errors.updateFailed');
     isSubmitting.value = false;

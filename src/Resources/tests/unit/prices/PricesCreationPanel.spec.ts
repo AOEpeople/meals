@@ -36,6 +36,7 @@ const InputLabelStub = {
       <input
         data-testid="number-input"
         :value="modelValue"
+        :min="min"
         @input="$emit('update:modelValue', $event.target.value)"
       />
       <p v-if="error" data-testid="field-error">{{ error }}</p>
@@ -98,8 +99,8 @@ describe('Test PricesCreationPanel', () => {
             price_combined: 6.6,
         });
 
-        const isEventSubmitted = wrapper.emitted('closePanel');
-        expect(isEventSubmitted).toBeTruthy();
+        const isEventTriggered = wrapper.emitted('closePanel');
+        expect(isEventTriggered).toBeTruthy();
         expect(wrapper.text()).toContain('2027');
     });
 
@@ -147,6 +148,17 @@ describe('Test PricesCreationPanel', () => {
         expect(createPriceMock).not.toHaveBeenCalled();
         expect(wrapper.text()).toContain('prices.errors.priceRequired');
         expect(wrapper.text()).toContain('prices.errors.priceCombinedRequired');
+        expect(wrapper.text()).toContain('2027');
+    });
+
+    it ('should get min prices for input fields', () => {
+        const inputs = wrapper.findAll('[data-testid="number-input"]');
+
+        expect(inputs).toHaveLength(2);
+        expect((inputs[0].element as HTMLInputElement).value).toBe('4.6');
+        expect((inputs[1].element as HTMLInputElement).value).toBe('6.6');
+        expect(Number((inputs[0].element as HTMLInputElement).min)).toBe(4.6);
+        expect(Number((inputs[1].element as HTMLInputElement).min)).toBe(6.6);
         expect(wrapper.text()).toContain('2027');
     });
 });

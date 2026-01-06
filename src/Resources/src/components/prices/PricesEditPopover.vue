@@ -156,7 +156,7 @@ async function onSubmit() {
     year: props.year,
     price: parsePrice(priceInput.value),
     price_combined: parsePrice(priceCombinedInput.value)
-  } as any);
+  });
   isSubmitting.value = false;
 }
 </script>

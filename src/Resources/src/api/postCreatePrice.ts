@@ -1,7 +1,7 @@
 import useApi from './api';
 import { type IMessage } from '@/interfaces/IMessage';
 
-interface PriceCreateData {
+export interface PriceCreateData {
     year: number;
     price: number;
     price_combined: number;

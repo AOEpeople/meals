@@ -2,6 +2,7 @@ import {mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {reactive} from 'vue';
 import PricesEditPopover from '@/components/prices/PricesEditPopover.vue';
+import {PriceUpdateData} from '../../../src/api/putUpdatePrice';
 
 const updatePriceMock = vi.fn();
 
@@ -10,7 +11,7 @@ const PricesStateMock = reactive({
         2024: { price: 4.2, price_combined: 6.2, year: 2024 },
         2025: { price: 4.4, price_combined: 6.4, year: 2025 },
         2026: { price: 4.6, price_combined: 6.6, year: 2026 },
-    } as Record<number, any>,
+    } as Record<number, PriceUpdateData>,
 });
 
 let priceByYear = { price: 4.4, price_combined: 6.4, year: 2025 };

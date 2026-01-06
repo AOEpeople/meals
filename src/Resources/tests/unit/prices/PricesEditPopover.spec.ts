@@ -112,12 +112,12 @@ describe('Test PricesCreationPanel', () => {
         await inputs[0].setValue('10.5');
         await inputs[1].setValue('12.25');
         const emitSpy = vi
-            .spyOn((wrapper.vm as any).$ as any, 'emit')
+            .spyOn((wrapper.vm).$, 'emit')
             .mockImplementation((event: string) => {
                 if (event === 'update') {
                     throw new Error('emit failed');
                 }
-                return undefined as any;
+                return undefined;
             });
 
         await wrapper.find('form').trigger('submit.prevent');

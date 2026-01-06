@@ -112,18 +112,13 @@ watch(priceCombinedInput, (newValue) => {
 function validateForm(): boolean {
   errors.value = { price: '', priceCombined: '', general: '' };
   let isValid = true;
-
   const priceValue = parseFloat(priceInput.value);
   const priceCombinedValue = parseFloat(priceCombinedInput.value);
-
   if (!priceInput.value || isNaN(priceValue)) {
     errors.value.price = t('prices.errors.priceRequired');
     isValid = false;
   } else if (priceValue < minPrice.value) {
     errors.value.price = t('prices.errors.priceMinimum', { min: minPrice.value });
-    isValid = false;
-  } else if (priceValue < 0) {
-    errors.value.price = t('prices.errors.priceNegative');
     isValid = false;
   }
 
@@ -133,9 +128,6 @@ function validateForm(): boolean {
   } else if (priceCombinedValue < minPriceCombined.value) {
     errors.value.priceCombined = t('prices.errors.priceCombinedMinimum', { min: minPriceCombined.value });
     isValid = false;
-  } else if (priceCombinedValue < 0) {
-    errors.value.priceCombined = t('prices.errors.priceCombinedNegative');
-    isValid = false;
   }
 
   return isValid;
@@ -143,13 +135,11 @@ function validateForm(): boolean {
 
 async function onSubmit() {
   required.value = true;
-
   if (!validateForm()) {
     return;
   }
 
   isSubmitting.value = true;
-
   try {
     const success = await createPrice({
       year: nextYear.value,

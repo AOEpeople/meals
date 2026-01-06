@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end gap-2 sm:gap-4">
     <ActionButton
+      :id="`edit-${props.year}-price-button`"
       v-if="canEdit"
       :action="Action.EDIT"
       :btn-text="t('button.edit')"
@@ -8,6 +9,7 @@
       @click="$emit('edit', year)"
     />
     <ActionButton
+      :id="`delete-${props.year}-price-button`"
       v-if="canDelete"
       :action="Action.DELETE"
       :btn-text="t('button.delete')"

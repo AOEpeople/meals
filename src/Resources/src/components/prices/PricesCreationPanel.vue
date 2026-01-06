@@ -12,6 +12,7 @@
       </p>
     </div>
     <InputLabel
+      id="create-price-per-dish-field"
       v-model="priceInput"
       :label-text="t('prices.popover.price')"
       :required="required"
@@ -21,6 +22,7 @@
       :error="errors.price"
     />
     <InputLabel
+      id="create-price-per-combined-dishes-field"
       v-model="priceCombinedInput"
       :label-text="t('prices.popover.priceCombined')"
       :required="required"

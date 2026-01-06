@@ -15,7 +15,7 @@
       "
     >
       <input
-        :id="labelText"
+        :id="id"
         v-model="value"
         :type="type"
         :name="labelText"
@@ -46,6 +46,7 @@ import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
+    id?: string;
     labelText?: string;
     modelValue: string | number;
     type?: string;

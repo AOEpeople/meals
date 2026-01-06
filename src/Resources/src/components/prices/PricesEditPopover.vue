@@ -4,6 +4,7 @@
 
     <form @submit.prevent="onSubmit">
       <InputLabel
+        id="edit-price-per-dish-field"
         v-model="priceInput"
         :label-text="t('prices.popover.price')"
         :min="minPrice"
@@ -15,6 +16,7 @@
       />
 
       <InputLabel
+        id="edit-price-per-combined-dishes-field"
         v-model="priceCombinedInput"
         :label-text="t('prices.popover.priceCombined')"
         :min="minPriceCombined"

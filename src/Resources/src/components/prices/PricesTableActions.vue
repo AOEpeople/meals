@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end gap-2 sm:gap-4">
     <ActionButton
-      :id="`edit-${props.year}-price-button`"
       v-if="canEdit"
+      :id="`edit-${props.year}-price-button`"
       :action="Action.EDIT"
       :btn-text="t('button.edit')"
       class="h-[40px]"
       @click="$emit('edit', year)"
     />
     <ActionButton
-      :id="`delete-${props.year}-price-button`"
       v-if="canDelete"
+      :id="`delete-${props.year}-price-button`"
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
       :width-full="false"

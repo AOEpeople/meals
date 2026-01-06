@@ -68,7 +68,7 @@ final class LoadMeals extends Fixture implements OrderedFixtureInterface
         $price = new Price();
         $year = (int) (new DateTimeImmutable())->format('Y');
         if ($this->containsOldPrices) {
-            $year--;
+            --$year;
         }
         $price->setPriceValue(4.4);
         $price->setYear($year);

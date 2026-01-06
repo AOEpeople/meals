@@ -129,7 +129,7 @@ final class PricesController extends BaseController
 
     private function validateYearAndPrices($data, PriceRepository $priceRepository): ?JsonResponse
     {
-        $response = $this->validateYear($data);
+        $response = $this->validatePrice($data);
         if (!is_null($response)) {
             return $response;
         }
@@ -152,7 +152,7 @@ final class PricesController extends BaseController
         return null;
     }
 
-    private function validatePricesForYear($data, PriceRepository $priceRepository)
+    private function validatePricesForYear($data, PriceRepository $priceRepository): ?JsonResponse
     {
         $year = (int) $data['year'];
         $price = (float) $data['price'];

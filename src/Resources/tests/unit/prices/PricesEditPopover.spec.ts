@@ -14,7 +14,7 @@ const PricesStateMock = reactive({
     } as Record<number, PriceUpdateData>,
 });
 
-let priceByYear = { price: 4.4, price_combined: 6.4, year: 2025 };
+const priceByYear = { price: 4.4, price_combined: 6.4, year: 2025 };
 vi.mock('@/stores/pricesStore', () => ({
     usePrices: () => ({
         PricesState: PricesStateMock,

@@ -64,6 +64,7 @@ const props = withDefaults(
     labelText: '',
     type: 'text',
     min: 0,
+    max: undefined,
     step: '',
     labelVisible: true,
     required: false,

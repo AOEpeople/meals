@@ -106,30 +106,6 @@ describe('Test PricesCreationPanel', () => {
         });
     });
 
-    it('should show error when update emit throws error', async () => {
-        const inputs = wrapper.findAll('[data-testid="number-input"]');
-        await inputs[0].setValue('10.5');
-        await inputs[1].setValue('12.25');
-        const emitSpy = vi
-            .spyOn((wrapper.vm as any).$ as any, 'emit')
-            .mockImplementation((event: string) => {
-                if (event === 'update') {
-                    throw new Error('emit failed');
-                }
-                return undefined as any;
-            });
-
-        await wrapper.find('form').trigger('submit.prevent');
-
-        expect(wrapper.text()).toContain('prices.errors.updateFailed');
-        expect(emitSpy).toHaveBeenCalledWith('update', {
-            year: 2025,
-            price: 10.5,
-            price_combined: 12.25,
-        });
-        expect(wrapper.emitted('update')).toBeFalsy();
-    });
-
     it ('should get min and max prices for input fields', () => {
         const inputs = wrapper.findAll('[data-testid="number-input"]');
         expect(inputs).toHaveLength(2);

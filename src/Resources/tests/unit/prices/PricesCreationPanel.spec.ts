@@ -2,6 +2,7 @@ import {mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {reactive} from 'vue';
 import PricesCreationPanel from '@/components/prices/PricesCreationPanel.vue';
+import {PriceCreateData} from '../../../src/api/postCreatePrice';
 
 const createPriceMock = vi.fn();
 
@@ -9,7 +10,7 @@ const PricesStateMock = reactive({
     prices: {
         2025: { price: 4.4, price_combined: 6.4, year: 2025 },
         2026: { price: 4.6, price_combined: 6.6, year: 2026 },
-    } as Record<number, any>,
+    } as Record<number, PriceCreateData>,
 });
 
 vi.mock('@/stores/pricesStore', () => ({

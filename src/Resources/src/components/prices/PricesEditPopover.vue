@@ -152,15 +152,11 @@ async function onSubmit() {
   if (!validateForm() || isSubmitting.value) return;
 
   isSubmitting.value = true;
-  try {
-    emit('update', {
-      year: props.year,
-      price: parsePrice(priceInput.value),
-      price_combined: parsePrice(priceCombinedInput.value)
-    } as any);
-  } catch (error) {
-    errors.value.general = t('prices.errors.updateFailed');
-    isSubmitting.value = false;
-  }
+  emit('update', {
+    year: props.year,
+    price: parsePrice(priceInput.value),
+    price_combined: parsePrice(priceCombinedInput.value)
+  } as any);
+  isSubmitting.value = false;
 }
 </script>

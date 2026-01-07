@@ -37,6 +37,7 @@
       <td class="min-w-[100px] pl-2">
         <PricesTableActions
           :year="priceData.year"
+          :highestYear="highestYearInSortedPrices"
           @edit="$emit('edit', $event)"
           @delete="$emit('delete', $event)"
         />
@@ -77,4 +78,5 @@ defineEmits<{
 const sortedPrices = computed(() => {
   return [...props.prices].sort((a, b) => b.year - a.year);
 });
+const highestYearInSortedPrices = computed(() => Math.max(...sortedPrices.value.map((p) => p.year)));
 </script>

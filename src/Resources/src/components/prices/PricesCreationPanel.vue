@@ -95,19 +95,25 @@ const priceCombinedInput = ref<string>(minPriceCombined.value.toString());
 
 watch(priceInput, (newValue) => {
   const numValue = parseFloat(newValue);
+  errors.value.price = '';
   if (newValue && (isNaN(numValue) || numValue < minPrice.value)) {
-    errors.value.price = t('prices.errors.priceMinimum', { min: minPrice.value });
-  } else {
-    errors.value.price = '';
+    const minPriceAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(minPrice.value);
+    errors.value.price = t('prices.errors.priceMinimum', { min: minPriceAsCurrency });
   }
 });
 
 watch(priceCombinedInput, (newValue) => {
   const numValue = parseFloat(newValue);
+  errors.value.priceCombined = '';
   if (newValue && (isNaN(numValue) || numValue < minPriceCombined.value)) {
-    errors.value.priceCombined = t('prices.errors.priceCombinedMinimum', { min: minPriceCombined.value });
-  } else {
-    errors.value.priceCombined = '';
+    const minPriceCombinedAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(minPriceCombined.value);
+    errors.value.priceCombined = t('prices.errors.priceCombinedMinimum', { min: minPriceCombinedAsCurrency });
   }
 });
 
@@ -119,16 +125,9 @@ function validateForm(): boolean {
   if (!priceInput.value || isNaN(priceValue)) {
     errors.value.price = t('prices.errors.priceRequired');
     isValid = false;
-  } else if (priceValue < minPrice.value) {
-    errors.value.price = t('prices.errors.priceMinimum', { min: minPrice.value });
-    isValid = false;
   }
-
   if (!priceCombinedInput.value || isNaN(priceCombinedValue)) {
     errors.value.priceCombined = t('prices.errors.priceCombinedRequired');
-    isValid = false;
-  } else if (priceCombinedValue < minPriceCombined.value) {
-    errors.value.priceCombined = t('prices.errors.priceCombinedMinimum', { min: minPriceCombined.value });
     isValid = false;
   }
 

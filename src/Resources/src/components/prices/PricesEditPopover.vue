@@ -125,27 +125,64 @@ const nextYearPrices = computed(() => {
 const maxPrice = computed(() => nextYearPrices.value.price);
 const maxPriceCombined = computed(() => nextYearPrices.value.price_combined);
 
+watch(priceInput, (newValue) => {
+  const numValue = parseFloat(newValue);
+  errors.value.price = '';
+  if (newValue && (isNaN(numValue) || numValue < minPrice.value)) {
+    const minPriceAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(minPrice.value);
+    errors.value.price = t('prices.errors.priceMinimum', { min: minPriceAsCurrency });
+  }
+  if (newValue && (isNaN(numValue) || numValue > maxPrice.value)) {
+    const maxPriceAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(maxPrice.value);
+    errors.value.price = t('prices.errors.priceMaximum', { max: maxPriceAsCurrency });
+  }
+});
+
+watch(priceCombinedInput, (newValue) => {
+  const numValue = parseFloat(newValue);
+  errors.value.priceCombined = '';
+  if (newValue && (isNaN(numValue) || numValue < minPriceCombined.value)) {
+    const minPriceCombinedAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(minPriceCombined.value);
+    errors.value.priceCombined = t('prices.errors.priceCombinedMinimum', { min: minPriceCombinedAsCurrency });
+  }
+  if (newValue && (isNaN(numValue) || numValue > maxPriceCombined.value)) {
+    const maxPriceCombinedAsCurrency = new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(maxPriceCombined.value);
+    errors.value.priceCombined = t('prices.errors.priceCombinedMaximum', { max: maxPriceCombinedAsCurrency });
+  }
+});
+
 function parsePrice(value: string | number): number {
   const numValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;
   return isNaN(numValue) ? 0 : numValue;
 }
 
 function validateForm(): boolean {
-  let valid = true;
+  let isValid = true;
   errors.value = { price: '', priceCombined: '', general: '' };
   const price = parsePrice(priceInput.value);
   const priceCombined = parsePrice(priceCombinedInput.value);
-  if (isNaN(price) || price <= 0) {
-    errors.value.price = t('prices.errors.invalidPrice');
-    valid = false;
+  if (!price || isNaN(price)) {
+    errors.value.price = t('prices.errors.priceRequired');
+    isValid = false;
+  }
+  if (!priceCombined || isNaN(priceCombined)) {
+    errors.value.priceCombined = t('prices.errors.priceCombinedRequired');
+    isValid = false;
   }
 
-  if (isNaN(priceCombined) || priceCombined <= 0) {
-    errors.value.priceCombined = t('prices.errors.invalidPrice');
-    valid = false;
-  }
-
-  return valid;
+  return isValid;
 }
 
 async function onSubmit() {

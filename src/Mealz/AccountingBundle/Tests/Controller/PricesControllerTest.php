@@ -211,7 +211,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testDeletePriceWithPriceNotFound(): void
     {
-        $dateTime = new DateTimeImmutable('now')->modify('+1 year');;
+        $dateTime = new DateTimeImmutable('now')->modify('+1 year');
         $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request('DELETE', '/api/price/' . $dateTimeYearAsString);
 
@@ -241,7 +241,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testEditPriceWithNoPricesFound(): void
     {
-        $dateTime = new DateTimeImmutable('now')->modify('-1 year');;
+        $dateTime = new DateTimeImmutable('now')->modify('-1 year');
         $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request('PUT', '/api/price/' . $dateTimeYearAsString,
             [],

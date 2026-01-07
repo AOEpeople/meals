@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach} from 'vitest';
+import { describe, it, expect} from 'vitest';
 import MoneyInput from '../../../src/components/misc/MoneyInput.vue';
 import {mount} from '@vue/test-utils';
 describe('Test MoneyInput', () => {

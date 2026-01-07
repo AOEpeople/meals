@@ -89,7 +89,7 @@ describe('Test PricesCreationPanel', () => {
         await inputs[0].setValue('');
         await wrapper.find('form').trigger('submit.prevent');
 
-        expect(wrapper.text()).toContain('prices.errors.invalidPrice');
+        expect(wrapper.text()).toContain('prices.errors.priceRequired');
     });
 
     it('should submit form successfully', async () => {

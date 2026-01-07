@@ -30,6 +30,7 @@ const { t } = useI18n();
 
 const props = defineProps<{
   year: number;
+  highestYear: number;
 }>();
 
 defineEmits<{
@@ -40,5 +41,5 @@ defineEmits<{
 const currentYear = new Date().getFullYear();
 
 const canEdit = computed(() => props.year >= currentYear);
-const canDelete = computed(() => props.year > currentYear);
+const canDelete = computed(() => props.year > currentYear && props.year === props.highestYear);
 </script>

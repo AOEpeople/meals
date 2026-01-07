@@ -39,8 +39,8 @@
     </div>
 
     <p
-        v-if="error"
-        class="mt-1 px-4 text-xs font-medium text-[#DC2626]"
+      v-if="error"
+      class="mt-1 px-4 text-xs font-medium text-[#DC2626]"
     >
       {{ error }}
     </p>

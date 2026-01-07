@@ -20,6 +20,7 @@ use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 
@@ -141,11 +142,13 @@ final class CombinedMealServiceTest extends AbstractDatabaseTestCase
 
         $this->assertTrue($hasMeals);
 
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsString = $dateTime->format('Y');
         try {
             $this->cms->update($week);
             $this->fail('PriceNotFoundException was expected to be thrown.');
         } catch (PriceNotFoundException $exception) {
-            $this->assertSame('Price not found for year "2025".', $exception->getMessage());
+            $this->assertSame(sprintf('Price not found for year "%s".', $dateTimeYearAsString), $exception->getMessage());
         }
 
         $this->assertEquals([
@@ -153,7 +156,7 @@ final class CombinedMealServiceTest extends AbstractDatabaseTestCase
                 [
                     'message' => 'Combined dish price by year does not exist.',
                     'context' => [
-                        'year' => 2025
+                        'year' => (int) $dateTimeYearAsString
                     ]
                 ]
             ]

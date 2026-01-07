@@ -103,7 +103,7 @@ final class MealAdminHelperTest extends TestCase
             $this->mealAdminHelper->handleMealArray($mealArr, $dayEntity);
             $this->fail('PriceNotFoundException was expected to be thrown.');
         } catch (PriceNotFoundException $exception) {
-            $this->assertSame('Price not found for year "2025".', $exception->getMessage());
+            $this->assertSame(sprintf('Price not found for year "%d".', $dateTimeYearAsInt), $exception->getMessage());
         }
 
         $this->assertEquals([
@@ -111,7 +111,7 @@ final class MealAdminHelperTest extends TestCase
                 [
                     'message' => 'Prices could not be loaded by price repository in handleMealArray.',
                     'context' => [
-                        'year' => 2025
+                        'year' => $dateTimeYearAsInt
                     ]
                 ]
             ]

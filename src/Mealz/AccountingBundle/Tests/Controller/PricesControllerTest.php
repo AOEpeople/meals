@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use DateTimeImmutable;
 use Override;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -40,14 +41,18 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testListPricesIsValid(): void
     {
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request('GET', '/api/prices');
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('{"prices":{"2025":{"year":2025,"price":4.4,"price_combined":6.4}}}', $response->getContent());
+        $this->assertSame(sprintf('{"prices":{"%s":{"year":%d,"price":4.4,"price_combined":6.4}}}', $dateTimeYearAsString, (int) $dateTimeYearAsString), $response->getContent());
     }
 
     public function testAddPriceIsValid(): void
     {
+        $dateTime = new DateTimeImmutable('now')->modify('+1 year');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'POST',
             '/api/price',
@@ -55,7 +60,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'year' => '2026',
+                'year' => $dateTimeYearAsString,
                 'price' => 4.4,
                 'price_combined' => 6.4,
             ], JSON_THROW_ON_ERROR)
@@ -63,7 +68,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertSame('{"message":"Price created successfully.","price":{"year":2026,"price":4.4,"price_combined":6.4}}', $response->getContent());
+        $this->assertSame(sprintf('{"message":"Price created successfully.","price":{"year":%s,"price":4.4,"price_combined":6.4}}', $dateTimeYearAsString), $response->getContent());
     }
 
     public function testAddPriceWithMissingRequiredFields(): void
@@ -87,6 +92,8 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testAddPriceWithPriceCanNotBeLowerThanPreviousYear(): void
     {
+        $dateTime = new DateTimeImmutable('now')->modify('+1 year');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'POST',
             '/api/price',
@@ -94,7 +101,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'year' => '2026',
+                'year' => $dateTimeYearAsString,
                 'price' => 2,
                 'price_combined' => 6.4,
             ], JSON_THROW_ON_ERROR)
@@ -107,6 +114,8 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testAddPriceWithCombinedPriceCanNotBeLowerThanPreviousYear(): void
     {
+        $dateTime = new DateTimeImmutable('now')->modify('+1 year');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'POST',
             '/api/price',
@@ -114,7 +123,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'year' => '2026',
+                'year' => $dateTimeYearAsString,
                 'price' => 4.4,
                 'price_combined' => 2,
             ], JSON_THROW_ON_ERROR)
@@ -127,9 +136,11 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testAddPriceWithPriceCanNotBeHigherThanNextYear(): void
     {
+        $dateTime = new DateTimeImmutable('now')->modify('-1 year');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'PUT',
-            '/api/price/2024',
+            '/api/price/' . $dateTimeYearAsString,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -146,9 +157,11 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testAddPriceWithCombinedPriceCanNotBeHigherThanNextYear(): void
     {
+        $dateTime = new DateTimeImmutable('now')->modify('-1 year');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'PUT',
-            '/api/price/2024',
+            '/api/price/' . $dateTimeYearAsString,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -165,6 +178,8 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testAddPriceWithPriceAlreadyExistsForYear(): void
     {
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsString = $dateTime->format('Y');
         $this->client->request(
             'POST',
             '/api/price',
@@ -172,7 +187,7 @@ final class PricesControllerTest extends AbstractControllerTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'year' => '2025',
+                'year' => $dateTimeYearAsString,
                 'price' => 4.4,
                 'price_combined' => 6.4,
             ], JSON_THROW_ON_ERROR)
@@ -185,7 +200,9 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testDeletePriceIsValid(): void
     {
-        $this->client->request('DELETE', '/api/price/2025');
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsString = $dateTime->format('Y');
+        $this->client->request('DELETE', '/api/price/' . $dateTimeYearAsString);
 
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -194,7 +211,9 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testDeletePriceWithPriceNotFound(): void
     {
-        $this->client->request('DELETE', '/api/price/2026');
+        $dateTime = new DateTimeImmutable('now')->modify('+1 year');;
+        $dateTimeYearAsString = $dateTime->format('Y');
+        $this->client->request('DELETE', '/api/price/' . $dateTimeYearAsString);
 
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -203,7 +222,9 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
     public function testEditPriceIsValid(): void
     {
-        $this->client->request('PUT', '/api/price/2025',
+        $dateTime = new DateTimeImmutable('now');
+        $dateTimeYearAsString = $dateTime->format('Y');
+        $this->client->request('PUT', '/api/price/' . $dateTimeYearAsString,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -215,12 +236,14 @@ final class PricesControllerTest extends AbstractControllerTestCase
 
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('{"message":"Price updated successfully","price":{"year":2025,"price":4.2,"price_combined":6.4}}', $response->getContent());
+        $this->assertSame(sprintf('{"message":"Price updated successfully","price":{"year":%d,"price":4.2,"price_combined":6.4}}', (int) $dateTimeYearAsString), $response->getContent());
     }
 
     public function testEditPriceWithNoPricesFound(): void
     {
-        $this->client->request('PUT', '/api/price/2024',
+        $dateTime = new DateTimeImmutable('now')->modify('-1 year');;
+        $dateTimeYearAsString = $dateTime->format('Y');
+        $this->client->request('PUT', '/api/price/' . $dateTimeYearAsString,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],

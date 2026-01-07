@@ -135,7 +135,7 @@ watch(priceInput, (newValue) => {
     }).format(minPrice.value);
     errors.value.price = t('prices.errors.priceMinimum', { min: minPriceAsCurrency });
   }
-  if (maxPriceCombined.value !== undefined && newValue && (isNaN(numValue) || numValue > maxPrice.value)) {
+  if (maxPrice.value !== undefined && newValue && (isNaN(numValue) || numValue > maxPrice.value)) {
     const maxPriceAsCurrency = new Intl.NumberFormat('de-DE', {
       style: 'currency',
       currency: 'EUR'

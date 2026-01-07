@@ -29,7 +29,7 @@
 
       <p
         v-if="errors.general"
-        class="text-red-600 mb-3 text-sm"
+        class="text-[#DC2626] font-medium mb-3 text-sm"
       >
         {{ errors.general }}
       </p>

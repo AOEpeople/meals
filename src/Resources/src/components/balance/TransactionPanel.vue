@@ -60,7 +60,7 @@ onMounted(async () => {
     });
 
     if (paypal && paypal.Buttons) {
-      let activeSessionIntervalId: NodeJS.Timeout;
+      let activeSessionIntervalId: NodeJS.Timeout|number;
       paypal
         .Buttons({
           onInit: function (_data, actions) {

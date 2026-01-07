@@ -37,6 +37,13 @@
         @click="value = ''"
       />
     </div>
+
+    <p
+        v-if="error"
+        class="mt-1 px-4 text-xs font-medium text-[#DC2626]"
+    >
+      {{ error }}
+    </p>
   </div>
 </template>
 
@@ -58,6 +65,7 @@ const props = withDefaults(
     xButtonActive?: boolean;
     overwriteInputStyle?: string;
     overwriteContainerStyles?: string;
+    error?: string;
   }>(),
   {
     id: '',
@@ -70,7 +78,8 @@ const props = withDefaults(
     required: false,
     xButtonActive: false,
     overwriteInputStyle: '',
-    overwriteContainerStyles: ''
+    overwriteContainerStyles: '',
+    error: ''
   }
 );
 

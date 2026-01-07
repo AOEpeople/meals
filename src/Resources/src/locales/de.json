@@ -263,9 +263,11 @@
     },
     "errors": {
       "priceRequired": "Preis ist erforderlich",
-      "priceMinimum": "Preis muss mindestens {min} € betragen",
+      "priceMinimum": "Preis muss mindestens {min} betragen",
+      "priceMaximum": "Preis darf maximal {max} betragen",
       "priceCombinedRequired": "Kombinierter Preis ist erforderlich",
-      "priceCombinedMinimum": "Kombinierter Preis muss mindestens {min} € betragen",
+      "priceCombinedMinimum": "Kombinierter Preis muss mindestens {min} betragen",
+      "priceCombinedMaximum": "Kombinierter Preis darf maximal {max} betragen",
       "priceCombinedNegative": "Kombinierter Preis darf nicht negativ sein",
       "createFailed": "Fehler beim Erstellen des Preises"
     },

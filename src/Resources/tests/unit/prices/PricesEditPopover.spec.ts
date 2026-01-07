@@ -86,7 +86,7 @@ describe('Test PricesCreationPanel', () => {
         expect((inputs[0].element as HTMLInputElement).value).toBe('4.40');
         expect((inputs[1].element as HTMLInputElement).value).toBe('6.40');
 
-        await inputs[0].setValue('-4.0');
+        await inputs[0].setValue('');
         await wrapper.find('form').trigger('submit.prevent');
 
         expect(wrapper.text()).toContain('prices.errors.invalidPrice');

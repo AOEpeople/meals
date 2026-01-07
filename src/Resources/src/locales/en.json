@@ -263,9 +263,11 @@
     },
     "errors": {
       "priceRequired": "Price is required",
-      "priceMinimum": "Price must be at least {min} €",
+      "priceMinimum": "Price must be at least {min}",
+      "priceMaximum": "Price must not exceed {max}",
       "priceCombinedRequired": "Combined price is required",
-      "priceCombinedMinimum": "Combined price must be at least {min} €",
+      "priceCombinedMinimum": "Combined price must be at least {min}",
+      "priceCombinedMaximum": "Combined price must not exceed {max}",
       "priceCombinedNegative": "Combined price must not be negative",
       "createFailed": "Failed to create price"
     },

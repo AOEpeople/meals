@@ -116,7 +116,7 @@ const nextYearPrices = computed(() => {
   const years = Object.keys(PricesState.prices)
     .map(Number)
     .filter((year) => year > props.year)
-    .sort((a, b) => b - a);
+    .sort((a, b) => a - b);
   if (years.length > 0) {
     return PricesState.prices[years[0]];
   }

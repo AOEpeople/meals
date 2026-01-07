@@ -4,10 +4,11 @@ describe('Test Price View', () => {
         cy.loginAs('kochomi');
         cy.visitMeals();
 
+        const currentYear = new Date().getFullYear();
         cy.intercept('GET', '**/api/prices').as('getPrices');
         cy.intercept('POST', '**/api/price').as('createPrice');
-        cy.intercept('PUT', '**/api/price/2026').as('updatePrice');
-        cy.intercept('DELETE', '**/api/price/2025').as('deletePrice');
+        cy.intercept('PUT', `**/api/price/${currentYear}`).as('updatePrice');
+        cy.intercept('DELETE', `**/api/price/${currentYear - 1}`).as('deletePrice');
     });
 
     it('should visit /prices and create new price', () => {
@@ -61,20 +62,22 @@ describe('Test Price View', () => {
             .type('12');
         cy.get('input[type="submit"]').click();
         cy.wait('@createPrice');
-        cy.get('#edit-2026-price-button').click();
+        const currentYear = new Date().getFullYear();
+        const editPriceButtonId = `#edit-${currentYear}-price-button`;
+        cy.get(editPriceButtonId).click();
         cy.get('#edit-price-per-dish-field')
             .clear()
-            .type('11');
+            .type('9');
         cy.get('#edit-price-per-combined-dishes-field')
             .clear()
-            .type('13');
+            .type('11');
         cy.get('input[type="submit"]').click();
         cy.wait('@updatePrice');
         cy.get('td')
-            .contains('11,00 €')
+            .contains('9,00 €')
             .should('exist');
         cy.get('td')
-            .contains('13,00 €')
+            .contains('11,00 €')
             .should('exist');
     });
 
@@ -103,7 +106,9 @@ describe('Test Price View', () => {
         cy.get('input[type="submit"]').click();
         cy.wait('@createPrice');
 
-        cy.get('#edit-2026-price-button').click();
+        const currentYear = new Date().getFullYear();
+        const editPriceButtonId = `#edit-${currentYear}-price-button`;
+        cy.get(editPriceButtonId).click();
         cy.get('#edit-price-per-dish-field')
             .clear()
             .type('13');
@@ -142,7 +147,9 @@ describe('Test Price View', () => {
         cy.get('input[type="submit"]').click();
         cy.wait('@createPrice');
 
-        cy.get('#delete-2027-price-button').click();
+        const currentYear = new Date().getFullYear() + 2;
+        const deletePriceButtonId = `#delete-${currentYear}-price-button`;
+        cy.get(deletePriceButtonId).click();
 
         cy.get('td')
             .contains('11,00 €')

@@ -60,7 +60,7 @@ onMounted(async () => {
     });
 
     if (paypal && paypal.Buttons) {
-      let activeSessionIntervalId;
+      let activeSessionIntervalId: number;
       paypal
         .Buttons({
           onInit: function (_data, actions) {

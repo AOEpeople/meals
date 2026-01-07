@@ -6,7 +6,7 @@
     />
     <PopupModal :isOpen="showParticipations">
       <!-- maincontainer with padding -->
-      <div class="max-h-96 overflow-y-auto p-[16px] pt-[10px]">
+      <div class="min-w-[300px] sm:min-w-[576px] max-h-96 overflow-y-auto p-[16px] pt-[10px]">
         <!-- inner container with content in full width -->
         <div class="w-full">
           <!-- dialog and close icon -->

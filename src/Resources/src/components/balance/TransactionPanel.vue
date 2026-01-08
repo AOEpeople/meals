@@ -60,6 +60,7 @@ onMounted(async () => {
     });
 
     if (paypal && paypal.Buttons) {
+      let activeSessionIntervalId: NodeJS.Timeout | number;
       paypal
         .Buttons({
           onInit: function (_data, actions) {
@@ -82,7 +83,12 @@ onMounted(async () => {
             );
           },
           createOrder: function (_data, actions) {
-            checkActiveSession();
+            activeSessionIntervalId = setInterval(
+              () => {
+                checkActiveSession();
+              },
+              10 * 60 * 1000
+            );
             return actions.order.create({
               purchase_units: [
                 {
@@ -99,6 +105,7 @@ onMounted(async () => {
             return actions.resolve();
           },
           onApprove: async function (data, actions) {
+            clearInterval(activeSessionIntervalId);
             isLoading.value = true;
             try {
               await actions.order?.capture();

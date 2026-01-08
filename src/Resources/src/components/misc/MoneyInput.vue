@@ -1,36 +1,57 @@
 <template>
   <input
-    v-model="value"
-    type="number"
+    v-model="displayValue"
+    type="text"
+    inputmode="decimal"
     required
-    min="0.00"
-    step=".01"
     class="h-[46px] rounded-full border-2 border-solid border-[#CAD6E1] bg-white text-center"
-    @focus="(e) => selectAllAndPlaceCursor(e.target as HTMLInputElement)"
+    @input="onInput"
+    @focus="onFocus"
+    @blur="onBlur"
   />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   modelValue: number;
 }>();
 
 const emit = defineEmits(['update:modelValue']);
+const isFocused = ref(false);
+const rawValue = ref(props.modelValue.toString());
+const displayValue = computed(() => (isFocused.value ? rawValue.value : formatMoney(props.modelValue)));
 
-const value = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', parseFloat(value.toFixed(2)));
+function onInput(event: Event) {
+  const value = (event.target as HTMLInputElement).value;
+  rawValue.value = value;
+  const parsed = parseFloat(value.replace(',', '.'));
+  if (isNaN(parsed) || parsed < 0) {
+    return;
   }
-});
+  emit('update:modelValue', round(parsed));
+}
 
-function selectAllAndPlaceCursor(element: HTMLInputElement) {
-  element.select();
-  element.focus();
+function onFocus() {
+  isFocused.value = true;
+  rawValue.value = props.modelValue.toString();
+}
+
+function onBlur() {
+  isFocused.value = false;
+  rawValue.value = formatMoney(props.modelValue);
+}
+
+function round(value: number) {
+  return Math.round(value * 100) / 100;
+}
+
+function formatMoney(value: number) {
+  return value.toLocaleString('de-DE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 }
 </script>
 

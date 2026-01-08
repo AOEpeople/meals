@@ -1,5 +1,28 @@
 # Changelog
 
+## Version v3.3.0 (2026-01-07)
+
+### Features
+
+- **moneyinput:** Add test for money converting (b7b262d5)
+- **moneyinput:** Add negative parsed check before update modelValue (4bed33fa)
+- **moneyinput:** Add missing NaN parsed check before update modelValue (236aba8d)
+- **moneyinput:** Add automated money formatting (99bff0a5)
+- **keepalive:** Add activeSessionInterval (ef3b363b)
+
+### Refactoring
+
+- **prices:** remove unnecessary beforeEach import (f09d13fd)
+- **keepalive:** add number type to activeSessionIntervalId (2f4dad88)
+- **keepalive:** add Timeout type to activeSessionIntervalId (f9d9cda5)
+- **keepalive:** add number type to activeSessionIntervalId (d626f52b)
+
+### Other
+
+- style(keepAlive): add spacing between types (1f2b1587)
+- style(moneyInput): Add line break for displayValue (2123a32d)
+- style(keepAlive): Add line breaks for activeSessionInterval (3ad1d5d0)
+
 ## Version v3.2.0 (2025-12-17)
 
 ### Features

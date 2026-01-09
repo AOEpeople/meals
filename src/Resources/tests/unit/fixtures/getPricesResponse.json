@@ -1,0 +1,14 @@
+{
+  "prices": {
+    "2025": {
+      "year": 2025,
+      "price": 4.4,
+      "price_combined": 6.4
+    },
+    "2026": {
+      "year": 2026,
+      "price": 4.4,
+      "price_combined": 6.4
+    }
+  }
+}

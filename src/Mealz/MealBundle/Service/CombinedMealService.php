@@ -4,33 +4,45 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\AccountingBundle\Entity\Price;
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Service\Exception\PriceNotFoundException;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
+use Psr\Log\LoggerInterface;
 
-final class CombinedMealService
+final class CombinedMealService implements CombinedMealServiceInterface
 {
     private const string COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
-
-    private float $defaultPrice;
 
     private EntityManagerInterface $entityManager;
 
     private Dish $combinedDish;
+    private PriceRepository $priceRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
-        float $combinedPrice,
         EntityManagerInterface $entityManager,
-        DishRepository $dishRepo
+        DishRepository $dishRepo,
+        PriceRepository $priceRepo,
+        LoggerInterface $logger
     ) {
-        $this->defaultPrice = $combinedPrice;
         $this->entityManager = $entityManager;
         $this->combinedDish = $this->createCombinedDish($dishRepo);
+        $this->priceRepository = $priceRepo;
+        $this->logger = $logger;
     }
 
+    /**
+     * @throws PriceNotFoundException
+     */
+    #[Override]
     public function update(Week $week): void
     {
         $update = false;
@@ -58,8 +70,18 @@ final class CombinedMealService
                 }
             }
 
+            $dateTime = new DateTimeImmutable('now');
+            $dateTimeYearAsInt = (int) $dateTime->format('Y');
+            $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
+            if (!($price instanceof Price)) {
+                $this->logger->error('Combined dish price by year does not exist.', [
+                    'year' => $dateTimeYearAsInt,
+                ]);
+
+                throw PriceNotFoundException::isNotFound($dateTimeYearAsInt);
+            }
             if (null === $combinedMeal && 1 < count($baseMeals) && false === $dayHasOneSizeMeal) {
-                $this->createCombinedMeal($day);
+                $this->createCombinedMeal($day, $price);
                 $update = true;
             } elseif (null !== $combinedMeal && (1 >= count($baseMeals) || true === $dayHasOneSizeMeal)) {
                 $this->removeCombinedMeal($day, $combinedMeal);
@@ -82,7 +104,6 @@ final class CombinedMealService
 
         $combinedDish = new Dish();
         $combinedDish->setEnabled(false);
-        $combinedDish->setPrice($this->defaultPrice);
         $combinedDish->setTitleEn(self::COMBINED_DISH_TITLE_EN);
         $combinedDish->setTitleDe('Kombi-Gericht');
         $combinedDish->setDescriptionEn('');
@@ -94,10 +115,9 @@ final class CombinedMealService
         return $combinedDish;
     }
 
-    private function createCombinedMeal(Day $day): void
+    private function createCombinedMeal(Day $day, Price $price): void
     {
-        $combinedMeal = new Meal($this->combinedDish, $day);
-        $combinedMeal->setPrice($this->defaultPrice);
+        $combinedMeal = new Meal($this->combinedDish, $price, $day);
 
         $day->addMeal($combinedMeal);
     }

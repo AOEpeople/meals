@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Entity;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -32,8 +33,9 @@ class Meal implements Stringable, JsonSerializable
     private Dish $dish;
 
     #[Assert\NotBlank]
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
-    private float $price = 0.0;
+    #[ORM\ManyToOne(targetEntity: Price::class, cascade: ['refresh'], fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: 'price_id', referencedColumnName: 'year', onDelete: 'CASCADE')]
+    private Price $price;
 
     #[Assert\NotBlank]
     #[ORM\Column(name: 'participation_limit', type: 'integer', nullable: false)]
@@ -53,12 +55,18 @@ class Meal implements Stringable, JsonSerializable
     #[ORM\OneToMany(mappedBy: 'meal', targetEntity: Participant::class)]
     public ?Collection $participants = null;
 
-    public function __construct(Dish $dish, Day $day)
+    public function __construct(Dish $dish, Price $price, Day $day)
     {
         $this->participants = new ArrayCollection();
         $this->dish = $dish;
+        $this->price = $price;
         $this->day = $day;
         $this->dateTime = clone $day->getDateTime();
+    }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getId(): ?int
@@ -66,12 +74,7 @@ class Meal implements Stringable, JsonSerializable
         return $this->id;
     }
 
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
-    public function getPrice(): float
+    public function getPrice(): Price
     {
         return $this->price;
     }

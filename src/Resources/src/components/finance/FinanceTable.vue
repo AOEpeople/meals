@@ -17,7 +17,7 @@
       <tr
         v-for="(transaction, i) in dateTransactions"
         :key="i"
-        class="contents border-b-2 border-gray-200 text-[12px] xl:text-[18px]"
+        class="border-b-2 border-gray-200 text-[12px] xl:text-[18px]"
       >
         <td
           class="w-50% p-2"

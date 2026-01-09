@@ -178,7 +178,11 @@
       "903": "You are already registered. If you have any questions please message your contact person.",
       "1001": "At least one of the Parameters firstname or lastname are missing.",
       "1002": "The profile exists but is hidden.",
-      "balanceBelowBalanceLimit": "The account is not supposed to be overdrawn by more than €50."
+      "balanceBelowBalanceLimit": "The account is not supposed to be overdrawn by more than €50.",
+      "loadPricesFailed": "Failed to load prices",
+      "createPriceFailed": "Failed to create price",
+      "updatePriceFailed": "Failed to update price",
+      "deletePriceFailed": "Failed to delete price"
     },
     "success": {
       "menu": {
@@ -240,6 +244,36 @@
       "export": "export"
     }
   },
+  "prices": {
+    "header": "Price list",
+    "create": "Create new price",
+    "table": {
+      "year": "Year",
+      "price": "Price per dish",
+      "priceCombined": "Price per combined dish",
+      "actions": "Actions"
+    },
+    "edit": "edit",
+    "delete": "delete",
+    "popover": {
+      "create": "New prices",
+      "year": "Year",
+      "price": "Price per dish",
+      "priceCombined": "Price per combined dish"
+    },
+    "errors": {
+      "priceRequired": "Price is required",
+      "priceMinimum": "Price must be at least {min}",
+      "priceMaximum": "Price must not exceed {max}",
+      "priceCombinedRequired": "Combined price is required",
+      "priceCombinedMinimum": "Combined price must be at least {min}",
+      "priceCombinedMaximum": "Combined price must not exceed {max}",
+      "priceCombinedNegative": "Combined price must not be negative",
+      "createFailed": "Failed to create price"
+    },
+    "submitting": "is submitting",
+    "confirmDelete": "Do you really want to delete the price for the year {year}?"
+  },
   "guest": {
     "form": {
       "add": "Add a guest to the list",
@@ -274,6 +308,7 @@
       "slots": "Time Slots",
       "costs": "Costs",
       "finance": "Finance",
+      "prices": "Prices",
       "events": "Events"
     },
     "logged_in_text": "You are logged in as",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Message;
 
+use App\Mealz\AccountingBundle\Entity\Price;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
@@ -98,8 +99,12 @@ final class WeeklyMenuMessageTest extends WebTestCase
         $dishVariationA->setParent($dishParent);
         $dishVariationB->setParent($dishParent);
 
-        $mealA = new Meal($dishVariationA, $day);
-        $mealB = new Meal($dishVariationB, $day);
+        $price = new Price();
+        $price->setPriceValue(1);
+        $price->setPriceCombinedValue(2);
+        $price->setYear(2025);
+        $mealA = new Meal($dishVariationA, $price, $day);
+        $mealB = new Meal($dishVariationB, $price, $day);
 
         $day->addMeal($mealA);
         $day->addMeal($mealB);
@@ -128,12 +133,16 @@ final class WeeklyMenuMessageTest extends WebTestCase
     {
         $day = new Day();
         $day->setDateTime($date);
+        $price = new Price();
+        $price->setPriceValue(1);
+        $price->setPriceCombinedValue(2);
+        $price->setYear(2025);
 
         foreach ($dishTitles as $dishTitle) {
             $dish = new Dish();
             $dish->setTitleEn($dishTitle);
 
-            $meal = new Meal($dish, $day);
+            $meal = new Meal($dish, $price, $day);
             $day->addMeal($meal);
         }
 

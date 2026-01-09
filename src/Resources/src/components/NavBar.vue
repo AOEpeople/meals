@@ -57,7 +57,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 hidden space-x-3 xl:inline-block"
+            class="col-span-4 hidden space-x-3 whitespace-nowrap xl:flex"
           >
             <span
               v-for="link in navigation"
@@ -74,7 +74,7 @@
           </div>
           <div
             v-if="isAuthenticated && !isShowParticipations"
-            class="col-span-4 inline-block space-x-4 justify-self-end"
+            class="col-span-4 -mr-2 flex space-x-4 justify-self-end"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
               <Icons
@@ -135,7 +135,8 @@ import {
   CalculatorIcon,
   CashIcon,
   BookmarkIcon,
-  ClockIcon
+  ClockIcon,
+  CurrencyEuroIcon
 } from '@heroicons/vue/outline';
 import Icons from '@/components/misc/Icons.vue';
 import { useI18n } from 'vue-i18n';
@@ -209,6 +210,12 @@ const navigation = computed(() => {
       to: '/events',
       icon: EventIcon,
       access: userDataStore.roleAllowsRoute('Events')
+    },
+    {
+      name: 'header.navigation.prices',
+      to: '/prices',
+      icon: CurrencyEuroIcon,
+      access: userDataStore.roleAllowsRoute('Prices')
     },
     { name: 'header.navigation.costs', to: '/costs', icon: CashIcon, access: userDataStore.roleAllowsRoute('Costs') },
     {

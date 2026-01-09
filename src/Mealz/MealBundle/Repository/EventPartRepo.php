@@ -38,6 +38,7 @@ final class EventPartRepo extends BaseRepository implements EventPartRepoInterfa
         return count($result) ? $result[0] : null;
     }
 
+    #[Override]
     public function findByEventIdAndDay(Day $day, int $eventId): ?EventParticipation
     {
         $queryBuilder = $this->createQueryBuilder('m');

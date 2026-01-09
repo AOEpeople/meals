@@ -1,0 +1,8 @@
+{
+  "message": "Price created successfully",
+  "price": {
+    "year": "2025",
+    "price": 4.4,
+    "price_combined": 6.4
+  }
+}

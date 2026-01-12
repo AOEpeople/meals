@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[300px] md:w-[400px] rounded-lg bg-white p-6 shadow-lg">
+  <div class="w-[300px] rounded-lg bg-white p-6 shadow-lg md:w-[400px]">
     <h3 class="mb-4 text-lg font-semibold">Jahr {{ year }} {{ t('prices.edit') }}</h3>
 
     <form @submit.prevent="onSubmit">

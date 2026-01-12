@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\MealBundle\Enum\Diet;
@@ -52,10 +54,6 @@ class Dish implements Stringable, JsonSerializable
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     protected ?Category $category = null;
 
-    #[Assert\NotBlank]
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
-    protected float $price = 0.0;
-
     #[ORM\Column(type: 'boolean', nullable: false)]
     protected bool $enabled = true;
 
@@ -101,6 +99,11 @@ class Dish implements Stringable, JsonSerializable
         return $this->id;
     }
 
+    public function setSlug(?string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -113,16 +116,6 @@ class Dish implements Stringable, JsonSerializable
         }
 
         return $this->getDescriptionEn();
-    }
-
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
-    public function getPrice(): float
-    {
-        return $this->price;
     }
 
     public function getTitle(): string

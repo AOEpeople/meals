@@ -282,7 +282,9 @@ final class ApiController extends BaseController
 
         $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
 
+        $price = $meal->getPrice()->getPriceValue();
         if ($meal->isCombinedMeal()) {
+            $price = $meal->getPrice()->getPriceCombinedValue();
             $reachedLimit = $this->apiSrv->hasCombiReachedLimit($meal->getDay());
         }
 
@@ -293,7 +295,7 @@ final class ApiController extends BaseController
             ],
             'description' => $description,
             'dishSlug' => $meal->getDish()->getSlug(),
-            'price' => $meal->getPrice(),
+            'price' => $price,
             'limit' => $meal->getParticipationLimit(),
             'reachedLimit' => $reachedLimit,
             'isOpen' => $meal->isOpen(),

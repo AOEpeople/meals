@@ -23,11 +23,12 @@ final class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
     public function testTriggersOnInsert(): void
     {
         // load test data
-        $meal = $this->createMeal();
+        $price = $this->createPrice();
+        $meal = $this->createMeal(null, $price);
         $profile = $this->createProfile();
         $participant1 = new Participant($profile, $meal);
         $participant2 = clone $participant1;
-        $this->persistAndFlushAll([$meal, $profile, $participant1]);
+        $this->persistAndFlushAll([$meal, $profile, $participant1, $price]);
 
         // persist second participant
         $this->expectException(ParticipantNotUniqueException::class);
@@ -43,12 +44,13 @@ final class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
     public function testTriggersOnUpdate(): void
     {
         // load test data
-        $meal1 = $this->createMeal();
-        $meal2 = $this->createMeal();
+        $price = $this->createPrice();
+        $meal1 = $this->createMeal(null, $price);
+        $meal2 = $this->createMeal(null, $price);
         $profile = $this->createProfile();
         $participant1 = new Participant($profile, $meal1);
         $participant2 = new Participant($profile, $meal2);
-        $this->persistAndFlushAll([$meal1, $meal1->getDish(), $meal1->getDay(), $meal2, $meal2->getDish(), $meal2->getDay(), $profile, $participant1, $participant2]);
+        $this->persistAndFlushAll([$meal1, $meal1->getDish(), $meal1->getDay(), $meal2, $meal2->getDish(), $meal2->getDay(), $profile, $participant1, $participant2, $price]);
 
         // change first participant
         $this->expectException(ParticipantNotUniqueException::class);

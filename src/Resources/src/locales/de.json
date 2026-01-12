@@ -178,7 +178,11 @@
       "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner.",
       "1001": "Mindestens eines Felder Vorname oder Nachname fehlt.",
       "1002": "Das Profil existiert, aber ist versteckt.",
-      "balanceBelowBalanceLimit": "Das Konto darf nicht mehr als 50 € überzogen werden."
+      "balanceBelowBalanceLimit": "Das Konto darf nicht mehr als 50 € überzogen werden.",
+      "loadPricesFailed": "Fehler beim Laden der Preise",
+      "createPriceFailed": "Fehler beim Erstellen des Preises",
+      "updatePriceFailed": "Fehler beim Updaten des Preises",
+      "deletePriceFailed": "Fehler beim Löschen des Preises"
     },
     "success": {
       "menu": {
@@ -240,6 +244,36 @@
       "export": "exportieren"
     }
   },
+  "prices": {
+    "header": "Liste der Preise",
+    "create": "Neuer Preis",
+    "table": {
+      "year": "Jahr",
+      "price": "Preis je Gericht",
+      "priceCombined": "Preis je Kombi-Gericht",
+      "actions": "Aktionen"
+    },
+    "edit": "bearbeiten",
+    "delete": "löschen",
+    "popover": {
+      "create": "Neuen Preis anlegen",
+      "year": "Jahr",
+      "price": "Preis je Gericht",
+      "priceCombined": "Preis je Kombi-Gericht"
+    },
+    "errors": {
+      "priceRequired": "Preis ist erforderlich",
+      "priceMinimum": "Preis muss mindestens {min} betragen",
+      "priceMaximum": "Preis darf maximal {max} betragen",
+      "priceCombinedRequired": "Kombinierter Preis ist erforderlich",
+      "priceCombinedMinimum": "Kombinierter Preis muss mindestens {min} betragen",
+      "priceCombinedMaximum": "Kombinierter Preis darf maximal {max} betragen",
+      "priceCombinedNegative": "Kombinierter Preis darf nicht negativ sein",
+      "createFailed": "Fehler beim Erstellen des Preises"
+    },
+    "submitting": "wurde abgesendet",
+    "confirmDelete": "Möchtest du den Preis für das Jahr {year} wirklich löschen?"
+  },
   "guest": {
     "form": {
       "add": "Gast der Liste hinzufügen",
@@ -274,6 +308,7 @@
       "slots": "Zeitslot",
       "costs": "Kosten",
       "finance": "Finanzen",
+      "prices": "Preise",
       "events": "Events"
     },
     "logged_in_text": "Eingeloggt als",

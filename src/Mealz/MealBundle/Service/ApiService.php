@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
@@ -17,14 +19,14 @@ class ApiService
     private TransactionRepositoryInterface $transactionRepo;
     private MealRepositoryInterface $mealRepo;
     private DayRepositoryInterface $dayRepo;
-    private EventParticipationService $eventPartSrv;
+    private EventParticipationServiceInterface $eventPartSrv;
 
     public function __construct(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo,
         MealRepositoryInterface $mealRepo,
         DayRepositoryInterface $dayRepo,
-        EventParticipationService $eventPartSrv
+        EventParticipationServiceInterface $eventPartSrv
     ) {
         $this->participantRepo = $participantRepo;
         $this->transactionRepo = $transactionRepo;
@@ -46,7 +48,7 @@ class ApiService
 
         $transactions = $this->transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
-        $costDifference = 0;
+        $costDifference = 0.0;
         $transactionHistory = [];
         foreach ($transactions as $transaction) {
             $costDifference += $transaction->getAmount();
@@ -69,14 +71,18 @@ class ApiService
         }
 
         foreach ($participations as $participation) {
-            $costDifference -= $participation->getMeal()->getPrice();
+            $mealPrice = $participation->getMeal()->getPrice()->getPriceValue();
+            if ($participation->getMeal()->isCombinedMeal()) {
+                $mealPrice = $participation->getMeal()->getPrice()->getPriceCombinedValue();
+            }
+            $costDifference -= $mealPrice;
             $timestamp = $participation->getMeal()->getDateTime()->getTimestamp();
             $mealId = $participation->getMeal()->getId();
 
             $date = $participation->getMeal()->getDateTime();
             $description_en = $participation->getMeal()->getDish()->getTitleEn();
             $description_de = $participation->getMeal()->getDish()->getTitleDe();
-            $amount = $participation->getMeal()->getPrice();
+            $amount = $mealPrice;
 
             $debit = [
                 'type' => 'debit',

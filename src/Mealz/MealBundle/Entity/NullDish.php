@@ -39,12 +39,6 @@ class NullDish extends Dish
         return '';
     }
 
-    #[Override]
-    public function getPrice(): float
-    {
-        return 0.0;
-    }
-
     /**
      * @psalm-return ''
      */

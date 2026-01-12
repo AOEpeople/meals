@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
@@ -18,7 +20,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class DishVariationController extends BaseController
 {
     public function __construct(
-        private readonly float $price,
         private readonly DishRepositoryInterface $dishRepository,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
@@ -36,7 +37,6 @@ final class DishVariationController extends BaseController
             $dishVariation = new DishVariation();
             $dishVariation->setParent($dish);
             $dishVariation->setOneServingSize($dish->hasOneServingSize());
-            $dishVariation->setPrice($this->price);
             $dishVariation->setCategory($dish->getCategory());
 
             if (true === isset($parameters['titleDe']) && true === isset($parameters['titleEn'])) {

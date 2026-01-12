@@ -1,35 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
-use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Override;
 
-final class EventParticipationService
+final class EventParticipationService implements EventParticipationServiceInterface
 {
     private Doorman $doorman;
     private EntityManagerInterface $em;
-    private EventPartRepoInterface $eventPartRepo;
-    private EventRepositoryInterface $eventRepo;
     private GuestParticipationService $guestPartSrv;
 
     public function __construct(
         Doorman $doorman,
         EntityManagerInterface $em,
-        EventRepositoryInterface $eventRepo,
-        EventPartRepoInterface $eventPartRepo,
         GuestParticipationService $guestPartSrv
     ) {
         $this->doorman = $doorman;
         $this->em = $em;
-        $this->eventPartRepo = $eventPartRepo;
-        $this->eventRepo = $eventRepo;
         $this->guestPartSrv = $guestPartSrv;
     }
 
@@ -38,6 +33,7 @@ final class EventParticipationService
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
+    #[Override]
     public function handleEventParticipation(Day $day, EventParticipation $event): void
     {
         if (null === $event->getId()) {
@@ -52,6 +48,7 @@ final class EventParticipationService
      *
      * @psalm-return array{day: Day, eventId: int, isParticipating?: bool, isPublic: bool, participationId: int|null, participations: int<0, max>} | array{EventParticipation}
      */
+    #[Override]
     public function getEventParticipationData(Day $day, ?int $eventId = null, ?Profile $profile = null): ?array
     {
         if (null === $eventId) {
@@ -77,6 +74,7 @@ final class EventParticipationService
         }
     }
 
+    #[Override]
     public function join(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $eventParticipation = $day->getEvent($eventId);
@@ -94,6 +92,7 @@ final class EventParticipationService
     /**
      * @throws Exception
      */
+    #[Override]
     public function joinAsGuest(
         string $firstName,
         string $lastName,
@@ -126,6 +125,7 @@ final class EventParticipationService
         }
     }
 
+    #[Override]
     public function leave(Profile $profile, Day $day, int $eventId): ?EventParticipation
     {
         $eventParticipation = $day->getEvent($eventId);
@@ -146,6 +146,7 @@ final class EventParticipationService
      *
      * @psalm-return array<string>
      */
+    #[Override]
     public function getParticipants(Day $day, int $eventId): array
     {
         $eventParticipation = $day->getEvent($eventId);

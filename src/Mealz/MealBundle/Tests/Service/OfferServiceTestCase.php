@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
+use App\Mealz\AccountingBundle\Repository\PriceRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
@@ -12,6 +13,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\OfferService;
+use App\Mealz\MealBundle\Tests\Mocks\LoggerMock;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -31,12 +33,10 @@ final class OfferServiceTestCase extends AbstractParticipationServiceTestCase
             new LoadUsers(static::getContainer()->get('security.user_password_hasher')),
         ]);
 
-        /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
-        $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
-        $price = is_float($price) ? $price : 0;
-
         $dishRepo = static::getContainer()->get(DishRepository::class);
-        $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
+        $priceRepo = static::getContainer()->get(PriceRepository::class);
+        $loggerMock = new LoggerMock();
+        $this->cms = new CombinedMealService($this->entityManager, $dishRepo, $priceRepo, $loggerMock);
         $this->offerService = new OfferService($this->participantRepo);
     }
 

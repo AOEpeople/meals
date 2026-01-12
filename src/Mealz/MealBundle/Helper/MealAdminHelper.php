@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Helper;
 
+use App\Mealz\AccountingBundle\Entity\Price;
+use App\Mealz\AccountingBundle\Repository\PriceRepositoryInterface;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Repository\DishRepository;
-use App\Mealz\MealBundle\Repository\EventPartRepo;
-use App\Mealz\MealBundle\Repository\EventRepository;
-use App\Mealz\MealBundle\Repository\MealRepository;
-use App\Mealz\MealBundle\Service\EventParticipationService;
+use App\Mealz\MealBundle\Helper\Exceptions\PriceNotFoundException;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventPartRepoInterface;
+use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use DateTimeImmutable;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 final class MealAdminHelper
 {
     public function __construct(
-        private readonly EventParticipationService $eventService,
-        private readonly EventRepository $eventRepository,
-        private readonly EventPartRepo $eventPartRepo,
-        private readonly DishRepository $dishRepository,
-        private readonly MealRepository $mealRepository
+        private readonly EventRepositoryInterface $eventRepository,
+        private readonly EventPartRepoInterface $eventPartRepo,
+        private readonly DishRepositoryInterface $dishRepository,
+        private readonly MealRepositoryInterface $mealRepository,
+        private readonly PriceRepositoryInterface $priceRepository,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -53,6 +58,10 @@ final class MealAdminHelper
         return false;
     }
 
+    /**
+     * @throws Exception
+     * @throws PriceNotFoundException
+     */
     public function handleMealArray(array $mealArr, Day $dayEntity): void
     {
         foreach ($mealArr as $meal) {
@@ -63,19 +72,27 @@ final class MealAdminHelper
             if (null === $dishEntity) {
                 throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
+            $dateTime = new DateTimeImmutable('now');
+            $dateTimeYearAsInt = (int) $dateTime->format('Y');
+            $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
+            if (!($price instanceof Price)) {
+                $this->logger->error('Prices could not be loaded by price repository in handleMealArray.', [
+                    'year' => $dateTimeYearAsInt,
+                ]);
+                throw PriceNotFoundException::isNotFound($dateTimeYearAsInt);
+            }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {
-                $this->createMeal($dishEntity, $dayEntity, $meal);
+                $this->createMeal($dishEntity, $dayEntity, $meal, $price);
             } else {
-                $this->modifyMeal($meal, $dishEntity, $dayEntity);
+                $this->modifyMeal($meal, $dishEntity, $dayEntity, $price);
             }
         }
     }
 
-    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal): void
+    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal, Price $price): void
     {
-        $mealEntity = new Meal($dishEntity, $dayEntity);
-        $mealEntity->setPrice($dishEntity->getPrice());
+        $mealEntity = new Meal($dishEntity, $price, $dayEntity);
         $this->setParticipationLimit($mealEntity, $meal);
         $dayEntity->addMeal($mealEntity);
     }
@@ -83,14 +100,13 @@ final class MealAdminHelper
     /**
      * @throws Exception
      */
-    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity): void
+    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity, $price): void
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
         if (null === $mealEntity) {
             // this happens because meals without participations are deleted, even though they
             // could be modified later on (this shouldn't happen but might)
-            $mealEntity = new Meal($dishEntity, $dayEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
+            $mealEntity = new Meal($dishEntity, $price, $dayEntity);
             $dayEntity->addMeal($mealEntity);
 
             return;
@@ -105,7 +121,6 @@ final class MealAdminHelper
         // check if meal already exists and can be modified (aka has no participations)
         if (!$mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
 
             return;
         }

@@ -276,8 +276,9 @@
   },
   "confirmOfferMeal": {
     "popover": {
-      "title": "Gericht zur Übergabe annehmen?",
-      "button": "Ja"
+      "title": "Möchtest du das Tauschgericht annehmen?",
+      "yesButton": "Ja",
+      "noButton": "Nein"
     }
   },
   "guest": {

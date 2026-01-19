@@ -276,8 +276,9 @@
   },
   "confirmOfferMeal": {
     "popover": {
-      "title": "Accept meal transfer?",
-      "button": "Yes"
+      "title": "Do you accept the meal transfer?",
+      "yesButton": "Yes",
+      "noButton": "no"
     }
   },
   "guest": {

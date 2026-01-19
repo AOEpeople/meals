@@ -7,10 +7,17 @@
       <h3 class="mb-4 text-lg font-semibold">{{ t('confirmOfferMeal.popover.title') }}</h3>
       <button
         type="button"
-        class="btn-primary inline-flex w-full justify-center"
+        class="btn-primary mb-1 inline-flex w-full justify-center"
         @click="$emit('confirm')"
       >
-        {{ t('confirmOfferMeal.popover.button') }}
+        {{ t('confirmOfferMeal.popover.yesButton') }}
+      </button>
+      <button
+        type="button"
+        class="btn-secondary inline-flex w-full justify-center"
+        @click="$emit('close')"
+      >
+        {{ t('confirmOfferMeal.popover.noButton') }}
       </button>
     </div>
   </Modal>

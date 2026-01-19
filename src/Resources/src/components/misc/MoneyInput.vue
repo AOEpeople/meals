@@ -13,11 +13,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   modelValue: number;
 }>();
 
+const { t } = useI18n();
 const emit = defineEmits(['update:modelValue']);
 const isFocused = ref(false);
 const rawValue = ref(props.modelValue.toString());
@@ -48,7 +50,9 @@ function round(value: number) {
 }
 
 function formatMoney(value: number) {
-  return value.toLocaleString('de-DE', {
+  return value.toLocaleString(t('languageCode'), {
+    style: 'currency',
+    currency: 'EUR',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });

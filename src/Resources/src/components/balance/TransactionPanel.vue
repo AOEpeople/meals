@@ -11,7 +11,7 @@
     class="w-[300px] p-2 text-center align-middle sm:w-[420px]"
   >
     <div class="mb-8 flex justify-center gap-1">
-      <h5 class="m-0 self-center text-[14px] text-black sm:text-[18px]">{{ t('balance.amount') }}: €</h5>
+      <h5 class="m-0 self-center text-[14px] text-black sm:text-[18px]">{{ t('balance.amount') }}:</h5>
       <MoneyInput v-model="amountFieldValue" />
     </div>
     <div

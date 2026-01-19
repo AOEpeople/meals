@@ -293,7 +293,7 @@ function closeConfirmOfferMealPopover() {
 }
 
 async function confirmOfferMeal() {
-  let slugs = [mealOrVariation.value.dishSlug as string];
+  let slugs = [mealOrVariation.value?.dishSlug as string];
   if (isCombiBox) {
     slugs = getDishSlugs();
     if (slugs.length === 0) return;

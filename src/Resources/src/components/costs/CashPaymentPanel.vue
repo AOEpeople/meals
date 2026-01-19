@@ -1,17 +1,12 @@
 <template>
   <form
-    class="w-[300px] p-4 sm:w-[400px]"
+    class="flex w-[300px] flex-col p-4 sm:w-[400px]"
     @submit.prevent="onSubmit"
   >
     <h3 class="w-full text-center">
       {{ t('costs.payment').replace('#name#', getFullNameByUser(username)) }}
     </h3>
-    <InputLabel
-      v-model="amount"
-      :type="'number'"
-      :min="1"
-      :required="true"
-    />
+    <MoneyInput v-model="amount" />
     <SubmitButton />
   </form>
 </template>
@@ -19,14 +14,14 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useCosts } from '@/stores/costsStore';
-import InputLabel from '../misc/InputLabel.vue';
 import { ref } from 'vue';
 import SubmitButton from '../misc/SubmitButton.vue';
+import MoneyInput from '@/components/misc/MoneyInput.vue';
 
 const { t } = useI18n();
 const { sendCashPayment, getFullNameByUser } = useCosts();
 
-const amount = ref('1');
+const amount = ref(0);
 
 const props = defineProps<{
   username: string;

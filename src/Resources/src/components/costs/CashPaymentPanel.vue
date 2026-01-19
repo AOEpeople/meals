@@ -30,7 +30,7 @@ const props = defineProps<{
 const emit = defineEmits(['closePanel']);
 
 async function onSubmit() {
-  const parsedAmount = parseFloat(amount.value);
+  const parsedAmount = amount.value;
   if (parsedAmount > 0) {
     await sendCashPayment(props.username, parsedAmount);
   }

@@ -21,6 +21,7 @@ class Login implements Stringable, SymfonyUserInterface, MealzUserInterface, Pas
 {
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
+
     private string $email = '';
     #[ORM\Column(type: 'string', length: 128)]
     protected string $password = '';
@@ -28,6 +29,16 @@ class Login implements Stringable, SymfonyUserInterface, MealzUserInterface, Pas
     #[ORM\OneToOne(targetEntity: Profile::class)]
     #[ORM\JoinColumn(name: 'profile_id', referencedColumnName: 'id')]
     protected ?Profile $profile = null;
+
+    public function setId(string $id): void
+    {
+        $this->username = $id;
+    }
+
+    public function getId(): string
+    {
+        return $this->username;
+    }
 
     public function getUsername(): string
     {

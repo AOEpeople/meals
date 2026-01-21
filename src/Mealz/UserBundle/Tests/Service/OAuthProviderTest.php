@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Override;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -36,7 +37,10 @@ final class OAuthProviderTest extends AbstractControllerTestCase
         /** @var EntityManagerInterface $em */
         $em = $this->getDoctrine()->getManager();
 
+        $logger = $this->createMock(LoggerInterface::class);
+
         $this->sut = new OAuthUserProvider(
+            $logger,
             $em,
             self::getContainer()->get(RoleRepositoryInterface::class),
             self::AUTH_CLIENT_ID
@@ -50,20 +54,23 @@ final class OAuthProviderTest extends AbstractControllerTestCase
      */
     public function testCreateNewUser(array $idpUserData, array $mealsRoles): void
     {
+        $idpId = $idpUserData['sub'];
         $firstName = $idpUserData['given_name'];
         $lastName = $idpUserData['family_name'];
         $username = $idpUserData['username'];
         $email = $idpUserData['email'];
         $idpRoles = $idpUserData['roles'];
 
-        $userResponseMock = $this->getMockedUserResponse($username, $firstName, $lastName, $email, $idpRoles);
+        $userResponseMock = $this->getMockedUserResponse($idpId, $username, $firstName, $lastName, $email, $idpRoles);
 
         // check if valid oAuth User comes in return
         $user = $this->sut->loadUserByOAuthUserResponse($userResponseMock);
         $this->assertInstanceOf(Profile::class, $user);
 
         // check if new valid Profile is written in Database
-        $newCreatedProfile = $this->getDoctrine()->getManager()->find(Profile::class, $username);
+        $profileRepository = $this->getDoctrine()->getManager()->getRepository(Profile::class);
+        $newCreatedProfile = $profileRepository->findOneBy(['ssoId' => $idpId]);
+
         $this->assertNotNull($newCreatedProfile);
         $this->assertEquals($username, $newCreatedProfile->getUsername());
 
@@ -79,6 +86,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
         return [
             'admin' => [
                 'idpUserData' => [
+                    'sub' => '1',
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
@@ -89,6 +97,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'kitchen staff' => [
                 'idpUserData' => [
+                    'sub' => '2',
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
@@ -99,6 +108,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'standard user' => [
                 'idpUserData' => [
+                    'sub' => '3',
                     'username' => 'alice.meals',
                     'given_name' => 'alice',
                     'family_name' => 'ecila',
@@ -109,6 +119,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'finance' => [
                 'idpUserData' => [
+                    'sub' => '4',
                     'username' => 'finance.meals',
                     'given_name' => 'finance',
                     'family_name' => 'ecnanif',
@@ -119,6 +130,7 @@ final class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'user with invalid role' => [
                 'idpUserData' => [
+                    'sub' => '5',
                     'username' => 'invalid.role',
                     'given_name' => 'invalid',
                     'family_name' => 'role',
@@ -136,9 +148,10 @@ final class OAuthProviderTest extends AbstractControllerTestCase
      * @psalm-suppress UndefinedMagicMethod
      */
     private function getMockedUserResponse(
-        string $username, string $firstName, string $lastName, ?string $email, array $roles
+        string $idpId, string $username, string $firstName, string $lastName, ?string $email, array $roles
     ): object {
         $userData = [
+            'sub' => $idpId,
             'preferred_username' => $username,
             'family_name' => $lastName,
             'given_name' => $firstName,

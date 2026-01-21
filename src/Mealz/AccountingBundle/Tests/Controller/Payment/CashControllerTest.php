@@ -59,15 +59,13 @@ final class CashControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
-        $janeProfile = $profileRepo->findOneBy([
-            'username' => self::USER_STANDARD,
-        ]);
+        $janeProfile = $profileRepo->findOneBy(['username' => self::USER_STANDARD]);
 
         $amount = 10;
         $balanceBefore = $this->wallet->getBalance($janeProfile);
 
         // Request
-        $this->client->request('POST', '/api/payment/cash/' . self::USER_STANDARD . '?amount=' . $amount);
+        $this->client->request('POST', '/api/payment/cash/' . (string) $janeProfile->getId() . '?amount=' . $amount);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $response = json_decode($this->client->getResponse()->getContent(), true);

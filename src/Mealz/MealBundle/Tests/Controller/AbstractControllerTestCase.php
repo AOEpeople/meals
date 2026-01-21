@@ -49,7 +49,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function loginAs(string $username): void
     {
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
-        $user = $repo->find($username);
+        $user = $repo->findOneBy(['username' => $username]);
 
         if (!($user instanceof Profile)) {
             throw new RuntimeException($username . ': user not found');
@@ -72,14 +72,31 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         return $token;
     }
 
-    protected function getUserProfile(string $username): Profile
+    protected function getUserProfile(?int $id): Profile
+    {
+        if (null === $id) {
+            $this->fail('userId is null');
+        }
+
+        /** @var ProfileRepositoryInterface $profileRepository */
+        $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
+        $userProfile = $profileRepository->find($id);
+
+        if (!($userProfile instanceof Profile)) {
+            $this->fail('user profile with id not found: ' . $id);
+        }
+
+        return $userProfile;
+    }
+
+    protected function getUserProfileByUsername(string $username): Profile
     {
         /** @var ProfileRepositoryInterface $profileRepository */
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
-            $this->fail('user profile not found: ' . $username);
+            $this->fail('user profile with username not found: ' . $username);
         }
 
         return $userProfile;
@@ -120,7 +137,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * @param string $company   User company
      */
     #[Override]
-    protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
+    protected function createProfile(string $id = '', string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
         $firstName = ('' !== $firstName) ? $firstName : 'Test';
         $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();

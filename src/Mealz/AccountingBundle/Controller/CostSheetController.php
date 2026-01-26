@@ -153,10 +153,10 @@ final class CostSheetController extends BaseController
             } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
                 return new JsonResponse(['message' => '502: Settlement request already send'],
                     Response::HTTP_INTERNAL_SERVER_ERROR);
-            } else {
-                return new JsonResponse(['message' => '503: Settlement request failed'],
-                    Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+
+            return new JsonResponse(['message' => '503: Settlement request failed'],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (EntityNotFoundException $exeption) {
             return new JsonResponse(['message' => '506: ' . $exeption->getMessage()], Response::HTTP_NOT_FOUND);
         }

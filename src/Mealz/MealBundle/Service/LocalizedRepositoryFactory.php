@@ -8,9 +8,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class LocalizedRepositoryFactory
 {
-    protected EntityManagerInterface $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    protected LocalisationListener $localisationListener;
+    private LocalisationListener $localisationListener;
 
     public function __construct(EntityManagerInterface $entityManager, LocalisationListener $localisationListener)
     {

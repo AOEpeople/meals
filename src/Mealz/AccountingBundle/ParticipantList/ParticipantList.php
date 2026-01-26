@@ -12,12 +12,12 @@ final class ParticipantList
     /**
      * @var Participant[]
      */
-    protected $participations;
+    private $participations;
 
     /**
      * @var Profile[]
      */
-    protected $profiles;
+    private $profiles;
 
     /**
      * @param Participant[] $participations

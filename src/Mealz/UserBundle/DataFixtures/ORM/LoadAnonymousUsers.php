@@ -43,7 +43,7 @@ final class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterfac
     #[Override]
     public function load(ObjectManager $manager): void
     {
-        if (!($manager instanceof EntityManagerInterface)) {
+        if (!$manager instanceof EntityManagerInterface) {
             throw new Exception('Expected EntityManagerInterface, got ' . get_class($manager));
         }
 

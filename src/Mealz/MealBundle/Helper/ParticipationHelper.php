@@ -125,7 +125,7 @@ final class ParticipationHelper
         return $fullname;
     }
 
-    protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
+    private function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
     {
         $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 

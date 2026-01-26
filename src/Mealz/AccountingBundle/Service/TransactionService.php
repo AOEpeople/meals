@@ -128,13 +128,13 @@ final class TransactionService
             throw new AccessDeniedHttpException('login required');
         }
 
-        if (!($profile instanceof Profile)) {
+        if (!$profile instanceof Profile) {
             if (!method_exists($profile, 'getProfile')) {
                 throw new AccessDeniedHttpException();
             }
 
             $profile = $profile->getProfile();
-            if (!($profile instanceof Profile)) {
+            if (!$profile instanceof Profile) {
                 throw new AccessDeniedHttpException();
             }
         }

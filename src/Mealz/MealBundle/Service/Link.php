@@ -18,7 +18,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 final class Link
 {
-    protected RouterInterface $router;
+    private RouterInterface $router;
 
     public function __construct(RouterInterface $router)
     {

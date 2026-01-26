@@ -23,7 +23,7 @@ final class ProfileToStringTransformer implements DataTransformerInterface
     #[Override]
     public function transform($value): string
     {
-        if (!($value instanceof Profile)) {
+        if (!$value instanceof Profile) {
             return '';
         }
 

@@ -73,7 +73,7 @@ final class CombinedMealService implements CombinedMealServiceInterface
             $dateTime = new DateTimeImmutable('now');
             $dateTimeYearAsInt = (int) $dateTime->format('Y');
             $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
-            if (!($price instanceof Price)) {
+            if (!$price instanceof Price) {
                 $this->logger->error('Combined dish price by year does not exist.', [
                     'year' => $dateTimeYearAsInt,
                 ]);

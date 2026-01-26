@@ -10,4 +10,5 @@
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Mealz/MealBundle/Service/CombinedMealService.php" method="update"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/Link.php" method="linkMeal"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Mealz/MealBundle/Helper/ParticipationHelper.php" method="compareNameOfParticipants"/>
 </phpmd-baseline>

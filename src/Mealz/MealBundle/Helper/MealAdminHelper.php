@@ -75,7 +75,7 @@ final class MealAdminHelper
             $dateTime = new DateTimeImmutable('now');
             $dateTimeYearAsInt = (int) $dateTime->format('Y');
             $price = $this->priceRepository->findByYear($dateTimeYearAsInt);
-            if (!($price instanceof Price)) {
+            if (!$price instanceof Price) {
                 $this->logger->error('Prices could not be loaded by price repository in handleMealArray.', [
                     'year' => $dateTimeYearAsInt,
                 ]);

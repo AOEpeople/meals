@@ -82,7 +82,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
             return $this->createProfile($username, $firstName, $lastName, $email, $roles);
         }
 
-        if (!($user instanceof Profile)) {
+        if (!$user instanceof Profile) {
             throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
         }
 

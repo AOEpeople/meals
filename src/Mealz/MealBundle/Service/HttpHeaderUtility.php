@@ -9,7 +9,7 @@ final class HttpHeaderUtility
     /**
      * @var string[]
      */
-    protected array $locales = [];
+    private array $locales = [];
 
     public function __construct(array $locales)
     {
@@ -41,7 +41,7 @@ final class HttpHeaderUtility
      * filter an Accept-Language header string according to the given quality and drop
      * languages that are not supported in $this->locales.
      */
-    protected function filterAndOrderAcceptLanguages(array $acceptLanguages): array
+    private function filterAndOrderAcceptLanguages(array $acceptLanguages): array
     {
         $orderedAcceptLangs = [];
         foreach ($acceptLanguages as $acceptLanguage) {
@@ -74,14 +74,14 @@ final class HttpHeaderUtility
     /**
      * get the part before the first hyphen ("-") in a language string.
      */
-    protected function parseShortAcceptLanguage(string|false $acceptLanguage): string|false
+    private function parseShortAcceptLanguage(string|false $acceptLanguage): string|false
     {
         $rpos = strrpos($acceptLanguage, '-');
         if (false !== $rpos) {
             return substr($acceptLanguage, 0, $rpos);
-        } else {
-            return $acceptLanguage;
         }
+
+        return $acceptLanguage;
     }
 
     /**
@@ -89,7 +89,7 @@ final class HttpHeaderUtility
      *
      * @return float|int
      */
-    protected function parseQuality(string $qualityString)
+    private function parseQuality(string $qualityString)
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {

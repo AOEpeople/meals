@@ -53,25 +53,25 @@ final class EventParticipationService implements EventParticipationServiceInterf
     {
         if (null === $eventId) {
             return $day->getEvents()->toArray();
-        } else {
-            $eventParticipation = $day->getEvent($eventId);
-            if (null === $eventParticipation) {
-                return null;
-            }
-            $participationData = [
-                'eventId' => $eventParticipation->getEvent()->getId(),
-                'participationId' => $eventParticipation->getId(),
-                'participations' => count($eventParticipation->getParticipants()),
-                'isPublic' => $eventParticipation->getEvent()->isPublic(),
-                'day' => $eventParticipation->getDay(),
-            ];
-
-            if (null !== $profile) {
-                $participationData['isParticipating'] = null !== $eventParticipation->getParticipant($profile);
-            }
-
-            return $participationData;
         }
+
+        $eventParticipation = $day->getEvent($eventId);
+        if (null === $eventParticipation) {
+            return null;
+        }
+        $participationData = [
+            'eventId' => $eventParticipation->getEvent()->getId(),
+            'participationId' => $eventParticipation->getId(),
+            'participations' => count($eventParticipation->getParticipants()),
+            'isPublic' => $eventParticipation->getEvent()->isPublic(),
+            'day' => $eventParticipation->getDay(),
+        ];
+
+        if (null !== $profile) {
+            $participationData['isParticipating'] = null !== $eventParticipation->getParticipant($profile);
+        }
+
+        return $participationData;
     }
 
     #[Override]
@@ -196,8 +196,8 @@ final class EventParticipationService implements EventParticipationServiceInterf
                 ' (Gast)';
 
             return $participant->getProfile()->getFullName() . $company;
-        } else {
-            return $participant->getProfile()->getFullName();
         }
+
+        return $participant->getProfile()->getFullName();
     }
 }

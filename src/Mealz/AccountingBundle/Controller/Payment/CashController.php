@@ -43,9 +43,8 @@ final class CashController extends BaseController
                 ]);
 
                 return new JsonResponse($transaction->getAmount(), Response::HTTP_OK);
-            } else {
-                throw new Exception('601: Amount less than 0');
             }
+            throw new Exception('601: Amount less than 0');
         } catch (Exception $e) {
             $this->logger->error('transaction create error', $this->getTrace($e));
 

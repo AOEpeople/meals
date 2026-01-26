@@ -62,7 +62,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     /**
      * Loads an user by identifier or create it.
      */
-    public function loadUserByIdOrCreate(UserResponseInterface $response): ?UserInterface
+    public function loadUserByIdOrCreate(UserResponseInterface $response): UserInterface
     {
         $data = $response->getData();
 

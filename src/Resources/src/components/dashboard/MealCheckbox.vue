@@ -29,6 +29,11 @@
   >
     <OfferPopover />
   </TransitionRoot>
+  <ConfirmOfferMealPopover
+    :show="showOfferedMealPopover"
+    @confirm="confirmOfferMeal"
+    @close="closeConfirmOfferMealPopover"
+  />
 </template>
 
 <script setup lang="ts">
@@ -52,6 +57,7 @@ import { MealState } from '@/enums/MealState';
 import useMealState from '@/services/useMealState';
 import { useEvents } from '@/stores/eventsStore';
 import LunchroulettePopup from '../events/LunchroulettePopup.vue';
+import ConfirmOfferMealPopover from '@/components/dashboard/ConfirmOfferMealPopover.vue';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -65,6 +71,7 @@ const { sendFlashMessage } = useFlashMessage();
 const { addLock, isLocked, removeLock } = useLockRequests();
 const { getEventById } = useEvents();
 const lunchroulettePopup = ref<InstanceType<typeof LunchroulettePopup> | null>(null);
+const showOfferedMealPopover = ref(false);
 
 const day = props.day ?? dashboardStore.getDay(props.weekID ?? 0, props.dayID ?? 0);
 const mealOrVariation = ref<Meal>();
@@ -134,12 +141,7 @@ const checkboxCSS = computed(() => {
 async function handle() {
   // Meal is being offered by someone to be taken over
   if (mealOrVariation.value?.hasOffers === true && mealOrVariation.value.mealState === MealState.TRADEABLE) {
-    let slugs = [mealOrVariation.value.dishSlug as string];
-    if (isCombiBox === true) {
-      slugs = getDishSlugs();
-      if (slugs.length === 0) return;
-    }
-    await joinMeal(slugs);
+    showOfferedMealPopover.value = true;
     return;
   }
   // Meal is not locked
@@ -284,5 +286,19 @@ async function closeCombiModal(slugs: string[]) {
     await joinMeal(slugs);
   }
   removeLock(String(props.dayID));
+}
+
+function closeConfirmOfferMealPopover() {
+  showOfferedMealPopover.value = false;
+}
+
+async function confirmOfferMeal() {
+  let slugs = [mealOrVariation.value?.dishSlug as string];
+  if (isCombiBox) {
+    slugs = getDishSlugs();
+    if (slugs.length === 0) return;
+  }
+  await joinMeal(slugs);
+  showOfferedMealPopover.value = false;
 }
 </script>

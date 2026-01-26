@@ -275,6 +275,13 @@
     "submitting": "is submitting",
     "confirmDelete": "Do you really want to delete the price for the year {year}?"
   },
+  "confirmOfferMeal": {
+    "popover": {
+      "title": "Do you accept the meal transfer?",
+      "yesButton": "Yes",
+      "noButton": "no"
+    }
+  },
   "guest": {
     "form": {
       "add": "Add a guest to the list",

@@ -275,6 +275,13 @@
     "submitting": "wurde abgesendet",
     "confirmDelete": "Möchtest du den Preis für das Jahr {year} wirklich löschen?"
   },
+  "confirmOfferMeal": {
+    "popover": {
+      "title": "Möchtest du das Tauschgericht annehmen?",
+      "yesButton": "Ja",
+      "noButton": "Nein"
+    }
+  },
   "guest": {
     "form": {
       "add": "Gast der Liste hinzufügen",

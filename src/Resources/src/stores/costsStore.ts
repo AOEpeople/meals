@@ -111,8 +111,6 @@ export function useCosts() {
         if (error.value === true || isMessage(response.value)) {
             CostsState.error = isMessage(response.value) === true ? response.value.message : 'Error on hiding user';
         } else {
-            console.log(CostsState.users);
-            console.log(CostsState.users[userid]);
             CostsState.users[userid].hidden = true;
             CostsState.error = '';
             sendFlashMessage({
@@ -129,7 +127,6 @@ export function useCosts() {
      * @param userid  The userid of the user to do the settlement for.
      */
     async function sendSettlement(userid: number) {
-        console.log(userid);
         const { error, response } = await postSettlement(userid);
 
         if (error.value === true || isMessage(response.value)) {

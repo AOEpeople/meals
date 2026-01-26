@@ -26,7 +26,7 @@ type IMenuParticipant = {
 };
 export interface IMenuParticipation {
     booked: Dictionary<IMealInfo>;
-    profile: string;
+    profile: number;
 }
 
 interface IMealInfo {
@@ -117,7 +117,7 @@ export function useParticipations(weekId: number) {
         combinedDishes?: string[]
     ) {
         const profileId = getProfileId(profileFullname);
-        if (typeof profileId !== 'string') {
+        if (profileId === null) {
             return;
         }
 
@@ -139,7 +139,7 @@ export function useParticipations(weekId: number) {
      */
     async function removeParticipantFromMeal(mealId: number, profileFullname: string, dayId: string) {
         const profileId = getProfileId(profileFullname);
-        if (typeof profileId !== 'string') {
+        if (profileId === null) {
             return;
         }
 
@@ -223,10 +223,10 @@ export function useParticipations(weekId: number) {
      * Returns the profile id of a participant.
      * @param participant   The full name of the participant.
      */
-    function getProfileId(participant: string) {
+    function getProfileId(participant: string): number | null {
         const strippedParticipant = replaceStrings(participant, ' (Guest)', ' (Gast)');
         for (const day of Object.values(menuParticipationsState.days)) {
-            if (typeof day[strippedParticipant]?.profile === 'string') {
+            if (typeof day[strippedParticipant]?.profile === 'number') {
                 return day[strippedParticipant].profile;
             }
         }

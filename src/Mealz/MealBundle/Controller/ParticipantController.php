@@ -256,8 +256,13 @@ final class ParticipantController extends BaseController
     }
 
     #[IsGranted('ROLE_KITCHEN_STAFF')]
-    public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
+    public function add(EntityManagerInterface $entityManager, int $userid, Meal $meal, Request $request): JsonResponse
     {
+        $profile = $entityManager->getRepository(Profile::class)->find($userid);
+        if (!$profile) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
         $parameters = json_decode($request->getContent(), true);
 
         try {
@@ -296,8 +301,13 @@ final class ParticipantController extends BaseController
     }
 
     #[IsGranted('ROLE_KITCHEN_STAFF')]
-    public function remove(EntityManagerInterface $entityManager, Profile $profile, Meal $meal): JsonResponse
+    public function remove(EntityManagerInterface $entityManager, int $userid, Meal $meal): JsonResponse
     {
+        $profile = $entityManager->getRepository(Profile::class)->find($userid);
+        if (!$profile) {
+            return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             $participation->setCombinedDishes(null);
@@ -317,7 +327,7 @@ final class ParticipantController extends BaseController
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
-                'profile' => $profile->getUsername(),
+                'profile' => $profile->getId(),
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -439,7 +449,7 @@ final class ParticipantController extends BaseController
         foreach ($participants as $participant) {
             $participationData = $this->participationHelper->getParticipationMealData($participant);
             $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['booked'][] = $participationData;
-            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['profile'] = $participant->getProfile()->getUsername();
+            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['profile'] = $participant->getProfile()->getId();
         }
 
         return $response;

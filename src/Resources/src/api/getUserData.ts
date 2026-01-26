@@ -2,8 +2,8 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 
 export type UserData = {
+    id: number | null;
     roles: Array<string>;
-    user: string | null;
     fullName: string | null;
     balance: number;
 };

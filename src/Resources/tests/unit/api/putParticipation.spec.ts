@@ -19,7 +19,7 @@ vi.mock('@/api/api', () => ({
 
 describe('Test putParticipation', () => {
     it('should return an updated list of participations for the changed profile', async () => {
-        const { response, error } = await putParticipation(1, '1');
+        const { response, error } = await putParticipation(1, 1);
 
         expect(error.value).toBeFalsy();
         expect(response.value).toEqual(Update.put);

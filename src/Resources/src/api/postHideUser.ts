@@ -3,14 +3,14 @@ import useApi from './api';
 
 /**
  * Sends a POST request to hide a user from the costs page.
- * @param username  The username of the user to hide.
+ * @param userid  The user id of the user to hide.
  */
-export default async function postHideUser(username: string) {
+export default async function postHideUser(userid: number) {
     const { error, request, response } = useApi<IMessage | null>(
         'POST',
         'api/costs/hideuser',
         'application/json',
-        JSON.stringify({ username: username })
+        JSON.stringify({ userid: userid })
     );
 
     await request();

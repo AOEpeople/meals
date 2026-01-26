@@ -19,9 +19,9 @@ vi.mock('@/api/api', () => ({
 
 describe('Test postCashPayment', () => {
     it('should return the amount, that was paid', async () => {
-        const { error, response } = await postCashPayment('TestUser987', 123);
+        const { error, response } = await postCashPayment(987, 123);
 
-        expect(useApi).toHaveBeenCalledWith('POST', 'api/payment/cash/TestUser987?amount=123');
+        expect(useApi).toHaveBeenCalledWith('POST', 'api/payment/cash/987?amount=123');
         expect(error.value).toBe(false);
         expect(response.value).toBe(123);
     });

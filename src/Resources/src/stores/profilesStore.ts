@@ -14,7 +14,7 @@ interface IProfilesState {
 }
 
 export interface IProfile {
-    user: string;
+    user: number;
     fullName: string;
     roles: string[];
 }

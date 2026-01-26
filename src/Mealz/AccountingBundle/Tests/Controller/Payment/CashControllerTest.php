@@ -65,7 +65,8 @@ final class CashControllerTest extends AbstractControllerTestCase
         $balanceBefore = $this->wallet->getBalance($janeProfile);
 
         // Request
-        $this->client->request('POST', '/api/payment/cash/' . (string) $janeProfile->getId() . '?amount=' . $amount);
+        $this->client->request('POST', '/api/payment/cash/' . $janeProfile->getUsername() . '?amount=' . $amount);
+
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $response = json_decode($this->client->getResponse()->getContent(), true);

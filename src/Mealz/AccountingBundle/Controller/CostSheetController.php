@@ -58,10 +58,10 @@ final class CostSheetController extends BaseController
         $columnNames['total'] = 'total';
 
         // create table rows
-        foreach ($users as $username => &$user) {
+        foreach ($users as $userid => &$user) {
             $userCosts = array_fill_keys(array_keys($columnNames), '0');
             foreach ($user['costs'] as $cost) {
-                $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
+                $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$userid]['amount']);
                 if ($cost['timestamp'] < $earlierTimestamp) {
                     $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
@@ -69,8 +69,8 @@ final class CostSheetController extends BaseController
                 }
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
-            if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = $transactionsPerUser[$username]['amount'];
+            if ($transactionsPerUser[$userid]['amount'] > 0) {
+                $userCosts['total'] = $transactionsPerUser[$userid]['amount'];
             }
             $user['costs'] = array_map(
                 fn ($cost) => (float) $cost,
@@ -112,7 +112,7 @@ final class CostSheetController extends BaseController
     {
         $parameters = json_decode($request->getContent(), true);
         try {
-            $profile = $this->getProfileById($parameters, $entityManager);
+            $profile = $entityManager->getRepository(Profile::class)->find($parameters['userid']);
             if (!$profile->isHidden()) {
                 $profile->setHidden(true);
                 $entityManager->persist($profile);
@@ -135,11 +135,11 @@ final class CostSheetController extends BaseController
     ): JsonResponse {
         $parameters = json_decode($request->getContent(), true);
         try {
-            $profile = $this->getProfileById($parameters, $entityManager);
+            $profile = $entityManager->getRepository(Profile::class)->find($parameters['userid']);
             if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
-                $username = $profile->getUsername();
+                $userid = strval($profile->getId());
                 $secret = $this->getParameter('app.secret');
-                $hashCode = str_replace('/', '', crypt($username, $secret));
+                $hashCode = str_replace('/', '', crypt($userid, $secret));
                 $urlEncodedHash = urlencode($hashCode);
 
                 $profile->setSettlementHash($hashCode);
@@ -194,7 +194,7 @@ final class CostSheetController extends BaseController
         }
 
         return new JsonResponse([
-            'user' => $profile->getUsername(),
+            'user' => $profile->getId(),
             'fullName' => $profile->getFullName(),
             'roles' => $profile->getRoles(),
         ], Response::HTTP_OK);

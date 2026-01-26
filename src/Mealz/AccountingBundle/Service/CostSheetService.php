@@ -13,13 +13,13 @@ final class CostSheetService
     {
         $mergedUsers = [];
 
-        foreach ($users as $username => &$user) {
-            $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $username);
+        foreach ($users as $userId => &$user) {
+            $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $user['username']);
             if (!isset($mergedUsers[$trimmedUsername])) {
-                $mergedUsers[$username] = $user;
+                $mergedUsers[$userId] = $user;
             } else {
-                $mergedUsers[$username] = $user;
-                $mergedUsers[$username]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
+                $mergedUsers[$userId] = $user;
+                $mergedUsers[$userId]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
                 unset($mergedUsers[$trimmedUsername]);
             }
         }

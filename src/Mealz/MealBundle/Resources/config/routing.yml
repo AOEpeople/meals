@@ -131,12 +131,12 @@ MealzMealBundle_api_week_lockDates:
     methods: [GET]
 
 MealzMealBundle_api_participant_add:
-    path: /api/participation/{profile}/{meal}
+    path: /api/participation/{userid}/{meal}
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::add }
     methods: [PUT]
 
 MealzMealBundle_api_participant_remove:
-    path: /api/participation/{profile}/{meal}
+    path: /api/participation/{userid}/{meal}
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::remove }
     methods: [DELETE]
 

@@ -82,7 +82,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
         ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->select('p.username, p.firstName, p.name, MIN(t.paymethod) as paymethod, SUM(t.amount) AS amount');
+        $queryBuilder->select('p.id, p.username, p.firstName, p.name, MIN(t.paymethod) as paymethod, SUM(t.amount) AS amount');
         $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof DateTime) {
@@ -100,14 +100,14 @@ final class TransactionRepository extends BaseRepository implements TransactionR
             $queryBuilder->setParameter('username', $profile->getUsername(), Types::STRING);
         }
 
-        $queryBuilder->groupBy('p.username');
+        $queryBuilder->groupBy('p.id');
         $queryBuilder->orderBy('p.name, p.firstName');
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = [];
 
         foreach ($queryResult as $item) {
-            $result[$item['username']] = [
+            $result[$item['id']] = [
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],
                 'amount' => $item['amount'],

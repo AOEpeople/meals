@@ -141,16 +141,18 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
         $result = [];
 
         foreach ($costs as $cost) {
-            $username = $cost['username'];
+            $id = $cost['id'];
             $timestamp = strtotime($cost['yearMonth']);
             $costByMonth = [
                 'timestamp' => $timestamp,
                 'costs' => $cost['costs'],
             ];
-            if (true === array_key_exists($username, $result)) {
-                $result[$username]['costs'][] = $costByMonth;
+            if (true === array_key_exists($id, $result)) {
+                $result[$id]['costs'][] = $costByMonth;
             } else {
-                $result[$username] = [
+                $result[$id] = [
+                    'id' => $cost['id'],
+                    'username' => $cost['username'],
                     'name' => $cost['name'],
                     'firstName' => $cost['firstName'],
                     'hidden' => $cost['hidden'],
@@ -306,7 +308,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     private function findCostsPerMonthPerUser(): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $queryBuilder->select('u.id, u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
         $queryBuilder->leftJoin('p.meal', 'm');
         $queryBuilder->leftJoin('p.profile', 'u');
         $queryBuilder->leftJoin('u.roles', 'r');

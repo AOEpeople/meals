@@ -173,7 +173,8 @@ const getShowParticipationsError = computed(() => loadedState.error !== '');
 
 const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 
-const user = computed(() => userDataStore.getState().user ?? '');
+const user = computed(() => userDataStore.getState().fullName ?? '');
+
 const isAuthenticated = computed(() => {
   return !userDataStore.getState().roles.includes('ROLE_GUEST');
 });

@@ -18,6 +18,8 @@ export interface ICosts {
 }
 
 interface UserCost {
+    id: number;
+    username: string;
     name: string;
     firstName: string;
     hidden: boolean;
@@ -63,12 +65,14 @@ function isCosts(costs: ICosts): costs is ICosts {
         return (
             cost !== null &&
             cost !== undefined &&
+            typeof (cost as UserCost).id === 'number' &&
+            typeof (cost as UserCost).username === 'string' &&
             typeof (cost as UserCost).name === 'string' &&
             typeof (cost as UserCost).firstName === 'string' &&
             typeof (cost as UserCost).hidden === 'boolean' &&
             (cost as UserCost).costs !== undefined &&
             (cost as UserCost).costs !== null &&
-            Object.keys(cost).length === 4 &&
+            Object.keys(cost).length === 6 &&
             typeof (column as DateTime).date === 'string' &&
             typeof (column as DateTime).timezone === 'string' &&
             typeof (column as DateTime).timezone_type === 'number'
@@ -97,16 +101,16 @@ export function useCosts() {
     }
 
     /**
-     * Performs a request to hide the a user with a given username.
-     * @param username  The username of the user to hide.
+     * Performs a request to hide the a user with a given userid.
+     * @param userid  The userid of the user to hide.
      */
-    async function hideUser(username: string) {
-        const { error, response } = await postHideUser(username);
+    async function hideUser(userid: number) {
+        const { error, response } = await postHideUser(userid);
 
         if (error.value === true || isMessage(response.value)) {
             CostsState.error = isMessage(response.value) === true ? response.value.message : 'Error on hiding user';
         } else {
-            CostsState.users[username].hidden = true;
+            CostsState.users[userid].hidden = true;
             CostsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
@@ -116,12 +120,13 @@ export function useCosts() {
     }
 
     /**
-     * Sends a request to settle the balance of a user with a given username.
+     * Sends a request to settle the balance of a user with a given userid.
      * The HR-Department will be informed about the request and needs to confirm it.
-     * @param username  The username of the user to do the settlement for.
+     * @param userid  The userid of the user to do the settlement for.
      */
-    async function sendSettlement(username: string) {
-        const { error, response } = await postSettlement(username);
+    async function sendSettlement(userid: number) {
+        console.log(userid);
+        const { error, response } = await postSettlement(userid);
 
         if (error.value === true || isMessage(response.value)) {
             CostsState.error =
@@ -137,11 +142,11 @@ export function useCosts() {
 
     /**
      * Sends the amount of money a user payed in cash to the backend.
-     * @param username  The username of the user that payed in cash.
+     * @param userid  The userid of the user that payed in cash.
      * @param amount    The amount of money the user payed in cash.
      */
-    async function sendCashPayment(username: string, amount: number) {
-        const { error, response } = await postCashPayment(username, amount);
+    async function sendCashPayment(userid: number, amount: number) {
+        const { error, response } = await postCashPayment(userid, amount);
 
         if (error.value === true || isMessage(response.value)) {
             CostsState.error =
@@ -150,7 +155,7 @@ export function useCosts() {
                     : 'Error on sending settlement';
         } else if (typeof response.value === 'number') {
             CostsState.error = '';
-            CostsState.users[username].costs['total'] += response.value;
+            CostsState.users[userid].costs['total'] += response.value;
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'costs.cashPayment'
@@ -187,8 +192,8 @@ export function useCosts() {
         });
     }
 
-    function getFullNameByUser(username: string) {
-        const user = CostsState.users[username];
+    function getFullNameByUser(userid: number) {
+        const user = CostsState.users[userid];
         if (user !== undefined && user !== null) {
             return `${user.firstName} ${user.name}`;
         }

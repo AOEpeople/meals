@@ -4,7 +4,7 @@
     @submit.prevent="onSubmit"
   >
     <h3 class="w-full text-center">
-      {{ t('costs.payment').replace('#name#', getFullNameByUser(username)) }}
+      {{ t('costs.payment').replace('#name#', getFullNameByUser(props.userid)) }}
     </h3>
     <InputLabel
       v-model="amount"
@@ -29,7 +29,7 @@ const { sendCashPayment, getFullNameByUser } = useCosts();
 const amount = ref('1');
 
 const props = defineProps<{
-  username: string;
+  userid: number;
 }>();
 
 const emit = defineEmits(['closePanel']);
@@ -37,7 +37,7 @@ const emit = defineEmits(['closePanel']);
 async function onSubmit() {
   const parsedAmount = parseFloat(amount.value);
   if (parsedAmount > 0) {
-    await sendCashPayment(props.username, parsedAmount);
+    await sendCashPayment(props.userid, parsedAmount);
   }
   emit('closePanel');
 }

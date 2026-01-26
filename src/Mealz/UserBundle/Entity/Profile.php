@@ -236,7 +236,6 @@ class Profile implements UserInterface, JsonSerializable
     {
         return [
             'id' => $this->id,
-            'user' => $this->username,
             'fullName' => $this->getFullName(),
             'roles' => $this->getRoles(),
         ];

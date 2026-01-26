@@ -21,11 +21,12 @@ final class CashController extends BaseController
     }
 
     public function postPaymentCash(
-        Profile $profile,
+        int $userid,
         Request $request,
         EntityManagerInterface $entityManager,
     ): JsonResponse {
         try {
+            $profile = $entityManager->getRepository(Profile::class)->find($userid);
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $amount = (float) $request->query->get('amount');

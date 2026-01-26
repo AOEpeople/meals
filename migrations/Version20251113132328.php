@@ -32,9 +32,7 @@ final class Version20251113132328 extends AbstractMigration
         $this->addSql('ALTER TABLE guest_invitation DROP FOREIGN KEY FK_CC0531331FB8D185');
 
         $this->addSql('ALTER TABLE profile DROP COLUMN id');
-        $this->addSql('ALTER TABLE profile ADD COLUMN id INT NOT NULL');
-        $this->addSql('ALTER TABLE profile ADD PRIMARY KEY (id)');
-        $this->addSql('ALTER TABLE profile CHANGE id id INT NOT NULL AUTO_INCREMENT FIRST');
+        $this->addSql('ALTER TABLE profile ADD id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST');
 
         $this->addSql('UPDATE guest_invitation gi INNER JOIN profile p ON gi.host_id = p.username SET gi.host_id=p.id WHERE 1=1');
         $this->addSql('UPDATE login l INNER JOIN profile p ON l.profile_id = p.username SET l.profile_id=p.id WHERE 1=1');

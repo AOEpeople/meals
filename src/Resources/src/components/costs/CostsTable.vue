@@ -6,8 +6,8 @@
     :overflow-table="true"
   >
     <LazyTableRow
-      v-for="[username, costs] in filteredUsers"
-      :key="username"
+      v-for="[id, costs] in filteredUsers"
+      :key="id"
       :min-height="40"
       class="max-h-[62px] border-b-2 border-gray-200 text-right text-[12px] xl:text-[18px]"
     >
@@ -19,7 +19,7 @@
       </td>
       <td
         v-for="column in Object.keys(CostsState.columnNames)"
-        :key="`${String(column)}_${username}`"
+        :key="`${String(column)}_${id}`"
       >
         {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs[column]) }}
       </td>
@@ -28,7 +28,7 @@
       </td>
       <td class="min-w-[100px] pl-2">
         <CostsTableActions
-          :username="username"
+          :userid="costs.id"
           :balance="costs.costs['total']"
         />
       </td>

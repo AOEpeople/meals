@@ -1,5 +1,137 @@
 # Changelog
 
+## Version v3.3.0 (2026-01-26)
+
+### Features
+
+- add ROLE_ADMIN to allowed roles for prices (bf45e628)
+- display navigation link, if is accessible (66918cdf)
+- **prices:** use correct nextYearPrices as max price (264a635b)
+- add responsive styling for PricesEditPopover (3c1a6f7f)
+- **prices:** add condition for only deleting the highest year (8df81e47)
+- add no button to confirm offer meal popover (099d588b)
+- **eventpopup:** add min width style to popup (5d9b7fd2)
+- add handling dishSlug as undefined in confirmOfferMeal (179080cf)
+- **moneyinput:** Add test for money converting (b7b262d5)
+- add money formatter to CashPaymentPanel (e5785100)
+- display ConfirmOfferMealPopover before offered meal is taken over (3930552e)
+- **moneyinput:** Add negative parsed check before update modelValue (4bed33fa)
+- display money formated value depending on language selection (b5a359bf)
+- **moneyinput:** Add missing NaN parsed check before update modelValue (236aba8d)
+- **prices:** change styling for input error message general (1dd34feb)
+- **moneyinput:** Add automated money formatting (99bff0a5)
+- **prices:** add maxPrice undefined check (62571302)
+- **keepalive:** Add activeSessionInterval (ef3b363b)
+- **prices:** add undefined check for price maximum check (aa96c5c0)
+- **prices:** display input warning message (96529e57)
+- **prices:** remove any in emit error test (0deb8b5d)
+- **prices:** add error handling for update price (3ae256b2)
+- **prices:** add default value for max price (5a8c9f82)
+- **prices:** change let to const for priceByYear (0277f9df)
+- **prices:** replace any type with PriceCreateData (648c3dcb)
+- **prices:** replace any type with PriceCreateData (2b991624)
+- **prices:** remove any type for update emit object (d36206b2)
+- **prices:** add default value for id (4ec83744)
+- **prices:** change access role from admin to kitchen staff (578fea90)
+- **prices:** use validatePrice in validateYearAndPrices (5e411f96)
+- **prices:** add max price validation for update prices (546ba972)
+- **prices:** add improved error handling for update prices (88646b1c)
+- **prices:** add filter for getting years before selected year (27e0603a)
+- **prices:** Reformat code in PricesEditPopover (3e89ad29)
+- **prices:** Display warning message, if inputs are invalid (8dcd917d)
+- **navbar:** Add space between balance and navigation (0e6bbaaa)
+- add display flex to navigation items (84ce9739)
+- add minimum grid col size (b9966392)
+- add default empty array due invalid request data (fda46c42)
+- change no price for this year found error code to 404 (1a7d845b)
+- add logic for displaying priceCombined or price (d353a436)
+- add onDelete Cascade to Meal entity (4012481f)
+- add remove price_id in down migration (cae1426c)
+- remove unnecessary year in createPrice api call (719a6716)
+- remove unnecessary request body data for putUpdatePrice (ba98e454)
+- remove unnecessary request body in delete api call (80d88bdd)
+- change routing in PricesController (a647e2f0)
+- add on delete cascade constraint for meal table (2475cd3d)
+- add combined dish check (99a60a38)
+- add logging and error handling (412d9850)
+- Use prices in price table instead of dish table and services.yaml (cac146b6)
+- add migrations for referencing prices to meals (c889fb3c)
+- #272072 adds list view + edit, delete and create functions (c713e2d0)
+
+### Fixes
+
+- fix code guidlines messages (8466ffbd)
+- **eventpopup:** Add missing scrollbar to EventPopup (5d35cdc8)
+- add missing index increasing for getting days (2647a66f)
+- add missing convertation to int (014bc77b)
+- #272152 fixes line-breaks in finance table (afb25930)
+
+### Tests
+
+- add test for confirm offer meal popover logic (5b3c2232)
+- **prices:** use current year to fix flaky test (425d30eb)
+- add tests for displaying euro sign in input field (06009dd8)
+- **prices:** use current year to fix flaky test (d1c9f43a)
+- **prices:** change error message id for test (cee698c9)
+- **prices:** use current year to fix flaky test (2e044d81)
+- **prices:** add cypress test for Price View (de23c68d)
+- **prices:** add tests for PricesEditPopover (f8556927)
+- **prices:** add test for PricesCreationPanel (40425a4b)
+- **prices:** add test for pricesStore (c3762ae7)
+- **prices:** add frontend tests for api call (ff544ef3)
+- add psalm supress InvalidArgument annotation (c8a8c354)
+- replace mocks with PHPUnit Mocks for Service classes (6574bb43)
+- replace mocks with PHPUnit Mocks for Week classes (866f03e5)
+- add WeekCreateHandlerTest (81ba1d62)
+- add acceptance test for PricesController (0dc41c4d)
+
+### Refactoring
+
+- remove unnecessary parseFloat for amount (bdc4d6b7)
+- **prices:** remove unnecessary beforeEach import (f09d13fd)
+- **keepalive:** add number type to activeSessionIntervalId (2f4dad88)
+- **keepalive:** add Timeout type to activeSessionIntervalId (f9d9cda5)
+- **keepalive:** add number type to activeSessionIntervalId (d626f52b)
+- **prices:** change order of minus and variable name (0112968b)
+- **prices:** change order for v-if and id (f03808d2)
+- **prices:** remove unnecessary try catch for emit (8e34939d)
+- **prices:** reduce complexity of validateYearAndPrices (0c7168d1)
+- change test name (6b65ed36)
+- reduce complexity of MealAdminController (fc9c8a0e)
+- fix static code analysis issues (d89606be)
+- change setPrice name to setPriceValue (d4fb8fd8)
+
+### Ops and CI/CD
+
+- **deps:** bump lodash from 4.17.21 to 4.17.23 in /tests/e2e (88e0a2fa)
+- **deps:** bump lodash from 4.17.21 to 4.17.23 in /src/Resources (3c53e2e0)
+
+### Chores and tidying
+
+- #272129 fixes ROLE_FINANCE access to Accounting &amp; Costs View - fixes test (f6b7a4de)
+- fixes codestyle (c1f301ae)
+- fixes codestyle (9db0e013)
+- refactoring to local variables instead of class-variables (79ebf239)
+- #272129 fixes ROLE_FINANCE access to Accounting &amp; Costs View (39f7b69f)
+
+### Other
+
+- Bump jspdf from 3.0.3 to 4.0.0 in /src/Resources (6a16bb27)
+- style: change order of styles for PricesEditPopover div (ae829887)
+- style(eventPopup): change order for min width (c0010e01)
+- style(keepAlive): add spacing between types (1f2b1587)
+- style(prices): remove unnecessary semicolon (f27d9e5f)
+- style(prices): reformat general warning markup (0cb81d49)
+- style(moneyInput): Add line break for displayValue (2123a32d)
+- style(keepAlive): Add line breaks for activeSessionInterval (3ad1d5d0)
+- style(prices): reformat input warning message (0d72ee84)
+- text(prices): change response message of price edit api (8731b8aa)
+- text(prices): Add flashMessages translations (f9efa83d)
+- text: add english error texts (d8461744)
+- style: add missing declare strict types (70027ab4)
+- style: fix psalm issues for use prices feature (9d73d38d)
+- style: fix code styling for use prices feature (95348204)
+
 ## Version v3.2.0 (2025-12-17)
 
 ### Features

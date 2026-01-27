@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(new Expression('is_granted("ROLE_KITCHEN_STAFF") or is_granted("ROLE_FINANCE")'))]
+#[IsGranted(new Expression('is_granted("ROLE_KITCHEN_STAFF") or is_granted("ROLE_FINANCE") or is_granted("ROLE_ADMIN")'))]
 final class PricesController extends BaseController
 {
     public function list(PriceRepository $priceRepository): JsonResponse

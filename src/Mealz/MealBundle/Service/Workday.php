@@ -17,7 +17,7 @@ final class Workday
      *
      * @var array
      */
-    protected $weekdayWhitelist = ['1', '2', '3', '4', '5'];
+    private $weekdayWhitelist = ['1', '2', '3', '4', '5'];
 
     /**
      * array of dates that are not considered workdays.
@@ -26,7 +26,7 @@ final class Workday
      *
      * @var array
      */
-    protected $dayBlacklist = [
+    private $dayBlacklist = [
         // new year
         '01-01',
         // christmas
@@ -35,7 +35,7 @@ final class Workday
         '12-26',
     ];
 
-    protected $blacklistRelToEaster = [
+    private $blacklistRelToEaster = [
         '-2 days',
         '+ 0 days',
         '+1 day',
@@ -89,7 +89,7 @@ final class Workday
         }
     }
 
-    protected function dateIsValid(DateTime $date): bool
+    private function dateIsValid(DateTime $date): bool
     {
         if (false === in_array($date->format('N'), $this->weekdayWhitelist)) {
             return false;

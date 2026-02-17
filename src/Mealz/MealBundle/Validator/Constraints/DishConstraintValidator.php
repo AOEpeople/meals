@@ -26,7 +26,7 @@ final class DishConstraintValidator extends ConstraintValidator
     #[Override]
     public function validate($value, Constraint $constraint): void
     {
-        if (!($value->getDish() instanceof NullDish)) {
+        if (!$value->getDish() instanceof NullDish) {
             return;
         }
 

@@ -35,9 +35,9 @@ final class SecurityController extends AbstractController
                 SecurityRequestAttributes::AUTHENTICATION_ERROR
             );
             throw new Error($error);
-        } else {
-            $session->remove(SecurityRequestAttributes::AUTHENTICATION_ERROR);
         }
+
+        $session->remove(SecurityRequestAttributes::AUTHENTICATION_ERROR);
 
         return $this->redirectToRoute('MealzMealBundle_home');
     }

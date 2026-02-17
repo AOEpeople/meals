@@ -50,7 +50,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
         $user = $repo->findOneBy(['username' => $username]);
 
-        if (!($user instanceof Profile)) {
+        if (!$user instanceof Profile) {
             throw new RuntimeException($username . ': user not found');
         }
 
@@ -81,7 +81,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->find($id);
 
-        if (!($userProfile instanceof Profile)) {
+        if (!$userProfile instanceof Profile) {
             $this->fail('user profile with id not found: ' . $id);
         }
 
@@ -94,7 +94,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $profileRepository = self::getContainer()->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
-        if (!($userProfile instanceof Profile)) {
+        if (!$userProfile instanceof Profile) {
             $this->fail('user profile with username not found: ' . $username);
         }
 
@@ -121,7 +121,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         /** @var RoleRepositoryInterface $roleRepository */
         $roleRepository = self::getContainer()->get(RoleRepositoryInterface::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
-        if (!($role instanceof Role)) {
+        if (!$role instanceof Role) {
             $this->fail('user role not found:  "' . $roleType);
         }
 

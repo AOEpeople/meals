@@ -36,24 +36,24 @@ class ProfileService
                 'profile' => $existingProfile,
                 'status' => 'existing',
             ];
-        } else {
-            $profile = new Profile();
-            $profile->setUsername(sprintf('%s.%s_%s', $firstName, $lastName, (new DateTime())->format('Y-m-d')));
-            $profile->setFirstName($firstName);
-            $profile->setName($lastName);
-            if (0 < strlen($company)) {
-                $profile->setCompany($company);
-            }
-            $profile->addRole($this->getGuestRole());
-
-            $this->em->persist($profile);
-            $this->em->flush();
-
-            return [
-                'profile' => $profile,
-                'status' => 'new',
-            ];
         }
+
+        $profile = new Profile();
+        $profile->setUsername(sprintf('%s.%s_%s', $firstName, $lastName, (new DateTime())->format('Y-m-d')));
+        $profile->setFirstName($firstName);
+        $profile->setName($lastName);
+        if (0 < strlen($company)) {
+            $profile->setCompany($company);
+        }
+        $profile->addRole($this->getGuestRole());
+
+        $this->em->persist($profile);
+        $this->em->flush();
+
+        return [
+            'profile' => $profile,
+            'status' => 'new',
+        ];
     }
 
     private function profileExists(string $firstName, string $lastName, string $company): ?Profile

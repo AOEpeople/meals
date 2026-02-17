@@ -52,7 +52,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $user = $this->entityManager->getRepository(Profile::class)->findOneBy(['ssoId' => $identifier]);
-        if (!($user instanceof UserInterface)) {
+        if (!$user instanceof UserInterface) {
             throw new UserNotFoundException(sprintf('user not found: %s', $identifier));
         }
 
@@ -104,7 +104,7 @@ final class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserPr
             }
         }
 
-        if (!($user instanceof Profile)) {
+        if (!$user instanceof Profile) {
             throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
         }
 

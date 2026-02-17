@@ -89,18 +89,18 @@ final class WeeklyMenuMessage implements MessageInterface
             $body = $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages') . ' | ';
             if (0 === count($day->getEvents())) {
                 return $body . $this->translator->trans('week.notification.content.no_events', [], 'messages') . ' | ';
-            } else {
-                return $body . $this->eventsToString($events);
             }
+
+            return $body . $this->eventsToString($events);
         } elseif (!$day->isEnabled() || (0 === count($day->getEvents()))) {
             $body = $body . $this->toString($dishes);
 
             return $body . $this->translator->trans('week.notification.content.no_events', [], 'messages') . ' | ';
-        } else {
-            $body = $body . $this->toString($dishes);
-
-            return $body . $this->eventsToString($events);
         }
+
+        $body = $body . $this->toString($dishes);
+
+        return $body . $this->eventsToString($events);
     }
 
     private function handleDishes(Day $day)

@@ -104,9 +104,9 @@ class Doorman
     {
         if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public function isUserAllowedToUnswap(Meal $meal, Participant $participant): bool

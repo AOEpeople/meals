@@ -15,7 +15,6 @@ use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -238,17 +237,5 @@ final class CostSheetController extends BaseController
         }
 
         return new JsonResponse(null, Response::HTTP_OK);
-    }
-
-    private function getProfileById(array $parameters, EntityManagerInterface $em): ?Profile
-    {
-        try {
-            $userId = $parameters['id'];
-            $profile = $em->getRepository(Profile::class)->find($userId);
-
-            return $profile;
-        } catch (Exception $exception) {
-            throw new EntityNotFoundException('User not found');
-        }
     }
 }

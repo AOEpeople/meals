@@ -14,7 +14,7 @@ final class CostSheetService
         // ToDo: is mergeDoubleUserTransactions nescessary at all?
         $mergedUsers = [];
 
-        foreach ($users as $userId => &$user) {
+        foreach ($users as &$user) {
             $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $user['username']);
             if (!isset($mergedUsers[$trimmedUsername])) {
                 $mergedUsers[$user['username']] = $user;
@@ -27,7 +27,7 @@ final class CostSheetService
 
         // Fix keys
         $fixedUsers = [];
-        foreach ($mergedUsers as $username => $userData) {
+        foreach ($mergedUsers as $userData) {
             $fixedUsers[$userData['id']] = $userData;
         }
 

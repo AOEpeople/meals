@@ -303,7 +303,7 @@ export function useParticipations(weekId: number) {
         fetchParticipations,
         getParticipants,
         countBookedMeal,
-        getProfileId,
+        //getProfileId,
         addParticipantToMeal,
         removeParticipantFromMeal,
         hasParticipantBookedMeal,

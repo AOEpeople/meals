@@ -56,7 +56,7 @@ const openCombi = ref<number | null>(null);
 
 const props = defineProps<{
   edit: boolean;
-  participant: string;
+  participantId: number;
   dayId: string;
   weekId: number;
   meal: SimpleMeal;
@@ -71,27 +71,23 @@ const isCombi = computed(() => props.meal.dish === 'combined-dish');
 const bookedCombi = computed(() => {
   const dishId = mealIdToDishIdDict.get(props.meal.id);
   if (dishId === undefined || dishId === null) return undefined;
-  return hasParticipantBookedCombiDish(props.dayId, cleanParticipantName(props.participant), dishId);
+  return hasParticipantBookedCombiDish(props.dayId, props.participantId, dishId);
 });
 const bookedMeal = computed(() =>
-  hasParticipantBookedMeal(props.dayId, cleanParticipantName(props.participant), props.meal.id)
+  hasParticipantBookedMeal(props.dayId, props.participantId, props.meal.id)
 );
-
-function cleanParticipantName(name: string): string {
-  return name.replace(/\s\(gast\)\s*/i, ' (Guest)');
-}
 
 function handleClick() {
   if (props.edit === true && bookedMeal.value === true) {
-    removeParticipantFromMeal(props.meal.id, props.participant, props.dayId);
+    removeParticipantFromMeal(props.meal.id, props.participantId, props.dayId);
   } else if (props.edit === true && bookedMeal.value === false) {
-    addParticipantOrOpenCombi(props.meal, props.participant, props.dayId);
+    addParticipantOrOpenCombi(props.meal, props.participantId, props.dayId);
   }
 }
 
-function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId: string) {
+function addParticipantOrOpenCombi(meal: SimpleMeal, participantId: number, dayId: string) {
   if (props.edit === true && isCombi.value === false) {
-    addParticipantToMeal(meal.id, participant, dayId);
+    addParticipantToMeal(meal.id, participantId, dayId);
   } else if (props.edit === true && isCombi.value === true) {
     openCombi.value = meal.id;
   }
@@ -107,7 +103,7 @@ async function closeCombiModal(combiMeals: number[]) {
       })
       .filter((slug) => slug !== null && slug !== undefined);
     if (dishSlugs !== null && dishSlugs !== undefined) {
-      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs as string[]);
+      await addParticipantToMeal(props.meal.id, props.participantId, props.dayId, dishSlugs as string[]);
     }
   }
 }

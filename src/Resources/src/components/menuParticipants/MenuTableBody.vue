@@ -2,7 +2,7 @@
   <tbody class="z-10">
     <MenuTableDataRows
       v-for="participant in filteredParticipants"
-      :key="participant"
+      :key="participant.id"
       :week-id="weekId"
       :participant="participant"
     />
@@ -44,12 +44,15 @@ const { t } = useI18n();
 const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
-  if (getFilter() === '') {
-    return participants.value.map((participant) => getDisplayName(participant, t));
-  }
+  const filter = getFilter().toLowerCase();
 
-  return participants.value
-    .filter((participant) => participant.toLowerCase().includes(getFilter().toLowerCase()))
-    .map((participant) => getDisplayName(participant, t));
+  return Object.entries(participants.value)
+    .filter(([_, fullName]) =>
+      filter === '' || fullName.toLowerCase().includes(filter)
+    )
+    .map(([id, fullName]) => ({
+      id: Number(id),
+      displayName: getDisplayName(fullName, t),
+    }));
 });
 </script>

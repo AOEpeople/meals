@@ -61,14 +61,14 @@ final class ParticipationHelper
     }
 
     /**
-     * @return (string|string[])[][]
+     * @return (int|string[]|null)[][]
      *
-     * @psalm-return array<array{user: string, fullName: string, roles: array<string>}>
+     * @psalm-return array<array{user: int|null, fullName: string, roles: array<string>}>
      */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {
         $profiles = array_map(
-            fn ($participant) => $participant->getProfile()->getUserName(),
+            fn ($participant) => $participant->getProfile()->getId(),
             $participations
         );
 
@@ -80,7 +80,7 @@ final class ParticipationHelper
 
         $profileData = array_map(
             fn ($profile) => [
-                'user' => $profile->getUsername(),
+                'user' => $profile->getId(),
                 'fullName' => $profile->getFullName(),
                 'roles' => $profile->getRoles(),
             ],

@@ -49,7 +49,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
     {
         $profile = $this->getUserProfileByUsername(self::USER_STANDARD);
         $data = json_encode([
-            'id' => $profile->getId(),
+            'userid' => $profile->getId(),
         ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -70,7 +70,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
     {
         $profile = $this->getUserProfileByUsername('john.meals');
         $data = json_encode([
-            'id' => $profile->getId(),
+            'userid' => $profile->getId(),
         ]);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -127,7 +127,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         // Pre-action tests
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $data = json_encode([
-            'id' => $profile->getId(),
+            'userid' => $profile->getId(),
         ]);
         $this->assertFalse($profile->isHidden());
 
@@ -148,7 +148,7 @@ final class CostSheetControllerTest extends AbstractControllerTestCase
         // Pre-action tests
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $data = json_encode([
-            'id' => $profile->getId(),
+            'userid' => $profile->getId(),
         ]);
 
         $profile->setHidden(true);

@@ -290,7 +290,7 @@ final class ParticipantController extends BaseController
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
-                'profile' => $profile->getUsername(),
+                'profile' => $profile->getId(),
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -448,8 +448,8 @@ final class ParticipantController extends BaseController
         /** @var Participant $participant */
         foreach ($participants as $participant) {
             $participationData = $this->participationHelper->getParticipationMealData($participant);
-            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['booked'][] = $participationData;
-            $response[$day->getId()][$this->participationHelper->getParticipantName($participant)]['profile'] = $participant->getProfile()->getId();
+            $response[$day->getId()][$participant->getProfile()->getId()]['booked'][] = $participationData;
+            $response[$day->getId()][$participant->getProfile()->getId()]['fullName'] = $this->participationHelper->getParticipantName($participant);
         }
 
         return $response;

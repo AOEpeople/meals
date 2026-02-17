@@ -68,7 +68,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
         if (null !== $profile) {
             $queryBuilder
                 ->andWhere('p.profile = :profile_id')
-                ->setParameter('profile_id', $profile->getUsername());
+                ->setParameter('profile_id', $profile->getId());
         }
 
         return $queryBuilder->getQuery()->execute();
@@ -131,7 +131,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     /**
      * @return ((false|int|mixed)[][]|mixed)[][]
      *
-     * @psalm-return array<array{name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
+     * @psalm-return array<array-key, array{id?: mixed, username?: mixed, name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
      */
     #[Override]
     public function findCostsGroupedByUserGroupedByMonth(): array

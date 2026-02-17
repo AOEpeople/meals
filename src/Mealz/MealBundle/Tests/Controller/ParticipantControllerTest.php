@@ -135,7 +135,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals($profileToAdd->getUsername(), $responseData['profile']);
+        $this->assertEquals($profileToAdd->getId(), $responseData['profile']);
         $this->assertEquals($mealToAdd->getDay()->getId(), $responseData['day']);
         $this->assertEquals($mealToAdd->getId(), $responseData['booked'][0]['mealId']);
     }
@@ -185,8 +185,9 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
 
         $profileToParticipate = $responseData[0]['user'];
         $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
-        $profile = $profileRepo->findOneBy(['username' => $profileToParticipate]);
+        $profile = $profileRepo->find($profileToParticipate);
         $meal = $weekEntity->getDays()[0]->getMeals()[0];
+
         self::createParticipant($profile, $meal);
 
         $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
@@ -197,6 +198,7 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
 
         $found = false;
         $responseData = json_decode($response->getContent(), true);
+
         foreach ($responseData as $part) {
             if ($part['user'] === $profileToParticipate) {
                 $found = true;

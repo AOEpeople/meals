@@ -27,7 +27,7 @@ function isProfile(profile: IProfile): profile is IProfile {
     return (
         profile !== null &&
         profile !== undefined &&
-        typeof (profile as IProfile)?.user === 'string' &&
+        typeof (profile as IProfile)?.user === 'number' &&
         (profile as IProfile)?.roles !== null &&
         (profile as IProfile)?.roles !== undefined &&
         Object.keys(profile).length === 3

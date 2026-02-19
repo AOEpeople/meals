@@ -79,9 +79,9 @@ final class HttpHeaderUtility
         $rpos = strrpos($acceptLanguage, '-');
         if (false !== $rpos) {
             return substr($acceptLanguage, 0, $rpos);
-        } else {
-            return $acceptLanguage;
         }
+
+        return $acceptLanguage;
     }
 
     /**

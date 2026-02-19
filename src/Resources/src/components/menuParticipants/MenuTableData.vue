@@ -73,9 +73,7 @@ const bookedCombi = computed(() => {
   if (dishId === undefined || dishId === null) return undefined;
   return hasParticipantBookedCombiDish(props.dayId, props.participantId, dishId);
 });
-const bookedMeal = computed(() =>
-  hasParticipantBookedMeal(props.dayId, props.participantId, props.meal.id)
-);
+const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participantId, props.meal.id));
 
 function handleClick() {
   if (props.edit === true && bookedMeal.value === true) {

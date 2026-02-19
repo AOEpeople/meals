@@ -8,7 +8,6 @@ import deleteParticipation from '@/api/deleteParticipation';
 import type { IProfile } from './profilesStore';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
-import replaceStrings from '@/tools/stringReplacer';
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays;
@@ -110,12 +109,7 @@ export function useParticipations(weekId: number) {
      * @param dayId             The id of the day the meal is on.
      * @param combinedDishes    The ids of the dishes that make up the combined dish. Only needed if the dish is a combined dish.
      */
-    async function addParticipantToMeal(
-        mealId: number,
-        profileId: number,
-        dayId: string,
-        combinedDishes?: string[]
-    ) {
+    async function addParticipantToMeal(mealId: number, profileId: number, dayId: string, combinedDishes?: string[]) {
         menuParticipationsState.error = '';
         const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
@@ -166,9 +160,7 @@ export function useParticipations(weekId: number) {
         ) {
             menuParticipationsState.error = '';
             if (menuParticipationsState.days[dayId][profile] !== undefined) {
-                menuParticipationsState.days[dayId][profile].booked = (
-                    response.value as IMenuParticipation
-                ).booked;
+                menuParticipationsState.days[dayId][profile].booked = (response.value as IMenuParticipation).booked;
             } else {
                 menuParticipationsState.days[dayId][profile] = {
                     booked: (response.value as IMenuParticipation).booked,

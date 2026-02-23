@@ -21,6 +21,10 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use stdClass;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ */
 final class ParticipationService
 {
     use ParticipationServiceTrait;

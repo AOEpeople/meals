@@ -24,6 +24,8 @@ use stdClass;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NpathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 final class ParticipationService
 {

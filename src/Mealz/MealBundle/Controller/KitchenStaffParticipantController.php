@@ -4,22 +4,15 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Helper\ParticipationHelper;
-use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
-use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use stdClass;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,10 +25,7 @@ final class KitchenStaffParticipantController extends BaseController
 
     public function __construct(
         private readonly EventService $eventSrv,
-        private readonly ParticipationHelper $participationHelper,
         private readonly ParticipationService $participationSrv,
-        private readonly DayRepositoryInterface $dayRepo,
-        private readonly ParticipantRepositoryInterface $participantRepo,
         private readonly LoggerInterface $logger,
         private readonly Doorman $doorman
     ) {
@@ -43,20 +33,7 @@ final class KitchenStaffParticipantController extends BaseController
 
     public function getParticipationsForWeek(Week $week): JsonResponse
     {
-        $days = $week->getDays();
-        $response = [];
-
-        /** @var Day $day */
-        foreach ($days as $day) {
-            $meals = $day->getMeals();
-            $participants = new ArrayCollection();
-            /** @var Meal $meal */
-            foreach ($meals as $meal) {
-                $participants = new ArrayCollection(array_merge($participants->toArray(), $meal->getParticipants()->toArray()));
-            }
-
-            $response = $this->addParticipationInfo($response, $participants, $day);
-        }
+        $response = $this->participationSrv->getParticipationsForWeek($week);
 
         return new JsonResponse($response, Response::HTTP_OK);
     }
@@ -84,14 +61,9 @@ final class KitchenStaffParticipantController extends BaseController
             $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
             $this->logAdd($meal, $result['participant']);
 
-            // get updated day
-            $day = $this->dayRepo->getDayByDate($meal->getDay()->getDateTime());
-            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $day);
-
-            $participationData = [];
-            foreach ($participations as $participation) {
-                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
-            }
+            // get updated day participations for user
+            $day = $meal->getDay();
+            $participationData = $this->participationSrv->getProfileParticipationsForDay($profile, $day);
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
@@ -122,12 +94,8 @@ final class KitchenStaffParticipantController extends BaseController
             $this->eventSrv->triggerLeaveEvents($participation);
             $this->logRemove($meal, $participation);
 
-            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $meal->getDay());
-
-            $participationData = [];
-            foreach ($participations as $participation) {
-                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
-            }
+            $day = $meal->getDay();
+            $participationData = $this->participationSrv->getProfileParticipationsForDay($profile, $day);
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
@@ -143,32 +111,8 @@ final class KitchenStaffParticipantController extends BaseController
 
     public function getProfilesWithoutParticipation(Week $week): JsonResponse
     {
-        $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
-        $response = $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
+        $response = $this->participationSrv->getNonParticipatingProfilesForWeek($week);
 
         return new JsonResponse($response, Response::HTTP_OK);
-    }
-
-    /**
-     * @param array<mixed> $response
-     *
-     * @return array<mixed>
-     */
-    private function addParticipationInfo(array $response, ArrayCollection $participants, Day $day): array
-    {
-        if (0 === count($participants)) {
-            $response[$day->getId()] = new stdClass();
-
-            return $response;
-        }
-
-        /** @var Participant $participant */
-        foreach ($participants as $participant) {
-            $participationData = $this->participationHelper->getParticipationMealData($participant);
-            $response[$day->getId()][$participant->getProfile()->getId()]['booked'][] = $participationData;
-            $response[$day->getId()][$participant->getProfile()->getId()]['fullName'] = $this->participationHelper->getParticipantName($participant);
-        }
-
-        return $response;
     }
 }

@@ -10,6 +10,8 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Helper\ParticipationHelper;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
@@ -17,6 +19,7 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use stdClass;
 
 final class ParticipationService
 {
@@ -28,19 +31,22 @@ final class ParticipationService
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
     private SlotRepositoryInterface $slotRepo;
+    private ParticipationHelper $participationHelper;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
         DayRepositoryInterface $dayRepo,
         ParticipantRepositoryInterface $participantRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        ParticipationHelper $participationHelper
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
+        $this->participationHelper = $participationHelper;
     }
 
     /**
@@ -269,6 +275,70 @@ final class ParticipationService
         );
 
         return $profileData;
+    }
+
+    /**
+     * Build the participation overview structure used by staff views.
+     *
+     * @return array<mixed>
+     */
+    public function getParticipationsForWeek(Week $week): array
+    {
+        $response = [];
+
+        foreach ($week->getDays() as $day) {
+            $dayId = $day->getId();
+
+            foreach ($day->getMeals() as $meal) {
+                foreach ($meal->getParticipants() as $participant) {
+                    $profileId = $participant->getProfile()->getId();
+                    $response[$dayId][$profileId]['booked'][] =
+                        $this->participationHelper->getParticipationMealData($participant);
+                    $response[$dayId][$profileId]['fullName'] =
+                        $this->participationHelper->getParticipantName($participant);
+                }
+            }
+
+            if (!isset($response[$dayId])) {
+                // use empty array rather than stdClass to satisfy psalm array access
+                $response[$dayId] = [];
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Return list of profiles without any participation in the given week.
+     *
+     * @return array<mixed>
+     */
+    public function getNonParticipatingProfilesForWeek(Week $week): array
+    {
+        $participations = $this->participantRepo->getParticipantsOnDays(
+            $week->getStartTime(),
+            $week->getEndTime()
+        );
+
+        return $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
+    }
+
+    /**
+     * Helper used after adding/removing a user in a meal; collects booked meal data for the
+     * given profile on the specified day.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function getProfileParticipationsForDay(Profile $profile, Day $day): array
+    {
+        $participations = $this->getParticipationsByDayAndProfile($profile, $day);
+        $participationData = [];
+
+        foreach ($participations as $participation) {
+            $participationData[] = $this->participationHelper->getParticipationMealData($participation);
+        }
+
+        return $participationData;
     }
 
     /**

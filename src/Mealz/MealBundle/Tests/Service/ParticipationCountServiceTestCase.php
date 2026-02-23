@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Helper\ParticipationHelper;
 use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
@@ -46,7 +47,8 @@ final class ParticipationCountServiceTestCase extends AbstractParticipationServi
                 $doorman,
                 $dayRepo,
                 $this->participantRepo,
-                $this->slotRepo
+                $this->slotRepo,
+                self::getContainer()->get(ParticipationHelper::class)
             )
         );
 

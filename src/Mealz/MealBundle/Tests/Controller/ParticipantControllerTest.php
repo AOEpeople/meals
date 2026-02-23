@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use DateTime;
 use Override;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -65,11 +66,20 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $meal = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($meal);
 
+        // ensure lock time is in the future so the standard user may join
+        $day = $meal->getDay();
+        $day->setLockParticipationDateTime(new DateTime('+1 hour'));
+        $this->persistAndFlushAll([$day]);
+
         // first join so we have a participation
         $payload = json_encode(['mealID' => $meal->getId(), 'dishSlugs' => []]);
         $this->client->request('POST', '/api/meal/participation', [], [], [], $payload);
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $participantId = $data['participantId'];
+
+        // move lock into the past to allow swapping
+        $day->setLockParticipationDateTime(new DateTime('-1 hour'));
+        $this->persistAndFlushAll([$day]);
 
         // offer meal
         $payload = json_encode(['mealId' => $meal->getId()]);

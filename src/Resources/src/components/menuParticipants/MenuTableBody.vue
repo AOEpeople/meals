@@ -47,9 +47,7 @@ const filteredParticipants = computed(() => {
   const filter = getFilter().toLowerCase();
 
   return Object.entries(participants.value)
-    .filter((entry) =>
-      filter === '' || entry[1].toLowerCase().includes(filter)
-    )
+    .filter((entry) => filter === '' || entry[1].toLowerCase().includes(filter))
     .map(([id, fullName]) => ({
       id: Number(id),
       displayName: getDisplayName(fullName, t)

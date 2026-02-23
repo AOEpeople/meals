@@ -132,12 +132,12 @@ MealzMealBundle_api_week_lockDates:
 
 MealzMealBundle_api_participant_add:
     path: /api/participation/{userid}/{meal}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::add }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\KitchenStaffParticipantController::add }
     methods: [PUT]
 
 MealzMealBundle_api_participant_remove:
     path: /api/participation/{userid}/{meal}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::remove }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\KitchenStaffParticipantController::remove }
     methods: [DELETE]
 
 MealzMealBundle_api_is_participanting:
@@ -353,7 +353,7 @@ mealz_meal_edit_participations:
 
 MealzMealBundle_api_participations:
     path: /api/participations/{week}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getParticipationsForWeek }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\KitchenStaffParticipantController::getParticipationsForWeek }
     methods: [ GET ]
 
 MealzMealBundle_api_event_participations:
@@ -363,7 +363,7 @@ MealzMealBundle_api_event_participations:
 
 MealzMealBundle_api_non_participating:
     path: /api/participations/{week}/abstaining
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getProfilesWithoutParticipation }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\KitchenStaffParticipantController::getProfilesWithoutParticipation }
     methods: [ GET ]
 
 MealzMealBundle_api_participation_combi:

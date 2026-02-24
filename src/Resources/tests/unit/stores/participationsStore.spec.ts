@@ -69,10 +69,10 @@ describe('Test participationsStore', () => {
 
     it('should add a participant to a meal', async () => {
         await fetchParticipations();
-        await addParticipantToMeal(1518, 'Meals, Alice', '571');
+        await addParticipantToMeal(1518, 2, '571');
 
         expect(menuParticipationsState.error).toEqual('');
-        expect(menuParticipationsState.days['571']['Meals, Alice'].booked).toEqual([
+        expect(menuParticipationsState.days['571']['2'].booked).toEqual([
             {
                 mealId: 1516,
                 dishId: 48,
@@ -88,10 +88,10 @@ describe('Test participationsStore', () => {
 
     it('should remove a participant from a meal', async () => {
         await fetchParticipations();
-        await removeParticipantFromMeal(1516, 'Meals, Alice', '571');
+        await removeParticipantFromMeal(1516, 2, '571');
 
         expect(menuParticipationsState.error).toEqual('');
-        expect(menuParticipationsState.days['571']['Meals, Alice'].booked).toEqual([
+        expect(menuParticipationsState.days['571']['2'].booked).toEqual([
             {
                 mealId: 1518,
                 dishId: 52,
@@ -103,20 +103,20 @@ describe('Test participationsStore', () => {
     it('should add an empty participation to the state', async () => {
         await fetchParticipations();
         const profile: IProfile = {
-            user: 'jane.meals',
+            user: 7,
             fullName: 'Meals, Jane',
             roles: []
         };
         addEmptyParticipationToState(profile);
 
         expect(menuParticipationsState.error).toEqual('');
-        expect(menuParticipationsState.days['571']['Meals, Jane'].booked).toEqual({});
-        expect(menuParticipationsState.days['571']['Meals, Jane'].profile).toEqual(profile.user);
+        expect(menuParticipationsState.days['571'][7].booked).toEqual({});
+        expect(menuParticipationsState.days['571'][7].fullName).toEqual(profile.fullName);
     });
 
     it('should return a list of unique participants strings', async () => {
         await fetchParticipations();
-        const participants = getParticipants();
+        const participants = Object.values(getParticipants());
 
         let count;
         for (const participant of participants) {
@@ -134,7 +134,7 @@ describe('Test participationsStore', () => {
         await fetchParticipations();
         const id = getProfileId('Meals, Alice');
 
-        expect(id).toEqual('alice.meals');
+        expect(id).toEqual(2);
     });
 
     it('should return the number of booked meals', async () => {
@@ -147,16 +147,16 @@ describe('Test participationsStore', () => {
     it('should return true if a participant has booked a meal', async () => {
         await fetchParticipations();
 
-        expect(hasParticipantBookedMeal('573', 'Meals, Alice', 1521)).toBeTruthy();
-        expect(hasParticipantBookedMeal('573', 'Meals, Alice', 1522)).toBeFalsy();
+        expect(hasParticipantBookedMeal('573', 2, 1521)).toBeTruthy();
+        expect(hasParticipantBookedMeal('573', 2, 1522)).toBeFalsy();
     });
 
     it('should return true if a participant has booked a combi dish', async () => {
         await fetchParticipations();
 
-        expect(hasParticipantBookedCombiDish('575', 'Meals, Finance', 48)).toBeTruthy();
-        expect(hasParticipantBookedCombiDish('575', 'Meals, Finance', 45)).toBeTruthy();
-        expect(hasParticipantBookedCombiDish('575', 'Meals, Alice', 45)).toBeFalsy();
-        expect(hasParticipantBookedCombiDish('575', 'Meals, Finance', 55)).toBeFalsy();
+        expect(hasParticipantBookedCombiDish('575', 4, 48)).toBeTruthy();
+        expect(hasParticipantBookedCombiDish('575', 4, 45)).toBeTruthy();
+        expect(hasParticipantBookedCombiDish('575', 2, 45)).toBeFalsy();
+        expect(hasParticipantBookedCombiDish('575', 4, 55)).toBeFalsy();
     });
 });

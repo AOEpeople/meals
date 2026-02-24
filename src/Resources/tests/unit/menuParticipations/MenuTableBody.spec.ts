@@ -40,7 +40,7 @@ vi.mock('@/api/api', () => ({
 }));
 
 describe('Test MenuTableBody', () => {
-    const { fetchParticipations, getParticipants } = useParticipations(115);
+    const { fetchParticipations } = useParticipations(115);
     const { fetchWeeks } = useWeeks();
     const { fetchDishes } = useDishes();
 
@@ -59,8 +59,19 @@ describe('Test MenuTableBody', () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(wrapper.text()).toContain('menu.total');
-        for (const participant of getParticipants()) {
-            expect(wrapper.text()).toContain(participant);
-        }
+
+        // build unique list of full names from the participation fixture
+        const fullNames: string[] = [];
+        Object.values(Participations).forEach((day) => {
+            Object.values(day).forEach((entry: { fullName: string }) => {
+                if (!fullNames.includes(entry.fullName)) {
+                    fullNames.push(entry.fullName);
+                }
+            });
+        });
+
+        fullNames.forEach((name) => {
+            expect(wrapper.text()).toContain(name);
+        });
     });
 });

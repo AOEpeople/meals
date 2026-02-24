@@ -191,12 +191,11 @@ export function useParticipations(weekId: number) {
      * Returns a unique and sorted list of full names of all participants in the current week.
      */
     function getParticipants() {
-        const participants: Record<string, string> = {};
+        const participants: Record<number, string> = {} as Record<number, string>;
 
         for (const day of Object.values(menuParticipationsState.days)) {
             for (const id in day) {
-                //const numericId = Number(id);
-                participants[id] = day[id].fullName;
+                participants[Number(id)] = day[id].fullName;
             }
         }
 
@@ -204,20 +203,20 @@ export function useParticipations(weekId: number) {
     }
 
     /**
-     * Returns the profile id of a participant.
-     * @param participant   The full name of the participant.
+     * Returns the profile id of a participant based on their full name.
+     * Scans the currently loaded participations for a matching fullName.
+     * @param participantName   Full name string of the participant.
      */
-    /*
-    function getProfileId(participant: string): number | null {
-        const strippedParticipant = replaceStrings(participant, ' (Guest)', ' (Gast)');
+    function getProfileId(participantName: string): number | null {
         for (const day of Object.values(menuParticipationsState.days)) {
-            if (typeof day[strippedParticipant]?.profile === 'number') {
-                return day[strippedParticipant].profile;
+            for (const idStr in day) {
+                if (day[idStr].fullName === participantName) {
+                    return Number(idStr);
+                }
             }
         }
         return null;
     }
-        */
 
     /**
      * Returns how often a dish is booked on a given day.
@@ -301,7 +300,7 @@ export function useParticipations(weekId: number) {
         fetchParticipations,
         getParticipants,
         countBookedMeal,
-        //getProfileId,
+        getProfileId,
         addParticipantToMeal,
         removeParticipantFromMeal,
         hasParticipantBookedMeal,

@@ -18,7 +18,6 @@ describe('Test CostsTableActions', () => {
     const wrapper = mount(CostsTableActions, {
         props: {
             userid: 1,
-            username: 'TestUser123',
             balance: 987
         }
     });

@@ -10,7 +10,13 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const getMockedResponses = (method: string, url: string) => {
-    if (/api\/costs\/hideuser/.test(url) && method === 'POST') {
+    if (/api\/costs$/.test(url) && method === 'GET') {
+        return {
+            response: ref(Costs),
+            request: asyncFunc,
+            error: ref(false)
+        };
+    } else if (/api\/costs\/hideuser/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
@@ -22,21 +28,10 @@ const getMockedResponses = (method: string, url: string) => {
             request: asyncFunc,
             error: ref(false)
         };
-    } else if (/api\/payment\/cash\/[a-z]+.[a-z]+\?amount=[0-9]+/.test(url) && method === 'POST') {
+    } else if (/api\/payment\/cash\/[0-9]+\?amount=[0-9]+/.test(url) && method === 'POST') {
         return {
+            // API returns the amount that was applied
             response: ref(PAYMENT_AMOUNT),
-            request: asyncFunc,
-            error: ref(false)
-        };
-    } else if (/api\/costs\/settlement\/confirm\/[a-z]+/.test(url) && method === 'POST') {
-        return {
-            response: ref(null),
-            request: asyncFunc,
-            error: ref(false)
-        };
-    } else if (/api\/costs/.test(url) && method === 'GET') {
-        return {
-            response: ref(Costs),
             request: asyncFunc,
             error: ref(false)
         };
@@ -75,14 +70,14 @@ describe('Test CostsStore', () => {
     });
 
     it('should hide a user and update the state', async () => {
-        const userKey = Object.keys(CostsState.users)[0];
+        const userKey = Number(Object.keys(CostsState.users)[0]);
         expect(CostsState.users[userKey].hidden).toBeFalsy();
         await hideUser(userKey);
         expect(CostsState.users[userKey].hidden).toBeTruthy();
     });
 
     it('should send a cash payment and update the state', async () => {
-        const userKey = Object.keys(CostsState.users)[0];
+        const userKey = Number(Object.keys(CostsState.users)[0]);
         const user = CostsState.users[userKey];
         const oldBalance = user.costs['total'];
         await sendCashPayment(userKey, PAYMENT_AMOUNT);

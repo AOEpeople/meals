@@ -56,10 +56,12 @@ final class ParticipantController extends BaseController
 
         $parameters = json_decode($request->getContent(), true);
         $slot = null;
-        if (true === isset($parameters['slotID'])) {
-            $slot = $this->slotRepo->find($parameters['slotID']);
+        if (isset($parameters['slotID']) || isset($parameters['slotId'])) {
+            $slotId = $parameters['slotId'] ?? $parameters['slotID'];
+            $slot = $this->slotRepo->find($slotId);
         }
-        $meal = $this->mealRepo->find($parameters['mealID']);
+        // prefer lowercase id key for consistency
+        $meal = $this->mealRepo->find($parameters['mealId'] ?? $parameters['mealID']);
 
         try {
             $result = $this->participationSrv->join($profile, $meal, $slot, $parameters['dishSlugs']);

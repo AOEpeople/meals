@@ -39,9 +39,14 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $meal = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($meal);
 
+        // ensure lock time is in the future so the standard user may join
+        $day = $meal->getDay();
+        $day->setLockParticipationDateTime(new DateTime('+1 hour'));
+        $this->persistAndFlushAll([$day]);
+
         // join meal
         $payload = json_encode([
-            'mealID' => $meal->getId(),
+            'mealId' => $meal->getId(),
             'dishSlugs' => [],
         ]);
         $this->client->request('POST', '/api/meal/participation', [], [], [], $payload);

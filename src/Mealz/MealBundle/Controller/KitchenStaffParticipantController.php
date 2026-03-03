@@ -67,7 +67,7 @@ final class KitchenStaffParticipantController extends BaseController
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
-                'profile' => $profile->getId(),
+                'fullName' => $profile->getFullName(),
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {

@@ -14,7 +14,7 @@ interface IProfilesState {
 }
 
 export interface IProfile {
-    user: number;
+    id: number;
     fullName: string;
     roles: string[];
 }
@@ -27,7 +27,7 @@ function isProfile(profile: IProfile): profile is IProfile {
     return (
         profile !== null &&
         profile !== undefined &&
-        typeof (profile as IProfile)?.user === 'number' &&
+        typeof (profile as IProfile)?.id === 'number' &&
         (profile as IProfile)?.roles !== null &&
         (profile as IProfile)?.roles !== undefined &&
         Object.keys(profile).length === 3

@@ -80,7 +80,7 @@ final class ParticipationHelper
 
         $profileData = array_map(
             fn ($profile) => [
-                'user' => $profile->getId(),
+                'id' => $profile->getId(),
                 'fullName' => $profile->getFullName(),
                 'roles' => $profile->getRoles(),
             ],

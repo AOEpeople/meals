@@ -1,6 +1,6 @@
 {
   "profile": {
-    "user": 4,
+    "id": 4,
     "fullName": "Meals, Finance",
     "roles": ["ROLE_FINANCE"]
   },

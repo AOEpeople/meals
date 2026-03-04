@@ -1,31 +1,31 @@
 [
   {
-    "user": 6,
+    "id": 6,
     "fullName": "Meals, Kochomi",
     "roles": ["ROLE_KITCHEN_STAFF"]
   },
   {
-    "user": 2,
+    "id": 2,
     "fullName": "Meals, Alice",
-    "roles": ["ROLE_USER"]
+    "roles": ["ROLE_id"]
   },
   {
-    "user": 7,
+    "id": 7,
     "fullName": "Meals, Jane",
-    "roles": ["ROLE_USER"]
+    "roles": ["ROLE_id"]
   },
   {
-    "user": 5,
+    "id": 5,
     "fullName": "Meals, John",
-    "roles": ["ROLE_USER"]
+    "roles": ["ROLE_id"]
   },
   {
-    "user": 1,
+    "id": 1,
     "fullName": "Meals, Admin",
     "roles": ["ROLE_ADMIN"]
   },
   {
-    "user": 4,
+    "id": 4,
     "fullName": "Meals, Finance",
     "roles": ["ROLE_FINANCE"]
   }

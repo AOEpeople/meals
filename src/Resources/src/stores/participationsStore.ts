@@ -181,7 +181,7 @@ export function useParticipations(weekId: number) {
      */
     function addEmptyParticipationToState(profile: IProfile) {
         const firstDayId = Object.keys(menuParticipationsState.days)[0];
-        menuParticipationsState.days[firstDayId][profile.user] = {
+        menuParticipationsState.days[firstDayId][profile.id] = {
             booked: {},
             fullName: profile.fullName
         };

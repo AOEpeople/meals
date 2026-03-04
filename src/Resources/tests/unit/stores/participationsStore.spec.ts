@@ -103,7 +103,7 @@ describe('Test participationsStore', () => {
     it('should add an empty participation to the state', async () => {
         await fetchParticipations();
         const profile: IProfile = {
-            user: 7,
+            id: 7,
             fullName: 'Meals, Jane',
             roles: []
         };

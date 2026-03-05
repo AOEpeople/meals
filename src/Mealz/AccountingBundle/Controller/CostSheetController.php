@@ -193,7 +193,7 @@ final class CostSheetController extends BaseController
         }
 
         return new JsonResponse([
-            'user' => $profile->getId(),
+            'id' => $profile->getId(),
             'fullName' => $profile->getFullName(),
             'roles' => $profile->getRoles(),
         ], Response::HTTP_OK);

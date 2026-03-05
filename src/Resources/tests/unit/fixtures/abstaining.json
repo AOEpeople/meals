@@ -7,17 +7,17 @@
   {
     "id": 2,
     "fullName": "Meals, Alice",
-    "roles": ["ROLE_id"]
+    "roles": ["ROLE_USER"]
   },
   {
     "id": 7,
     "fullName": "Meals, Jane",
-    "roles": ["ROLE_id"]
+    "roles": ["ROLE_USER"]
   },
   {
     "id": 5,
     "fullName": "Meals, John",
-    "roles": ["ROLE_id"]
+    "roles": ["ROLE_USER"]
   },
   {
     "id": 1,

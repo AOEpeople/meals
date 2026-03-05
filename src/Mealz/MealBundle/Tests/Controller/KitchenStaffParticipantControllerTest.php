@@ -183,7 +183,7 @@ final class KitchenStaffParticipantControllerTest extends AbstractControllerTest
         $this->assertTrue(is_array($responseData));
         $this->assertNotEmpty($responseData);
 
-        $profileToParticipate = $responseData[0]['user'];
+        $profileToParticipate = $responseData[0]['id'];
         $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->find($profileToParticipate);
         $meal = $weekEntity->getDays()[0]->getMeals()[0];
@@ -200,7 +200,7 @@ final class KitchenStaffParticipantControllerTest extends AbstractControllerTest
         $responseData = json_decode($response->getContent(), true);
 
         foreach ($responseData as $part) {
-            if ($part['user'] === $profileToParticipate) {
+            if ($part['id'] === $profileToParticipate) {
                 $found = true;
                 break;
             }

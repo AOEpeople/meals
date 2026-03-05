@@ -63,7 +63,7 @@ final class ParticipationHelper
     /**
      * @return (int|string[]|null)[][]
      *
-     * @psalm-return array<array{user: int|null, fullName: string, roles: array<string>}>
+     * @psalm-return array<array{id: int|null, fullName: string, roles: array<string>}>
      */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {

@@ -182,7 +182,7 @@ jobs:
             type=ref,event=branch
       - name: Build and push development image
         id: build_dev
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           file: Dockerfile
           push: false
@@ -245,7 +245,7 @@ jobs:
             type=edge,branch=main
       - name: Build and push production image
         id: build_latest
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false

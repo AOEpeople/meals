@@ -1,5 +1,23 @@
 # Changelog
 
+## Version v3.3.1 (2026-03-11)
+
+### Ops and CI/CD
+
+- **deps:** bump svgo from 4.0.0 to 4.0.1 in /src/Resources (a26062d1)
+- **deps:** bump docker/login-action from 3 to 4 (0682eec0)
+- **deps:** bump dompurify from 3.3.1 to 3.3.3 in /src/Resources (0dfc89ee)
+- **deps:** bump actions/download-artifact from 7 to 8 (57468115)
+- **deps:** bump docker/setup-qemu-action from 3 to 4 (007f5103)
+- **deps:** bump docker/metadata-action from 5 to 6 (6f9a4528)
+- **deps:** bump actions/upload-artifact from 6 to 7 (2d9926af)
+- **deps:** bump docker/build-push-action from 6 to 7 (57fd15f5)
+- **deps-dev:** bump minimatch from 3.1.2 to 3.1.5 in /src/Resources (8109490a)
+- **deps:** bump jspdf from 4.0.0 to 4.2.0 in /src/Resources (2820b073)
+- **deps:** bump docker/setup-buildx-action from 3 to 4 (9e492e0d)
+- **deps:** bump rollup from 4.52.4 to 4.59.0 in /src/Resources (72e5f009)
+- **deps:** bump axios from 1.12.2 to 1.13.5 in /src/Resources (859cb8c2)
+
 ## Version v3.3.0 (2026-01-26)
 
 ### Features

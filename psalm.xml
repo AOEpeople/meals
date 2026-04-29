@@ -27,6 +27,7 @@
                 <referencedFunction name="Doctrine\ORM\Query\Expr::orX" />
             </errorLevel>
         </TooManyArguments>
+        <InvalidAttribute errorLevel="suppress" />
     </issueHandlers>
 
 </psalm>

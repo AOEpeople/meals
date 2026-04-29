@@ -431,11 +431,11 @@ jobs:
           docker pull $IMAGE
           echo "digest=$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)" >> $GITHUB_OUTPUT
       - name: Delete docker image artifact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: docker-dev-image
       - name: Delete docker image artifact
-        uses: geekyeggo/delete-artifact@v5
+        uses: geekyeggo/delete-artifact@v6
         with:
           name: docker-app-image
     outputs:

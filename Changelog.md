@@ -1,5 +1,39 @@
 # Changelog
 
+## Version v3.3.1 (2026-04-29)
+
+### Ops and CI/CD
+
+- **deps:** bump geekyeggo/delete-artifact from 5 to 6 (8dff9aa3)
+- **deps:** bump jspdf from 4.2.0 to 4.2.1 in /src/Resources (23c1e9fb)
+- **deps-dev:** bump flatted from 3.3.3 to 3.4.2 in /src/Resources (a59ec581)
+- **deps:** bump svgo from 4.0.0 to 4.0.1 in /src/Resources (a26062d1)
+- **deps:** bump picomatch in /src/Resources (2cf9f830)
+- **deps:** bump docker/login-action from 3 to 4 (0682eec0)
+- **deps:** bump lodash from 4.17.23 to 4.18.1 in /tests/e2e (d09bb459)
+- **deps:** bump dompurify from 3.3.1 to 3.3.3 in /src/Resources (0dfc89ee)
+- **deps:** bump actions/download-artifact from 7 to 8 (57468115)
+- **deps-dev:** bump postcss from 8.5.6 to 8.5.12 in /src/Resources (5523530f)
+- **deps:** bump docker/setup-qemu-action from 3 to 4 (007f5103)
+- **deps:** bump docker/metadata-action from 5 to 6 (6f9a4528)
+- **deps:** bump actions/upload-artifact from 6 to 7 (2d9926af)
+- **deps:** bump yaml from 2.8.1 to 2.8.3 in /src/Resources (ec9706c0)
+- **deps:** bump lodash from 4.17.23 to 4.18.1 in /src/Resources (a03b35ba)
+- **deps:** bump docker/build-push-action from 6 to 7 (57fd15f5)
+- **deps-dev:** bump minimatch from 3.1.2 to 3.1.5 in /src/Resources (8109490a)
+- **deps:** bump jspdf from 4.0.0 to 4.2.0 in /src/Resources (2820b073)
+- **deps-dev:** bump vite from 6.4.1 to 6.4.2 in /src/Resources (84375373)
+- **deps:** bump axios from 1.13.5 to 1.15.0 in /src/Resources (a8e2d1db)
+- **deps:** bump docker/setup-buildx-action from 3 to 4 (9e492e0d)
+- **deps:** bump rollup from 4.52.4 to 4.59.0 in /src/Resources (72e5f009)
+- **deps:** bump axios from 1.12.2 to 1.13.5 in /src/Resources (859cb8c2)
+- **deps:** bump follow-redirects in /src/Resources (8deb253f)
+- **deps:** bump dompurify from 3.3.3 to 3.4.1 in /src/Resources (9c5aa6b9)
+
+### Chores and tidying
+
+- update packages, add issuehandler configuration for override attribute (315bdb4f)
+
 ## Version v3.3.0 (2026-01-26)
 
 ### Features

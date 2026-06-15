@@ -133,6 +133,6 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->profile->getUserIdentifier();
     }
 }

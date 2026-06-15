@@ -63,7 +63,7 @@ final class Version20251113132328 extends AbstractMigration
 
         $this->addSql('ALTER TABLE profile DROP PRIMARY KEY');
         $this->addSql('ALTER TABLE profile DROP COLUMN id');
-        $this->addSql('ALTER TABLE profile ADD id VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE profile ADD id VARCHAR(255) NOT NULL PRIMARY KEY');
 
         $this->addSql('UPDATE profile SET id = username');
 

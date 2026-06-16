@@ -11,7 +11,6 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query\ParameterTypeInferer;
 use Override;
 
 /**

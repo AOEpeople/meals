@@ -136,7 +136,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * @param string $company   User company
      */
     #[Override]
-    protected function createProfile(string $id = '', string $firstName = '', string $lastName = '', string $company = ''): Profile
+    protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
         $firstName = ('' !== $firstName) ? $firstName : 'Test';
         $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();

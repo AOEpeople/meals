@@ -84,7 +84,7 @@ final class KitchenStaffParticipantControllerTest extends AbstractControllerTest
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
         self::$userLastName = 'Schmidt' . $time;
-        $user = $this->createProfile('1', self::$userFirstName, self::$userLastName);
+        $user = $this->createProfile(self::$userFirstName, self::$userLastName);
         $this->persistAndFlushAll([$user]);
 
         // Check that created profiles are persisted
@@ -239,7 +239,7 @@ final class KitchenStaffParticipantControllerTest extends AbstractControllerTest
         string $userLastName,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile(uniqid(), $userFirstName, $userLastName);
+        $user = $this->createProfile($userFirstName, $userLastName);
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);
 
@@ -257,7 +257,7 @@ final class KitchenStaffParticipantControllerTest extends AbstractControllerTest
         string $guestCompany,
         Meal $meal
     ): Participant {
-        $user = $this->createProfile(uniqid(), $guestFirstName, $guestLastName, $guestCompany);
+        $user = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
         $user->addRole($this->getRole(Role::ROLE_GUEST));
         $this->persistAndFlushAll([$user]);
         $participant = new Participant($user, $meal);

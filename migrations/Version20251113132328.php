@@ -61,6 +61,18 @@ final class Version20251113132328 extends AbstractMigration
         $this->addSql('ALTER TABLE profile_role DROP FOREIGN KEY FK_E1A105FECCFA12B8');
         $this->addSql('ALTER TABLE transaction DROP FOREIGN KEY FK_723705D18157AA0F');
 
+        $this->addSql('ALTER TABLE guest_invitation CHANGE host_id host_id VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE login CHANGE profile_id profile_id VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE participant CHANGE profile_id profile_id VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE profile_role CHANGE profile_id profile_id VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE transaction CHANGE profile profile VARCHAR(255) NOT NULL');
+
+        $this->addSql('UPDATE guest_invitation gi INNER JOIN profile p ON gi.host_id = p.id SET gi.host_id = p.username');
+        $this->addSql('UPDATE login l INNER JOIN profile p ON l.profile_id = p.id SET l.profile_id = p.username');
+        $this->addSql('UPDATE participant pa INNER JOIN profile p ON pa.profile_id = p.id SET pa.profile_id = p.username');
+        $this->addSql('UPDATE transaction t INNER JOIN profile p ON t.profile = p.id SET t.profile = p.username');
+        $this->addSql('UPDATE profile_role pr INNER JOIN profile p ON pr.profile_id = p.id SET pr.profile_id = p.username');
+
         $this->addSql('ALTER TABLE profile DROP PRIMARY KEY');
         $this->addSql('ALTER TABLE profile DROP COLUMN id');
         $this->addSql('ALTER TABLE profile ADD id VARCHAR(255) NOT NULL PRIMARY KEY');
@@ -69,18 +81,6 @@ final class Version20251113132328 extends AbstractMigration
 
         $this->addSql('ALTER TABLE profile DROP COLUMN username');
         $this->addSql('ALTER TABLE profile DROP COLUMN ssoId');
-
-        $this->addSql('ALTER TABLE guest_invitation CHANGE host_id host_id VARCHAR(255) NOT NULL');
-        $this->addSql('ALTER TABLE login CHANGE profile_id profile_id VARCHAR(255) DEFAULT NULL');
-        $this->addSql('ALTER TABLE participant CHANGE profile_id profile_id VARCHAR(255) NOT NULL');
-        $this->addSql('ALTER TABLE profile_role CHANGE profile_id profile_id VARCHAR(255) NOT NULL');
-        $this->addSql('ALTER TABLE transaction CHANGE profile profile VARCHAR(255) NOT NULL');
-
-        $this->addSql('UPDATE guest_invitation gi INNER JOIN profile p ON gi.host_id = p.id SET gi.host_id = p.id');
-        $this->addSql('UPDATE login l INNER JOIN profile p ON l.profile_id = p.id SET l.profile_id = p.id');
-        $this->addSql('UPDATE participant pa INNER JOIN profile p ON pa.profile_id = p.id SET pa.profile_id = p.id');
-        $this->addSql('UPDATE transaction t INNER JOIN profile p ON t.profile = p.id SET t.profile = p.id');
-        $this->addSql('UPDATE profile_role pr INNER JOIN profile p ON pr.profile_id = p.id SET pr.profile_id = p.id');
 
         $this->addSql('ALTER TABLE guest_invitation ADD CONSTRAINT FK_CC0531331FB8D185 FOREIGN KEY (host_id) REFERENCES profile (id)');
         $this->addSql('ALTER TABLE login ADD CONSTRAINT FK_AA08CB10CCFA12B8 FOREIGN KEY (profile_id) REFERENCES profile (id)');

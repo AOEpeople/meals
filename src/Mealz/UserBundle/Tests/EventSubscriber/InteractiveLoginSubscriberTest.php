@@ -7,6 +7,7 @@ namespace App\Mealz\UserBundle\Tests\EventSubscriber;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -52,7 +53,7 @@ final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
-        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent($profile));
 
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -68,7 +69,7 @@ final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
-        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent($profile));
 
         $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -77,13 +78,13 @@ final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
     /**
      * Helper to get a mocked InteractiveLoginEvent.
      */
-    private function getMockedInteractiveLoginEvent(): InteractiveLoginEvent
+    private function getMockedInteractiveLoginEvent(Profile $profile): InteractiveLoginEvent
     {
         $userInterfaceMock = $this->getMockBuilder(UserInterface::class)
             ->getMock();
         $userInterfaceMock->expects($this->once())
             ->method('getUserIdentifier')
-            ->willReturn(parent::USER_STANDARD);
+            ->willReturn((string) $profile->getId());
 
         $tokenInterfaceMock = $this->getMockBuilder(TokenInterface::class)
             ->getMock();

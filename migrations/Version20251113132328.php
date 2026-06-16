@@ -20,7 +20,6 @@ final class Version20251113132328 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE profile ADD username VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE profile ADD ssoId VARCHAR(255) NOT NULL');
 
         $this->addSql('UPDATE profile SET username=id WHERE 1=1');

@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\ParameterTypeInferer;
 use Override;
 
 /**
@@ -59,7 +60,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
         $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->andWhere('t.profile = :profile');
-        $queryBuilder->setParameter('profile', $profile);
+        $queryBuilder->setParameter('profile', $profile, Profile::class);
 
         $queryBuilder->orderBy('t.date', 'ASC');
 

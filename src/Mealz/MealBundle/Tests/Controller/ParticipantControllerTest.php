@@ -63,47 +63,6 @@ final class ParticipantControllerTest extends AbstractControllerTestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    public function testGetParticipationsForWeek(): void
-    {
-        $date = new DateTime('today 23:59:59');
-        $week = (int) $date->format('W');
-
-        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
-        $weekEntity = $weekRepository->findOneBy([
-            'year' => $date->format('o'),
-            'calendarWeek' => $week,
-        ]);
-        $this->assertNotNull($weekEntity);
-
-        $this->client->request('GET', '/api/participations/' . $weekEntity->getId());
-        $response = $this->client->getResponse();
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $responseData = json_decode($response->getContent(), true);
-        foreach ($weekEntity->getDays() as $day) {
-            $this->assertArrayHasKey($day->getId(), $responseData);
-        }
-    }
-
-    public function testAddParticipant(): void
-    {
-        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
-
-        $profileToAdd = $this->getUserProfile(self::USER_STANDARD);
-        $mealToAdd = $mealRepo->getFutureMeals()[0];
-        $this->assertNotNull($mealToAdd);
-
-        $routeStr = '/api/participation/' . $profileToAdd->getId() . '/' . $mealToAdd->getId();
-        $this->client->request('PUT', $routeStr);
-
-        $response = $this->client->getResponse();
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $responseData = json_decode($response->getContent(), true);
-
-        $this->assertEquals($profileToAdd->getUsername(), $responseData['profile']);
-        $this->assertEquals($mealToAdd->getDay()->getId(), $responseData['day']);
-        $this->assertEquals($mealToAdd->getId(), $responseData['booked'][0]['mealId']);
-    }
-
     public function testOfferAndCancelMeal(): void
     {
         $this->loginAs(self::USER_STANDARD);

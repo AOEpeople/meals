@@ -61,8 +61,8 @@
           >
             <span
               v-for="link in navigation"
-              :key="link.name"
               v-show="link.access"
+              :key="link.name"
             >
               <router-link
                 v-if="link.access"

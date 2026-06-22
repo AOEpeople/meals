@@ -206,22 +206,6 @@ export function useParticipations(weekId: number) {
     }
 
     /**
-     * Returns the profile id of a participant based on their full name.
-     * Scans the currently loaded participations for a matching fullName.
-     * @param participantName   Full name string of the participant.
-     */
-    function getProfileId(participantName: string): number | null {
-        for (const day of Object.values(menuParticipationsState.days)) {
-            for (const idStr in day) {
-                if (day[idStr].fullName === participantName) {
-                    return Number(idStr);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns how often a dish is booked on a given day.
      * @param dayId     The id of the day.
      * @param dishId    The id of the dish.
@@ -303,7 +287,6 @@ export function useParticipations(weekId: number) {
         fetchParticipations,
         getParticipants,
         countBookedMeal,
-        //getProfileId,
         addParticipantToMeal,
         removeParticipantFromMeal,
         hasParticipantBookedMeal,

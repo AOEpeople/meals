@@ -54,7 +54,9 @@ final class CostSheetServiceTest extends TestCase
 
         $testArr = [
             'users' => [
-                'admin.meals' => [
+                1 => [
+                    'id' => 1,
+                    'username' => 'admin.meals',
                     'name' => 'Meals',
                     'firstName' => 'Admin',
                     'hidden' => false,
@@ -68,7 +70,9 @@ final class CostSheetServiceTest extends TestCase
                         'total' => 17.05,
                     ],
                 ],
-                'admin.meals@aoe.com' => [
+                2 => [
+                    'id' => 2,
+                    'username' => 'admin.meals@aoe.com',
                     'name' => 'Meals',
                     'firstName' => 'Admin',
                     'hidden' => false,
@@ -82,7 +86,9 @@ final class CostSheetServiceTest extends TestCase
                         'total' => 9.8,
                     ],
                 ],
-                'test.meals' => [
+                3 => [
+                    'id' => 3,
+                    'username' => 'test.meals',
                     'name' => 'Meals',
                     'firstName' => 'Test',
                     'hidden' => false,
@@ -101,21 +107,7 @@ final class CostSheetServiceTest extends TestCase
 
         $expectedArr = [
             'users' => [
-                'test.meals' => [
-                    'name' => 'Meals',
-                    'firstName' => 'Test',
-                    'hidden' => false,
-                    'costs' => [
-                        'earlier' => 1.00,
-                        '1234567890' => 2.51,
-                        '1234567891' => -3.00,
-                        '1234567892' => 0.37,
-                        '1234567894' => -3.29,
-                        '1234567895' => 6.72,
-                        'total' => 28.43,
-                    ],
-                ],
-                'admin.meals@aoe.com' => [
+                2 => [
                     'name' => 'Meals',
                     'firstName' => 'Admin',
                     'hidden' => false,
@@ -128,6 +120,24 @@ final class CostSheetServiceTest extends TestCase
                         '1234567895' => -5.89,
                         'total' => 26.85,
                     ],
+                    'id' => 2,
+                    'username' => 'admin.meals@aoe.com',
+                ],
+                3 => [
+                    'name' => 'Meals',
+                    'firstName' => 'Test',
+                    'hidden' => false,
+                    'costs' => [
+                        'earlier' => 1.00,
+                        '1234567890' => 2.51,
+                        '1234567891' => -3.00,
+                        '1234567892' => 0.37,
+                        '1234567894' => -3.29,
+                        '1234567895' => 6.72,
+                        'total' => 28.43,
+                    ],
+                    'id' => 3,
+                    'username' => 'test.meals',
                 ],
             ],
         ];

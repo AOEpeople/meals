@@ -88,8 +88,8 @@ export const visitMeals = () => {
     },
   });
   cy.request({
-    method: 'POST',
-    url: `${Cypress.env('baseUrl')}api/payment/cash/kochomi.meals?amount=1000`
+    method: 'GET',
+    url: `${Cypress.env('baseUrl')}api/user`
   }).then((response) => {
     expect(response.status).to.eq(200);
   });

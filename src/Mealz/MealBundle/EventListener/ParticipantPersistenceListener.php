@@ -73,7 +73,7 @@ final class ParticipantPersistenceListener
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('meal', $participant->getMeal()->getId());
-        $query->setParameter('profile', $participant->getProfile()->getUsername());
+        $query->setParameter('profile', $participant->getProfile()->getId());
         $query->disableResultCache();
 
         return $query;
@@ -95,7 +95,7 @@ final class ParticipantPersistenceListener
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('event_participation', $participant->getEventParticipation()->getId());
-        $query->setParameter('profile', $participant->getProfile()->getUsername());
+        $query->setParameter('profile', $participant->getProfile()->getId());
         $query->disableResultCache();
 
         return $query;

@@ -14,13 +14,13 @@ use Override;
 final class ProfileRepository extends BaseRepository implements ProfileRepositoryInterface
 {
     #[Override]
-    public function findAllExcept($usernames): array
+    public function findAllExcept($userIds): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->addSelect('r');
         $queryBuilder->leftJoin('p.roles', 'r');
-        $queryBuilder->where($queryBuilder->expr()->notIn('p.username', ':usernames'));
-        $queryBuilder->setParameter(':usernames', $usernames);
+        $queryBuilder->where($queryBuilder->expr()->notIn('p.id', ':userIds'));
+        $queryBuilder->setParameter(':userIds', $userIds);
 
         return $queryBuilder->getQuery()->getResult();
     }

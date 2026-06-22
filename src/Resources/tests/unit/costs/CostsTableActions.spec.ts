@@ -17,7 +17,7 @@ vi.mock('@/stores/costsStore', () => ({
 describe('Test CostsTableActions', () => {
     const wrapper = mount(CostsTableActions, {
         props: {
-            username: 'TestUser123',
+            userid: 1,
             balance: 987
         }
     });

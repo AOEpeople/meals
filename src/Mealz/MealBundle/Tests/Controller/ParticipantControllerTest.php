@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
-use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use DateTime;
 use Override;

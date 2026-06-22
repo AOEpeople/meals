@@ -59,7 +59,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
         $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->andWhere('t.profile = :profile');
-        $queryBuilder->setParameter('profile', $profile);
+        $queryBuilder->setParameter('profile', $profile->getId(), Types::INTEGER);
 
         $queryBuilder->orderBy('t.date', 'ASC');
 

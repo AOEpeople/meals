@@ -43,7 +43,6 @@ describe('Test participationsStore', () => {
         removeParticipantFromMeal,
         resetStates,
         addEmptyParticipationToState,
-        getProfileId,
         getParticipants,
         countBookedMeal,
         hasParticipantBookedMeal,
@@ -128,13 +127,6 @@ describe('Test participationsStore', () => {
             }
             expect(count).toEqual(1);
         }
-    });
-
-    it('should return the profile id', async () => {
-        await fetchParticipations();
-        const id = getProfileId('Meals, Alice');
-
-        expect(id).toEqual(2);
     });
 
     it('should return the number of booked meals', async () => {

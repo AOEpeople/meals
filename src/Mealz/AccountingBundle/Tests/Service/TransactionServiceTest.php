@@ -189,7 +189,7 @@ final class TransactionServiceTest extends AbstractDatabaseTestCase
     {
         /** @var ProfileRepositoryInterface $profileRepo */
         $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
-        $profile = $profileRepo->find($username);
+        $profile = $profileRepo->findOneBy(['username' => $username]);
 
         if (null === $profile) {
             throw new RuntimeException($username . ': profile not found');

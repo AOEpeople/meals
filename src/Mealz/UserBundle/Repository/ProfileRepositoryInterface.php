@@ -13,11 +13,11 @@ use Doctrine\Persistence\ObjectRepository;
 interface ProfileRepositoryInterface extends ObjectRepository
 {
     /**
-     * Find all profiles except the one existing in $usernames.
+     * Find all profiles except the one existing in $userIds.
      *
-     * @param string[] $usernames
+     * @param string[] $userIds
      *
      * @return Profile[]
      */
-    public function findAllExcept(array $usernames): array;
+    public function findAllExcept(array $userIds): array;
 }

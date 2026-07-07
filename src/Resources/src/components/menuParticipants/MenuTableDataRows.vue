@@ -15,7 +15,7 @@
             class="pr-2 text-left"
             :class="{ 'font-bold': editRow }"
           >
-            {{ participant }}
+            {{ participant.displayName }}
           </span>
           <PencilIcon
             v-if="editRow === true"
@@ -29,7 +29,7 @@
         v-for="(meal, mealIndex) in meals"
         :key="`${String(meal.id)}.${String(mealIndex)}`"
         :edit="editRow"
-        :participant="participant"
+        :participantId="participant.id"
         :day-id="dayId"
         :week-id="weekId"
         :meal="meal"
@@ -50,7 +50,7 @@ const row = ref<HTMLElement | null>(null);
 
 defineProps<{
   weekId: number;
-  participant: string;
+  participant: { displayName: string; id: number };
 }>();
 
 watch(editRow, () => editRow.value === true && useDetectClickOutside(row, () => (editRow.value = false)));

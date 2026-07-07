@@ -25,12 +25,12 @@ final class TransactionRepository extends BaseRepository implements TransactionR
      * @throws NonUniqueResultException
      */
     #[Override]
-    public function getTotalAmount(string $username): float
+    public function getTotalAmount(int $userId): float
     {
         $queryBuilder = $this->createQueryBuilder('t');
         $queryBuilder->select('SUM(t.amount) AS amount');
         $queryBuilder->andWhere('t.profile = :user');
-        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('user', $userId, Types::STRING);
 
         return (float) $queryBuilder->getQuery()->getSingleScalarResult();
     }
@@ -59,7 +59,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
         $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->andWhere('t.profile = :profile');
-        $queryBuilder->setParameter('profile', $profile->getUsername(), Types::STRING);
+        $queryBuilder->setParameter('profile', $profile->getId(), Types::INTEGER);
 
         $queryBuilder->orderBy('t.date', 'ASC');
 
@@ -82,7 +82,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
         ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->select('p.username, p.firstName, p.name, MIN(t.paymethod) as paymethod, SUM(t.amount) AS amount');
+        $queryBuilder->select('p.id, p.username, p.firstName, p.name, MIN(t.paymethod) as paymethod, SUM(t.amount) AS amount');
         $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof DateTime) {
@@ -100,14 +100,14 @@ final class TransactionRepository extends BaseRepository implements TransactionR
             $queryBuilder->setParameter('username', $profile->getUsername(), Types::STRING);
         }
 
-        $queryBuilder->groupBy('p.username');
+        $queryBuilder->groupBy('p.id');
         $queryBuilder->orderBy('p.name, p.firstName');
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = [];
 
         foreach ($queryResult as $item) {
-            $result[$item['username']] = [
+            $result[$item['id']] = [
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],
                 'amount' => $item['amount'],

@@ -21,11 +21,12 @@ final class CashController extends BaseController
     }
 
     public function postPaymentCash(
-        Profile $profile,
+        int $userid,
         Request $request,
         EntityManagerInterface $entityManager,
     ): JsonResponse {
         try {
+            $profile = $entityManager->getRepository(Profile::class)->find($userid);
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $amount = (float) $request->query->get('amount');
@@ -44,6 +45,7 @@ final class CashController extends BaseController
 
                 return new JsonResponse($transaction->getAmount(), Response::HTTP_OK);
             }
+
             throw new Exception('601: Amount less than 0');
         } catch (Exception $e) {
             $this->logger->error('transaction create error', $this->getTrace($e));

@@ -11,6 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class BaseController extends AbstractController
 {
     /**

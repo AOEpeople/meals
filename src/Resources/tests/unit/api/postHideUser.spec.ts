@@ -19,9 +19,9 @@ vi.mock('@/api/api', () => ({
 
 describe('Test postHideUser', () => {
     it('should call useApi with correct parameters and not return an error', async () => {
-        const { error, response } = await postHideUser('TestName123');
+        const { error, response } = await postHideUser(123);
 
-        expect(useApi).toHaveBeenCalledWith('POST', 'api/costs/hideuser', 'application/json', JSON.stringify({ username: 'TestName123' }));
+        expect(useApi).toHaveBeenCalledWith('POST', 'api/costs/hideuser', 'application/json', JSON.stringify({ userid: 123 }));
         expect(error.value).toBeFalsy();
         expect(response.value).toBeNull();
     });

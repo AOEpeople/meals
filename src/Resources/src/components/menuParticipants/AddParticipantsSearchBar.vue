@@ -55,7 +55,7 @@
           </li>
           <ComboboxOption
             v-for="profile in filteredProfiles"
-            :key="profile.user"
+            :key="profile.id"
             as="template"
             :value="profile"
           >

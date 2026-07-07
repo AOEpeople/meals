@@ -22,7 +22,9 @@
     }
   },
   "users": {
-    "admin.meals": {
+    "1": {
+      "id": 1,
+      "username": "admin.meals",
       "name": "Meals",
       "firstName": "Admin",
       "hidden": false,
@@ -35,7 +37,9 @@
         "total": 1057.29
       }
     },
-    "alice.meals": {
+    "2": {
+      "id": 2,
+      "username": "alice.meals",
       "name": "Meals",
       "firstName": "Alice",
       "hidden": false,
@@ -48,7 +52,9 @@
         "total": 932.44000000000005
       }
     },
-    "bob.meals": {
+    "3": {
+      "id": 3,
+      "username": "bob.meals",
       "name": "Meals",
       "firstName": "Bob",
       "hidden": false,
@@ -61,7 +67,9 @@
         "total": 974.26999999999998
       }
     },
-    "finance.meals": {
+    "4": {
+      "id": 4,
+      "username": "finance.meals",
       "name": "Meals",
       "firstName": "Finance",
       "hidden": false,
@@ -74,7 +82,9 @@
         "total": 695.66999999999996
       }
     },
-    "jane.meals": {
+    "5": {
+      "id": 5,
+      "username": "jane.meals",
       "name": "Meals",
       "firstName": "Jane",
       "hidden": false,
@@ -87,7 +97,9 @@
         "total": -3.6000000000000001
       }
     },
-    "john.meals": {
+    "6": {
+      "id": 6,
+      "username": "john.meals",
       "name": "Meals",
       "firstName": "John",
       "hidden": true,
@@ -100,7 +112,9 @@
         "total": -468
       }
     },
-    "kochomi.meals": {
+    "7": {
+      "id": 7,
+      "username": "kochomi.meals",
       "name": "Meals",
       "firstName": "Kochomi",
       "hidden": true,

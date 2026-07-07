@@ -46,10 +46,10 @@ describe('Test MenuTableDataRows', () => {
         await fetchParticipations();
         await fetchWeeks();
 
-        const wrapper = mount(MenuTableDataRows, {
+            const wrapper = mount(MenuTableDataRows, {
             props: {
                 weekId: 115,
-                participant: 'Meals, Alice'
+                participant: { id: 2, displayName: 'Meals, Alice' }
             }
         });
 
@@ -57,6 +57,9 @@ describe('Test MenuTableDataRows', () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(wrapper.text()).toContain('Meals, Alice');
+        // verify some table cells rendered (row with six meals + name + actions?)
+        expect(wrapper.findAll('td').length).toBeGreaterThan(0);
+        // there should still be 16 cells for our fixture data
         expect(wrapper.findAll('td').length).toBe(16);
     });
 });

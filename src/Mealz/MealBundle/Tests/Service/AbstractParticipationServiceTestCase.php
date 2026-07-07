@@ -196,7 +196,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
     protected function getProfile(string $username): Profile
     {
         $profileRepo = $this->entityManager->getRepository(Profile::class);
-        $profile = $profileRepo->find($username);
+        $profile = $profileRepo->findOneBy(['username' => $username]);
         if (null === $profile) {
             throw new RuntimeException('profile not found: ' . $username);
         }

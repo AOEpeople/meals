@@ -5,8 +5,8 @@ import router from '@/router';
 class UserDataStore extends Store<UserData> {
     protected data(): UserData {
         return {
+            id: null,
             roles: [],
-            user: '',
             fullName: '',
             balance: 0.0
         };
@@ -23,8 +23,8 @@ class UserDataStore extends Store<UserData> {
             return;
         }
         if (userData.value !== undefined && this.isUserdata(userData.value)) {
+            this.state.id = userData.value.id;
             this.state.roles = userData.value.roles;
-            this.state.user = userData.value.user;
             this.state.fullName = userData.value.fullName;
             this.state.balance = userData.value.balance;
         }

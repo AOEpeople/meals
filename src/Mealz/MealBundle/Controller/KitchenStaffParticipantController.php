@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\EventService;
@@ -86,6 +87,9 @@ final class KitchenStaffParticipantController extends BaseController
 
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+            if (!$participation instanceof Participant) {
+                return new JsonResponse(['message' => 'No participation found'], Response::HTTP_NOT_FOUND);
+            }
             $participation->setCombinedDishes(null);
 
             $entityManager->remove($participation);

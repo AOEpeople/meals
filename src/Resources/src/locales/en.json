@@ -183,7 +183,8 @@
       "loadPricesFailed": "Failed to load prices",
       "createPriceFailed": "Failed to create price",
       "updatePriceFailed": "Failed to update price",
-      "deletePriceFailed": "Failed to delete price"
+      "deletePriceFailed": "Failed to delete price",
+      "No participation found": "Participant is not marked as attending this meal. Please  try again."
     },
     "success": {
       "menu": {

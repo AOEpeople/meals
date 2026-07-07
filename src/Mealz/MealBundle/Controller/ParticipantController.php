@@ -300,6 +300,10 @@ final class ParticipantController extends BaseController
     {
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+            if (!$participation instanceof Participant) {
+                return new JsonResponse(['message' => 'No participation found'], Response::HTTP_NOT_FOUND);
+            }
+
             $participation->setCombinedDishes(null);
 
             $entityManager->remove($participation);

@@ -1,5 +1,23 @@
 # Changelog
 
+## Version v3.3.2 (2026-06-28)
+
+### Fixes
+
+- add error handling for removing participant (9dc407be)
+
+### Ops and CI/CD
+
+- **deps:** bump form-data from 4.0.4 to 4.0.6 in /tests/e2e (a8bc090f)
+- **deps:** bump form-data from 4.0.5 to 4.0.6 in /src/Resources (24d8be0f)
+- **deps:** bump js-yaml from 4.1.1 to 4.3.0 in /src/Resources (e86f6b28)
+- **deps-dev:** bump js-cookie from 3.0.5 to 3.0.7 in /src/Resources (9c1fc85b)
+- **deps:** bump dompurify from 3.4.1 to 3.4.11 in /src/Resources (f557e530)
+- **deps:** bump tmp from 0.2.5 to 0.2.7 in /tests/e2e (cf696a07)
+- **deps-dev:** bump vitest and @vitest/coverage-v8 in /src/Resources (ba6e49f7)
+- **deps:** bump axios from 1.15.0 to 1.16.0 in /src/Resources (b87a0dde)
+- **deps-dev:** bump shell-quote from 1.8.3 to 1.8.4 in /src/Resources (0d9c2e01)
+
 ## Version v3.3.1 (2026-04-29)
 
 ### Ops and CI/CD

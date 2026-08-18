@@ -8,7 +8,7 @@
     <div class="fixed inset-0 flex items-center justify-center p-4">
       <DialogPanel class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6">
         <DialogTitle class="text-[18px]">
-          {{ t('costs.settlement').replace('#name#', getFullNameByUser(username)) }}
+          {{ t('costs.settlement').replace('#name#', getFullNameByUser(userid)) }}
         </DialogTitle>
         <div class="flex flex-row">
           <CreateButton
@@ -42,7 +42,7 @@ const { getFullNameByUser } = useCosts();
 
 defineProps<{
   open: boolean;
-  username: string;
+  userid: number;
 }>();
 
 const emit = defineEmits(['confirm']);

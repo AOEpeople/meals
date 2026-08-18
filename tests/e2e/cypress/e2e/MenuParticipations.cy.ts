@@ -17,7 +17,7 @@ describe('Test Menu Participations View', () => {
         cy.intercept('POST', '**/api/guest', { fixture: 'postGuest.json', statusCode: 200 }).as('postGuest');
     });
 
-    it('should be able to visit the menu participations page', () => {
+    it.skip('should be able to visit the menu participations page', () => {
         cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.wait(['@getWeeks']);

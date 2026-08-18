@@ -1,6 +1,6 @@
 {
     "286": {
-        "Meals, Admin": {
+        "1": {
             "booked": [
                 {
                     "mealId": 808,
@@ -8,11 +8,11 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "admin.meals"
+            "fullName": "Meals, Admin"
         }
     },
     "287": {
-        "Meals, Admin": {
+        "1": {
             "booked": [
                 {
                     "mealId": 809,
@@ -20,9 +20,9 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "admin.meals"
+            "fullName": "Meals, Admin"
         },
-        "Meals, Finance": {
+        "2": {
             "booked": [
                 {
                     "mealId": 810,
@@ -30,11 +30,11 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "finance.meals"
+            "fullName": "Meals, Finance"
         }
     },
     "288": {
-        "Meals, Admin": {
+        "1": {
             "booked": [
                 {
                     "mealId": 812,
@@ -42,9 +42,9 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "admin.meals"
+            "fullName": "Meals, Admin"
         },
-        "Meals, Finance": {
+        "2": {
             "booked": [
                 {
                     "mealId": 814,
@@ -52,11 +52,11 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "finance.meals"
+            "fullName": "Meals, Finance"
         }
     },
     "289": {
-        "Meals, Admin": {
+        "1": {
             "booked": [
                 {
                     "mealId": 815,
@@ -64,11 +64,11 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "admin.meals"
+            "fullName": "Meals, Admin"
         }
     },
     "290": {
-        "Meals, Finance": {
+        "2": {
             "booked": [
                 {
                     "mealId": 817,
@@ -76,7 +76,7 @@
                     "combinedDishes": []
                 }
             ],
-            "profile": "finance.meals"
+            "fullName": "Meals, Finance"
         }
     }
 }

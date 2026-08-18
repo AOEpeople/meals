@@ -24,9 +24,9 @@ final class Wallet
 
     public function getBalance(Profile $profile): float
     {
-        $username = $profile->getUsername();
-        $costs = $this->participantRepo->getTotalCost($username);
-        $transactions = $this->transactionRepo->getTotalAmount($username);
+        $userId = $profile->getId();
+        $costs = $this->participantRepo->getTotalCost($userId);
+        $transactions = $this->transactionRepo->getTotalAmount($userId);
 
         return round($transactions - $costs, 2);
     }

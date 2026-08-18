@@ -11,20 +11,27 @@ final class CostSheetService
      */
     public function mergeDoubleUserTransactions(array $users)
     {
+        // ToDo: is mergeDoubleUserTransactions nescessary at all?
         $mergedUsers = [];
 
-        foreach ($users as $username => &$user) {
-            $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $username);
+        foreach ($users as &$user) {
+            $trimmedUsername = preg_replace('/@([a-zA-Z]+.)+[a-zA-Z]+$/', '', $user['username']);
             if (!isset($mergedUsers[$trimmedUsername])) {
-                $mergedUsers[$username] = $user;
+                $mergedUsers[$user['username']] = $user;
             } else {
-                $mergedUsers[$username] = $user;
-                $mergedUsers[$username]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
+                $mergedUsers[$user['username']] = $user;
+                $mergedUsers[$user['username']]['costs'] = $this->mergeArrayByKey($user['costs'], $mergedUsers[$trimmedUsername]['costs']);
                 unset($mergedUsers[$trimmedUsername]);
             }
         }
 
-        return $mergedUsers;
+        // Fix keys
+        $fixedUsers = [];
+        foreach ($mergedUsers as $userData) {
+            $fixedUsers[$userData['id']] = $userData;
+        }
+
+        return $fixedUsers;
     }
 
     public function mergeArrayByKey(array $arrOne, array $arrTwo): array

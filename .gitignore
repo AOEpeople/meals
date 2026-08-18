@@ -47,6 +47,7 @@ tests/e2e/cypress/e2e/FillDBWithStuff.cy.ts
 tests/e2e/cypress/downloads/result.pdf
 tests/e2e/cypress/downloads/teilnehmerliste.pdf
 src/Resources/style/output.css.map
+certs/
 
 ###> phpunit/phpunit ###
 /phpunit.xml

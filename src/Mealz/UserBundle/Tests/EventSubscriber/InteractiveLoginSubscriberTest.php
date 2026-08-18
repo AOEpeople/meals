@@ -7,6 +7,7 @@ namespace App\Mealz\UserBundle\Tests\EventSubscriber;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -49,41 +50,41 @@ final class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 
     public function testOnSecurityInteractiveLoginWithNonHiddenUser(): void
     {
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
-        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent($profile));
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
     }
 
     public function testOnSecurityInteractiveLoginWithHiddenUser(): void
     {
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $profile->setHidden(true);
 
         $this->persistAndFlushAll([$profile]);
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
-        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent($profile));
 
-        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $profile = $this->getUserProfileByUsername(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
     }
 
     /**
      * Helper to get a mocked InteractiveLoginEvent.
      */
-    private function getMockedInteractiveLoginEvent(): InteractiveLoginEvent
+    private function getMockedInteractiveLoginEvent(Profile $profile): InteractiveLoginEvent
     {
         $userInterfaceMock = $this->getMockBuilder(UserInterface::class)
             ->getMock();
         $userInterfaceMock->expects($this->once())
             ->method('getUserIdentifier')
-            ->willReturn(parent::USER_STANDARD);
+            ->willReturn((string) $profile->getId());
 
         $tokenInterfaceMock = $this->getMockBuilder(TokenInterface::class)
             ->getMock();

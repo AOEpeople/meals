@@ -8,7 +8,6 @@ import deleteParticipation from '@/api/deleteParticipation';
 import type { IProfile } from './profilesStore';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
-import replaceStrings from '@/tools/stringReplacer';
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays;
@@ -22,11 +21,11 @@ export type IMenuParticipationDays = {
 };
 
 type IMenuParticipant = {
-    [participantName: string]: IMenuParticipation;
+    [participantId: number]: IMenuParticipation;
 };
 export interface IMenuParticipation {
     booked: Dictionary<IMealInfo>;
-    profile: string;
+    fullName: string;
 }
 
 interface IMealInfo {
@@ -57,7 +56,7 @@ function isParticipationUpdate(participationUpdate: IParticipationUpdate): parti
         participationUpdate !== null &&
         participationUpdate !== undefined &&
         typeof (participationUpdate as IParticipationUpdate).day === 'number' &&
-        typeof (participationUpdate as IParticipationUpdate).profile === 'string' &&
+        //typeof (participationUpdate as IParticipationUpdate).profile === 'number' &&
         Object.keys(participationUpdate).length === 3
     );
 }
@@ -107,25 +106,15 @@ export function useParticipations(weekId: number) {
     /**
      * Performs a put request to add a participant to a meal. The response is handled by handleParticipationUpdate().
      * @param mealId            The id of the meal to add the participant to.
-     * @param profileFullname   The full name of the participant to add.
+     * @param profileId         The identifier of the participant to add.
      * @param dayId             The id of the day the meal is on.
      * @param combinedDishes    The ids of the dishes that make up the combined dish. Only needed if the dish is a combined dish.
      */
-    async function addParticipantToMeal(
-        mealId: number,
-        profileFullname: string,
-        dayId: string,
-        combinedDishes?: string[]
-    ) {
-        const profileId = getProfileId(profileFullname);
-        if (typeof profileId !== 'string') {
-            return;
-        }
-
+    async function addParticipantToMeal(mealId: number, profileId: number, dayId: string, combinedDishes?: string[]) {
         menuParticipationsState.error = '';
         const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
-        handleParticipationUpdate(response, error, dayId, profileFullname);
+        handleParticipationUpdate(response, error, dayId, profileId);
         sendFlashMessage({
             type: FlashMessageType.INFO,
             message: 'participations.added',
@@ -136,18 +125,13 @@ export function useParticipations(weekId: number) {
     /**
      * Performs a delete request to remove a participant from a meal. The response is handled by handleParticipationUpdate().
      * @param mealId            The id of the meal to remove the participant from.
-     * @param profileFullname   The full name of the participant to remove.
+     * @param profileId         The identifier of the participant to remove.
      * @param dayId             The id of the day the meal is on.
      */
-    async function removeParticipantFromMeal(mealId: number, profileFullname: string, dayId: string) {
-        const profileId = getProfileId(profileFullname);
-        if (typeof profileId !== 'string') {
-            return;
-        }
-
+    async function removeParticipantFromMeal(mealId: number, profileId: number, dayId: string) {
         const { error, response } = await deleteParticipation(mealId, profileId);
 
-        handleParticipationUpdate(response, error, dayId, profileFullname);
+        handleParticipationUpdate(response, error, dayId, profileId);
         sendFlashMessage({
             type: FlashMessageType.INFO,
             message: 'participations.removed',
@@ -167,9 +151,8 @@ export function useParticipations(weekId: number) {
         response: Ref<IMessage | IParticipationUpdate | undefined>,
         error: Ref<boolean>,
         dayId: string,
-        profileFullname: string
+        profile: number
     ) {
-        const formattedName = replaceStrings(profileFullname, ' (Guest)', ' (Gast)');
         if (
             isMessage(response.value) === false &&
             isResponseObjectOkay<IParticipationUpdate>(
@@ -179,14 +162,12 @@ export function useParticipations(weekId: number) {
             )
         ) {
             menuParticipationsState.error = '';
-            if (menuParticipationsState.days[dayId][formattedName] !== undefined) {
-                menuParticipationsState.days[dayId][formattedName].booked = (
-                    response.value as IMenuParticipation
-                ).booked;
+            if (menuParticipationsState.days[dayId][profile] !== undefined) {
+                menuParticipationsState.days[dayId][profile].booked = (response.value as IMenuParticipation).booked;
             } else {
-                menuParticipationsState.days[dayId][formattedName] = {
+                menuParticipationsState.days[dayId][profile] = {
                     booked: (response.value as IMenuParticipation).booked,
-                    profile: (response.value as IMenuParticipation).profile
+                    fullName: (response.value as IMenuParticipation).fullName
                 };
             }
         } else if (isMessage(response.value) === true) {
@@ -203,9 +184,9 @@ export function useParticipations(weekId: number) {
      */
     function addEmptyParticipationToState(profile: IProfile) {
         const firstDayId = Object.keys(menuParticipationsState.days)[0];
-        menuParticipationsState.days[firstDayId][profile.fullName] = {
+        menuParticipationsState.days[firstDayId][profile.id] = {
             booked: {},
-            profile: profile.user
+            fullName: profile.fullName
         };
     }
 
@@ -213,27 +194,15 @@ export function useParticipations(weekId: number) {
      * Returns a unique and sorted list of full names of all participants in the current week.
      */
     function getParticipants() {
-        const participants = new Set<string>();
+        const participants: Record<number, string> = {} as Record<number, string>;
 
         for (const day of Object.values(menuParticipationsState.days)) {
-            Object.keys(day).forEach((participant) => participants.add(participant));
-        }
-
-        return [...participants].sort();
-    }
-
-    /**
-     * Returns the profile id of a participant.
-     * @param participant   The full name of the participant.
-     */
-    function getProfileId(participant: string) {
-        const strippedParticipant = replaceStrings(participant, ' (Guest)', ' (Gast)');
-        for (const day of Object.values(menuParticipationsState.days)) {
-            if (typeof day[strippedParticipant]?.profile === 'string') {
-                return day[strippedParticipant].profile;
+            for (const id in day) {
+                participants[Number(id)] = day[id].fullName;
             }
         }
-        return null;
+
+        return participants;
     }
 
     /**
@@ -257,11 +226,11 @@ export function useParticipations(weekId: number) {
     /**
      * Checks if a participant has booked a meal on a specific day.
      * @param dayId         The id of the day.
-     * @param participant   The full name of the participant.
+     * @param participantId The identifier of the participant.
      * @param mealId        The id of the meal.
      */
-    function hasParticipantBookedMeal(dayId: string, participant: string, mealId: number) {
-        const participantMeals = menuParticipationsState.days[dayId][participant]?.booked;
+    function hasParticipantBookedMeal(dayId: string, participantId: number, mealId: number) {
+        const participantMeals = menuParticipationsState.days[dayId][participantId]?.booked;
         if (participantMeals !== null && participantMeals !== undefined) {
             return Object.values(participantMeals).find((mealInfo) => mealInfo.mealId === mealId) !== undefined;
         }
@@ -271,11 +240,11 @@ export function useParticipations(weekId: number) {
     /**
      * Checks if a participant has booked a combined meal containing a specific dish on a given day.
      * @param dayId         The id of the day.
-     * @param participant   The full name of the participant.
+     * @param participantId The identifier of the participant.
      * @param dishId        The id of the dish.
      */
-    function hasParticipantBookedCombiDish(dayId: string, participant: string, dishId: number) {
-        const participantMeals = menuParticipationsState.days[dayId][participant]?.booked;
+    function hasParticipantBookedCombiDish(dayId: string, participantId: number, dishId: number) {
+        const participantMeals = menuParticipationsState.days[dayId][participantId]?.booked;
 
         if (participantMeals !== null && participantMeals !== undefined) {
             for (const meal of Object.values(participantMeals)) {
@@ -318,7 +287,6 @@ export function useParticipations(weekId: number) {
         fetchParticipations,
         getParticipants,
         countBookedMeal,
-        getProfileId,
         addParticipantToMeal,
         removeParticipantFromMeal,
         hasParticipantBookedMeal,

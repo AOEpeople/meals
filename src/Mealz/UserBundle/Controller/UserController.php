@@ -24,7 +24,7 @@ final class UserController extends BaseController
             return new JsonResponse(
                 [
                     'roles' => [Role::ROLE_GUEST],
-                    'name' => null,
+                    'id' => null,
                     'fullName' => null,
                     'balance' => 0,
                 ]

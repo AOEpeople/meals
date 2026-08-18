@@ -1,6 +1,6 @@
 {
   "571": {
-    "Meals, Bob": {
+    "3": {
       "booked": [
         {
           "mealId": 1516,
@@ -18,9 +18,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "bob.meals"
+      "fullName": "Meals, Bob"
     },
-    "Meals, Finance": {
+    "4": {
       "booked": [
         {
           "mealId": 1516,
@@ -28,9 +28,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "finance.meals"
+      "fullName": "Meals, Finance"
     },
-    "Meals, Kochomi": {
+    "6": {
       "booked": [
         {
           "mealId": 1516,
@@ -43,9 +43,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "kochomi.meals"
+      "fullName": "Meals, Kochomi"
     },
-    "Meals, Alice": {
+    "2": {
       "booked": [
         {
           "mealId": 1516,
@@ -53,9 +53,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "alice.meals"
+      "fullName": "Meals, Alice"
     },
-    "Meals, John": {
+    "5": {
       "booked": [
         {
           "mealId": 1517,
@@ -63,9 +63,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "john.meals"
+      "fullName": "Meals, John"
     },
-    "Meals, Admin": {
+    "1": {
       "booked": [
         {
           "mealId": 1518,
@@ -73,11 +73,11 @@
           "combinedDishes": []
         }
       ],
-      "profile": "admin.meals"
+      "fullName": "Meals, Admin"
     }
   },
   "572": {
-    "Meals, Alice": {
+    "2": {
       "booked": [
         {
           "mealId": 1519,
@@ -85,9 +85,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "alice.meals"
+      "fullName": "Meals, Alice"
     },
-    "Meals, Admin": {
+    "1": {
       "booked": [
         {
           "mealId": 1519,
@@ -95,9 +95,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "admin.meals"
+      "fullName": "Meals, Admin"
     },
-    "Meals, John": {
+    "5": {
       "booked": [
         {
           "mealId": 1519,
@@ -105,9 +105,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "john.meals"
+      "fullName": "Meals, John"
     },
-    "Meals, Finance": {
+    "4": {
       "booked": [
         {
           "mealId": 1519,
@@ -115,9 +115,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "finance.meals"
+      "fullName": "Meals, Finance"
     },
-    "Meals, Kochomi": {
+    "6": {
       "booked": [
         {
           "mealId": 1520,
@@ -125,9 +125,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "kochomi.meals"
+      "fullName": "Meals, Kochomi"
     },
-    "Meals, Bob": {
+    "3": {
       "booked": [
         {
           "mealId": 1520,
@@ -135,11 +135,11 @@
           "combinedDishes": []
         }
       ],
-      "profile": "bob.meals"
+      "fullName": "Meals, Bob"
     }
   },
   "573": {
-    "Meals, Alice": {
+    "2": {
       "booked": [
         {
           "mealId": 1521,
@@ -147,9 +147,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "alice.meals"
+      "fullName": "Meals, Alice"
     },
-    "Meals, Finance": {
+    "4": {
       "booked": [
         {
           "mealId": 1521,
@@ -157,9 +157,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "finance.meals"
+      "fullName": "Meals, Finance"
     },
-    "Meals, John": {
+    "5": {
       "booked": [
         {
           "mealId": 1521,
@@ -167,9 +167,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "john.meals"
+      "fullName": "Meals, John"
     },
-    "Meals, Kochomi": {
+    "6": {
       "booked": [
         {
           "mealId": 1521,
@@ -177,9 +177,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "kochomi.meals"
+      "fullName": "Meals, Kochomi"
     },
-    "Meals, Admin": {
+    "1": {
       "booked": [
         {
           "mealId": 1521,
@@ -187,9 +187,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "admin.meals"
+      "fullName": "Meals, Admin"
     },
-    "Meals, Bob": {
+    "3": {
       "booked": [
         {
           "mealId": 1522,
@@ -197,11 +197,11 @@
           "combinedDishes": []
         }
       ],
-      "profile": "bob.meals"
+      "fullName": "Meals, Bob"
     }
   },
   "574": {
-    "Meals, Alice": {
+    "2": {
       "booked": [
         {
           "mealId": 1523,
@@ -214,9 +214,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "alice.meals"
+      "fullName": "Meals, Alice"
     },
-    "Meals, Bob": {
+    "3": {
       "booked": [
         {
           "mealId": 1523,
@@ -224,9 +224,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "bob.meals"
+      "fullName": "Meals, Bob"
     },
-    "Meals, Finance": {
+    "4": {
       "booked": [
         {
           "mealId": 1523,
@@ -234,24 +234,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "finance.meals"
+      "fullName": "Meals, Finance"
     },
-    "Meals, John": {
-      "booked": [
-        {
-          "mealId": 1523,
-          "dishId": 50,
-          "combinedDishes": []
-        },
-        {
-          "mealId": 1524,
-          "dishId": 47,
-          "combinedDishes": []
-        }
-      ],
-      "profile": "john.meals"
-    },
-    "Meals, Kochomi": {
+    "5": {
       "booked": [
         {
           "mealId": 1523,
@@ -264,9 +249,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "kochomi.meals"
+      "fullName": "Meals, John"
     },
-    "Meals, Admin": {
+    "6": {
       "booked": [
         {
           "mealId": 1523,
@@ -279,11 +264,26 @@
           "combinedDishes": []
         }
       ],
-      "profile": "admin.meals"
+      "fullName": "Meals, Kochomi"
+    },
+    "1": {
+      "booked": [
+        {
+          "mealId": 1523,
+          "dishId": 50,
+          "combinedDishes": []
+        },
+        {
+          "mealId": 1524,
+          "dishId": 47,
+          "combinedDishes": []
+        }
+      ],
+      "fullName": "Meals, Admin"
     }
   },
   "575": {
-    "Meals, Bob": {
+    "3": {
       "booked": [
         {
           "mealId": 1525,
@@ -291,9 +291,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "bob.meals"
+      "fullName": "Meals, Bob"
     },
-    "Meals, Finance": {
+    "4": {
       "booked": [
         {
           "mealId": 1525,
@@ -311,9 +311,9 @@
           "combinedDishes": [48, 45]
         }
       ],
-      "profile": "finance.meals"
+      "fullName": "Meals, Finance"
     },
-    "Meals, Jane": {
+    "7": {
       "booked": [
         {
           "mealId": 1525,
@@ -321,9 +321,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "jane.meals"
+      "fullName": "Meals, Jane"
     },
-    "Meals, John": {
+    "5": {
       "booked": [
         {
           "mealId": 1526,
@@ -331,9 +331,9 @@
           "combinedDishes": []
         }
       ],
-      "profile": "john.meals"
+      "fullName": "Meals, John"
     },
-    "Meals, Kochomi": {
+    "6": {
       "booked": [
         {
           "mealId": 1526,
@@ -341,7 +341,7 @@
           "combinedDishes": []
         }
       ],
-      "profile": "kochomi.meals"
+      "fullName": "Meals, Kochomi"
     }
   }
 }

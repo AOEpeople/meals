@@ -4,7 +4,7 @@ mealz_accounting_payment_ecash_form_submit:
     methods: [POST]
 
 mealz_accounting_api_payment_cash:
-    path: /api/payment/cash/{profile}
+    path: /api/payment/cash/{userid}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::postPaymentCash }
     methods: [ POST ]
 

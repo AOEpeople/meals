@@ -4,7 +4,7 @@
       class="min-w-[32px]"
       :action="Action.HIDE"
       :btn-text="''"
-      @click="hideUser(username)"
+      @click="hideUser(props.userid)"
     />
     <Popover
       :overflow-hidden="false"
@@ -19,7 +19,7 @@
       </template>
       <template #panel="{ close }">
         <CashPaymentPanel
-          :username="username"
+          :userid="props.userid"
           @closePanel="close()"
         />
       </template>
@@ -34,7 +34,7 @@
   </div>
   <CostsActionSettlement
     :open="settlementOpen"
-    :username="username"
+    :userid="props.userid"
     @confirm="(value) => handleSettlement(value)"
   />
 </template>
@@ -53,7 +53,7 @@ const { hideUser, sendSettlement } = useCosts();
 const settlementOpen = ref(false);
 
 const props = defineProps<{
-  username: string;
+  userid: number;
   balance: number;
 }>();
 
@@ -61,7 +61,7 @@ async function handleSettlement(confirm: boolean) {
   settlementOpen.value = false;
 
   if (confirm === true) {
-    await sendSettlement(props.username);
+    await sendSettlement(props.userid);
   }
 }
 </script>

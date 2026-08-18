@@ -3,13 +3,13 @@ import { type IMessage } from '@/interfaces/IMessage';
 
 /**
  * Performs a POST request to add a cash payment to a user.
- * @param username  The username of the user to add the cash payment to.
+ * @param userid  The userid of the user to add the cash payment to.
  * @param amount    The amount of money the user payed in cash.
  */
-export default async function postCashPayment(username: string, amount: number) {
+export default async function postCashPayment(userid: number, amount: number) {
     const { error, request, response } = useApi<IMessage | number>(
         'POST',
-        `api/payment/cash/${username}?amount=${amount}`
+        `api/payment/cash/${userid}?amount=${amount}`
     );
 
     await request();

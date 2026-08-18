@@ -12,11 +12,11 @@ jobs:
         go: [ '1.*' ]
     name: Semanticore
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go }}
       - name: Semanticore

@@ -61,8 +61,8 @@
           >
             <span
               v-for="link in navigation"
-              :key="link.name"
               v-show="link.access"
+              :key="link.name"
             >
               <router-link
                 v-if="link.access"
@@ -175,7 +175,8 @@ const getShowParticipationsError = computed(() => loadedState.error !== '');
 
 const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 
-const user = computed(() => userDataStore.getState().user ?? '');
+const user = computed(() => userDataStore.getState().fullName ?? '');
+
 const isAuthenticated = computed(() => {
   return !userDataStore.getState().roles.includes('ROLE_GUEST');
 });

@@ -68,14 +68,14 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
         if (null !== $profile) {
             $queryBuilder
                 ->andWhere('p.profile = :profile_id')
-                ->setParameter('profile_id', $profile->getUsername());
+                ->setParameter('profile_id', $profile->getId());
         }
 
         return $queryBuilder->getQuery()->execute();
     }
 
     #[Override]
-    public function getTotalCost(string $username): float
+    public function getTotalCost(int $userId): float
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
@@ -91,7 +91,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
             ->andWhere('p.costAbsorbed = 0')
             ->andWhere('d.enabled = 1')
             ->andWhere('w.enabled = 1');
-        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('user', $userId, Types::STRING);
         $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
@@ -133,7 +133,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     /**
      * @return ((false|int|mixed)[][]|mixed)[][]
      *
-     * @psalm-return array<array{name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
+     * @psalm-return array<array-key, array{id?: mixed, username?: mixed, name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
      */
     #[Override]
     public function findCostsGroupedByUserGroupedByMonth(): array
@@ -143,16 +143,18 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
         $result = [];
 
         foreach ($costs as $cost) {
-            $username = $cost['username'];
+            $id = $cost['id'];
             $timestamp = strtotime($cost['yearMonth']);
             $costByMonth = [
                 'timestamp' => $timestamp,
                 'costs' => $cost['costs'],
             ];
-            if (true === array_key_exists($username, $result)) {
-                $result[$username]['costs'][] = $costByMonth;
+            if (true === array_key_exists($id, $result)) {
+                $result[$id]['costs'][] = $costByMonth;
             } else {
-                $result[$username] = [
+                $result[$id] = [
+                    'id' => $cost['id'],
+                    'username' => $cost['username'],
                     'name' => $cost['name'],
                     'firstName' => $cost['firstName'],
                     'hidden' => $cost['hidden'],
@@ -308,7 +310,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
     private function findCostsPerMonthPerUser(): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(CASE WHEN dish.slug = \'combined-dish\' THEN COALESCE(pr.priceCombined, 0) ELSE COALESCE(pr.price, 0) END) AS costs');
+        $queryBuilder->select('u.id, u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(CASE WHEN dish.slug = \'combined-dish\' THEN COALESCE(pr.priceCombined, 0) ELSE COALESCE(pr.price, 0) END) AS costs');
         $queryBuilder->leftJoin('p.meal', 'm');
         $queryBuilder->leftJoin('m.dish', 'dish');
         $queryBuilder->leftJoin('m.price', 'pr');

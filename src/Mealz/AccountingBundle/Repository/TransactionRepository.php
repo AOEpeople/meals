@@ -100,8 +100,14 @@ final class TransactionRepository extends BaseRepository implements TransactionR
             $queryBuilder->setParameter('username', $profile->getUsername(), Types::STRING);
         }
 
-        $queryBuilder->groupBy('p.id');
-        $queryBuilder->orderBy('p.name, p.firstName');
+        $queryBuilder
+            ->groupBy('p.id')
+            ->addGroupBy('p.username')
+            ->addGroupBy('p.firstName')
+            ->addGroupBy('p.name')
+            ->orderBy('p.name', 'ASC')
+            ->addOrderBy('p.firstName', 'ASC');
+
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = [];

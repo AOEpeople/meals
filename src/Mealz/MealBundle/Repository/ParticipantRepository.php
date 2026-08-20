@@ -331,7 +331,7 @@ final class ParticipantRepository extends BaseRepository implements ParticipantR
         $queryBuilder->andWhere('m.dateTime < :now');
         $queryBuilder->andWhere('d.enabled = 1');
         $queryBuilder->andWhere('w.enabled = 1');
-        $queryBuilder->groupBy('u.id');
+        $queryBuilder->groupBy('u.username');
         $queryBuilder->addGroupBy('yearMonth');
         $queryBuilder->addOrderBy('u.name');
 

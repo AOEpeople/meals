@@ -1,5 +1,83 @@
 # Changelog
 
+## Version v3.4.0 (2026-08-20)
+
+### Features
+
+- add not found response if no participation was found (d58ef09b)
+- remove unnecessary second v-show (57230b2a)
+- use id for searching profile (d82e4a8e)
+- remove already existing query for adding username (07e2794e)
+
+### Fixes
+
+- add every select value to group by (cae47e74)
+- use id for groupBy instead of username in /costs (46151daa)
+- add error handling for removing participant (9dc407be)
+- remove setting profile id for guests (30c08b23)
+- remove incorrect Parametertype for setting profile param (278c5e55)
+- move persisting user to catch statement (bea3ac15)
+- Fix tests (d69cd232)
+- Fix loginAs method (556d5fdd)
+
+### Tests
+
+- remove missing method getProfileId test (42422192)
+- remove invalid tests (3a9ead34)
+- add username test instead of id (92f5ecc1)
+- use username for loginAs method (c428ad8e)
+
+### Refactoring
+
+- remove unused use statements (81352541)
+
+### Ops and CI/CD
+
+- **deps:** bump form-data from 4.0.4 to 4.0.6 in /tests/e2e (a8bc090f)
+- **deps:** bump actions/checkout from 6 to 7 (eb5c2d78)
+- **deps:** bump form-data from 4.0.5 to 4.0.6 in /src/Resources (24d8be0f)
+- **deps:** bump actions/cache from 5 to 6 (f7cabb89)
+- **deps:** bump js-yaml from 4.1.1 to 4.3.0 in /src/Resources (e86f6b28)
+- **deps-dev:** bump js-cookie from 3.0.5 to 3.0.7 in /src/Resources (9c1fc85b)
+- **deps:** bump actions/setup-node from 6 to 7 (d827a253)
+- **deps:** bump dompurify from 3.4.1 to 3.4.11 in /src/Resources (f557e530)
+- **deps:** bump tmp from 0.2.5 to 0.2.7 in /tests/e2e (cf696a07)
+- **deps:** bump actions/setup-go from 6 to 7 (24525713)
+- **deps-dev:** bump vitest and @vitest/coverage-v8 in /src/Resources (ba6e49f7)
+- **deps:** bump docker/login-action from 4 to 4.5.2 (98370667)
+- **deps:** bump axios from 1.15.0 to 1.16.0 in /src/Resources (b87a0dde)
+- **deps:** bump axios from 1.16.0 to 1.18.0 in /src/Resources (39e7050f)
+- **deps-dev:** bump shell-quote from 1.8.3 to 1.8.4 in /src/Resources (0d9c2e01)
+- **deps:** bump svgo from 4.0.1 to 4.0.2 in /src/Resources (7fa86f5b)
+- **deps-dev:** bump shell-quote from 1.8.4 to 1.10.0 in /src/Resources (8643de91)
+- **deps-dev:** bump postcss from 8.5.12 to 8.5.25 in /src/Resources (469b2d47)
+- **deps:** bump dompurify from 3.4.11 to 3.4.13 in /src/Resources (f4ea7ec3)
+- **deps:** bump nanoid in /src/Resources (7570788e)
+- **deps:** bump postcss from 8.5.6 to 8.5.26 in /tests/e2e (1a3dd8b4)
+- **deps:** bump js-yaml from 4.3.0 to 4.3.1 in /src/Resources (6f27ead2)
+- **deps-dev:** bump js-cookie from 3.0.5 to 3.0.7 in /src/Resources (c7228f3d)
+- **deps:** bump tmp from 0.2.5 to 0.2.7 in /tests/e2e (8d75c3f4)
+- **deps-dev:** bump vitest and @vitest/coverage-v8 in /src/Resources (fa1657a5)
+- **deps:** bump axios from 1.15.0 to 1.16.0 in /src/Resources (f5fbcec0)
+- **deps-dev:** bump shell-quote from 1.8.3 to 1.8.4 in /src/Resources (5b5ad8fc)
+
+### Chores and tidying
+
+- add ONLY_FULL_GROUP_BY to sql_mode (7aac84a5)
+
+### Other
+
+- deps: add access token for aoe-group-web-cd repo (513281eb)
+- deps: update composer.lock (a05f322b)
+- style: remove unnecessary function (c3ecdff0)
+- style: add missing line ending (d7edc8d8)
+- [WIP] fix functionalities after switch to userIds (0c3fb9b2)
+- WIP: use profile id instead of username (ebee060c)
+- use a new field for sso identifier (fb67ae06)
+- use profile id as identifier (f05326ab)
+- adjust search by username (3284b8d1)
+- add migration, adjust test data (fad5b88b)
+
 ## Version v3.3.1 (2026-04-29)
 
 ### Ops and CI/CD

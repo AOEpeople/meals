@@ -240,8 +240,37 @@ services:
 
   App\Mealz\MealBundle\Service\Mailer\Mailer:
     arguments:
-      $senderEmail: '%app.email.sender%'
       $mailerType: '%env(string:MAILER_TYPE)%'
+
+  App\Mealz\MealBundle\Service\Mailer\SymfonySmtpMailer:
+    arguments:
+      $senderEmail: '%app.email.sender%'
+
+  App\Mealz\MealBundle\Service\Mailer\OAuthSMTPMailer:
+    arguments:
+      $senderEmail: '%app.email.sender%'
+
+  App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
+    arguments:
+      $envHost: '%env(string:MAILER_HOST)%'
+      $envPort: '%env(int:MAILER_PORT)%'
+      $envAuthType: '%env(string:MAILER_AUTH_TYPE)%'
+      $envEmail: '%env(string:MAILER_EMAIL)%'
+      $envClientId: '%env(string:MAILER_CLIENT_ID)%'
+      $envClientSecret: '%env(string:MAILER_CLIENT_SECRET)%'
+      $envTenantId: '%env(string:MAILER_TENANT_ID)%'
+      $envRefreshToken: '%env(string:MAILER_REFRESH_TOKEN)%'
+
+  App\Mealz\MealBundle\Service\Mailer\RestApiMailer:
+    arguments:
+      $webhookUrl: '%env(string:REST_API_MAILER_WEBHOOK_URL)%'
+      $webhookToken: '%env(string:REST_API_MAILER_WEBHOOK_TOKEN)%'
+      $appName: '%env(string:APP_NAME)%'
+      $appEnv: '%kernel.environment%'
+
+  App\Mealz\MealBundle\Service\Mailer\MonologMailer:
+    arguments:
+      $toEmail: '%app.email.admin%'
 
   App\Mealz\MealBundle\Service\Workday:
     calls:
@@ -296,21 +325,6 @@ services:
       $dishRepo: '@App\Mealz\MealBundle\Repository\DishRepository'
       $priceRepo: '@App\Mealz\AccountingBundle\Repository\PriceRepository'
       $logger: '@logger'
-
-  App\Mealz\MealBundle\Service\Mailer\OAuthMailer:
-    arguments:
-      $envHost: '%env(string:MAILER_HOST)%'
-      $envPort: '%env(int:MAILER_PORT)%'
-      $envAuthType: '%env(string:MAILER_AUTH_TYPE)%'
-      $envEmail: '%env(string:MAILER_EMAIL)%'
-      $envClientId: '%env(string:MAILER_CLIENT_ID)%'
-      $envClientSecret: '%env(string:MAILER_CLIENT_SECRET)%'
-      $envTenantId: '%env(string:MAILER_TENANT_ID)%'
-      $envRefreshToken: '%env(string:MAILER_REFRESH_TOKEN)%'
-
-  App\Mealz\MealBundle\Service\Mailer\MonologMailer:
-    arguments:
-      $toEmail: '%app.email.admin%'
 
   App\Mealz\MealBundle\Service\ApiService:
     arguments:

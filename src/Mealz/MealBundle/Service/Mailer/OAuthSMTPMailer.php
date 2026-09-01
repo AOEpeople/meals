@@ -15,7 +15,8 @@ final class OAuthSMTPMailer implements MailerInterface
         private readonly OAuthMailer $oAuthMailer,
         private readonly LoggerInterface $logger,
         private readonly string $senderEmail,
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void

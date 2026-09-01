@@ -17,13 +17,13 @@ final class SymfonySmtpMailer implements MailerInterface
         private readonly SymfonyMailerInterface $symfonyMailer,
         private readonly LoggerInterface $logger,
         private readonly string $senderEmail,
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void
     {
-        $email = new Email()
-            ->from(Address::create($this->senderEmail))
+        $email = new Email()->from(Address::create($this->senderEmail))
             ->to($recipient)
             ->subject($subject)
             ->text(strip_tags($content));

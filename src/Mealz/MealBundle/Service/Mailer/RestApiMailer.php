@@ -18,7 +18,8 @@ final class RestApiMailer implements MailerInterface
         private readonly string $webhookToken,
         private readonly string $appName,
         private readonly string $appEnv,
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void

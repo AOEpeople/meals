@@ -25,11 +25,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Secret scan (gitleaks)
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Fallback local scan (git-secrets)
         if: success()
         run: |

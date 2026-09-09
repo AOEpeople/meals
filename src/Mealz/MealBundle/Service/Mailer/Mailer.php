@@ -4,84 +4,29 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Mailer;
 
-use Exception;
+use InvalidArgumentException;
 use Override;
-use PHPMailer\PHPMailer\PHPMailer;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface as SymfonyMailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
 final class Mailer implements MailerInterface
 {
-    private string $senderEmail;
-
-    private string $mailerType;
-
-    private LoggerInterface $logger;
-
-    private OAuthMailer $oAuthMailer;
-
-    private SymfonyMailerInterface $symfonyMailer;
+    private MailerInterface $activeMailer;
 
     public function __construct(
-        OAuthMailer $oAuthMailer,
-        SymfonyMailerInterface $symfonyMailer,
-        LoggerInterface $logger,
-        string $senderEmail,
-        string $mailerType
+        private readonly string $mailerType,
+        ?OAuthSMTPMailer $oAuthMailer = null,
+        ?SymfonySmtpMailer $symfonyMailer = null,
+        ?RestApiMailer $restApiMailer = null,
     ) {
-        $this->oAuthMailer = $oAuthMailer;
-        $this->symfonyMailer = $symfonyMailer;
-        $this->logger = $logger;
-        $this->senderEmail = $senderEmail;
-        $this->mailerType = $mailerType;
+        $this->activeMailer = match ($this->mailerType) {
+            'ms_oauth_smtp' => $oAuthMailer ?? throw new InvalidArgumentException('OAuthSMTPMailer required for ms_oauth_smtp'),
+            'rest_api_mailer' => $restApiMailer ?? throw new InvalidArgumentException('RestApiMailer required for rest_api_mailer'),
+            default => $symfonyMailer ?? throw new InvalidArgumentException('SymfonySmtpMailer required as default'),
+        };
     }
 
     #[Override]
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void
     {
-        if ('ms_oauth_smtp' === $this->mailerType) {
-            try {
-                $this->oAuthMailer->setFrom($this->senderEmail);
-                $this->oAuthMailer->addAddress($recipient);
-
-                $this->oAuthMailer->Subject = $subject;
-                $this->oAuthMailer->CharSet = PHPMailer::CHARSET_UTF8;
-                $this->oAuthMailer->Body = strip_tags($content);
-                $this->oAuthMailer->msgHTML($content);
-                $this->oAuthMailer->isHTML($isHTML);
-
-                if (!$this->oAuthMailer->send()) {
-                    $this->logger->error('email send error: ' . $this->oAuthMailer->ErrorInfo);
-                }
-            } catch (Exception $e) {
-                $this->logger->error('email send error', [
-                    'exception' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-            }
-        } else {
-            $email = (new Email())
-                ->from(Address::create($this->senderEmail))
-                ->to($recipient)
-                ->subject($subject)
-                ->text(strip_tags($content))
-                ->html($content);
-
-            if ($isHTML) {
-                $email->html($content);
-            }
-
-            try {
-                $this->symfonyMailer->send($email);
-            } catch (TransportExceptionInterface $e) {
-                $this->logger->error('email send error', [
-                    'exception' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-            }
-        }
+        $this->activeMailer->send($recipient, $subject, $content, $isHTML);
     }
 }

@@ -1,5 +1,15 @@
 # Changelog
 
+## Version v3.4.1 (2026-09-16)
+
+### Fixes
+
+- fix label (ec6d6f40)
+
+### Other
+
+- remove enforce TSL v1.2, enforce X25519 instead (6537454d)
+
 ## Version v3.4.0 (2026-09-16)
 
 ### Features

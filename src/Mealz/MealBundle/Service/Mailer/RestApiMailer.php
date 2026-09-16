@@ -57,9 +57,9 @@ final class RestApiMailer implements MailerInterface
 
     private function sendCurlRequest(array $payload): array
     {
-        $ch = curl_init($this->webhookUrl);
- 
-        curl_setopt_array($ch, [
+        $curlHandle = curl_init($this->webhookUrl);
+
+        curl_setopt_array($curlHandle, [
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => json_encode($payload, JSON_THROW_ON_ERROR),
             CURLOPT_HTTPHEADER     => [
@@ -68,23 +68,15 @@ final class RestApiMailer implements MailerInterface
             ],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => $this->timeoutSeconds,
- 
+
             // enforce TLS 1.2 ---
             CURLOPT_SSLVERSION     => CURL_SSLVERSION_MAX_TLSv1_2,
         ]);
- 
-        $body     = curl_exec($ch);
-        $errno    = curl_errno($ch);
-        $error    = curl_error($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
- 
-        if ($errno !== 0) {
-            throw new \RuntimeException(
-                sprintf('n8n-Webhook-Aufruf fehlgeschlagen (curl errno %d): %s', $errno, $error)
-            );
-        }
- 
+
+        $body     = curl_exec($curlHandle);
+        $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+        curl_close($curlHandle);
+
         return [
             'statusCode' => $httpCode,
             'body'       => (string) $body,

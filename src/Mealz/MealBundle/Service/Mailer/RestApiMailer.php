@@ -69,8 +69,8 @@ final class RestApiMailer implements MailerInterface
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => $this->timeoutSeconds,
 
-            // enforce TLS 1.2 ---
-            CURLOPT_SSLVERSION => CURL_SSLVERSION_MAX_TLSv1_2,
+            // enforce X25519 ---
+            CURLOPT_SSL_EC_CURVES => 'X25519',
         ]);
 
         $body = curl_exec($curlHandle);

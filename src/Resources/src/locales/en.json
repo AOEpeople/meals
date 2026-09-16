@@ -45,7 +45,7 @@
     }
   },
   "costs": {
-    "header": "Listof Costs",
+    "header": "List of Costs",
     "cashRegister": "Cash Register",
     "search": "Filter users",
     "showHidden": "Show hidden users",

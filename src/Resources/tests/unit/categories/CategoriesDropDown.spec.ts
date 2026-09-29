@@ -43,13 +43,13 @@ describe('Test CategoriesDropDown', () => {
     it('should contain the correct category after selecting it', async () => {
         const wrapper = mount(CategoriesDropDown);
 
-        await wrapper.findComponent(ListboxButton).trigger('click');
-        const options = wrapper.findAllComponents(ListboxOption);
+        for (const [index, category] of Categories.entries()) {
+            await wrapper.findComponent(ListboxButton).trigger('click');
+            const options = wrapper.findAllComponents(ListboxOption);
 
-        for (const [index, option] of options.entries()) {
-            await option.trigger('click');
+            await options[index].trigger('click');
 
-            expect(wrapper.findComponent(Listbox).props().modelValue).toEqual(Categories[index]);
+            expect(wrapper.findComponent(Listbox).props().modelValue).toEqual(category);
         }
     });
 });

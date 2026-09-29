@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\UserBundle\Entity\Profile;
@@ -9,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'guest_invitation')]
 #[ORM\HasLifecycleCallbacks]
-class GuestInvitation
+final class GuestInvitation
 {
     #[ORM\Id]
     #[ORM\Column(type: 'string')]

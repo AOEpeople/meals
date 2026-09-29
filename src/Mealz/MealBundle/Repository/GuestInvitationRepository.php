@@ -28,7 +28,7 @@ final class GuestInvitationRepository extends BaseRepository implements GuestInv
     {
         $entityManager = $this->getEntityManager();
         if ($eventParticipation) {
-            $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId(), 'eventParticipation' => $eventParticipation]);
+            $invitation = $this->findOneBy(['host' => $host, 'day' => $day, 'eventParticipation' => $eventParticipation]);
         }
 
         if (($invitation instanceof GuestInvitation) === false) {
@@ -50,7 +50,7 @@ final class GuestInvitationRepository extends BaseRepository implements GuestInv
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation
     {
         $entityManager = $this->getEntityManager();
-        $invitation = $this->findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
+        $invitation = $this->findOneBy(['host' => $host, 'day' => $day]);
 
         if (($invitation instanceof GuestInvitation) === false) {
             $invitation = new GuestInvitation($host, $day, null);

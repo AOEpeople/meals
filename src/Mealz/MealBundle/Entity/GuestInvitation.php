@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'guest_invitation')]
 #[ORM\HasLifecycleCallbacks]
-final class GuestInvitation
+class GuestInvitation
 {
     #[ORM\Id]
     #[ORM\Column(type: 'string')]

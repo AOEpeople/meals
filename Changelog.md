@@ -1,5 +1,28 @@
 # Changelog
 
+## Version v3.5.0 (2026-09-29)
+
+### Features
+
+- **guest:** remove final for GuestInvitation (565d8a7f)
+
+### Fixes
+
+- **guest:** use entities instead of identifier in findOneBy method (72cb2bde)
+
+### Tests
+
+- **guest:** fix test for categories drop down component (76e9a0ca)
+
+### Ops and CI/CD
+
+- **deps:** bump vite, vite-plugin-symfony, @vitejs/plugin-vue and vite-plugin-vue-devtools (5165880e)
+
+### Other
+
+- deps: update node packages (8119d9e5)
+- deps: add correct token for aoe-group-web-cd (0319263f)
+
 ## Version v3.4.1 (2026-09-16)
 
 ### Fixes

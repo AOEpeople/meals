@@ -1,5 +1,16 @@
 # Changelog
 
+## Version v3.5.1 (2026-10-28)
+
+### Ops and CI/CD
+
+- **deps:** bump docker/login-action from 4.6.0 to 4.7.0 (00eaf186)
+- **deps:** bump postcss-selector-parser in /src/Resources (4c564d15)
+- **deps:** bump follow-redirects in /src/Resources (4bb4c0b0)
+- **deps-dev:** bump vite from 8.3.1 to 8.3.4 in /src/Resources (1ef10c11)
+- **deps:** bump source-map-js from 1.2.1 to 1.2.2 in /tests/e2e (7c97c12a)
+- **deps:** bump dompurify from 3.4.16 to 3.4.17 in /src/Resources (1e9f48e0)
+
 ## Version v3.5.0 (2026-09-29)
 
 ### Features

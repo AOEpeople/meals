@@ -90,7 +90,7 @@ final class ParticipationHelper
         return $profileData;
     }
 
-    public function getReachedLimit(Meal $meal): bool
+    public function hasReachedLimit(Meal $meal): bool
     {
         $participationsPerDay = $this->partCountSrv->getParticipationByDay($meal->getDay());
         $participationCount = null;

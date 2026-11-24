@@ -39,7 +39,7 @@ interface TransactionRepositoryInterface extends ObjectRepository
      *
      * @psalm-return array<string, array{firstName: string, name: string, amount: string, paymethod: string|null}>
      */
-    public function findUserDataAndTransactionAmountForGivenPeriod(
+    public function findUserTransactionTotalsForPeriod(
         ?DateTime $minDate = null,
         ?DateTime $maxDate = null,
         ?Profile $profile = null

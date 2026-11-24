@@ -224,7 +224,7 @@ final class ParticipationService
     /**
      * @psalm-return 0|positive-int
      */
-    public function getCountOfActiveParticipationsByDayAndUser(DateTime $dateTime, Profile $profile): int
+    public function countActiveParticipationsByDayAndUser(DateTime $dateTime, Profile $profile): int
     {
         $activeParticipations = $this->participantRepo->getParticipantsOnDays(
             $dateTime,

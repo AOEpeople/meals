@@ -57,11 +57,11 @@ final class TransactionRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * Test if method findUserDataAndTransactionAmountForGivenPeriod() returns the right summed up amounts for transactions of the LAST month
+     * Test if method findUserTransactionTotalsForPeriod() returns the right summed up amounts for transactions of the LAST month
      * Check if transactions of the last month are cumulated correctly.
      *
      * - create several temporary transactions for a TEST user (spread over this month, last month and the month before last month)
-     * - call transactionRepository->findUserDataAndTransactionAmountForGivenPeriod() with parameters for last month and TEST user
+     * - call transactionRepository->findUserTransactionTotalsForPeriod() with parameters for last month and TEST user
      * - compare returned sum of transactions with the sum of the temporary transactions sum which are added to the last month
      */
     public function testTransactionsSummedUpByLastMonth(): void
@@ -81,7 +81,7 @@ final class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($firstTransaction instanceof Transaction);
 
         // now fetch results from db and get the summed up amount for a certain user...
-        $userData = $this->transactionRepo->findUserDataAndTransactionAmountForGivenPeriod(
+        $userData = $this->transactionRepo->findUserTransactionTotalsForPeriod(
             $minDate,
             $maxDate,
             $firstTransaction->getProfile()

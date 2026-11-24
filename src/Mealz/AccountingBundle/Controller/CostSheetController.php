@@ -44,7 +44,7 @@ final class CostSheetController extends BaseController
         TransactionRepositoryInterface $transactionRepo,
         Request $request
     ): JsonResponse {
-        $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
+        $transactionsPerUser = $transactionRepo->findUserTransactionTotalsForPeriod();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names

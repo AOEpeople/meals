@@ -76,7 +76,7 @@ final class TransactionRepository extends BaseRepository implements TransactionR
      * @psalm-return array<string, array{firstName: string, name: string, amount: string, paymethod: string|null}>
      */
     #[Override]
-    public function findUserDataAndTransactionAmountForGivenPeriod(
+    public function findUserTransactionTotalsForPeriod(
         ?DateTime $minDate = null,
         ?DateTime $maxDate = null,
         ?Profile $profile = null

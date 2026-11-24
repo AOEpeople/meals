@@ -85,9 +85,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          tools: phpmd
+          tools: phpmd:3
       - name: Run PHPMD
-        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+        run: phpmd analyze src --format github --ruleset ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude '*/Tests/*' --exclude '*/node_modules/*'
 
   psalm:
     name: Static Code Analysis

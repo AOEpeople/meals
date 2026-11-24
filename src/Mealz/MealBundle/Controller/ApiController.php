@@ -81,7 +81,7 @@ final class ApiController extends BaseController
 
                 $slots = $this->slotSrv->getAllActiveSlots();
 
-                $activeParticipations = $this->participationSrv->getCountOfActiveParticipationsByDayAndUser($day->getDateTime(), $profile);
+                $activeParticipations = $this->participationSrv->countActiveParticipationsByDayAndUser($day->getDateTime(), $profile);
                 $response[$week->getId()]['days'][$day->getId()] = [
                     'date' => $day->getDateTime(),
                     'isLocked' => $day->getLockParticipationDateTime() < new DateTime(),

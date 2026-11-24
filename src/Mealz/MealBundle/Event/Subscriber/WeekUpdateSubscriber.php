@@ -45,7 +45,7 @@ final class WeekUpdateSubscriber implements EventSubscriberInterface
         try {
             $week = $event->getWeek();
             $this->combinedMealService->update($week);
-            if ($event->getNotify()) {
+            if ($event->shouldNotify()) {
                 $msg = new WeeklyMenuMessage($week, $this->translator);
                 $this->notifier->send($msg);
             }

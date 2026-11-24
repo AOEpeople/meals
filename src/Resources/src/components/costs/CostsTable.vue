@@ -45,7 +45,7 @@ import CostsTableActions from './CostsTableActions.vue';
 import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const { t, locale } = useI18n();
-const { CostsState, getColumnNames } = useCosts();
+const { CostsState, orderedUsers, getColumnNames } = useCosts();
 
 const props = defineProps<{
   filter: string;
@@ -66,7 +66,7 @@ const filterRegex = computed(() => {
 });
 
 const hiddenUsers = computed(() =>
-  Object.entries(CostsState.users).filter((user) => {
+  orderedUsers.value.filter((user) => {
     const value = user[1];
     return (
       (value.hidden === false && (value.costs.total > 0.01 || value.costs.total < -0.01)) || props.showHidden === true

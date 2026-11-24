@@ -2,7 +2,7 @@ import getCosts from '@/api/getCosts';
 import type { DateTime } from '@/api/getDashboardData';
 import { isResponseObjectOkay } from '@/api/isResponseOkay';
 import type { Dictionary } from '@/types/types';
-import { reactive, readonly, watch } from 'vue';
+import { computed, reactive, readonly, watch } from 'vue';
 import { translateMonth } from '@/tools/localeHelper';
 import postHideUser from '@/api/postHideUser';
 import { type IMessage, isMessage } from '@/interfaces/IMessage';
@@ -15,6 +15,7 @@ import { FlashMessageType } from '@/enums/FlashMessage';
 export interface ICosts {
     columnNames: Dictionary<DateTime>;
     users: Dictionary<UserCost>;
+    userOrder: number[];
 }
 
 interface UserCost {
@@ -34,9 +35,12 @@ interface ICostsState extends ICosts {
 const CostsState = reactive<ICostsState>({
     columnNames: {},
     users: {},
+    userOrder: [],
     error: '',
     isLoading: false
 });
+
+const orderedUsers = computed(() => CostsState.userOrder.map((id): [number, UserCost] => [id, CostsState.users[id]]));
 
 const { sendFlashMessage } = useFlashMessage();
 
@@ -58,7 +62,8 @@ function isCosts(costs: ICosts): costs is ICosts {
         costs.columnNames !== null &&
         costs.columnNames !== undefined &&
         costs.users !== null &&
-        costs.users !== undefined
+        costs.users !== undefined &&
+        Array.isArray(costs.userOrder)
     ) {
         const cost = Object.values(costs.users)[0];
         const column = Object.values(costs.columnNames)[0];
@@ -94,6 +99,7 @@ export function useCosts() {
         if (isResponseObjectOkay(error, costs, isCosts) === true) {
             CostsState.columnNames = (costs.value as ICosts).columnNames;
             CostsState.users = (costs.value as ICosts).users;
+            CostsState.userOrder = (costs.value as ICosts).userOrder;
             CostsState.error = '';
         } else {
             CostsState.error = 'Error on fetching Costs';
@@ -209,6 +215,7 @@ export function useCosts() {
 
     return {
         CostsState: readonly(CostsState),
+        orderedUsers: readonly(orderedUsers),
         fetchCosts,
         hideUser,
         sendSettlement,

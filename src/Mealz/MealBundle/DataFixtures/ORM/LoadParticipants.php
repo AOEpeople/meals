@@ -237,15 +237,15 @@ final class LoadParticipants extends Fixture implements OrderedFixtureInterface
 
     protected function loadReferences(): void
     {
-        foreach ($this->referenceRepository->getReferencesByClass()[Meal::class] as $referenceName => $reference) {
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Meal::class]) as $referenceName) {
             $this->meals[] = $this->getReference($referenceName, Meal::class);
         }
 
-        foreach ($this->referenceRepository->getReferencesByClass()[Profile::class] as $referenceName => $reference) {
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Profile::class]) as $referenceName) {
             $this->profiles[] = $this->getReference($referenceName, Profile::class);
         }
 
-        foreach ($this->referenceRepository->getReferencesByClass()[Slot::class] as $referenceName => $reference) {
+        foreach (array_keys($this->referenceRepository->getReferencesByClass()[Slot::class]) as $referenceName) {
             $this->slots[] = $this->getReference($referenceName, Slot::class);
         }
     }

@@ -9,6 +9,38 @@ use PHPUnit\Framework\TestCase;
 
 final class CostSheetServiceTest extends TestCase
 {
+    /**
+     * @dataProvider sortingLocales
+     */
+    public function testSortUsersByName(string $locale): void
+    {
+        $users = [
+            1 => ['id' => 1, 'name' => 'Zeller', 'firstName' => 'Anna'],
+            2 => ['id' => 2, 'name' => 'Müller', 'firstName' => 'Zoe'],
+            3 => ['id' => 3, 'name' => ' meier ', 'firstName' => 'Clara'],
+            10 => ['id' => 10, 'name' => 'Äbel', 'firstName' => 'Berta'],
+            20 => ['id' => 20, 'name' => 'abel', 'firstName' => 'Anton'],
+            40 => ['id' => 40, 'name' => 'Müller', 'firstName' => 'Adam'],
+            30 => ['id' => 30, 'name' => 'Müller', 'firstName' => ' adam '],
+        ];
+
+        $sortedUsers = (new CostSheetService())->sortUsersByName($users, $locale);
+
+        $this->assertSame([20, 10, 3, 30, 40, 2, 1], array_keys($sortedUsers));
+        $this->assertSame($users[20], $sortedUsers[20]);
+        $this->assertSame($users[30], $sortedUsers[30]);
+    }
+
+    public function sortingLocales(): array
+    {
+        return [['de'], ['en']];
+    }
+
+    public function testSortUsersByNameReturnsEmptyList(): void
+    {
+        $this->assertSame([], (new CostSheetService())->sortUsersByName([], 'de'));
+    }
+
     public function testMergeArrayByKey(): void
     {
         $costSheetService = new CostSheetService();

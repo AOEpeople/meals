@@ -35,10 +35,10 @@ final class AccountingBookController extends BaseController
         $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
-        $usersFirst = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDateFirst, $maxDateFirst);
+        $usersFirst = $transactionRepo->findUserTransactionTotalsForPeriod($minDateFirst, $maxDateFirst);
 
         // Get array of users with their amount of transactions in actual month
-        $users = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
+        $users = $transactionRepo->findUserTransactionTotalsForPeriod($minDate, $maxDate);
 
         return new JsonResponse([
             'lastMonth' => $headingFirst,

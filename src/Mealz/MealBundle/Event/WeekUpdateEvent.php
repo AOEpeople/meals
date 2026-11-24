@@ -23,7 +23,7 @@ final class WeekUpdateEvent extends Event
         return $this->week;
     }
 
-    public function getNotify(): bool
+    public function shouldNotify(): bool
     {
         return $this->notify;
     }

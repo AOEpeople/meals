@@ -60,7 +60,7 @@ run-prettier:
 	ddev exec npm run --prefix src/Resources format
 
 run-phpmd:
-	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+	ddev exec vendor/bin/phpmd analyze src/Mealz --format text --ruleset ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude '*/Tests/*'
 
 run-psalm:
 	ddev exec vendor/bin/psalm --use-baseline=./psalm.baseline.xml

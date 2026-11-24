@@ -41,7 +41,8 @@ final class CostSheetController extends BaseController
     #[IsGranted(new Expression('is_granted("ROLE_KITCHEN_STAFF") or is_granted("ROLE_FINANCE")'))]
     public function list(
         ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
+        TransactionRepositoryInterface $transactionRepo,
+        Request $request
     ): JsonResponse {
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
@@ -80,13 +81,14 @@ final class CostSheetController extends BaseController
 
         $users = $this->costSheetService->mergeDoubleUserTransactions($users);
 
-        ksort($users, SORT_STRING);
+        $users = $this->costSheetService->sortUsersByName($users, $request->getLocale());
         unset($columnNames['total']);
         unset($columnNames['earlier']);
 
         return new JsonResponse([
             'columnNames' => $columnNames,
-            'users' => $users,
+            'users' => (object) $users,
+            'userOrder' => array_keys($users),
         ]);
     }
 

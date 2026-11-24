@@ -56,6 +56,7 @@ describe('Test CostsStore', () => {
 
     it('should not contain data before fetching', () => {
         expect(CostsState.users).toEqual({});
+        expect(CostsState.userOrder).toEqual([]);
         expect(CostsState.columnNames).toEqual({});
         expect(CostsState.error).toEqual('');
         expect(CostsState.isLoading).toBeFalsy();
@@ -64,6 +65,7 @@ describe('Test CostsStore', () => {
     it('should contain data after fetching', async () => {
         await fetchCosts();
         expect(CostsState.users).toEqual(Costs.users);
+        expect(CostsState.userOrder).toEqual(Costs.userOrder);
         expect(CostsState.columnNames).toEqual(Costs.columnNames);
         expect(CostsState.error).toEqual('');
         expect(CostsState.isLoading).toBeFalsy();

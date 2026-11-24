@@ -28,7 +28,7 @@ import { useCosts } from '@/stores/costsStore';
 import { computed } from 'vue';
 
 const { t, locale } = useI18n();
-const { CostsState } = useCosts();
+const { orderedUsers } = useCosts();
 
-const mealsUsers = computed(() => Object.entries(CostsState.users).filter((user) => !user[1].hidden));
+const mealsUsers = computed(() => orderedUsers.value.filter((user) => !user[1].hidden));
 </script>

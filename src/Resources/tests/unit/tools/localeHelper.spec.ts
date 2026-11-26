@@ -42,9 +42,8 @@ describe('Test localeHelper', () => {
         expect(translateMonth(dateTime, 'en')).toBe('July');
         expect(translateMonth(dateTime, 'de')).toBe('Juli');
 
-        dateTime.date = new Date().toISOString().split('T')[0];
-        expect(translateMonth(dateTime, 'en')).toBe(
-            new Date().toLocaleString('en', { month: '2-digit', day: '2-digit' })
-        );
+        const currentMonth = { ...dateTime, date: '2023-04-01 00:00:00.000000' };
+        expect(translateMonth(currentMonth, 'en')).toBe('April');
+        expect(translateMonth(currentMonth, 'de')).toBe('April');
     });
 });

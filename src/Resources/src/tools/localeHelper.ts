@@ -12,9 +12,5 @@ export function translateWeekdayWithoutRef(date: DateTime, locale: string): stri
 }
 
 export function translateMonth(date: DateTime, locale: string): string {
-    const parsedDate = new Date(date.date).toLocaleDateString(locale, { month: 'long' });
-    if (parsedDate === new Date().toLocaleDateString(locale, { month: 'long' })) {
-        return new Date().toLocaleDateString(locale, { month: '2-digit', day: '2-digit' });
-    }
-    return parsedDate;
+    return new Date(date.date).toLocaleDateString(locale, { month: 'long' });
 }
